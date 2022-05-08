@@ -5,6 +5,7 @@
 
   imports = [
     ./modules/zinit.nix
+    ./modules/zsh-plugins
   ];
 
   programs = {

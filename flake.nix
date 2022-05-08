@@ -30,6 +30,7 @@
         (import ./overlays/silicon.nix inputs.nixpkgs-unstable nixpkgsConfig.config)
         emacs.overlay
         (import ./overlays/emacs.nix)
+        (import ./overlays/zinit.nix)
       ];
     }; 
 

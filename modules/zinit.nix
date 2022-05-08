@@ -24,6 +24,12 @@ let
         default = [ ];
         description = "The plugin tags.";
       };
+
+      pre = mkOption {
+        type = types.str;
+        default = "";
+        description = "The plugin pre-config";
+      };
     };
 
   });
@@ -37,6 +43,19 @@ in {
       type = types.listOf pluginModule;
       description = "List of zinit plugins.";
     };
+
+    pre = mkOption {
+      type = types.str;
+      default = "";
+      description = "pre-zinit config";
+    };
+
+    post = mkOption {
+      type = types.str;
+      default = "";
+      description = "post-zinit config";
+    };
+
   };
 
   config = mkIf cfg.enable {
@@ -45,16 +64,31 @@ in {
     programs.zsh.initExtraBeforeCompInit = ''
       source ${pkgs.zinit}/share/zinit/zinit.zsh
 
+      ${
+        optionalString (cfg.pre != "") ''
+          ${cfg.pre}
+        ''
+      }
       ${optionalString (cfg.plugins != [ ]) ''
         ${concatStrings (map (plugin: ''
           ${
+            optionalString (plugin.pre != "") ''
+              ${plugin.pre}
+            ''
+          }
+          ${
             optionalString (plugin.tags != [ ]) ''
-              zinit ice ${concatStrings (map (tag: ", ${tag}") plugin.tags)}
+              zinit ice ${concatStrings (map (tag: " ${tag}") plugin.tags)}
             ''
           }
           zinit ${if plugin.light then "light" else "load"} "${plugin.name}"
         '') cfg.plugins)}
       ''}
+      ${
+        optionalString (cfg.post != "") ''
+          ${cfg.post}
+        ''
+      }
     '';
   };
 }
