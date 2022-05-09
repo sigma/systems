@@ -12,6 +12,11 @@
         source /etc/static/zshrc
     fi
 
+    # for home-manager only systems
+    if [[ "$PATH" != ?(*:)"$HOME/.nix-profile/bin"?(:*) ]]; then
+        export PATH="$HOME/.nix-profile/bin:$PATH"
+    fi
+
     export DOTREPO=$HOME/.dotdrop
 
     # Set the list of directories that Zsh searches for programs.
