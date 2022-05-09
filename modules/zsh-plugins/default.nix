@@ -25,4 +25,8 @@
   home.file.".zsh-plugins/input/input.plugin.zsh".source = ./input.plugin.zsh;
 
   home.file.".zsh-plugins/less/less.plugin.zsh".source = ./less.plugin.zsh;
+
+  home.file.".p10k.config.zsh".source = ./p10k.config.zsh;
+  home.file.".p10k.zsh".source = ./p10k.zsh;
+  home.file.".p10k.pure.zsh".source = ./p10k.pure.zsh;
 }
