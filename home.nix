@@ -1,5 +1,10 @@
 { config, pkgs, lib, ... }:
 
+let
+    loadSettings = prog: import ./settings/${prog}.nix {
+        inherit config pkgs lib;
+    };
+in
 {
   home.stateVersion = "22.05";
 
@@ -9,12 +14,12 @@
   ];
 
   programs = {
-    zsh = import ./settings/zsh.nix { inherit config; };
-    git = import ./settings/git.nix { inherit config pkgs; };
-    direnv = import ./settings/direnv.nix { inherit config; };
-    htop = import ./settings/htop.nix { inherit config; };
-
-    gitui.enable = true;
+    zsh = loadSettings "zsh";
+    git = loadSettings "git";
+    direnv = loadSettings "direnv";
+    htop = loadSettings "htop";
+  } // {
+      gitui.enable = true;
   };
 
   home.packages = with pkgs; [
