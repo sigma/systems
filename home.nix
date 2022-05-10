@@ -11,6 +11,7 @@ in
   imports = [
     ./modules/zinit.nix
     ./modules/zsh-plugins
+    ./modules/bat-syntaxes
   ];
 
   programs = {
@@ -18,6 +19,7 @@ in
     git = loadSettings "git";
     direnv = loadSettings "direnv";
     htop = loadSettings "htop";
+    bat = loadSettings "bat";
   } // {
       gitui.enable = true;
   };
