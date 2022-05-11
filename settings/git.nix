@@ -2,7 +2,7 @@
 
 {
   enable = true;
-  package = pkgs.gitAndTools.gitMinimal;
+  package = pkgs.gitGoogle;
 
   aliases = {
     ldiff = "difftool -t latex";
