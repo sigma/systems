@@ -38,9 +38,7 @@ in
     ninja
 
     # console tools
-    bat
     coreutils
-    delta
     exa
     fd
     fzf
