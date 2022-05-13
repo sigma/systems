@@ -20,6 +20,7 @@ in
     direnv = loadSettings "direnv";
     htop = loadSettings "htop";
     bat = loadSettings "bat";
+    mercurial = loadSettings "mercurial";
   } // {
       gitui.enable = true;
   };
