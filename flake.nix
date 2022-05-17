@@ -44,6 +44,12 @@
         inherit darwinModules;
         inherit nixpkgsConfig darwin home-manager;
     };
+
+    glinuxUser = {
+      login = "yhodique";
+      name = "Yann Hodique";
+      email = "yhodique@google.com";
+    };
   in
   {
     # My `nix-darwin` configs
@@ -58,10 +64,13 @@
       glinux = inputs.home-manager.lib.homeManagerConfiguration {
         configuration = import ./home.nix;
         system = "x86_64-linux";
-        username = "yhodique";
-        homeDirectory = "/usr/local/google/home/yhodique";
+        username = glinuxUser.login;
+        homeDirectory = "/usr/local/google/home/${glinuxUser.login}";
 	      stateVersion = "22.05";
 	      pkgs = builtins.getAttr "x86_64-linux" inputs.nixpkgs-unstable.outputs.legacyPackages // nixpkgsConfig;
+        extraSpecialArgs = {
+          user = glinuxUser;
+        };
       };
     };
 

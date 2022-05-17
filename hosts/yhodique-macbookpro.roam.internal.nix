@@ -2,14 +2,21 @@
 
 let
   system = "aarch64-darwin";
-  login = "yhodique";
+  user = {
+    login = "yhodique";
+    name = "Yann Hodique";
+    email = "yhodique@google.com";
+  };
+  specialArgs = {
+    inherit user;
+  };
 in
 darwin.lib.darwinSystem {
   inherit system;
   modules = nixpkgs.lib.attrValues darwinModules ++ [
     # Main `nix-darwin` config
     ../configuration.nix
-    (import ../mac-user.nix login)
+    (import ../mac-user.nix user.login)
     # `home-manager` module
     home-manager.darwinModules.home-manager
     {
@@ -17,7 +24,8 @@ darwin.lib.darwinSystem {
       # `home-manager` config
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
-      home-manager.users.${login} = import ../home.nix;
+      home-manager.users.${user.login} = import ../home.nix;
+      home-manager.extraSpecialArgs = specialArgs;
     }
   ];
 }

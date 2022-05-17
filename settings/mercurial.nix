@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, user, ... }:
 
 {
   enable = true;
@@ -35,8 +35,8 @@
     testtargets = "!blaze query --keep_going \"tests($(hg potentialtesttargets | paste -s -d +))\"";
   };
 
-  userName = "Yann Hodique";
-  userEmail = "yhodique@google.com";
+  userName = "${user.name}";
+  userEmail = "${user.email}";
 
   extraConfig = {
     alices = {

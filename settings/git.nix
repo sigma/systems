@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, user, ... }:
 
 {
   enable = true;
@@ -26,8 +26,8 @@
 
   lfs.enable = true;
 
-  userName = "Yann Hodique";
-  userEmail = "yhodique@google.com";
+  userName = "${user.name}";
+  userEmail = "${user.email}";
 
   extraConfig = {
     core = {
