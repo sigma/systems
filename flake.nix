@@ -48,7 +48,7 @@
   {
     # My `nix-darwin` configs
     darwinConfigurations = {
-      yhodique-macbookpro.roam.internal = macMachine ./hosts/yhodique-macbookpro.roam.internal.nix;
+      yhodique-macbookpro = macMachine ./hosts/yhodique-macbookpro.roam.internal.nix;
     };
 
     inherit darwinModules;

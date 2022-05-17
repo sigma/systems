@@ -57,7 +57,7 @@ in
 
     # editors
     zile
-    emacsGcc
+    emacsNativeComp
 
     # git
     gitAndTools.gh

@@ -18,6 +18,7 @@
   nix.extraOptions = ''
     auto-optimise-store = true
     experimental-features = nix-command flakes
+    allow-import-from-derivation = true
   '' + lib.optionalString (pkgs.system == "aarch64-darwin") ''
     extra-platforms = x86_64-darwin aarch64-darwin
   '';
@@ -35,13 +36,13 @@
     coreutils
     htop
     vim
-    emacsGcc
+    emacsNativeComp
   ];
 
   programs.nix-index.enable = true;
 
   # Fonts
-  fonts.enableFontDir = true;
+  fonts.fontDir.enable = true;
   fonts.fonts = with pkgs; [
      recursive
      (nerdfonts.override { fonts = [ "SourceCodePro" ]; })
