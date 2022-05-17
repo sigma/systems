@@ -39,22 +39,21 @@
       link-apps = (import ./modules/link-apps);
     };
 
-    macMachine = mod: import mod {
+    users = import ./users.nix;
+
+    gmac = mod: import mod {
         nixpkgs = inputs.nixpkgs-unstable;
         inherit darwinModules;
         inherit nixpkgsConfig darwin home-manager;
+        user = users.corpUser;
     };
 
-    glinuxUser = {
-      login = "yhodique";
-      name = "Yann Hodique";
-      email = "yhodique@google.com";
-    };
+    glinuxUser = users.corpUser;
   in
   {
     # My `nix-darwin` configs
     darwinConfigurations = {
-      yhodique-macbookpro = macMachine ./hosts/yhodique-macbookpro.roam.internal.nix;
+      yhodique-macbookpro = gmac ./hosts/yhodique-macbookpro.roam.internal.nix;
     };
 
     inherit darwinModules;

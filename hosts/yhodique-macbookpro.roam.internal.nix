@@ -1,15 +1,7 @@
-{ nixpkgs, nixpkgsConfig, darwin, darwinModules, home-manager, ... }:
+{ nixpkgs, nixpkgsConfig, darwin, darwinModules, home-manager, user, ... }:
 
 let
   system = "aarch64-darwin";
-  user = {
-    login = "yhodique";
-    name = "Yann Hodique";
-    email = "yhodique@google.com";
-  };
-  specialArgs = {
-    inherit user;
-  };
 in
 darwin.lib.darwinSystem {
   inherit system;
@@ -25,7 +17,9 @@ darwin.lib.darwinSystem {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
       home-manager.users.${user.login} = import ../home.nix;
-      home-manager.extraSpecialArgs = specialArgs;
+      home-manager.extraSpecialArgs = {
+        inherit user;
+      };
     }
   ];
 }
