@@ -27,7 +27,7 @@ in
     installPhase = ''
       mkdir -p $out/bin
       for bin in chg hg hgd; do
-        ln -s $${figPath}/$bin $out/bin/$bin
+        ln -s ${figPath}/$bin $out/bin/$bin
       done
     '';
   };
