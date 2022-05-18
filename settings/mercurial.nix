@@ -27,7 +27,7 @@
     # What blaze targets (:all) are changed vs parent commit
     targets = "!$HG whatsout | sed -r 's#(.*)/.*$#\1:all#g' | sort -u";
     # Changed targets plus all the corresponding javatests targets.
-    potentialtesttargets = "!$HG targets | sed -r 's|^java/(.*:all)|javatests/\1\njava/\1|' | sort -u";
+    potentialtesttargets = "!$HG targets | sed -r 's|^java/(.*:all)|javatests/\1\\njava/\1|' | sort -u";
     # This step is mostly unnecessary for testing since we could just pass the
     # patterns directly to blaze test, but it allows passing --keep_going to the
     # blaze query step and skip targets that don't exist. Passing it to blaze
@@ -112,7 +112,7 @@
       # Age of public CLs (p4base/p4head), description and reason for others
       yrh_desc = "if(piper_change_number, \"http://cl/{piper_change_number} {age(date)}\", GOOG_desc)";
       yrh_one_line = "separate(\" \", yrh_rev_id, yrh_tags, yrh_desc, yrh_cl, why)";
-      yrh_two_lines = "separate(\"\n\", separate(\" \" , yrh_rev_id, yrh_tags, yrh_desc), separate(\" \", why, yrh_cl))";
+      yrh_two_lines = "separate(\"\\n\", separate(\" \" , yrh_rev_id, yrh_tags, yrh_desc), separate(\" \", why, yrh_cl))";
     };
 
     templates = {
