@@ -13,6 +13,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
     # Other sources
     emacs.url = github:nix-community/emacs-overlay;
+    emacs.inputs.nixpkgs.follows = "nixpkgs-unstable";
     flake-utils.url = github:numtide/flake-utils;
     comma.url = github:nix-community/comma;
     comma.inputs.nixpkgs.follows = "nixpkgs-unstable";
