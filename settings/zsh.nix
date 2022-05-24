@@ -13,6 +13,9 @@
     fi
 
     # for home-manager only systems
+    if [[ "$PATH" != ?(*:)"$HOME/.nix-default-profile/bin"?(:*) ]]; then
+        export PATH="$HOME/.nix-default-profile/bin:$PATH"
+    fi
     if [[ "$PATH" != ?(*:)"$HOME/.nix-profile/bin"?(:*) ]]; then
         export PATH="$HOME/.nix-profile/bin:$PATH"
     fi
