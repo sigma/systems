@@ -22,7 +22,7 @@ self: super:
         ];
     });
 
-    emacsGcc = super.emacsGcc.overrideAttrs (oldAttrs: rec {
+    emacsNativeComp = super.emacsNativeComp.overrideAttrs (oldAttrs: rec {
         patches = oldAttrs.patches ++ [
             (self.fetchpatch {
                 url = "https://github.com/d12frosted/homebrew-emacs-plus/raw/master/patches/emacs-28/fix-window-role.patch";
