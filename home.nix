@@ -12,6 +12,7 @@ in
     ./modules/zinit.nix
     ./modules/zsh-plugins
     ./modules/bat-syntaxes
+    ./modules/editors/emacs.nix
   ];
 
   programs = {
@@ -24,6 +25,8 @@ in
   } // {
       gitui.enable = true;
   };
+
+  modules.editors.emacs.enable = true;
 
   home.packages = with pkgs; [
     # Some basics
@@ -48,7 +51,6 @@ in
     less
     ncdu
     pinfo
-    ripgrep
     silver-searcher
     skim
     tldr
@@ -57,7 +59,6 @@ in
 
     # editors
     zile
-    emacsNativeComp
 
     # git
     gitAndTools.gh
