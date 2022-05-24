@@ -79,6 +79,7 @@ in
     comma
     # comma # run software from without installing it
     niv # easy dependency management for nix projects
+    nix
   ] ++ lib.optionals stdenv.isDarwin [
     m-cli # useful macOS CLI commands
   ];
