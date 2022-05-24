@@ -18,7 +18,7 @@
     comma.inputs.nixpkgs.follows = "nixpkgs-unstable";
   };
 
-  outputs = { self, darwin, home-manager, comma, emacs, flake-utils, ... }@inputs:
+  outputs = inputs @ { self, nixpkgs-unstable, darwin, home-manager, comma, emacs, flake-utils, ... }:
 
   let
     # Configuration for `nixpkgs`
@@ -26,8 +26,8 @@
       config = { allowUnfree = true; };
       overlays = [
         (import ./overlays/nix.nix)
-        (import ./overlays/comma.nix inputs.comma)
-        (import ./overlays/silicon.nix inputs.nixpkgs-unstable nixpkgsConfig.config)
+        (import ./overlays/comma.nix comma)
+        (import ./overlays/silicon.nix nixpkgs-unstable nixpkgsConfig.config)
         emacs.overlay
         (import ./overlays/emacs.nix)
         (import ./overlays/zinit.nix)
@@ -43,8 +43,7 @@
 
     gmac = mod: import mod {
         nixpkgs = inputs.nixpkgs-unstable;
-        inherit darwinModules;
-        inherit nixpkgsConfig darwin home-manager;
+        inherit nixpkgsConfig darwin darwinModules home-manager;
         user = users.corpUser;
     };
 
@@ -74,6 +73,5 @@
     };
 
     packages = inputs.home-manager.packages;
-
   };
 }
