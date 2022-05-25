@@ -39,6 +39,7 @@ in {
       editorconfig-core-c
       sqlite
       texlive.combined.scheme-full
+      pandoc
     ];
 
     home.activation = {
