@@ -2,8 +2,8 @@
   comma = input.packages.${prev.stdenv.system}.comma.overrideAttrs (oldAttrs: rec {
     patches = (oldAttrs.patches or []) ++ [
       (prev.fetchpatch {
-        url = "https://github.com/sigma/comma/commit/7b024f4ad44796572bbdb4d71861a0bb3130ba49.patch";
-        sha256 = "sha256-bbJNhjgfLza3nLbmtMruC5w7bL33pdfXf28bqgHbAoE=";
+        url = "https://github.com/sigma/comma/commit/1fcb07d14c9b433b3fa3840984ba18ab64e3154b.patch";
+        sha256 = "sha256-K3hj5aAwCYU/ffj/RqkcBQ0xMfvmcLckIhSXBr/3Z4Q=";
       })
     ];
   });
