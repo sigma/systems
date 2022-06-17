@@ -6,8 +6,8 @@ final: prev:
     src = final.fetchFromGitHub {
       owner = "zdharma-continuum";
       repo = "zinit";
-      rev = "2cdeef387aa39c118cbfdb470f05c184e427ae4c";
-      hash = "sha256-8PPZlKWtrQ71k+PXliNxaV7xn/6gqQS3+5nKnNitUtw=";
+      rev = "161d7c1ee1fc2bbb43442cd90b48e502bf62603f";
+      hash = "sha256-XJjlinLkXmvmayGeFxJhHSFUHrf18E7J+TreQdGb5GY=";
     };
 
     installPhase = ''
@@ -15,12 +15,16 @@ final: prev:
 
       cd "$src"
 
-      # Zplugin's source files
+      # zinit's source files
       install -dm0755 "$outdir"
 
       find share -type f -exec install -Dm 755 "{}" "$outdir/{}" \;
       install -m0644 zinit*.zsh "$outdir"
       install -m0644 _zinit "$outdir"
+
+      # disable self-update
+      sed -i -e '/^.zinit-self-update.*/a\
+      +zinit-message "Zinit is Nix-managed, skipping self-update"; return 0;' "$outdir/zinit-autoload.zsh"
     '';
   });
 }
