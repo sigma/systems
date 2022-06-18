@@ -9,6 +9,7 @@ in
   home.stateVersion = "22.05";
 
   imports = [
+    ./modules/blaze.nix
     ./modules/zinit.nix
     ./modules/zsh-plugins
     ./modules/bat-syntaxes
