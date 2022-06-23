@@ -10,10 +10,12 @@ in
 
   imports = [
     ./modules/blaze.nix
+    ./modules/gcert.nix
     ./modules/zinit.nix
     ./modules/zsh-plugins
     ./modules/bat-syntaxes
     ./modules/editors/emacs.nix
+    ./modules/cloud-shell.nix
   ];
 
   programs = {
@@ -25,6 +27,8 @@ in
     mercurial = loadSettings "mercurial";
   } // {
       gitui.enable = true;
+      gcert.enable = true;
+      cloudshell.enable = true;
   };
 
   modules.editors.emacs.enable = true;
