@@ -20,11 +20,15 @@ in
 
   programs = {
     zsh = loadSettings "zsh";
-    git = loadSettings "git";
+
     direnv = loadSettings "direnv";
     htop = loadSettings "htop";
     bat = loadSettings "bat";
+
+    git = loadSettings "git";
     mercurial = loadSettings "mercurial";
+
+    tmux = loadSettings "tmux";
   } // {
       gitui.enable = true;
       gcert.enable = true;
