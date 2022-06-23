@@ -21,58 +21,81 @@
 
   outputs = inputs @ { self, nixpkgs-unstable, darwin, home-manager, comma, emacs, flake-utils, ... }:
 
-  let
-    # Configuration for `nixpkgs`
-    nixpkgsConfig = {
-      config = { allowUnfree = true; };
-      overlays = [
-        (import ./overlays/nix.nix)
-        (import ./overlays/comma.nix comma)
-        (import ./overlays/silicon.nix nixpkgs-unstable nixpkgsConfig.config)
-        emacs.overlay
-        (import ./overlays/emacs.nix)
-        (import ./overlays/zinit.nix)
-        (import ./overlays/google.nix)
-      ];
-    }; 
-
-    darwinModules = {
-      link-apps = (import ./modules/link-apps);
-    };
-
-    users = import ./users.nix;
-
-    gmac = mod: import mod {
-        nixpkgs = inputs.nixpkgs-unstable;
-        inherit nixpkgsConfig darwin darwinModules home-manager;
-        user = users.corpUser;
-    };
-
-    glinuxUser = users.corpUser;
-  in
-  {
-    # My `nix-darwin` configs
-    darwinConfigurations = {
-      yhodique-macbookpro = gmac ./hosts/yhodique-macbookpro.roam.internal.nix;
-    };
-
-    inherit darwinModules;
-
-    # My home-manager only configs
-    homeConfigurations = {
-      glinux = inputs.home-manager.lib.homeManagerConfiguration {
-        configuration = import ./home.nix;
-        system = "x86_64-linux";
-        username = glinuxUser.login;
-        homeDirectory = "/usr/local/google/home/${glinuxUser.login}";
-	      stateVersion = "22.05";
-	      pkgs = builtins.getAttr "x86_64-linux" inputs.nixpkgs-unstable.outputs.legacyPackages // nixpkgsConfig;
-        extraSpecialArgs = {
-          user = glinuxUser;
-        };
+    let
+      # Configuration for `nixpkgs`
+      nixpkgsConfig = {
+        config = { allowUnfree = true; };
+        overlays = [
+          (import ./overlays/nix.nix)
+          (import ./overlays/comma.nix comma)
+          (import ./overlays/silicon.nix nixpkgs-unstable nixpkgsConfig.config)
+          emacs.overlay
+          (import ./overlays/emacs.nix)
+          (import ./overlays/zinit.nix)
+          (import ./overlays/google.nix)
+        ];
       };
-    };
 
-    packages = inputs.home-manager.packages;
-  };
+      darwinModules = {
+        link-apps = (import ./modules/link-apps);
+      };
+
+      users = import ./users.nix;
+      hosts = import ./hosts.nix {
+        inherit (inputs.nixpkgs-unstable) lib;
+      };
+
+      gmac = machine: let
+        nixpkgs = inputs.nixpkgs-unstable;
+        user = users.corpUser;
+      in darwin.lib.darwinSystem {
+        inherit (machine) system;
+        modules = nixpkgs.lib.attrValues darwinModules ++ [
+          # Main `nix-darwin` config
+          ./configuration.nix
+          (import ./mac-user.nix user.login)
+          # `home-manager` module
+          home-manager.darwinModules.home-manager
+          {
+            nixpkgs = nixpkgsConfig;
+            # `home-manager` config
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.${user.login} = import ./home.nix;
+            home-manager.extraSpecialArgs = {
+              inherit user machine;
+            };
+          }
+        ];
+      };
+    in
+      {
+        # My `nix-darwin` configs
+        darwinConfigurations = {
+          yhodique-macbookpro = gmac hosts.yhodique-macbookpro;
+          yhodique-macmini = gmac hosts.yhodique-macmini;
+        };
+
+        inherit darwinModules;
+
+        # My home-manager only configs
+        homeConfigurations = let
+          glinuxUser = users.corpUser;
+        in {
+          glinux = inputs.home-manager.lib.homeManagerConfiguration {
+            configuration = import ./home.nix;
+            system = "x86_64-linux";
+            username = glinuxUser.login;
+            homeDirectory = "/usr/local/google/home/${glinuxUser.login}";
+	          stateVersion = "22.05";
+	          pkgs = builtins.getAttr "x86_64-linux" inputs.nixpkgs-unstable.outputs.legacyPackages // nixpkgsConfig;
+            extraSpecialArgs = {
+              user = glinuxUser;
+              machine = {};
+            };
+          };
+        };
+
+        packages = inputs.home-manager.packages;
+      };
 }

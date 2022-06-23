@@ -1,8 +1,8 @@
-{ config, pkgs, lib, user, ... }:
+{ config, pkgs, lib, user, machine, ... }:
 
 let
     loadSettings = prog: import ./settings/${prog}.nix {
-        inherit config pkgs lib user;
+        inherit config pkgs lib user machine;
     };
 in
 {
