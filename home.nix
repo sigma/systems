@@ -29,6 +29,8 @@ in
     mercurial = loadSettings "mercurial";
 
     tmux = loadSettings "tmux";
+
+    ssh = loadSettings "ssh";
   } // {
       gitui.enable = true;
       gcert.enable = true;
