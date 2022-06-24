@@ -36,7 +36,7 @@ in
           esac
         done
 
-        exec ${pkgs.netcat}/bin/nc "$HOST" "$PORT"
+        exec ${pkgs.nmap}/bin/ncat "$HOST" "$PORT"
         '';
 
       executable = true;

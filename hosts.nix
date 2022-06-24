@@ -57,7 +57,7 @@ in rec {
   csp = cloudshell {
     alias = "csp";
     profile = "perso";
-    user = "yhodique";
+    user = "yann_hodique";
     sshOpts = {
       identitiesOnly = true;
       identityFile = "~/.ssh/google_compute_engine";
