@@ -1,22 +1,44 @@
 final: prev:
 
 let
-  gitPath = if final.stdenv.isDarwin then "/usr/local/git/current/bin/" else "/usr/bin/";
-  figPath = if final.stdenv.isDarwin then "/usr/local/bin/" else "/usr/bin/";
-  gcertPath = "/usr/local/bin/";
+  gitPath = if final.stdenv.isDarwin then "/usr/local/git/current/bin" else "/usr/bin";
+  figPath = if final.stdenv.isDarwin then "/usr/local/bin" else "/usr/bin";
+  gcertPath = "/usr/local/bin";
 in
 {
+  nativeWrapper = final.stdenv.mkDerivation rec {
+    pname = "native-wrapper";
+    version = "goog";
+
+    dontUnpack = true;
+    installPhase = ''
+      mkdir -p $out/bin
+      cat > $out/bin/native-wrapper <<EOF
+      #!/bin/sh
+      if test -x "\$NATIVE_WRAPPER_BIN"; then
+        exec "\$NATIVE_WRAPPER_BIN" "\$@"
+      fi
+      echo "\$NATIVE_WRAPPER_BIN is not installed."
+      exit 1
+      EOF
+
+      chmod a+x $out/bin/native-wrapper
+    '';
+  };
+
   # a fake git package that just links to the google-one. To be used in
   # home-manager git config for example.
   gitGoogle = final.stdenv.mkDerivation rec {
     pname = "git";
     version = "goog";
 
+    buildInputs = [ final.makeWrapper ];
     dontUnpack = true;
     installPhase = ''
       mkdir -p $out/bin
       for helper in ${gitPath}/{git,gob}*; do
-        ln -s $helper $out/bin/
+        bin=`basename $helper`
+        makeWrapper ${final.nativeWrapper}/bin/native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN ${gitPath}/$bin
       done
     '';
   };
@@ -25,11 +47,12 @@ in
     pname = "fig";
     version = "goog";
 
+    buildInputs = [ final.makeWrapper ];
     dontUnpack = true;
     installPhase = ''
       mkdir -p $out/bin
       for bin in chg hg hgd; do
-        ln -s ${figPath}/$bin $out/bin/$bin
+        makeWrapper ${final.nativeWrapper}/bin/native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN ${figPath}/$bin
       done
     '';
   };
@@ -38,11 +61,12 @@ in
     pname = "gcert";
     version = "goog";
 
+    buildInputs = [ final.makeWrapper ];
     dontUnpack = true;
     installPhase = ''
       mkdir -p $out/bin
       for bin in gcert gcertstatus gcertdestroy; do
-        ln -s ${gcertPath}/$bin $out/bin/$bin
+        makeWrapper ${final.nativeWrapper}/bin/native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN ${gcertPath}/$bin
       done
 
       cat > $out/bin/gcert_renew.command <<EOF
