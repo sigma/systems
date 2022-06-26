@@ -29,12 +29,20 @@ let
     host.port = codeserverPort;
   };
 
-  unmanaged = mac: mac;
-  cloudshell = mac: mac;
+  unmanaged = mac: mac // {
+    isWork = false;
+  };
+  cloudshell = mac: mac // {
+    system = "x86_64-linux";
+    isWork = false;
+  };
   cloudtop = mac: mac // {
+    isWork = true;
+    system = "x86_64-linux";
     sshMatchBlocks = sshBlocks mac;
   };
   gmac = mac: mac // {
+    isWork = true;
     sshMatchBlocks = sshBlocks mac;
   };
 in rec {
@@ -81,7 +89,6 @@ in rec {
   shirka = cloudtop {
     name = "shirka.c.googlers.com";
     alias = "dev";
-    system = "x86_64-linux";
     remotes = [pdev cs];
     sshOpts = {
       localForwards = [dockerFwd codeserverFwd];
@@ -91,7 +98,6 @@ in rec {
   ghost-wheel = cloudtop {
     name = "ghost-wheel.c.googlers.com";
     alias = "cdev";
-    system = "x86_64-linux";
     remotes = [pdev cs];
     sshOpts = {
       localForwards = [dockerFwd codeserverFwd];
