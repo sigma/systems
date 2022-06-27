@@ -13,12 +13,12 @@ in
     dontUnpack = true;
     installPhase = ''
       mkdir -p $out/bin
-      cat > $out/bin/native-wrapper <<EOF
+      cat > $out/bin/native-wrapper << 'EOF'
       #!/bin/sh
-      if test -x "\$NATIVE_WRAPPER_BIN"; then
-        exec "\$NATIVE_WRAPPER_BIN" "\$@"
+      if test -x "$NATIVE_WRAPPER_BIN"; then
+        exec "$NATIVE_WRAPPER_BIN" "$@"
       fi
-      echo "\$NATIVE_WRAPPER_BIN is not installed."
+      echo "$NATIVE_WRAPPER_BIN is not installed."
       exit 1
       EOF
 
