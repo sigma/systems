@@ -83,12 +83,17 @@
           glinuxUser = users.corpUser;
         in {
           glinux = inputs.home-manager.lib.homeManagerConfiguration {
-            configuration = import ./home.nix;
-            system = "x86_64-linux";
-            username = glinuxUser.login;
-            homeDirectory = "/usr/local/google/home/${glinuxUser.login}";
-	          stateVersion = "22.05";
-	          pkgs = builtins.getAttr "x86_64-linux" inputs.nixpkgs-unstable.outputs.legacyPackages // nixpkgsConfig;
+            pkgs = builtins.getAttr "x86_64-linux" inputs.nixpkgs-unstable.outputs.legacyPackages // nixpkgsConfig;
+            modules = [
+              ./home.nix
+              {
+                home = {
+                  username = glinuxUser.login;
+                  homeDirectory = "/usr/local/google/home/${glinuxUser.login}";
+                  stateVersion = "22.11";
+                };
+              }
+            ];	    
             extraSpecialArgs = {
               user = glinuxUser;
               machine = {};
