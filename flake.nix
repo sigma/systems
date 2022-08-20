@@ -93,7 +93,7 @@
                   stateVersion = "22.11";
                 };
               }
-            ];	    
+            ];
             extraSpecialArgs = {
               user = glinuxUser;
               machine = {};
