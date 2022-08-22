@@ -18,6 +18,15 @@ in
     ./modules/cloud-shell.nix
   ];
 
+  accounts.email.maildirBasePath = ".mail";
+  accounts.email.accounts.${user.login} = {
+      primary = true;
+      notmuch.enable = true;
+      realName = user.name;
+      address = user.email;
+      aliases = user.aliases;
+  };
+
   programs = {
     zsh = loadSettings "zsh";
 
@@ -31,10 +40,12 @@ in
     tmux = loadSettings "tmux";
 
     ssh = loadSettings "ssh";
+    notmuch = loadSettings "notmuch";
   } // {
       gitui.enable = true;
       gcert.enable = true;
       cloudshell.enable = true;
+      lieer.enable = true;
   };
 
   modules.editors.emacs.enable = true;

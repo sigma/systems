@@ -4,5 +4,5 @@
     inherit config;
   };
   # Sub in x86 version of packages that don't build on Apple Silicon yet
-  inherit (pkgs-x86) idris2;
+  inherit (pkgs-x86) idris2 lieer;
 })
