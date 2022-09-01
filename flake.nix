@@ -45,12 +45,12 @@
         inherit (inputs.nixpkgs-unstable) lib;
       };
 
-      gmac = machine: let
+      mac = machine: let
         nixpkgs = inputs.nixpkgs-unstable;
-        user = users.corpUser;
         specialArgs = {
           inherit user machine;
         };
+        user = if machine.isWork then users.corpUser else users.personalUser;
       in darwin.lib.darwinSystem {
         inherit (machine) system;
         inherit specialArgs;
@@ -70,12 +70,13 @@
           }
         ];
       };
+
     in
       {
         # My `nix-darwin` configs
         darwinConfigurations = {
-          yhodique-macbookpro = gmac hosts.yhodique-macbookpro;
-          yhodique-macmini = gmac hosts.yhodique-macmini;
+          yhodique-macbookpro = mac hosts.yhodique-macbookpro;
+          yhodique-macmini = mac hosts.yhodique-macmini;
         };
 
         inherit darwinModules;
