@@ -48,12 +48,16 @@
       gmac = machine: let
         nixpkgs = inputs.nixpkgs-unstable;
         user = users.corpUser;
+        specialArgs = {
+          inherit user machine;
+        };
       in darwin.lib.darwinSystem {
         inherit (machine) system;
+        inherit specialArgs;
         modules = nixpkgs.lib.attrValues darwinModules ++ [
           # Main `nix-darwin` config
           ./configuration.nix
-          (import ./mac-user.nix user.login)
+          ./mac-user.nix
           # `home-manager` module
           home-manager.darwinModules.home-manager
           {
@@ -62,9 +66,7 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.${user.login} = import ./home.nix;
-            home-manager.extraSpecialArgs = {
-              inherit user machine;
-            };
+            home-manager.extraSpecialArgs = specialArgs;
           }
         ];
       };

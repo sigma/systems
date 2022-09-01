@@ -1,19 +1,19 @@
-user:
-{ config, lib, pkgs, ... }:
+{ user, config, lib, pkgs, ... }:
 
 let
-  homeDir = "/Users/${user}";
+  login = user.login;
+  homeDir = "/Users/${login}";
 in
 {
   nix.trustedUsers = [
-    user
+    login
   ];
 
-  users.users.${user}.home = homeDir;
+  users.users.${login}.home = homeDir;
 
   services.link-apps = {
     enable = true;
-    userName = user;
+    userName = login;
     userHome = homeDir;
   };
 }
