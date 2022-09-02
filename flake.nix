@@ -3,32 +3,46 @@
 
   inputs = {
     # Package sets
-    nixpkgs-nixos.url = github:NixOS/nixpkgs/nixos-21.11;
-    nixpkgs-darwin.url = github:NixOS/nixpkgs/nixpkgs-21.11-darwin;
-    nixpkgs-unstable.url = github:NixOS/nixpkgs/nixpkgs-unstable;
+    nixpkgs.url = github:nixos/nixpkgs/nixpkgs-unstable;
+    nixos-stable.url = github:NixOS/nixpkgs/nixos-21.11;
+    darwin-stable.url = github:NixOS/nixpkgs/nixpkgs-21.11-darwin;
+    nixpkgs-master.url = github:NixOS/nixpkgs/master;
+
     # Environment/system management
     darwin.url = github:lnl7/nix-darwin/master;
-    darwin.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = github:nix-community/home-manager;
-    home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
     # Other sources
     emacs.url = github:nix-community/emacs-overlay;
-    emacs.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    emacs.inputs.nixpkgs.follows = "nixpkgs";
     flake-utils.url = github:numtide/flake-utils;
     comma.url = github:nix-community/comma;
-    comma.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    comma.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs @ { self, nixpkgs-unstable, darwin, home-manager, comma, emacs, flake-utils, ... }:
+  outputs = inputs @ { self, nixpkgs, nixos-stable, darwin-stable, nixpkgs-master, darwin, home-manager, comma, emacs, flake-utils, ... }:
 
     let
       # Configuration for `nixpkgs`
       nixpkgsConfig = {
         config = { allowUnfree = true; };
         overlays = [
+          # Add stable and master package sets for convenience
+          (
+            final: prev:
+            let
+              system = prev.stdenv.system;
+              nixpkgs-stable = if final.stdenv.isDarwin then darwin-stable else nixos-stable;
+            in {
+              master = nixpkgs-master.legacyPackages.${system};
+              stable = nixpkgs-stable.legacyPackages.${system};
+            }
+          )
           (import ./overlays/nix.nix)
           (import ./overlays/comma.nix comma)
-          (import ./overlays/silicon.nix nixpkgs-unstable nixpkgsConfig.config)
+          (import ./overlays/silicon.nix nixpkgs darwin-stable nixpkgs-master nixpkgsConfig.config)
           emacs.overlay
           (import ./overlays/emacs.nix)
           (import ./overlays/zinit.nix)
@@ -42,11 +56,10 @@
 
       users = import ./users.nix;
       hosts = import ./hosts.nix {
-        inherit (inputs.nixpkgs-unstable) lib;
+        inherit (nixpkgs) lib;
       };
 
       mac = machine: let
-        nixpkgs = inputs.nixpkgs-unstable;
         specialArgs = {
           inherit user machine;
         };
@@ -85,8 +98,8 @@
         homeConfigurations = let
           glinuxUser = users.corpUser;
         in {
-          glinux = inputs.home-manager.lib.homeManagerConfiguration {
-            pkgs = builtins.getAttr "x86_64-linux" inputs.nixpkgs-unstable.outputs.legacyPackages // nixpkgsConfig;
+          glinux = home-manager.lib.homeManagerConfiguration {
+            pkgs = builtins.getAttr "x86_64-linux" nixpkgs.outputs.legacyPackages // nixpkgsConfig;
             modules = [
               ./home.nix
               {
@@ -104,6 +117,6 @@
           };
         };
 
-        packages = inputs.home-manager.packages;
+        packages = home-manager.packages;
       };
 }
