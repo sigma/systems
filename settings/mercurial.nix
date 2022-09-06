@@ -70,6 +70,7 @@
     extensions = {
       beautifygraph = "";
       "unsupported.alices" = "";
+      "unsupported.quahog" = "";
     };
 
     google_hgext = {
