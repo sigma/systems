@@ -1,21 +1,35 @@
 let
   name = "Yann Hodique";
-  workEmail = "yhodique@google.com";
-  primaryEmail = "yann.hodique@gmail.com";
-  secondaryEmail = "yann@hodique.info";
-in
-{
-  corpUser = {
-    inherit name;
-    login = "yhodique";
-    email = workEmail;
-    aliases = [primaryEmail secondaryEmail];
+  workProfile = {
+    name = "work";
+    emails = ["yhodique@google.com" "yrh@google.com"];
+  };
+  persoProfile = {
+    name = "perso";
+    emails = ["yann.hodique@gmail.com" "yann@hodique.info"];
   };
 
-  personalUser = {
+  expandUser = user: user // rec {
+    allEmails = builtins.concatMap (prof: prof.emails) user.profiles;
+    email = builtins.head allEmails;
+    aliases = builtins.tail allEmails;
+  };
+in
+{
+  corpUser = expandUser {
+    inherit name;
+    login = "yhodique";
+    profiles = [
+      workProfile
+      persoProfile
+    ];
+  };
+
+  personalUser = expandUser {
     inherit name;
     login = "yann";
-    email = primaryEmail;
-    aliases = [secondaryEmail];
+    profiles = [
+      persoProfile
+    ];
   };
 }

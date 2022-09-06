@@ -11,6 +11,7 @@ in
   imports = [
     ./modules/blaze.nix
     ./modules/gcert.nix
+    ./modules/mailsetup.nix
     ./modules/zinit.nix
     ./modules/zsh-plugins
     ./modules/bat-syntaxes
@@ -46,6 +47,7 @@ in
       gcert.enable = true;
       cloudshell.enable = true;
       lieer.enable = true;
+      mailsetup.enable = true;
   };
 
   modules.editors.emacs.enable = true;
