@@ -33,7 +33,7 @@
           (
             final: prev:
             let
-              system = prev.stdenv.system;
+              system = final.stdenv.system;
               nixpkgs-stable = if final.stdenv.isDarwin then darwin-stable else nixos-stable;
             in {
               master = nixpkgs-master.legacyPackages.${system};
@@ -60,10 +60,10 @@
       };
 
       mac = machine: let
+        user = if machine.isWork then users.corpUser else users.personalUser;
         specialArgs = {
           inherit user machine;
         };
-        user = if machine.isWork then users.corpUser else users.personalUser;
       in darwin.lib.darwinSystem {
         inherit (machine) system;
         inherit specialArgs;
@@ -84,6 +84,26 @@
         ];
       };
 
+      glinux = machine: let
+        user = users.corpUser;
+        specialArgs = {
+          inherit user machine;
+        };
+      in home-manager.lib.homeManagerConfiguration {
+        pkgs = builtins.getAttr "x86_64-linux" nixpkgs.outputs.legacyPackages // nixpkgsConfig;
+        modules = [
+          ./home.nix
+          {
+            home = {
+              username = user.login;
+              homeDirectory = "/usr/local/google/home/${user.login}";
+              stateVersion = "22.11";
+            };
+          }
+        ];
+        extraSpecialArgs = specialArgs;
+      };
+
     in
       {
         # My `nix-darwin` configs
@@ -91,30 +111,13 @@
           yhodique-macbookpro = mac hosts.yhodique-macbookpro;
           yhodique-macmini = mac hosts.yhodique-macmini;
         };
-
         inherit darwinModules;
 
         # My home-manager only configs
-        homeConfigurations = let
-          glinuxUser = users.corpUser;
-        in {
-          glinux = home-manager.lib.homeManagerConfiguration {
-            pkgs = builtins.getAttr "x86_64-linux" nixpkgs.outputs.legacyPackages // nixpkgsConfig;
-            modules = [
-              ./home.nix
-              {
-                home = {
-                  username = glinuxUser.login;
-                  homeDirectory = "/usr/local/google/home/${glinuxUser.login}";
-                  stateVersion = "22.11";
-                };
-              }
-            ];
-            extraSpecialArgs = {
-              user = glinuxUser;
-              machine = {};
-            };
-          };
+        homeConfigurations = {
+          glinux = glinux {};
+          shirka = glinux hosts.shirka;
+          ghost-wheel = glinux hosts.ghost-wheel;
         };
 
         packages = home-manager.packages;
