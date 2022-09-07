@@ -42,6 +42,7 @@
           )
           (import ./overlays/nix.nix)
           (import ./overlays/comma.nix comma)
+          (import ./overlays/notmuch.nix)
           (import ./overlays/silicon.nix nixpkgs darwin-stable nixpkgs-master nixpkgsConfig.config)
           emacs.overlay
           (import ./overlays/emacs.nix)
