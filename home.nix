@@ -42,6 +42,7 @@ in
 
     ssh = loadSettings "ssh";
     notmuch = loadSettings "notmuch";
+    afew = loadSettings "afew";
   } // {
       gitui.enable = true;
       gcert.enable = true;

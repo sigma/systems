@@ -37,5 +37,55 @@ in
         exec ${pkgs.lieer}/bin/gmi send --quiet -t -C "${config.accounts.email.maildirBasePath}/$PROFILE" < "$MAIL"
         '';
     };
+
+    home.file.".config/afew/expire.py".text = ''
+    from afew.filters.BaseFilter  import Filter
+    from afew.FilterRegistry import register_filter
+
+    @register_filter
+    class ExpireFilter(Filter):
+      message = 'Expire tagged messages'
+
+      def __init__(self, database, tag="", after=""):
+        super().__init__(database)
+        self.query = "(tag:%s AND NOT tag:trash AND date:..%s)" % (tag, after)
+
+      def handle_message(self, message):
+        self.add_tags(message, 'trash')
+    '';
+
+    home.file.".config/afew/kill.py".text = ''
+    from afew.filters.KillThreadsFilter import KillThreadsFilter
+    from afew.FilterRegistry import register_filter
+
+    @register_filter
+    class NewKillThreadsFilter(KillThreadsFilter):
+
+      def __init__(self, database):
+        super().__init__(database)
+        self.query = "(tag:new AND (%s))" % (self.query)
+    '';
+
+    home.file.".config/afew/archive.py".text = ''
+    from afew.filters.ArchiveSentMailsFilter import ArchiveSentMailsFilter
+    from afew.FilterRegistry import register_filter
+
+    @register_filter
+    class NewArchiveSentMailsFilter(ArchiveSentMailsFilter):
+
+      def __init__(self, database):
+        super().__init__(database)
+        self.query = "(tag:new AND (%s))" % (self.query)
+    '';
+
+    home.file."bin/gmi-tag" = {
+      executable = true;
+      text = ''
+      #!${pkgs.zsh}/bin/zsh
+
+      # our config is for all mails
+      ${pkgs.afew}/bin/afew --all --tag --verbose "$@"
+      '';
+    };
   };
 }
