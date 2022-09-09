@@ -38,6 +38,20 @@ in
         '';
     };
 
+    home.file."bin/gmi-sync" = {
+      executable = true;
+      text = ''
+        #!${pkgs.zsh}/bin/zsh
+
+        ${(builtins.concatStringsSep "\n" (map (prof: ''
+        PROFILE_DIR=${config.accounts.email.maildirBasePath}/${prof.name}
+        if [ -d "$PROFILE_DIR" ]; then
+          cd "$PROFILE_DIR" && ${pkgs.lieer}/bin/gmi sync
+        fi
+        '') user.profiles))}
+      '';
+    };
+
     home.file.".config/afew/expire.py".text = ''
     from afew.filters.BaseFilter  import Filter
     from afew.FilterRegistry import register_filter
