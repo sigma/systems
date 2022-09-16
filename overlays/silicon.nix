@@ -11,7 +11,4 @@
     system = "x86_64-darwin";
     inherit config;
   };
-
-  # Sub in x86 version of packages that don't build on Apple Silicon yet
-  inherit (x86) lieer;
 })
