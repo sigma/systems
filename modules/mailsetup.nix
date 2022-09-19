@@ -48,11 +48,9 @@ in
         ${(builtins.concatStringsSep "\n" (map (prof: ''
         PROFILE_DIR=${config.accounts.email.maildirBasePath}/${prof.name}
         if [ -d "$PROFILE_DIR" ]; then
-          cd "$PROFILE_DIR" && ${pkgs.lieer}/bin/gmi sync
+          cd "$PROFILE_DIR" && ${pkgs.lieer}/bin/gmi pull && "$SCRIPT_DIR/gmi-tag" && ${pkgs.lieer}/bin/gmi push
         fi
         '') user.profiles))}
-
-        exec "$SCRIPT_DIR/gmi-tag"
       '';
     };
 
