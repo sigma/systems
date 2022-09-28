@@ -10,7 +10,7 @@
 
   [ExpireFilter]
   tag = cls
-  after = 180days
+  after = 259200minutes
 
   [Filter.0]
   query = tag:new
