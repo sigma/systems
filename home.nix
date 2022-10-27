@@ -73,6 +73,7 @@ in
     fzf
     htop
     jq
+    jsonnet
     less
     ncdu
     pinfo
