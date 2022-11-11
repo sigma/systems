@@ -2,6 +2,7 @@ final: prev:
 
 let
   gitPath = if final.stdenv.isDarwin then "/usr/local/git/current/bin" else "/usr/bin";
+  gitGooglePath = if final.stdenv.isDarwin then "/usr/local/git/git-google/bin" else "/usr/bin";
   figPath = if final.stdenv.isDarwin then "/usr/local/bin" else "/usr/bin";
   gcertPath = "/usr/local/bin";
 in
@@ -39,6 +40,10 @@ in
       for helper in ${gitPath}/{git,gob}*; do
         bin=`basename $helper`
         makeWrapper ${final.nativeWrapper}/bin/native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN ${gitPath}/$bin
+      done
+      for helper in ${gitGooglePath}/{git,gob}*; do
+        bin=`basename $helper`
+        makeWrapper ${final.nativeWrapper}/bin/native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN ${gitGooglePath}/$bin
       done
     '';
   };
