@@ -108,6 +108,7 @@ in
     nix
   ] ++ lib.optionals stdenv.isDarwin [
     m-cli # useful macOS CLI commands
+    afsctool
   ];
 
   # Misc configuration files --------------------------------------------------------------------{{{
