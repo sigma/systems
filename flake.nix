@@ -51,6 +51,7 @@
           (import ./overlays/emacs.nix)
           (import ./overlays/zinit.nix)
           (import ./overlays/google.nix)
+          (import ./overlays/afsctool.nix)
         ];
       };
 
