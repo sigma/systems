@@ -43,15 +43,12 @@
               stable = nixpkgs-stable.legacyPackages.${system};
             }
           )
-          (import ./overlays/nix.nix)
           (import ./overlays/comma.nix comma)
-          (import ./overlays/notmuch.nix)
           (import ./overlays/silicon.nix nixpkgs darwin-stable nixpkgs-master nixpkgsConfig.config)
           emacs.overlay
-          (import ./overlays/emacs.nix)
-          (import ./overlays/zinit.nix)
-          (import ./overlays/google.nix)
-          (import ./overlays/afsctool.nix)
+
+          # packages hacks
+          (import ./overlays/pkg)
         ];
       };
 
