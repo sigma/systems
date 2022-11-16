@@ -13,13 +13,16 @@
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = github:nix-community/home-manager;
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.inputs.utils.follows = "flake-utils";
 
     # Other sources
+    flake-utils.url = github:numtide/flake-utils;
     emacs.url = github:nix-community/emacs-overlay;
     emacs.inputs.nixpkgs.follows = "nixpkgs";
-    flake-utils.url = github:numtide/flake-utils;
+    emacs.inputs.flake-utils.follows = "flake-utils";
     comma.url = github:nix-community/comma;
     comma.inputs.nixpkgs.follows = "nixpkgs";
+    comma.inputs.utils.follows = "flake-utils";
   };
 
   outputs = inputs @ { self, nixpkgs, nixos-stable, darwin-stable, nixpkgs-master, darwin, home-manager, comma, emacs, flake-utils, ... }:
