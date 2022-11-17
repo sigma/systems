@@ -43,8 +43,12 @@
               stable = nixpkgs-stable.legacyPackages.${system};
             }
           )
-          (import ./overlays/comma.nix comma)
+
+          # silicon package sets
           (import ./overlays/silicon.nix nixpkgs darwin-stable nixpkgs-master nixpkgsConfig.config)
+
+          # community overlays
+          comma.overlays.default
           emacs.overlay
 
           # packages hacks
