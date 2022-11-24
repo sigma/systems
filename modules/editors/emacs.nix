@@ -44,8 +44,8 @@ in {
 
     home.activation = {
       doomActivationAction = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        test -d $HOME/.emacs.d || $DRY_RUN_CMD git clone ${cfg.doom.repoUrl} $HOME/.emacs.d
-        test -d $HOME/.config/doom || $DRY_RUN_CMD git clone ${cfg.doom.configRepoUrl} $HOME/.config/doom
+        test -d $HOME/.emacs.d || $DRY_RUN_CMD ${pkgs.git}/bin/git clone ${cfg.doom.repoUrl} $HOME/.emacs.d
+        test -d $HOME/.config/doom || $DRY_RUN_CMD ${pkgs.git}/bin/git clone ${cfg.doom.configRepoUrl} $HOME/.config/doom
       '';
     };
   };
