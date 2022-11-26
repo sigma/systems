@@ -106,6 +106,7 @@
       in home-manager.lib.homeManagerConfiguration {
         pkgs = builtins.getAttr "x86_64-linux" nixpkgs.outputs.legacyPackages // nixpkgsConfig;
         modules = [
+          nix-doom-emacs.hmModule
           ./home.nix
           {
             home = {
