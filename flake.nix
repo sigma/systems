@@ -63,7 +63,6 @@
       };
 
       darwinModules = {
-        link-apps = (import ./modules/link-apps);
       };
 
       users = import ./users.nix;

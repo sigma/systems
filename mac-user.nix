@@ -10,10 +10,4 @@ in
   ];
 
   users.users.${login}.home = homeDir;
-
-  services.link-apps = {
-    enable = true;
-    userName = login;
-    userHome = homeDir;
-  };
 }
