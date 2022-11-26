@@ -15,7 +15,6 @@ in
     ./modules/zinit.nix
     ./modules/zsh-plugins
     ./modules/bat-syntaxes
-    ./modules/editors/emacs.nix
     ./modules/cloud-shell.nix
   ];
 
@@ -30,6 +29,8 @@ in
 
   programs = {
     zsh = loadSettings "zsh";
+
+    doom-emacs = loadSettings "doom-emacs";
 
     direnv = loadSettings "direnv";
     htop = loadSettings "htop";
@@ -50,8 +51,6 @@ in
       lieer.enable = true;
       mailsetup.enable = true;
   };
-
-  modules.editors.emacs.enable = true;
 
   home.packages = with pkgs; [
     # Some basics

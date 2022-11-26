@@ -23,10 +23,16 @@
     comma.url = github:nix-community/comma;
     comma.inputs.nixpkgs.follows = "nixpkgs";
     comma.inputs.utils.follows = "flake-utils";
+    nix-doom-emacs.url = github:nix-community/nix-doom-emacs;
+    nix-doom-emacs.inputs.emacs-overlay.follows = "emacs";
+    nix-doom-emacs.inputs.nixpkgs.follows = "nixpkgs";
+    nix-doom-emacs.inputs.flake-utils.follows = "flake-utils";
   };
 
-  outputs = inputs @ { self, nixpkgs, nixos-stable, darwin-stable, nixpkgs-master, darwin, home-manager, comma, emacs, flake-utils, ... }:
-
+  outputs = inputs @ {
+    self, nixpkgs, nixos-stable, darwin-stable, nixpkgs-master,
+    darwin, home-manager, comma, emacs, flake-utils, nix-doom-emacs, ...
+  }:
     let
       # Configuration for `nixpkgs`
       nixpkgsConfig = {
@@ -84,7 +90,10 @@
             # `home-manager` config
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.${user.login} = import ./home.nix;
+            home-manager.users.${user.login} = nixpkgs.lib.mkMerge [
+              (import ./home.nix)
+              nix-doom-emacs.hmModule
+            ];
             home-manager.extraSpecialArgs = specialArgs;
           }
         ];

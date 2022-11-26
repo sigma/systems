@@ -1,0 +1,1069 @@
+#+title: Emacs
+#+PROPERTY: header-args:emacs-lisp :noweb yes :results none :comments org :padline yes :mkdirp yes
+
+#+name: elisp-header
+#+begin_src emacs-lisp
+;;; -*- lexical-binding: t -*-
+
+#+end_src
+
+* Init
+#+begin_src emacs-lisp :tangle init.el :comments no
+<<elisp-header>>
+#+end_src
+
+** OS detection
+I need to detect Google flavor of OS, and this needs to gate loading some
+modules, so let's define this early.
+#+begin_src emacs-lisp :tangle init.el
+(defconst IS-GLINUX (file-exists-p "/etc/google-emacs"))
+#+end_src
+
+** Modules activation
+This is the default Doom Emacs =init.el=, tuned to my liking.
+#+begin_src emacs-lisp :tangle init.el
+;; This file controls what Doom modules are enabled and what order they load
+;; in. Remember to run 'doom sync' after modifying it!
+
+;; NOTE Press 'SPC h d h' (or 'C-h d h' for non-vim users) to access Doom's
+;;      documentation. There you'll find a "Module Index" link where you'll find
+;;      a comprehensive list of Doom's modules and what flags they support.
+
+;; NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
+;;      'C-c c k' for non-vim users) to view its documentation. This works on
+;;      flags as well (those symbols that start with a plus).
+;;
+;;      Alternatively, press 'gd' (or 'C-c c d') on a module to browse its
+;;      directory (for easy access to its source code).
+
+(doom! :input
+       ;;chinese
+       ;;japanese
+       ;;layout            ; auie,ctsrnm is the superior home row
+
+       :completion
+       company           ; the ultimate code completion backend
+       ;;helm              ; the *other* search engine for love and life
+       ;;ido               ; the other *other* search engine...
+       ;;ivy               ; a search engine for love and life
+       vertico           ; the search engine of the future
+
+       :ui
+       deft              ; notational velocity for Emacs
+       doom              ; what makes DOOM look the way it does
+       doom-dashboard    ; a nifty splash screen for Emacs
+       ;; doom-quit         ; DOOM quit-message prompts when you quit Emacs
+       ;;(emoji +unicode)  ; 🙂
+       hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
+       ;;hydra
+       ;;indent-guides     ; highlighted indent columns
+       ;;ligatures         ; ligatures and symbols to make your code pretty again
+       ;;minimap           ; show a map of the code on the side
+       modeline          ; snazzy, Atom-inspired modeline, plus API
+       ;;nav-flash         ; blink cursor line after big motions
+       ;;neotree           ; a project drawer, like NERDTree for vim
+       ophints           ; highlight the region an operation acts on
+       (popup +defaults)   ; tame sudden yet inevitable temporary windows
+       ;;tabs              ; a tab bar for Emacs
+       ;;treemacs          ; a project drawer, like neotree but cooler
+       ;;unicode           ; extended unicode support for various languages
+       vc-gutter         ; vcs diff in the fringe
+       vi-tilde-fringe   ; fringe tildes to mark beyond EOB
+       (window-select +numbers) ; visually switch windows
+       workspaces        ; tab emulation, persistence & separate workspaces
+       zen               ; distraction-free coding or writing
+
+       :editor
+       ;;(evil +everywhere); come to the dark side, we have cookies
+       file-templates    ; auto-snippets for empty files
+       fold              ; (nigh) universal code folding
+       (format +onsave)  ; automated prettiness
+       ;;god               ; run Emacs commands without modifier keys
+       ;;lispy             ; vim for lisp, for people who don't like vim
+       multiple-cursors  ; editing in many places at once
+       ;;objed             ; text object editing for the innocent
+       ;;parinfer          ; turn lisp into python, sort of
+       ;;rotate-text       ; cycle region at point between text candidates
+       snippets          ; my elves. They type so I don't have to
+       ;;word-wrap         ; soft wrapping with language-aware indent
+
+       :emacs
+       dired             ; making dired pretty [functional]
+       electric          ; smarter, keyword-based electric-indent
+       ibuffer         ; interactive buffer management
+       undo              ; persistent, smarter undo for your inevitable mistakes
+       vc                ; version-control and Emacs, sitting in a tree
+
+       :term
+       eshell            ; the elisp shell that works everywhere
+       ;;shell             ; simple shell REPL for Emacs
+       ;;term              ; basic terminal emulator for Emacs
+       ;;vterm             ; the best terminal emulation in Emacs
+
+       :checkers
+       syntax              ; tasing you for every semicolon you forget
+       ;;(spell +flyspell) ; tasing you for misspelling mispelling
+       ;;grammar           ; tasing grammar mistake every you make
+
+       :tools
+       ;;ansible
+       biblio            ; Writes a PhD for you (citation needed)
+       ;;debugger          ; FIXME stepping through code, to help you add bugs
+       ;;direnv
+       ;;docker
+       ;;editorconfig      ; let someone else argue about tabs vs spaces
+       ;;ein               ; tame Jupyter notebooks with emacs
+       (eval +overlay)     ; run code, run (also, repls)
+       gist              ; interacting with github gists
+       lookup              ; navigate your code and its documentation
+       lsp               ; M-x vscode
+       magit             ; a git porcelain for Emacs
+       ;;make              ; run make tasks from Emacs
+       ;;pass              ; password manager for nerds
+       ;;pdf               ; pdf enhancements
+       ;;prodigy           ; FIXME managing external services & code builders
+       ;;rgb               ; creating color strings
+       ;;taskrunner        ; taskrunner for all your projects
+       ;;terraform         ; infrastructure as code
+       ;;tmux              ; an API for interacting with tmux
+       ;;upload            ; map local to remote projects via ssh/ftp
+
+       :os
+       (:if IS-MAC macos)  ; improve compatibility with macOS
+       (:if IS-GLINUX google)
+       (tty +osc)               ; improve the terminal Emacs experience
+
+       :lang
+       ;;agda              ; types of types of types of types...
+       ;;beancount         ; mind the GAAP
+       cc                ; C > C++ == 1
+       ;;clojure           ; java with a lisp
+       ;;common-lisp       ; if you've seen one lisp, you've seen them all
+       ;;coq               ; proofs-as-programs
+       ;;crystal           ; ruby at the speed of c
+       ;;csharp            ; unity, .NET, and mono shenanigans
+       ;;data              ; config/data formats
+       ;;(dart +flutter)   ; paint ui and not much else
+       ;;dhall
+       ;;elixir            ; erlang done right
+       ;;elm               ; care for a cup of TEA?
+       emacs-lisp        ; drown in parentheses
+       ;;erlang            ; an elegant language for a more civilized age
+       ;;ess               ; emacs speaks statistics
+       ;;factor
+       ;;faust             ; dsp, but you get to keep your soul
+       ;;fortran           ; in FORTRAN, GOD is REAL (unless declared INTEGER)
+       ;;fsharp            ; ML stands for Microsoft's Language
+       ;;fstar             ; (dependent) types and (monadic) effects and Z3
+       ;;gdscript          ; the language you waited for
+       (go +lsp)         ; the hipster dialect
+       ;;(haskell +lsp)    ; a language that's lazier than I am
+       ;;hy                ; readability of scheme w/ speed of python
+       ;;idris             ; a language you can depend on
+       json              ; At least it ain't XML
+       (java +lsp)       ; the poster child for carpal tunnel syndrome
+       javascript        ; all(hope(abandon(ye(who(enter(here))))))
+       ;;julia             ; a better, faster MATLAB
+       ;;kotlin            ; a better, slicker Java(Script)
+       latex             ; writing papers in Emacs has never been so fun
+       ;;lean              ; for folks with too much to prove
+       ;;ledger            ; be audit you can be
+       lua               ; one-based indices? one-based indices
+       markdown          ; writing docs for people to ignore
+       ;;nim               ; python + lisp at the speed of c
+       nix               ; I hereby declare "nix geht mehr!"
+       ;;ocaml             ; an objective camel
+       (org +hugo +present +pretty +roam2) ; organize your plain life in plain text
+       ;;php               ; perl's insecure younger brother
+       ;;plantuml          ; diagrams for confusing people more
+       ;;purescript        ; javascript, but functional
+       python            ; beautiful is better than ugly
+       ;;qt                ; the 'cutest' gui framework ever
+       ;;racket            ; a DSL for DSLs
+       ;;raku              ; the artist formerly known as perl6
+       ;;rest              ; Emacs as a REST client
+       rst               ; ReST in peace
+       ;;(ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
+       rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+       ;;scala             ; java, but good
+       ;;(scheme +guile)   ; a fully conniving family of lisps
+       sh                ; she sells {ba,z,fi}sh shells on the C xor
+       ;;sml
+       ;;solidity          ; do you need a blockchain? No.
+       ;;swift             ; who asked for emoji variables?
+       ;;terra             ; Earth and Moon in alignment for performance.
+       ;;web               ; the tubes
+       yaml              ; JSON, but readable
+       ;;zig               ; C, but simpler
+
+       :email
+       ;;(mu4e +org +gmail)
+       notmuch
+       ;;(wanderlust +gmail)
+
+       :app
+       calendar
+       ;;emms
+       everywhere        ; *leave* Emacs!? You must be joking
+       ;;irc               ; how neckbeards socialize
+       ;;(rss +org)        ; emacs as an RSS reader
+       ;;twitter           ; twitter client https://twitter.com/vnought
+
+       :config
+       ;;literate
+       (default +bindings +smartparens)
+       private)
+#+end_src
+
+* Packages
+I don't really have anything in the global packages department, as my
+configuration is put in a proper module. Leaving the standard boilerplate up,
+for documentation purpose.
+#+begin_src emacs-lisp :tangle packages.el :comments no
+<<elisp-header>>
+;;; $DOOMDIR/packages.el
+
+;; To install a package with Doom you must declare them here and run 'doom sync'
+;; on the command line, then restart Emacs for the changes to take effect -- or
+;; use 'M-x doom/reload'.
+
+
+;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
+;(package! some-package)
+
+;; To install a package directly from a remote git repo, you must specify a
+;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
+;; https://github.com/raxod502/straight.el#the-recipe-format
+;(package! another-package
+;  :recipe (:host github :repo "username/repo"))
+
+;; If the package you are trying to install does not contain a PACKAGENAME.el
+;; file, or is located in a subdirectory of the repo, you'll need to specify
+;; `:files' in the `:recipe':
+;(package! this-package
+;  :recipe (:host github :repo "username/repo"
+;           :files ("some-file.el" "src/lisp/*.el")))
+
+;; If you'd like to disable a package included with Doom, you can do so here
+;; with the `:disable' property:
+;(package! builtin-package :disable t)
+
+;; You can override the recipe of a built in package without having to specify
+;; all the properties for `:recipe'. These will inherit the rest of its recipe
+;; from Doom or MELPA/ELPA/Emacsmirror:
+;(package! builtin-package :recipe (:nonrecursive t))
+;(package! builtin-package-2 :recipe (:repo "myfork/package"))
+
+;; Specify a `:branch' to install a package from a particular branch or tag.
+;; This is required for some packages whose default branch isn't 'master' (which
+;; our package manager can't deal with; see raxod502/straight.el#279)
+;(package! builtin-package :recipe (:branch "develop"))
+
+;; Use `:pin' to specify a particular commit to install.
+;(package! builtin-package :pin "1a2b3c4d5e")
+
+
+;; Doom's packages are pinned to a specific commit and updated from release to
+;; release. The `unpin!' macro allows you to unpin single packages...
+;(unpin! pinned-package)
+;; ...or multiple packages
+;(unpin! pinned-package another-pinned-package)
+;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
+;(unpin! t)
+#+end_src
+
+* Config
+#+begin_src emacs-lisp :tangle config.el :comments no
+<<elisp-header>>
+#+end_src
+#+begin_src emacs-lisp :tangle +ui.el :comments no
+<<elisp-header>>
+#+end_src
+
+** User data
+This =+id.el= file is generated from outside (by Nix), based on machine context.
+We still need to load it here.
+#+begin_src emacs-lisp :tangle config.el
+(load! "+id")
+#+end_src
+
+** UI tweaks
+A few definitions for theme and font to use.
+#+begin_src emacs-lisp :tangle config.el
+(load! "+ui")
+#+end_src
+
+#+begin_src emacs-lisp :tangle +ui.el
+;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
+;; are the three important ones:
+;;
+;; + `doom-font'
+;; + `doom-variable-pitch-font'
+;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
+;;   presentations or streaming.
+;;
+;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
+;; font string. You generally only need these two:
+(setq doom-font (font-spec :family "Source Code Pro" :size 13 :weight 'regular)
+      doom-variable-pitch-font (font-spec :family "Source Code Pro" :size 13)
+      doom-big-font (font-spec :family "Source Code Pro" :size 19))
+
+;; There are two ways to load a theme. Both assume the theme is installed and
+;; available. You can either set `doom-theme' or manually load a theme with the
+;; `load-theme' function. This is the default:
+(setq doom-theme 'doom-one)
+
+;; This determines the style of line numbers in effect. If set to `nil', line
+;; numbers are disabled. For relative line numbers, set this to `relative'.
+(setq display-line-numbers-type nil)
+#+end_src
+
+** Org location
+The way Doom organizes things, we must set a few org-related locations early on.
+Let's standardize on ~/org as the root of all orgs.
+#+begin_src emacs-lisp :tangle config.el
+;; If you use `org' and don't want your org files in the default location below,
+;; change `org-directory'. It must be set before org loads!
+(setq org-directory (file-truename (expand-file-name "~/org/")))
+(setq org-id-locations-file (expand-file-name ".orgids" org-directory))
+#+end_src
+
+** Paths
+For some reason path is not properly setup when running Emacs.app, we sidestep
+that issue here.
+
+#+begin_src emacs-lisp :tangle config.el
+(let ((suffix "/Applications/Emacs.app/Contents/MacOS/"))
+  (when (and (eq system-type 'darwin)
+             (string-suffix-p suffix invocation-directory))
+    (setq exec-path
+          (append
+           (reverse (cdr (reverse exec-path)))
+           (list
+            (concat (string-trim invocation-directory "" suffix) "/bin")
+            exec-directory)))))
+#+end_src
+
+* Modules
+I have a small number of private packages to make available to Doom Emacs.
+
+** Google
+#+begin_src emacs-lisp :tangle modules/os/google/packages.el :comments no
+<<elisp-header>>
+#+end_src
+#+begin_src emacs-lisp :tangle modules/os/google/config.el :comments no
+<<elisp-header>>
+#+end_src
+
+The =google= package is used to make the standard glinux google-emacs
+configuration available. As such, mark it as built-in cause there's no way to
+install it externally.
+
+#+begin_src emacs-lisp :tangle modules/os/google/packages.el
+(package! google :built-in 'prefer)
+#+end_src
+
+A small hack is required to pretend =google-emacs= is loading the code.
+
+#+begin_src emacs-lisp :tangle modules/os/google/config.el
+(use-package! google
+  :preface
+  (when IS-LINUX
+    (load "/usr/share/emacsen-common/debian-startup.el")
+    (load "/etc/google-emacs/site-start.d/50emacs-google-config.el"))
+  :init
+  (setq google-emacs-version 'something)
+  :config
+  (when (fboundp 'google-emacs-support-show-upgrade-mode)
+    (google-emacs-support-show-upgrade-mode 0))
+  (makunbound 'google-emacs-version))
+#+end_src
+
+** Private config
+#+begin_src emacs-lisp :tangle modules/config/private/config.el :comments no
+<<elisp-header>>
+#+end_src
+#+begin_src emacs-lisp :tangle modules/config/private/packages.el :comments no
+<<elisp-header>>
+#+end_src
+#+begin_src emacs-lisp :tangle modules/config/private/autoload/ibuffer.el :comments no
+<<elisp-header>>
+#+end_src
+#+begin_src emacs-lisp :tangle modules/config/private/autoload/org.el :comments no
+<<elisp-header>>
+#+end_src
+#+begin_src emacs-lisp :tangle modules/config/private/autoload/persp.el :comments no
+<<elisp-header>>
+#+end_src
+#+begin_src emacs-lisp :tangle modules/config/private/autoload/roam.el :comments no
+<<elisp-header>>
+#+end_src
+#+begin_src emacs-lisp :tangle modules/config/private/autoload/vulpea.el :comments no
+<<elisp-header>>
+#+end_src
+
+The =private= config package is used to centralize my personal customizations for various packages.
+
+*** Org mode
+I use org-mode for various purposes. In particular, I maintain a personal
+knowledge base using =org-roam=, which I also export using custom formats.
+
+**** Config
+#+begin_src emacs-lisp :tangle modules/config/private/config.el
+(after! org-clock
+  ;; Resume clocking task when emacs is restarted
+  (org-clock-persistence-insinuate)
+  ;; Show lot of clocking history so it's easy to pick items off the C-F11 list
+  (setq org-clock-history-length 23)
+  ;; Resume clocking task on clock-in if the clock is open
+  (setq org-clock-in-resume t)
+  ;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
+  (setq org-clock-out-remove-zero-time-clocks t)
+  ;; Clock out when moving task to a done state
+  (setq org-clock-out-when-done t)
+  ;; Save the running clock and all clock history when exiting Emacs, load it on startup
+  (setq org-clock-persist t)
+  ;; Include current clocking task in clock reports
+  (setq org-clock-report-include-clocking-task t))
+
+(defvar short-link-regexp
+  (rx bow
+      (or (seq (or "go" "screen" "screenshot")
+               ?/ alnum (* (any alnum ?/ ?- ?_ ?# ?? ?& ?=)))
+          (seq (or "tap") ?/ alnum (* (any alnum ?/ ?- ?_ ?# ?? ?& ?= ?.)))
+          (seq (or "groups" "g" "cs" "who") ?/ letter (* (any alnum ?- ?_)))
+          (seq (or "b" "cr" "cl" "ariane" "o" "t" "yaqs") ?/
+               (+ (any (?0 . ?9)))))
+      eow)
+  "A regular expression matching Google-style links (go/, cr/, etc.")
+
+(after! org
+  (setq org-log-into-drawer t
+        org-todo-keywords
+        '((sequence
+           "TODO(t)"
+           "STRT(s/!)"
+           "WAIT(w@/!)"
+           "|"
+           "DONE(d!)"
+           "CANCELED(c@)"))
+        org-hide-emphasis-markers t
+        org-return-follows-link t
+        org-tag-alist '(("noexport")))
+  (add-hook! 'org-open-link-functions
+    (defun yrh/open-short-link (link)
+      (when (string-match-p short-link-regexp link)
+        (browse-url (concat "http://" link))
+        t))))
+#+end_src
+**** Roam
+I need a few Roam extensions beyond what's built into Doom.
+
+***** Config
+#+begin_src emacs-lisp :tangle modules/config/private/config.el
+(use-package! org-roam
+  :after org
+  :config
+  (setq org-id-link-to-org-use-id t
+        org-roam-capture-templates
+        '(("d" "default" plain "%?" :target
+           (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+setupfile: ../_setup_roam.org\n#+title: ${title}\n#+category: ${title}\n")
+           :unnarrowed t))
+        org-roam-dailies-capture-templates
+        '(("d" "default" entry "* %?" :target
+           (file+head "%<%Y-%m-%d>.org" "#+setupfile: ../../_setup_roam_diary.org\n#+title: %<%Y-%m-%d>\n#+filetags: :journal:\n")))))
+#+end_src
+
+***** UI
+The Roam UI feature requires websocket support.
+#+begin_src emacs-lisp :tangle modules/config/private/packages.el
+(when (modulep! :lang org +roam2)
+  (package! org-roam-ui)
+  (package! websocket))
+#+end_src
+
+#+begin_src emacs-lisp :tangle modules/config/private/config.el
+(use-package! websocket
+  :after org-roam)
+
+(use-package! org-roam-ui
+  :after org-roam
+  :config
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t
+        org-roam-ui-open-on-start t))
+#+end_src
+
+***** Vulpea
+Backlinks are managed using the =vulpea= package. They work by automatically
+populating additional DB tables based on the content of the newly saved files.
+#+begin_src emacs-lisp :tangle modules/config/private/packages.el
+(when (modulep! :lang org +roam2)
+  (package! vulpea))
+#+end_src
+
+I keep some tasks in roam files. Due to the scalability problem of having a
+large number of files in the agenda list, I use a specific tag for roam files
+that contain such tasks. So only those will be added to the agenda.
+#+begin_src emacs-lisp :tangle modules/config/private/config.el
+(defconst yrh/roam-tasks-tag "roam_tasks")
+
+(use-package! vulpea
+  :after org-roam
+  :hook ((org-roam-db-autosync-mode . vulpea-db-autosync-enable))
+  :preface
+  (after! org
+    (add-to-list 'org-tags-exclude-from-inheritance yrh/roam-tasks-tag)
+    (add-hook! org-mode
+      (add-hook! 'before-save-hook :local #'time-stamp)
+      (add-hook! 'find-file-hook :local #'yrh/vulpea-project-update-tag)
+      (add-hook! 'before-save-hook :local #'yrh/vulpea-project-update-tag))
+    (advice-add 'org-agenda-files :filter-return #'yrh/inject-vulpea-project-files)))
+#+end_src
+
+#+begin_src emacs-lisp :tangle modules/config/private/autoload/vulpea.el
+(require 'vulpea-buffer)
+
+;;;###autoload
+(defun yrh/vulpea-project-p ()
+  "Return non-nil if current buffer has any todo entry.
+
+TODO entries marked as done are ignored, meaning the this
+function returns nil if current buffer contains only completed
+tasks."
+  (org-element-map                          ; (2)
+      (org-element-parse-buffer 'headline) ; (1)
+      'headline
+    (lambda (h)
+      (eq (org-element-property :todo-type h)
+          'todo))
+    nil 'first-match))
+
+;;;###autoload
+(defun yrh/vulpea-project-update-tag ()
+      "Update PROJECT tag in the current buffer."
+      (when (and (not (active-minibuffer-window))
+                 (yrh/vulpea-buffer-p))
+        (save-excursion
+          (goto-char (point-min))
+          (let* ((tags (vulpea-buffer-tags-get))
+                 (original-tags tags))
+            (if (yrh/vulpea-project-p)
+                (setq tags (cons yrh/roam-tasks-tag tags))
+              (setq tags (remove yrh/roam-tasks-tag tags)))
+
+            ;; cleanup duplicates
+            (setq tags (seq-uniq tags))
+
+            ;; update tags if changed
+            (when (or (seq-difference tags original-tags)
+                      (seq-difference original-tags tags))
+              (apply #'vulpea-buffer-tags-set tags))))))
+
+;;;###autoload
+(defun yrh/vulpea-buffer-p ()
+  "Return non-nil if the currently visited buffer is a note."
+  (and buffer-file-name
+       (string-prefix-p
+        (expand-file-name (file-name-as-directory org-roam-directory))
+        (file-name-directory buffer-file-name))))
+
+;;;###autoload
+(defun yrh/vulpea-project-files ()
+  "Return a list of note files containing 'project' tag." ;
+  (seq-uniq
+   (seq-map
+    #'car
+    (org-roam-db-query
+     [:select [nodes:file]
+      :from tags
+      :left-join nodes
+      :on (= tags:node-id nodes:id)
+      :where (like tag (quote "%\"roam_tasks\"%"))]))))
+
+;;;###autoload
+(defun yrh/inject-vulpea-project-files (org-agenda-files--output)
+  (append org-agenda-files--output (yrh/vulpea-project-files)))
+#+end_src
+
+***** Bibtex integration
+#+begin_src emacs-lisp :tangle modules/config/private/packages.el
+(package! org-roam-bibtex
+  :recipe (:host github :repo "org-roam/org-roam-bibtex"))
+
+(package! org-ref
+  :recipe (:host github :repo "jkitchin/org-ref"))
+
+;; When using bibtex-completion via the `biblio` module
+(when (modulep! :tools biblio)
+  (unpin! bibtex-completion helm-bibtex ivy-bibtex))
+#+end_src
+
+#+begin_src emacs-lisp :tangle modules/config/private/autoload/roam.el
+(require 'org-roam-capture)
+
+;;;###autoload
+(defun yrh/orb--insert-captured-ref-url ()
+  (when-let* ((ref (plist-get org-roam-capture--info :ref))
+              ;; just get the key for the first ref, there should be only one anyway
+              (citekey (plist-get (car (plist-get (org-ref-parse-cite-path ref) :references)) :key))
+              (entry (bibtex-completion-get-entry citekey))
+              (url (funcall orb-bibtex-entry-get-value-function "url" entry)))
+    (org-roam-ref-add url)))
+#+end_src
+
+#+begin_src emacs-lisp :tangle modules/config/private/config.el
+(use-package! org-roam-bibtex
+  :after org-roam
+  :config
+  (require 'org-ref)
+  (setq orb-roam-ref-format 'org-ref-v3)
+  (add-hook! 'org-roam-bibtex-mode-on-hook
+    (add-hook! 'org-roam-capture-new-node-hook #'yrh/orb--insert-captured-ref-url))
+  (add-hook! 'org-roam-bibtex-mode-off-hook
+    (remove-hook! 'org-roam-capture-new-node-hook #'yrh/orb--insert-captured-ref-url))
+  (add-hook! org-roam-mode
+    (org-roam-bibtex-mode 1)))
+
+(after! bibtex
+  (bibtex-set-dialect 'biblatex)
+  (map! :map bibtex-mode-map
+        "C-c C-e o" #'bibtex-Online)
+  (add-hook! bibtex-mode
+    (add-hook! 'before-save-hook :local #'bibtex-reformat)))
+
+(after! org-ref
+  (map! :map org-mode-map
+        "C-c ]" #'org-ref-insert-link))
+
+(after! org
+  (let* ((dir (file-name-as-directory (expand-file-name org-directory)))
+         (bibfiles (mapcar
+                    (lambda (f) (concat dir f))
+                    (directory-files dir nil "\\.bib"))))
+    (after! citar
+      (setq citar-bibliography bibfiles))
+    (after! bibtex-completion
+      (setq bibtex-completion-bibliography bibfiles
+            bibtex-completion-notes-path (concat (file-name-as-directory org-roam-directory) "notes")
+            bibtex-completion-additional-search-fields '(keywords)
+            bibtex-completion-pdf-open-function
+            (lambda (fpath)
+              (call-process "open" nil 0 nil fpath))
+            bibtex-completion-notes-template-multiple-files
+            ":PROPERTIES:\n:ROAM_REFS: cite:${=key=} ${url}\n:END:\n#+TITLE: Notes on: ${title} by ${author-or-editor} (${year})\n#+hugo_lastmod: Time-stamp: <>\n#+ROAM_KEY: cite:${=key=}\n\n- source :: cite:${=key=}
+  \n\n* TODO Summary\n* TODO Comments\n\n"
+            ))))
+#+end_src
+
+***** Export
+#+begin_src emacs-lisp :tangle modules/config/private/packages.el
+(when (modulep! :lang org)
+  (package! ox-gfm))
+#+end_src
+
+#+begin_src emacs-lisp :tangle modules/config/private/config.el
+(after! org
+  (use-package! ox-gfm
+    :after ox))
+
+(after! (ox-publish ox-gfm)
+  (org-export-define-derived-backend 'g3doc 'gfm
+    :translate-alist '((headline . org-g3doc-headline)
+                       (inner-template . org-g3doc-inner-template)
+                       (keyword . org-g3doc-keyword)
+                       (link . org-g3doc-link))
+    :menu-entry
+    '(?3 "Export to g3doc Markdown"
+         ((?G "To temporary buffer"
+              (lambda (a s v b) (org-g3doc-export-as-markdown a s v)))
+          (?g "To file" (lambda (a s v b) (org-g3doc-export-to-markdown a s v)))
+          (?o "To file and open"
+              (lambda (a s v b)
+                (if a (org-g3doc-export-to-markdown t s v)
+                  (org-open-file (org-g3doc-export-to-markdown nil s v)))))))))
+
+(after! ox-hugo
+  (defadvice! yrh/hugo-ref-note (fn contents info)
+    :around #'org-hugo-inner-template
+    (let* ((title (car (plist-get info :title)))
+           (refs (plist-get (cadr (plist-get info :parse-tree)) :ROAM_REFS))
+           (ref
+            (when refs
+              (car (cl-remove-if-not
+                    (lambda (s) (s-starts-with-p "http" s))
+                    (split-string refs " ")))))
+           (content (funcall fn contents info)))
+      (if ref
+          (org-trim (concat "> Important: these are my notes for [" title "](" ref ")\n\n" content))
+        content))))
+#+end_src
+
+#+begin_src emacs-lisp :tangle modules/config/private/autoload/org.el
+;;;###autoload
+(defun org-g3doc-link (link desc info)
+  (let ((type (org-element-property :type link))
+        (path (org-element-property :path link)))
+    (if (and (equal type "fuzzy")
+             (string-match-p short-link-regexp path))
+        (format "[%s](http://%s)" path path)
+      (org-md-link link desc info))))
+
+;;;###autoload
+(defun org-g3doc-inner-template (contents info)
+  (concat
+   "<!-- generated by ox-g3doc -->\n"
+   contents))
+
+;;;###autoload
+(defun org-g3doc-keyword (keyword contents info)
+  (if (equal (org-element-property :key keyword) "TITLE")
+      (concat (format "# %s\n\n[TOC]" (org-element-property :value keyword)) contents)
+    contents))
+
+;;;###autoload
+(defun org-g3doc-headline (headline contents info)
+  (org-md-headline headline contents (plist-put info :headline-offset 1)))
+
+;;;###autoload
+(defun org-g3doc-export-as-markdown (&optional async subtreep visible-only)
+  (interactive)
+  (org-export-to-buffer 'g3doc "*Org g3doc Export*"
+    async subtreep visible-only nil nil (lambda () (text-mode))))
+
+;;;###autoload
+(defun org-g3doc-export-to-markdown (&optional async subtreep visible-only)
+  (interactive)
+  (let ((outfile (org-export-output-file-name ".md" subtreep)))
+    (org-export-to-file 'g3doc outfile async subtreep visible-only)))
+#+end_src
+***** Keybingins
+#+begin_src emacs-lisp :tangle modules/config/private/config.el
+(map! :leader
+      (:prefix-map ("n" . "notes")
+       (:when (modulep! :lang org +roam2)
+        (:prefix ("r" . "roam")
+         :desc "Insert node immediately" "I" #'yrh/org-roam-node-insert-immediate
+         :desc "Find backlink" "b" #'vulpea-find-backlink))))
+#+end_src
+
+#+begin_src emacs-lisp :tangle modules/config/private/autoload/roam.el
+;;;###autoload
+(defun yrh/org-roam-node-insert-immediate (arg &rest args)
+  (interactive "P")
+  (let ((args (cons arg args))
+        (org-roam-capture-templates (list (append (car org-roam-capture-templates)
+                                                  '(:immediate-finish t)))))
+    (apply #'org-roam-node-insert args)))
+#+end_src
+**** Agenda
+#+begin_src emacs-lisp :tangle modules/config/private/packages.el
+(package! org-super-agenda
+  :recipe (:host github :repo "alphapapa/org-super-agenda"))
+#+end_src
+
+#+begin_src emacs-lisp :tangle modules/config/private/config.el
+(after! org-agenda
+  (setq org-agenda-skip-scheduled-if-done t
+      org-agenda-skip-deadline-if-done t
+      org-agenda-include-deadlines t
+      org-agenda-block-separator #x2501
+      org-agenda-compact-blocks t
+      org-agenda-start-with-log-mode t
+      org-agenda-clockreport-parameter-plist
+      (quote (:link t :maxlevel 5 :fileskip0 t :compact t :narrow 80))
+      org-agenda-deadline-faces
+      '((1.0001 . org-warning)              ; due yesterday or before
+        (0.0    . org-upcoming-deadline))
+      org-agenda-breadcrumbs-separator " ❱ "
+      org-agenda-current-time-string "⏰ ┈┈┈┈┈┈┈┈┈┈┈ now"
+      org-agenda-time-grid '((weekly today require-timed)
+                             (800 1000 1200 1400 1600 1800 2000)
+                             "---" "┈┈┈┈┈┈┈┈┈┈┈┈┈")
+      org-agenda-prefix-format '((agenda . "%i %-12:c%?-12t%b% s")
+                                 (todo . " %i %-12:c")
+                                 (tags . " %i %-12:c")
+                                 (search . " %i %-12:c"))
+      org-agenda-format-date (lambda (date) (concat "\n" (make-string (window-width) 9472)
+                                                    "\n"
+                                                    (org-agenda-format-date-aligned date)))
+      org-cycle-separator-lines 2
+      org-agenda-category-icon-alist
+      `(("Work" ,(list (all-the-icons-faicon "cogs")) nil nil :ascent center)
+        ("Personal" ,(list (all-the-icons-material "person")) nil nil :ascent center)
+        ("Calendar" ,(list (all-the-icons-faicon "calendar")) nil nil :ascent center)
+        ("Reading" ,(list (all-the-icons-faicon "book")) nil nil :ascent center))))
+
+(use-package! org-super-agenda
+  :config
+  (setq org-agenda-custom-commands
+      '(("y" "Yann view"
+         ((agenda "" ((org-agenda-start-day "today")
+                      (org-agenda-span 'day)
+                      (org-super-agenda-groups
+                       '((:name "Today"
+                          :time-grid t
+                          :date today
+                          :todo "TODAY"
+                          :scheduled today
+                          :order 1)))))
+          (alltodo "" ((org-agenda-overriding-header "")
+                       (org-super-agenda-groups
+                        '(;; Each group has an implicit boolean OR operator between its selectors.
+                          (:name "Today"
+                           :deadline today
+                           :face (:background "black"))
+                          (:name "Passed deadline"
+                           :and (:deadline past :todo ("TODO" "STRT" "WAIT"))
+                           :face (:background "#7f1b19"))
+                          (:name "Work important"
+                           :and (:priority>= "B" :category "Work" :todo ("TODO" "STRT" "WAIT")))
+                          (:name "Work other"
+                           :and (:category "Work" :todo ("TODO" "STRT" "WAIT")))
+                          (:name "Important"
+                           :priority "A")
+                          (:priority<= "B"
+                           ;; Show this section after "Today" and "Important", because
+                           ;; their order is unspecified, defaulting to 0. Sections
+                           ;; are displayed lowest-number-first.
+                           :order 1)
+                          (:name "Papers"
+                           :file-path "org/roam/notes")
+                          (:name "Waiting"
+                           :todo "WAITING"
+                           :order 9)
+                          (:name "On hold"
+                           :todo "HOLD"
+                           :order 10)))))))))
+  (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode))
+#+end_src
+
+**** Capture
+Declarative templates
+#+begin_src emacs-lisp :tangle modules/config/private/packages.el
+(package! doct)
+#+end_src
+
+#+begin_src emacs-lisp :tangle modules/config/private/config.el
+(use-package! doct
+  :commands (doct))
+
+(after! org-capture
+  (setq org-capture-templates
+        '(("t" "Personal todo" entry
+           (file+headline +org-capture-todo-file "Inbox")
+           "* TODO %?\n%i\n%a" :prepend t)
+          ("n" "Personal notes" entry
+           (file+headline +org-capture-notes-file "Inbox")
+           "* %u %?\n%i\n%a" :prepend t)
+          ("p" "Templates for projects")
+          ("pt" "Project-local todo" entry
+           (file+headline +org-capture-project-todo-file "Inbox")
+           "* TODO %?\n%i\n%a" :prepend t)
+          ("pn" "Project-local notes" entry
+           (file+headline +org-capture-project-notes-file "Inbox")
+           "* %U %?\n%i\n%a" :prepend t)
+          ("pc" "Project-local changelog" entry
+           (file+headline +org-capture-project-changelog-file "Unreleased")
+           "* %U %?\n%i\n%a" :prepend t)
+          ("o" "Centralized templates for projects")
+          ("ot" "Project todo" entry
+           #'+org-capture-central-project-todo-file
+           "* TODO %?\n %i\n %a" :heading "Tasks" :prepend nil)
+          ("on" "Project notes" entry
+           #'+org-capture-central-project-notes-file
+           "* %U %?\n %i\n %a" :heading "Notes" :prepend t)
+          ("oc" "Project changelog" entry
+           #'+org-capture-central-project-changelog-file
+           "* %U %?\n %i\n %a" :heading "Changelog" :prepend t))))
+#+end_src
+
+#+begin_src emacs-lisp :tangle modules/config/private/autoload/org.el
+(defvar yrh/capture-frame-parameters
+  '((name . "org-capture-pop-frame")
+    (width . 80)
+    (height . 20)
+    (tool-bar-lines . 0)
+    (menu-bar-lines . 1)))
+
+;;;###autoload
+(defun yrh/capture-delete-frame (&rest args)
+  "Close capture frame"
+  (if (equal (cdr (assoc 'name yrh/capture-frame-parameters))
+             (frame-parameter nil 'name))
+      (delete-frame)))
+
+;;;###autoload
+(defun yrh/capture-delete-other-windows (&rest args)
+  "Delete the extra window if we're in a capture frame"
+  (if (equal (cdr (assoc 'name yrh/capture-frame-parameters))
+             (frame-parameter nil 'name))
+      (let ((ignore-window-parameters t))
+        (delete-other-windows))))
+
+;;;###autoload
+(defun yrh/capture-switch-to-buffer (fn &rest args)
+  (if (equal (cdr (assoc 'name yrh/capture-frame-parameters))
+             (frame-parameter nil 'name))
+      (apply #'switch-to-buffer args)
+    (apply fn args)))
+
+;;;###autoload
+(defun yrh/org-capture (fn &optional goto keys)
+  "Create a new frame and run org-capture."
+  (interactive)
+  (if yrh/org-protocol-capture
+      (let ((frame-window-system window-system)
+            (after-make-frame-functions
+             #'(lambda (frame)
+                 (progn
+                   (select-frame frame)
+                   (x-focus-frame frame)
+                   (setq word-wrap nil)
+                   (setq truncate-lines nil)
+                   (with-selected-frame frame
+                     (condition-case nil
+                         (funcall fn goto keys)
+                       (user-error (yrh/capture-delete-frame))))
+                   ))))
+        (make-frame
+         `((window-system . ,frame-window-system)
+           ,@yrh/capture-frame-parameters)))
+    (funcall fn goto keys)))
+
+;;;###autoload
+(defun yrh/org-capture-keys-buttonize ()
+  (setq header-line-format
+        (list (propertize
+               (let ((directory-abbrev-alist
+                      (list (cons org-directory "ORG/"))))
+                 (abbreviate-file-name
+                  (buffer-file-name
+                   (buffer-base-buffer))))
+                 'face 'font-lock-string-face)
+              org-eldoc-breadcrumb-separator
+              "Capture buffer. "
+              (propertize (substitute-command-keys "Finish \\[org-capture-finalize], ")
+                          'mouse-face 'mode-line-highlight
+                          'keymap
+                          (let ((map (make-sparse-keymap)))
+                            (define-key map [header-line mouse-1] 'org-capture-finalize)
+                            map))
+              (propertize (substitute-command-keys "abort \\[org-capture-kill]. ")
+                          'mouse-face 'mode-line-highlight
+                          'keymap
+                          (let ((map (make-sparse-keymap)))
+                            (define-key map [header-line mouse-1] 'org-capture-kill)
+                            map)))))
+#+end_src
+**** Protocol
+#+begin_src emacs-lisp :tangle modules/config/private/config.el
+(after! org-protocol
+  (defvar yrh/org-protocol-capture nil)
+  (defadvice! yrh/org-protocol-capture-in-frame (fn info)
+    :around #'org-protocol-capture
+    (let ((yrh/org-protocol-capture t))
+      (funcall fn info)))
+  (advice-add 'org-capture :around #'yrh/org-capture)
+  (add-hook! 'org-capture-mode-hook :append #'yrh/org-capture-keys-buttonize)
+  (add-hook! 'org-capture-after-finalize-hook #'yrh/capture-delete-frame)
+  (advice-add 'org-switch-to-buffer-other-window :around #'yrh/capture-switch-to-buffer))
+#+end_src
+
+*** Buffers
+#+begin_src emacs-lisp :tangle modules/config/private/config.el
+(after! dired-x
+  (setq dired-find-subdir nil))
+
+(after! ibuf-ext
+  (add-to-list 'ibuffer-never-show-predicates "[[:space:]].*"))
+
+(after! ibuffer
+  (add-hook! ibuffer-mode #'yrh/ibuffer-auto-revert-setup))
+#+end_src
+
+#+begin_src emacs-lisp :tangle modules/config/private/autoload/ibuffer.el
+(defun yrh/ibuffer-stale-p (&optional noconfirm)
+  (frame-or-buffer-changed-p 'ibuffer-auto-buffers-changed))
+
+;;;###autoload
+(defun yrh/ibuffer-auto-revert-setup ()
+  (setq-local buffer-stale-function #'yrh/ibuffer-stale-p)
+  (setq-local auto-revert-verbose nil)
+  (auto-revert-mode 1))
+#+end_src
+*** Perspectives
+#+begin_src emacs-lisp :tangle modules/config/private/config.el
+(use-package! persp-mode
+  :config
+  ;; Fix uniquify handling of persp-mode by registering the underlying buffer name
+  (advice-add 'persp-buffers-to-savelist :filter-return #'yrh/normalize-persp-buffers-savelist)
+  ;; Hence give me back uniquify.
+  (add-hook! 'persp-mode-hook :append
+    (when +workspace--old-uniquify-style
+      (setq uniquify-buffer-name-style +workspace--old-uniquify-style))))
+#+end_src
+
+#+begin_src emacs-lisp :tangle modules/config/private/autoload/persp.el
+(require 'pcase)
+(require 'uniquify)
+
+;;;###autoload
+(defun yrh/normalize-persp-buffers-savelist (sl)
+  "de-uniquify buffer names if appropriate, so that we don't need
+to disable uniquify when using persp-mode"
+  (mapcar
+   (lambda (b)
+     ;; format is (def-buffer BUFFERNAME PATH MODE)
+     (pcase-let ((`(def-buffer ,buffer . ,rest) b))
+       (with-current-buffer buffer
+         (append `(def-buffer ,(or (uniquify-buffer-base-name) (buffer-name)))
+                 rest))))
+   sl))
+#+end_src
+*** Window moves
+#+begin_src emacs-lisp :tangle modules/config/private/config.el
+(use-package! windmove
+  :config
+  (map! "C-c <left>"  #'windmove-left
+        "C-c <right>" #'windmove-right
+        "C-c <up>"    #'windmove-up
+        "C-c <down>"  #'windmove-down))
+#+end_src
+*** Notmuch
+#+begin_src emacs-lisp :tangle modules/config/private/config.el
+(after! notmuch
+  (setq sendmail-program "gmi-sendmail")
+  (setq message-sendmail-extra-arguments nil)
+
+  (setq
+   notmuch-fcc-dirs nil
+   notmuch-wash-wrap-lines-length 100
+
+   notmuch-saved-searches '((:name "ai" :query "tag:🎬AI" :key "a")
+                            (:name "drafts" :query "tag:draft" :key "d")
+                            (:name "flagged" :query "tag:flagged" :key "f")
+                            (:name "inbox" :query "tag:inbox not tag:trash" :key "i")
+                            (:name "read" :query "tag:📖Read" :key "r")
+                            (:name "sent" :query "tag:sent" :key "s")
+                            (:name "followup" :query "tag:⏯️Followup" :key "t")
+                            (:name "review" :query "tag:👓Review" :key "v")
+                            (:name "waiting" :query "tag:💤waiting" :key "w"))
+   notmuch-search-line-faces '(("🎬AI" . '(:foreground "red"))
+                               ("💤waiting" . '(:foreground "yellow"))
+                               ("📖Read" . '(:foreground "magenta"))))
+
+  ;; Prevent wrapping at 70 characters in email composition.
+  (add-hook! 'message-mode-hook 'turn-off-auto-fill)
+  (add-hook! 'message-mode-hook 'visual-line-mode))
+#+end_src
+*** Write room
+#+begin_src emacs-lisp :tangle modules/config/private/config.el
+(after! writeroom-mode
+  (setq writeroom-fullscreen-effect 'maximized
+        writeroom-mode-line nil
+        writeroom-mode-line-toggle-position 'mode-line-format
+        writeroom-major-modes '(text-mode prog-mode special-mode dired-mode fundamental-mode)))
+#+end_src
+*** Misc
