@@ -109,6 +109,7 @@ in
   ] ++ lib.optionals stdenv.isDarwin [
     m-cli # useful macOS CLI commands
     afsctool
+    maschine-hacks
   ];
 
   # make sure our home-manager applications are dockable

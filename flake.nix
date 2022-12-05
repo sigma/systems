@@ -15,6 +15,12 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.inputs.utils.follows = "flake-utils";
 
+    # Flake compat
+    flake-compat = {
+      url = github:edolstra/flake-compat;
+      flake = false;
+    };
+
     # Other sources
     flake-utils.url = github:numtide/flake-utils;
     emacs.url = github:nix-community/emacs-overlay;
@@ -22,16 +28,23 @@
     emacs.inputs.flake-utils.follows = "flake-utils";
     comma.url = github:nix-community/comma;
     comma.inputs.nixpkgs.follows = "nixpkgs";
+    comma.inputs.flake-compat.follows = "flake-compat";
     comma.inputs.utils.follows = "flake-utils";
     nix-doom-emacs.url = github:nix-community/nix-doom-emacs;
     nix-doom-emacs.inputs.emacs-overlay.follows = "emacs";
     nix-doom-emacs.inputs.nixpkgs.follows = "nixpkgs";
     nix-doom-emacs.inputs.flake-utils.follows = "flake-utils";
+    nix-doom-emacs.inputs.flake-compat.follows = "flake-compat";
+
+    maschine-hacks.url = github:sigma/maschine-hacks;
+    maschine-hacks.inputs.flake-utils.follows = "flake-utils";
+    maschine-hacks.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs @ {
     self, nixpkgs, nixos-stable, darwin-stable, nixpkgs-master,
-    darwin, home-manager, comma, emacs, flake-utils, nix-doom-emacs, ...
+    darwin, home-manager, comma, emacs, flake-utils, nix-doom-emacs,
+    maschine-hacks, ...
   }:
     let
       # Configuration for `nixpkgs`
@@ -56,6 +69,9 @@
           # community overlays
           comma.overlays.default
           emacs.overlay
+
+          # my overlays
+          maschine-hacks.overlays.default
 
           # packages hacks
           (import ./overlays/pkg)
