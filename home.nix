@@ -67,6 +67,7 @@ in
 
     # console tools
     coreutils
+    d2
     exa
     fd
     fzf
