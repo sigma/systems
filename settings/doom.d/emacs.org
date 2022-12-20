@@ -1067,3 +1067,12 @@ to disable uniquify when using persp-mode"
         writeroom-major-modes '(text-mode prog-mode special-mode dired-mode fundamental-mode)))
 #+end_src
 *** Misc
+**** d2-mode
+#+begin_src emacs-lisp :tangle modules/config/private/packages.el
+(package! d2-mode
+  :recipe (:host github :repo "andorsk/d2-mode"))
+#+end_src
+
+#+begin_src emacs-lisp :tangle modules/config/private/config.el
+(use-package! d2-mode)
+#+end_src
