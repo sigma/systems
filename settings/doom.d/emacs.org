@@ -347,6 +347,15 @@ that issue here.
             exec-directory)))))
 #+end_src
 
+** Custom
+By default, `custom-file` points to a non-writable location, which kinda defeats
+the purpose.
+
+#+begin_src emacs-lisp :tangle config.el
+(setq custom-file "~/.emacs.d/custom.el")
+#+end_src
+
+
 * Modules
 I have a small number of private packages to make available to Doom Emacs.
 
