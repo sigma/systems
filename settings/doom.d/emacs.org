@@ -338,6 +338,9 @@ that issue here.
              (string-suffix-p suffix invocation-directory))
     (setq exec-path
           (append
+           (list
+            (format "/etc/profiles/per-user/%s/bin" user-real-login-name)
+            "/run/current-system/sw/bin")
            (reverse (cdr (reverse exec-path)))
            (list
             (concat (string-trim invocation-directory "" suffix) "/bin")

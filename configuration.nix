@@ -37,6 +37,7 @@
     htop
     vim
     emacsUnstable
+    gitGoogle
   ];
 
   programs.nix-index.enable = true;
