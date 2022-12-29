@@ -36,7 +36,7 @@
     coreutils
     htop
     vim
-    emacsNativeComp
+    emacsUnstable
   ];
 
   programs.nix-index.enable = true;

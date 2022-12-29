@@ -5,5 +5,5 @@
   doomPrivateDir = (import ./doom.d) {
     inherit config lib pkgs user;
   };
-  emacsPackage = pkgs.emacsNativeComp;
+  emacsPackage = pkgs.emacsUnstable;
 }

@@ -35,9 +35,9 @@ let
     ];
 in
 {
-    emacs = self.emacsNativeComp;
+    emacs = self.emacsUnstable;
 
-    emacsNativeComp = super.emacsNativeComp.overrideAttrs (oldAttrs: rec {
+    emacsUnstable = super.emacsUnstable.overrideAttrs (oldAttrs: rec {
         patches = oldAttrs.patches ++ emacs28Patches;
     });
 }
