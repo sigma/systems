@@ -1,8 +1,8 @@
-{ config, pkgs, user, ... }:
+{ config, pkgs, machine, user, ... }:
 
 {
   enable = true;
-  package = pkgs.gitGoogle;
+  package = if machine.isWork then pkgs.gitGoogle else pkgs.git;
 
   aliases = {
     ldiff = "difftool -t latex";

@@ -9,13 +9,14 @@ in
   home.stateVersion = "22.11";
 
   imports = [
-    ./modules/blaze.nix
-    ./modules/gcert.nix
     ./modules/mailsetup.nix
     ./modules/zinit.nix
     ./modules/zsh-plugins
     ./modules/bat-syntaxes
     ./modules/cloud-shell.nix
+  ] ++ lib.optionals machine.isWork [
+    ./modules/blaze.nix
+    ./modules/gcert.nix
   ];
 
   accounts.email.maildirBasePath = ".mail";
@@ -37,19 +38,20 @@ in
     bat = loadSettings "bat";
 
     git = loadSettings "git";
-    mercurial = loadSettings "mercurial";
 
     tmux = loadSettings "tmux";
 
     ssh = loadSettings "ssh";
     notmuch = loadSettings "notmuch";
     afew = loadSettings "afew";
-  } // {
-      gitui.enable = true;
-      gcert.enable = true;
-      cloudshell.enable = true;
-      lieer.enable = true;
-      mailsetup.enable = true;
+
+    gitui.enable = true;
+    cloudshell.enable = true;
+    lieer.enable = true;
+    mailsetup.enable = true;
+  } // lib.optionalAttrs machine.isWork {
+    gcert.enable = true;
+    mercurial = loadSettings "mercurial";
   };
 
   home.packages = with pkgs; [
