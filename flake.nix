@@ -35,6 +35,8 @@
     nix-doom-emacs.inputs.nixpkgs.follows = "nixpkgs";
     nix-doom-emacs.inputs.flake-utils.follows = "flake-utils";
     nix-doom-emacs.inputs.flake-compat.follows = "flake-compat";
+    fenix.url = "github:nix-community/fenix";
+    fenix.inputs.nixpkgs.follows = "nixpkgs";
 
     maschine-hacks.url = github:sigma/maschine-hacks;
     maschine-hacks.inputs.flake-utils.follows = "flake-utils";
@@ -43,7 +45,7 @@
 
   outputs = inputs @ {
     self, nixpkgs, nixos-stable, darwin-stable, nixpkgs-master,
-    darwin, home-manager, comma, emacs, flake-utils, nix-doom-emacs,
+    darwin, home-manager, comma, emacs, fenix, flake-utils, nix-doom-emacs,
     maschine-hacks, ...
   }:
     let
@@ -69,6 +71,7 @@
           # community overlays
           comma.overlays.default
           emacs.overlay
+          fenix.overlays.default
 
           # my overlays
           maschine-hacks.overlays.default
