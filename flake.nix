@@ -4,8 +4,8 @@
   inputs = {
     # Package sets
     nixpkgs.url = github:nixos/nixpkgs/nixpkgs-unstable;
-    nixos-stable.url = github:NixOS/nixpkgs/nixos-22.05;
-    darwin-stable.url = github:NixOS/nixpkgs/nixpkgs-22.05-darwin;
+    nixos-stable.url = github:NixOS/nixpkgs/nixos-22.11;
+    darwin-stable.url = github:NixOS/nixpkgs/nixpkgs-22.11-darwin;
     nixpkgs-master.url = github:NixOS/nixpkgs/master;
 
     # Environment/system management
@@ -13,7 +13,7 @@
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = github:nix-community/home-manager;
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.inputs.utils.follows = "flake-utils";
+    home-manager.inputs.utils.follows = "utils";
 
     # Flake compat
     flake-compat = {
@@ -22,30 +22,30 @@
     };
 
     # Other sources
-    flake-utils.url = github:numtide/flake-utils;
+    utils.url = github:gytis-ivaskevicius/flake-utils-plus;
     emacs.url = github:nix-community/emacs-overlay;
     emacs.inputs.nixpkgs.follows = "nixpkgs";
-    emacs.inputs.flake-utils.follows = "flake-utils";
+    emacs.inputs.flake-utils.follows = "utils";
     comma.url = github:nix-community/comma;
     comma.inputs.nixpkgs.follows = "nixpkgs";
     comma.inputs.flake-compat.follows = "flake-compat";
-    comma.inputs.utils.follows = "flake-utils";
+    comma.inputs.utils.follows = "utils";
     nix-doom-emacs.url = github:nix-community/nix-doom-emacs;
     nix-doom-emacs.inputs.emacs-overlay.follows = "emacs";
     nix-doom-emacs.inputs.nixpkgs.follows = "nixpkgs";
-    nix-doom-emacs.inputs.flake-utils.follows = "flake-utils";
+    nix-doom-emacs.inputs.flake-utils.follows = "utils";
     nix-doom-emacs.inputs.flake-compat.follows = "flake-compat";
     fenix.url = "github:nix-community/fenix";
     fenix.inputs.nixpkgs.follows = "nixpkgs";
 
     maschine-hacks.url = github:sigma/maschine-hacks;
-    maschine-hacks.inputs.flake-utils.follows = "flake-utils";
+    maschine-hacks.inputs.flake-utils.follows = "utils";
     maschine-hacks.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs @ {
     self, nixpkgs, nixos-stable, darwin-stable, nixpkgs-master,
-    darwin, home-manager, comma, emacs, fenix, flake-utils, nix-doom-emacs,
+    darwin, home-manager, comma, emacs, fenix, nix-doom-emacs,
     maschine-hacks, ...
   }:
     let

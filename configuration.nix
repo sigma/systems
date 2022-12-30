@@ -1,4 +1,4 @@
-{ conig, pkgs, lib, ... }:
+{ machine, pkgs, lib, ... }:
 {
   # Nix configuration ------------------------------------------------------------------------------
 
@@ -29,14 +29,14 @@
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
 
-  # Apps
-  # `home-manager` currently has issues adding them to `~/Applications`
-  # Issue: https://github.com/nix-community/home-manager/issues/1341
   environment.systemPackages = with pkgs; [
     coreutils
     htop
     vim
     emacsUnstable
+
+    nixFlakes
+  ] ++ lib.optionals machine.isWork [
     gitGoogle
   ];
 

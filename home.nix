@@ -77,7 +77,6 @@ in
     jq
     jsonnet
     less
-    ncdu
     pinfo
     silver-searcher
     skim
@@ -114,8 +113,7 @@ in
     # Useful nix related tools
     cachix # adding/managing alternative binary caches hosted by Cachix
     comma
-    # comma # run software from without installing it
-    niv # easy dependency management for nix projects
+
     nix
   ] ++ lib.optionals stdenv.isDarwin [
     m-cli # useful macOS CLI commands
