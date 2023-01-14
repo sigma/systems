@@ -16,7 +16,7 @@
 I need to detect Google flavor of OS, and this needs to gate loading some
 modules, so let's define this early.
 #+begin_src emacs-lisp :tangle init.el
-(defconst IS-GLINUX (file-exists-p "/etc/google-emacs"))
+(defconst IS-GLINUX (and IS-LINUX (file-exists-p "/etc/google-emacs")))
 #+end_src
 
 ** Modules activation
@@ -380,9 +380,10 @@ A small hack is required to pretend =google-emacs= is loading the code.
 #+begin_src emacs-lisp :tangle modules/os/google/config.el
 (use-package! google
   :preface
-  (when IS-LINUX
-    (load "/usr/share/emacsen-common/debian-startup.el")
-    (load "/etc/google-emacs/site-start.d/50emacs-google-config.el"))
+  (when IS-GLINUX
+    (let ((load-path (append load-path '("/usr/local/share/google-emacs/site-lisp"))))
+      (load "/usr/share/emacsen-common/debian-startup.el")
+      (load "/etc/google-emacs/site-start.d/50emacs-google-config.el")))
   :init
   (setq google-emacs-version 'something)
   :config
