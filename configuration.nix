@@ -40,6 +40,12 @@
     gitGoogle
   ];
 
+  environment.shells = with pkgs; [
+    bash
+    fish
+    zsh
+  ];
+
   programs.nix-index.enable = true;
 
   # Fonts
