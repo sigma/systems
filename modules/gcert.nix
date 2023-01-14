@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, machine, ... }:
 
 with lib;
 
@@ -20,22 +20,27 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
-    home.file.".ssh/${cfg.ssh_include}".text = let
-      gcertstatus = "${cfg.package}/bin/gcertstatus";
-      gcert = "${cfg.package}/bin/gcert";
-      gcert_renew = "open -W -n ${cfg.package}/bin/gcert_renew.command";
-    in ''
+  config = mkIf cfg.enable (let
+    glinux = (machine.isWork && machine.system == "x86_64-linux");
+    gcertstatus = "${cfg.package}/bin/gcertstatus";
+    gcert = "${cfg.package}/bin/gcert";
+  in {
+    home.file = {
+      ".ssh/${cfg.ssh_include}".text = ''
       #######
       # Ensure we have gcert
-      # https://yaqs.corp.google.com/eng/q/6704876541837312
-      Match host *.corp.google.com,*.c.googlers.com exec "${gcertstatus} --check_remaining=1h --quiet || ( ( [[ $- =~ i ]] && ${gcert}) || ( [[ ! $- =~ i ]] && ${gcert_renew} ) ) || true"
+      Match host *.corp.google.com,*.c.googlers.com exec "find /var/run/ccache/sso-$USER/cookie ~/.sso/cookie -mmin -1200 2>/dev/null | grep -q . && ${gcertstatus} --check_remaining=1h --nocheck_loas2 --quiet || ${gcert} --noloas2"
 
       # That blank line is required; we're executing that for the gcert side effects, not to set any ssh parameters.
       '';
+    } // lib.optionalAttrs glinux {
+      ".ssh/rc".text = ''
+      ${gcertstatus} --nocheck_ssh --check_remaining=1h --quiet || ${gcert} --nocorpssh
+      '';
+    };
 
     programs.ssh.includes = [
       "~/.ssh/${cfg.ssh_include}"
     ];
-  };
+  });
 }
