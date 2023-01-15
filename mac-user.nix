@@ -5,7 +5,7 @@ let
   homeDir = "/Users/${login}";
 in
 {
-  nix.trustedUsers = [
+  nix.settings.trusted-users = [
     login
   ];
 
