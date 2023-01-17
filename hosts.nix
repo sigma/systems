@@ -32,19 +32,17 @@ let
   unmanaged = mac: mac // {
     isWork = false;
   };
-  cloudshell = mac: mac // {
-    system = "x86_64-linux";
-    isWork = false;
-  };
-  cloudtop = mac: mac // {
-    isWork = true;
-    system = "x86_64-linux";
-    sshMatchBlocks = sshBlocks mac;
-  };
-  gmac = mac: mac // {
+  work = mac: mac // {
     isWork = true;
     sshMatchBlocks = sshBlocks mac;
   };
+  cloudshell = mac: (unmanaged mac) // {
+    system = "x86_64-linux";
+  };
+  cloudtop = mac: (work mac) // {
+    system = "x86_64-linux";
+  };
+  gmac = work;
 in rec {
   cs = cloudshell {
     alias = "cs";
@@ -89,8 +87,9 @@ in rec {
   shirka = cloudtop {
     name = "shirka.c.googlers.com";
     alias = "dev";
-    remotes = [pdev cs];
+    remotes = [pdev cs ghost-wheel];
     sshOpts = {
+      forwardAgent = true;
       localForwards = [dockerFwd codeserverFwd];
     };
   };
@@ -98,8 +97,9 @@ in rec {
   ghost-wheel = cloudtop {
     name = "ghost-wheel.c.googlers.com";
     alias = "cdev";
-    remotes = [pdev cs];
+    remotes = [pdev cs shirka];
     sshOpts = {
+      forwardAgent = true;
       localForwards = [dockerFwd codeserverFwd];
     };
   };
