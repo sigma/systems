@@ -2,7 +2,7 @@ final: prev:
 
 let
   paths = {
-    gcert = "/usr/local/bin";
+    gcert = "/usr/bin";
   } // (if final.stdenv.isDarwin then {
     git = "/usr/local/git/current/bin";
     gitExec ="/usr/local/git/current/libexec/git-core";
