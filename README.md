@@ -21,5 +21,6 @@ For example:
 
 ```
 $ nix profile install --profile $HOME/.nix-default-profile "nixpkgs#nixFlakes"
+$ export PATH=~/.nix-default-profile/bin:$PATH
 $ nix run ".#home-manager" --  switch --flake ".#glinux"
 ```
