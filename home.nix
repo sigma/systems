@@ -94,7 +94,7 @@ in
 
     # languages
     go
-    python
+    python3
     (fenix.complete.withComponents [
       "cargo"
       "clippy"
