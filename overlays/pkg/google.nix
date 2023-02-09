@@ -33,7 +33,18 @@ in
       exit 1
       EOF
 
-      chmod a+x $out/bin/native-wrapper
+      cat > $out/bin/git-native-wrapper << 'EOF'
+      #!${final.zsh}/bin/zsh
+
+      if test -x "$NATIVE_WRAPPER_BIN"; then
+        export GIT_EXEC_PATH=''${NATIVE_WRAPPER_BIN:a:h}
+        exec "$NATIVE_WRAPPER_BIN" "$@"
+      fi
+      echo "$NATIVE_WRAPPER_BIN is not installed."
+      exit 1
+      EOF
+
+      chmod a+x $out/bin/*native-wrapper
     '';
   };
 
@@ -49,11 +60,15 @@ in
       mkdir -p $out/bin
       for helper in ${paths.git}/{git,gob}*; do
         bin=`basename $helper`
-        makeWrapper ${final.nativeWrapper}/bin/native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN ${paths.git}/$bin --set GIT_EXEC_PATH ${paths.gitExec}:${paths.gitGoogle}
+        makeWrapper ${final.nativeWrapper}/bin/git-native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN ${paths.git}/$bin
+      done
+      for helper in ${paths.gitExec}/{git,gob}*; do
+        bin=`basename $helper`
+        makeWrapper ${final.nativeWrapper}/bin/git-native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN ${paths.gitExec}/$bin
       done
       for helper in ${paths.gitGoogle}/{git,gob}*; do
         bin=`basename $helper`
-        makeWrapper ${final.nativeWrapper}/bin/native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN ${paths.gitGoogle}/$bin
+        makeWrapper ${final.nativeWrapper}/bin/git-native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN ${paths.gitGoogle}/$bin
       done
     '';
   };
