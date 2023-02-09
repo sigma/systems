@@ -22,6 +22,10 @@ final: prev:
       install -m0644 zinit*.zsh "$outdir"
       install -m0644 _zinit "$outdir"
 
+      # zinit's documentation
+      install -dm0755 "$outdir/doc"
+      install -m0644 doc/zinit.1 "$outdir/doc"
+
       # disable self-update
       sed -i -e '/^.zinit-self-update.*/a\
       +zinit-message "Zinit is Nix-managed, skipping self-update"; return 0;' "$outdir/zinit-autoload.zsh"
