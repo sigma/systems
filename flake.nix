@@ -121,7 +121,9 @@
         user = users.corpUser;
         specialArgs = {
           inherit user;
-          machine = machine // {
+          machine = {
+            isInteractive = false;
+          } // machine // {
             isWork = true;
           };
         };

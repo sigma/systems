@@ -9,7 +9,6 @@ in
   home.stateVersion = "22.11";
 
   imports = [
-    ./modules/mailsetup.nix
     ./modules/zinit.nix
     ./modules/zsh-plugins
     ./modules/bat-syntaxes
@@ -17,6 +16,8 @@ in
   ] ++ lib.optionals machine.isWork [
     ./modules/blaze.nix
     ./modules/gcert.nix
+  ] ++ lib.optionals machine.isInteractive [
+    ./modules/mailsetup.nix
   ];
 
   accounts.email.maildirBasePath = ".mail";

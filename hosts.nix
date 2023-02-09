@@ -30,9 +30,11 @@ let
   };
 
   unmanaged = mac: mac // {
+    isInteractive = false;
     isWork = false;
   };
   work = mac: mac // {
+    isInteractive = false;
     isWork = true;
     sshMatchBlocks = sshBlocks mac;
   };
@@ -42,7 +44,9 @@ let
   cloudtop = mac: (work mac) // {
     system = "x86_64-linux";
   };
-  gmac = work;
+  gmac = mac: (work mac) // {
+    isInteractive = true;
+  };
 in rec {
   cs = cloudshell {
     alias = "cs";
