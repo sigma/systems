@@ -58,17 +58,12 @@ in
     dontUnpack = true;
     installPhase = ''
       mkdir -p $out/bin
-      for helper in ${paths.git}/{git,gob}*; do
-        bin=`basename $helper`
-        makeWrapper ${final.nativeWrapper}/bin/git-native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN ${paths.git}/$bin
-      done
-      for helper in ${paths.gitExec}/{git,gob}*; do
-        bin=`basename $helper`
-        makeWrapper ${final.nativeWrapper}/bin/git-native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN ${paths.gitExec}/$bin
-      done
-      for helper in ${paths.gitGoogle}/{git,gob}*; do
-        bin=`basename $helper`
-        makeWrapper ${final.nativeWrapper}/bin/git-native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN ${paths.gitGoogle}/$bin
+
+      for path in ${paths.git} ${paths.gitExec} ${paths.gitGoogle}; do
+        for helper in $path/{git,gob}*; do
+          bin=`basename $helper`
+          makeWrapper ${final.nativeWrapper}/bin/git-native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN $path/$bin
+        done
       done
     '';
   };
