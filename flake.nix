@@ -45,120 +45,111 @@
 
   outputs = inputs @ {
     self, nixpkgs, nixos-stable, darwin-stable, nixpkgs-master,
-    darwin, home-manager, comma, emacs, fenix, nix-doom-emacs,
-    maschine-hacks, ...
-  }:
-    let
-      # Configuration for `nixpkgs`
-      nixpkgsConfig = {
-        config = { allowUnfree = true; };
-        overlays = [
-          # Add stable and master package sets for convenience
-          (
-            final: prev:
-            let
-              system = final.stdenv.system;
-              nixpkgs-stable = if final.stdenv.isDarwin then darwin-stable else nixos-stable;
-            in {
-              master = nixpkgs-master.legacyPackages.${system};
-              stable = nixpkgs-stable.legacyPackages.${system};
-            }
-          )
-
-          # silicon package sets
-          (import ./overlays/silicon.nix nixpkgs darwin-stable nixpkgs-master nixpkgsConfig.config)
-
-          # community overlays
-          comma.overlays.default
-          emacs.overlay
-          fenix.overlays.default
-
-          # my overlays
-          maschine-hacks.overlays.default
-
-          # packages hacks
-          (import ./overlays/pkg)
-        ];
-      };
-
-      darwinModules = {
-      };
-
-      users = import ./users.nix;
-      hosts = import ./hosts.nix {
-        inherit (nixpkgs) lib;
-      };
-
-      mac = machine: let
-        user = if machine.isWork then users.corpUser else users.personalUser;
-        specialArgs = {
-          inherit user machine;
-        };
-      in darwin.lib.darwinSystem {
-        inherit (machine) system;
-        inherit specialArgs;
-        modules = nixpkgs.lib.attrValues darwinModules ++ [
-          # Main `nix-darwin` config
-          ./configuration.nix
-          ./mac-user.nix
-          # `home-manager` module
-          home-manager.darwinModules.home-manager
-          {
-            nixpkgs = nixpkgsConfig;
-            # `home-manager` config
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.${user.login} = nixpkgs.lib.mkMerge [
-              (import ./home.nix)
-              nix-doom-emacs.hmModule
-            ];
-            home-manager.extraSpecialArgs = specialArgs;
+      darwin, home-manager, comma, emacs, fenix, nix-doom-emacs,
+      maschine-hacks, ...
+  }: let
+    # Configuration for `nixpkgs`
+    nixpkgsConfig = {
+      config = { allowUnfree = true; };
+      overlays = [
+        # Add stable and master package sets for convenience
+        (
+          final: prev:
+          let
+            system = final.stdenv.system;
+            nixpkgs-stable = if final.stdenv.isDarwin then darwin-stable else nixos-stable;
+          in {
+            master = nixpkgs-master.legacyPackages.${system};
+            stable = nixpkgs-stable.legacyPackages.${system};
           }
-        ];
-      };
+        )
 
-      glinux = machine: let
-        user = users.corpUser;
-        specialArgs = {
-          inherit user;
-          machine = {
-            isInteractive = false;
-          } // machine // {
-            isWork = true;
+        # silicon package sets
+        (import ./overlays/silicon.nix nixpkgs darwin-stable nixpkgs-master nixpkgsConfig.config)
+
+        # community overlays
+        comma.overlays.default
+        emacs.overlay
+        fenix.overlays.default
+
+        # my overlays
+        maschine-hacks.overlays.default
+
+        # packages hacks
+        (import ./overlays/pkg)
+      ];
+    };
+
+    darwinModules = {
+    };
+
+    users = import ./users.nix;
+    hosts = import ./hosts.nix {
+      inherit (nixpkgs) lib;
+    };
+
+    mac = machine: let
+      user = if machine.isWork then users.corpUser else users.personalUser;
+      specialArgs = { inherit user machine; };
+    in darwin.lib.darwinSystem {
+      inherit (machine) system;
+      inherit specialArgs;
+      modules = nixpkgs.lib.attrValues darwinModules ++ [
+        # Main `nix-darwin` config
+        ./configuration.nix
+        ./mac-user.nix
+        # `home-manager` module
+        home-manager.darwinModules.home-manager
+        {
+          nixpkgs = nixpkgsConfig;
+          # `home-manager` config
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.${user.login} = nixpkgs.lib.mkMerge [
+            ./home.nix
+            nix-doom-emacs.hmModule
+          ];
+          home-manager.extraSpecialArgs = specialArgs;
+        }
+      ];
+    };
+
+    glinux = machine: let
+      user = users.corpUser;
+      machine = {isInteractive = false;} // machine // {isWork = true;};
+      specialArgs = { inherit user machine; };
+    in home-manager.lib.homeManagerConfiguration {
+      pkgs = builtins.getAttr "x86_64-linux" nixpkgs.outputs.legacyPackages // nixpkgsConfig;
+      modules = [
+        ./home.nix
+        nix-doom-emacs.hmModule
+        {
+          home = {
+            username = user.login;
+            homeDirectory = "/usr/local/google/home/${user.login}";
+            stateVersion = "22.11";
           };
-        };
-      in home-manager.lib.homeManagerConfiguration {
-        pkgs = builtins.getAttr "x86_64-linux" nixpkgs.outputs.legacyPackages // nixpkgsConfig;
-        modules = [
-          nix-doom-emacs.hmModule
-          ./home.nix
-          {
-            home = {
-              username = user.login;
-              homeDirectory = "/usr/local/google/home/${user.login}";
-              stateVersion = "22.11";
-            };
-          }
-        ];
-        extraSpecialArgs = specialArgs;
+        }
+      ];
+      extraSpecialArgs = specialArgs;
+    };
+
+  in
+    {
+      # My `nix-darwin` configs
+      darwinConfigurations = {
+        yhodique-macbookpro = mac hosts.yhodique-macbookpro;
+        yhodique-macmini = mac hosts.yhodique-macmini;
+      };
+      inherit darwinModules;
+
+      # My home-manager only configs
+      homeConfigurations = {
+        glinux = glinux {};
+        shirka = glinux hosts.shirka;
+        ghost-wheel = glinux hosts.ghost-wheel;
       };
 
-    in
-      {
-        # My `nix-darwin` configs
-        darwinConfigurations = {
-          yhodique-macbookpro = mac hosts.yhodique-macbookpro;
-          yhodique-macmini = mac hosts.yhodique-macmini;
-        };
-        inherit darwinModules;
-
-        # My home-manager only configs
-        homeConfigurations = {
-          glinux = glinux {};
-          shirka = glinux hosts.shirka;
-          ghost-wheel = glinux hosts.ghost-wheel;
-        };
-
-        packages = home-manager.packages;
-      };
+      packages = home-manager.packages;
+    };
 }
