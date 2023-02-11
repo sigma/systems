@@ -46,14 +46,10 @@ let
       installPhase = ''
       mkdir -p $out/bin
 
-      for path in ${paths.git} ${paths.gitExec} ${paths.gitGoogle}; do
-        for helper in $path/{git,gob}*; do
+      for path in ${paths.gitGoogle} ${paths.gitExec} ${paths.git}; do
+        for helper in $path/*; do
           bin=`basename $helper`
-          if [ -x $helper ]; then
-            makeWrapper ${nativeWrapper}/bin/native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN $path/$bin
-          else
-            ln -s $helper $out/bin/$bin
-          fi
+          ln -sf $helper $out/bin/$bin
         done
       done
     '';
