@@ -153,5 +153,10 @@
       };
 
       packages = home-manager.packages;
-    };
+    } // inputs.utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in {
+        devShell = import ./shell.nix { inherit pkgs; };
+      });
 }
