@@ -46,10 +46,12 @@ let
       installPhase = ''
       mkdir -p $out/bin
 
+      # these are all git helpers
       for helper in ${paths.gitExec}/*; do
         ln -s $helper $out/bin/$bin
       done
 
+      # on glinux, these paths contain other binaries, so let's be selective
       for path in ${paths.gitGoogle} ${paths.git}; do
         for helper in $path/{git,gob,scalar}*; do
           bin=`basename $helper`
