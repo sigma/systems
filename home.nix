@@ -69,6 +69,7 @@ in
     ninja
 
     # console tools
+    btop
     coreutils
     d2
     exa
