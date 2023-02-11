@@ -83,6 +83,11 @@
     darwinModules = {
     };
 
+    hmModules = [
+      ./home.nix
+      nix-doom-emacs.hmModule
+    ];
+
     users = import ./users.nix;
     hosts = import ./hosts.nix {
       inherit (nixpkgs) lib;
@@ -105,10 +110,7 @@
           # `home-manager` config
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.${user.login} = nixpkgs.lib.mkMerge [
-            ./home.nix
-            nix-doom-emacs.hmModule
-          ];
+          home-manager.users.${user.login} = nixpkgs.lib.mkMerge hmModules;
           home-manager.extraSpecialArgs = specialArgs;
         }
       ];
@@ -120,9 +122,7 @@
       specialArgs = { inherit user machine; };
     in home-manager.lib.homeManagerConfiguration {
       pkgs = builtins.getAttr "x86_64-linux" nixpkgs.outputs.legacyPackages // nixpkgsConfig;
-      modules = [
-        ./home.nix
-        nix-doom-emacs.hmModule
+      modules = hmModules ++ [
         {
           home = {
             username = user.login;
