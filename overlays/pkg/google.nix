@@ -49,7 +49,11 @@ let
       for path in ${paths.git} ${paths.gitExec} ${paths.gitGoogle}; do
         for helper in $path/{git,gob}*; do
           bin=`basename $helper`
-          makeWrapper ${nativeWrapper}/bin/native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN $path/$bin
+          if [ -x $helper ]; then
+            makeWrapper ${nativeWrapper}/bin/native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN $path/$bin
+          else
+            ln -s $helper $out/bin/$bin
+          fi
         done
       done
     '';
@@ -70,8 +74,10 @@ in
       mkdir -p $out/bin
 
       for helper in ${helpers.gitGoogleWrapped}/bin/*; do
-        bin=`basename $helper`
-        makeWrapper ${helpers.nativeWrapper}/bin/native-wrapper $out/bin/$bin --set GIT_EXEC_PATH ${helpers.gitGoogleWrapped}/bin --set NATIVE_WRAPPER_BIN $helper
+        if [ -x $helper ]; then
+          bin=`basename $helper`
+          makeWrapper ${helpers.nativeWrapper}/bin/native-wrapper $out/bin/$bin --set GIT_EXEC_PATH ${helpers.gitGoogleWrapped}/bin --set NATIVE_WRAPPER_BIN $helper
+        fi
       done
     '';
   };

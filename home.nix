@@ -49,10 +49,11 @@ in
     gitui.enable = true;
     cloudshell.enable = true;
     lieer.enable = true;
-    mailsetup.enable = true;
   } // lib.optionalAttrs machine.isWork {
     gcert.enable = true;
     mercurial = loadSettings "mercurial";
+  } // lib.optionalAttrs machine.isInteractive {
+    mailsetup.enable = true;
   };
 
   home.packages = with pkgs; [

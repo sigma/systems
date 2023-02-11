@@ -118,8 +118,10 @@
 
     glinux = machine: let
       user = users.corpUser;
-      machine = {isInteractive = false;} // machine // {isWork = true;};
-      specialArgs = { inherit user machine; };
+      specialArgs = { 
+        inherit user;
+        machine= {isInteractive = false; system = "x86_64-linux";} // machine // {isWork = true;};
+      };
     in home-manager.lib.homeManagerConfiguration {
       pkgs = builtins.getAttr "x86_64-linux" nixpkgs.outputs.legacyPackages // nixpkgsConfig;
       modules = hmModules ++ [
