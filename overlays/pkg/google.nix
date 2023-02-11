@@ -15,14 +15,14 @@ let
     fig = "/usr/bin";
   });
 
-in
-{
-  nativeWrapper = final.stdenv.mkDerivation rec {
-    pname = "native-wrapper";
-    version = "goog";
 
-    dontUnpack = true;
-    installPhase = ''
+  helpers = rec {
+    nativeWrapper = final.stdenv.mkDerivation rec {
+      pname = "native-wrapper";
+      version = "goog";
+
+      dontUnpack = true;
+      installPhase = ''
       mkdir -p $out/bin
       cat > $out/bin/native-wrapper << 'EOF'
       #!/bin/sh
@@ -33,21 +33,31 @@ in
       exit 1
       EOF
 
-      cat > $out/bin/git-native-wrapper << 'EOF'
-      #!${final.zsh}/bin/zsh
-
-      if test -x "$NATIVE_WRAPPER_BIN"; then
-        export GIT_EXEC_PATH=''${NATIVE_WRAPPER_BIN:a:h}
-        exec "$NATIVE_WRAPPER_BIN" "$@"
-      fi
-      echo "$NATIVE_WRAPPER_BIN is not installed."
-      exit 1
-      EOF
-
       chmod a+x $out/bin/*native-wrapper
     '';
-  };
+    };
 
+    gitGoogleWrapped = final.stdenv.mkDerivation rec {
+      pname = "git";
+      version = "goog-wrapped";
+
+      buildInputs = [ final.makeWrapper ];
+      dontUnpack = true;
+      installPhase = ''
+      mkdir -p $out/bin
+
+      for path in ${paths.git} ${paths.gitExec} ${paths.gitGoogle}; do
+        for helper in $path/{git,gob}*; do
+          bin=`basename $helper`
+          makeWrapper ${nativeWrapper}/bin/native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN $path/$bin
+        done
+      done
+    '';
+    };
+
+  };
+in
+{
   # a fake git package that just links to the google-one. To be used in
   # home-manager git config for example.
   gitGoogle = final.stdenv.mkDerivation rec {
@@ -59,11 +69,9 @@ in
     installPhase = ''
       mkdir -p $out/bin
 
-      for path in ${paths.git} ${paths.gitExec} ${paths.gitGoogle}; do
-        for helper in $path/{git,gob}*; do
-          bin=`basename $helper`
-          makeWrapper ${final.nativeWrapper}/bin/git-native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN $path/$bin
-        done
+      for helper in ${helpers.gitGoogleWrapped}/bin/*; do
+        bin=`basename $helper`
+        makeWrapper ${helpers.nativeWrapper}/bin/native-wrapper $out/bin/$bin --set GIT_EXEC_PATH ${helpers.gitGoogleWrapped}/bin --set NATIVE_WRAPPER_BIN $helper
       done
     '';
   };
@@ -77,7 +85,7 @@ in
     installPhase = ''
       mkdir -p $out/bin
       for bin in chg hg hgd; do
-        makeWrapper ${final.nativeWrapper}/bin/native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN ${paths.fig}/$bin
+        makeWrapper ${helpers.nativeWrapper}/bin/native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN ${paths.fig}/$bin
       done
     '';
   };
@@ -91,7 +99,7 @@ in
     installPhase = ''
       mkdir -p $out/bin
       for bin in gcert gcertstatus gcertdestroy; do
-        makeWrapper ${final.nativeWrapper}/bin/native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN ${paths.gcert}/$bin
+        makeWrapper ${helpers.nativeWrapper}/bin/native-wrapper $out/bin/$bin --set NATIVE_WRAPPER_BIN ${paths.gcert}/$bin
       done
     '';
   };
