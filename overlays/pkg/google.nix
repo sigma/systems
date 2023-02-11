@@ -46,8 +46,12 @@ let
       installPhase = ''
       mkdir -p $out/bin
 
-      for path in ${paths.gitGoogle} ${paths.gitExec} ${paths.git}; do
-        for helper in $path/*; do
+      for helper in ${paths.gitExec}/*; do
+        ln -s $helper $out/bin/$bin
+      done
+
+      for path in ${paths.gitGoogle} ${paths.git}; do
+        for helper in $path/{git,gob,scalar}*; do
           bin=`basename $helper`
           ln -sf $helper $out/bin/$bin
         done
