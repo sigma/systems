@@ -469,10 +469,85 @@ knowledge base using =org-roam=, which I also export using custom formats.
         (browse-url (concat "http://" link))
         t))))
 #+end_src
+
+**** Yank DWIM
+I also maintain some logic to facilitate yanking text into an org file without too much hassle.
+
+It leverages language-detection to handle code blocks
+#+begin_src emacs-lisp :tangle modules/config/private/packages.el
+(package! language-detection)
+#+end_src
+
+And a few helper functions.
+#+begin_src elisp :tangle modules/config/private/autoload/org-yank-dwim.el
+(defun org-yank-dwim-markdown-link (txt)
+  "Transform a markdown link TXT into a proper org link."
+  (when (string-match "^\\[\\(.+\\)\\](\\(.*\\))$" txt)
+    (org-link-make-string (match-string 2 txt) (match-string 1 txt))))
+
+(defun org-yank-dwim-code-block (txt)
+  "Transform a code snippet TXT into a proper org code block."
+  (unless (org-in-src-block-p)
+    (let ((lang (cdr (assoc (language-detection-string txt) org-yank-dwim-lang-list)))
+        (eol (string-suffix-p "\n" txt)))
+    (when lang
+      (format "#+begin_src %s\n%s%s#+end_src\n" lang txt (if eol "" "\n"))))))
+
+(defun org-yank-dwim (&optional _arg)
+  "Do what I mean when yanking text."
+  (let* ((mark (mark))
+         (point (point))
+         (orig (buffer-substring-no-properties mark point))
+         (txt (run-hook-with-args-until-success 'org-yank-dwim-functions orig)))
+    (when txt
+      (delete-region mark point)
+      (insert txt)
+      (push-mark mark 'nomsg))))
+
+;;;###autoload
+(define-minor-mode org-yank-dwim-mode
+  "Alter yanked text to fit `org-mode' better."
+  :lighter "^V"
+  (if org-yank-dwim-mode
+      (add-function :after (symbol-function 'org-yank) #'org-yank-dwim)
+    (remove-function (symbol-function 'org-yank) #'org-yank-dwim)))
+#+end_src
+
+#+begin_src elisp :tangle modules/config/private/config.el
+(defvar org-yank-dwim-lang-list
+  '((c . "C")
+    (clojure . "clojure")
+    (cpp . "cpp")
+    (css . "css")
+    (emacslisp . "elisp")
+    (fortran . "F90")
+    (go . "go")
+    (haskell . "haskell")
+    (html . "html")
+    (java . "java")
+    (javascript . "javascript")
+    (json . "json")
+    (latex . "latex")
+    (python . "python")
+    (ruby . "ruby")
+    (rust . "rust")
+    (shell . "shell")
+    (xml . "xml")))
+
+(defvar org-yank-dwim-functions (list 'org-yank-dwim-markdown-link 'org-yank-dwim-code-block))
+
+(use-package! language-detection
+  :preface
+  (after! org
+    (add-hook! org-mode #'org-yank-dwim-mode)))
+#+end_src
 **** Roam
 I need a few Roam extensions beyond what's built into Doom.
 
 ***** Config
+:PROPERTIES:
+:ID:       56527166-9abe-49e1-b5c1-b6d01ec90c63
+:END:
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
 (use-package! org-roam
   :after org
