@@ -556,6 +556,12 @@ I need a few Roam extensions beyond what's built into Doom.
         org-roam-capture-templates
         '(("d" "default" plain "%?" :target
            (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+setupfile: ../_setup_roam.org\n#+title: ${title}\n#+category: ${title}\n")
+           :unnarrowed t)
+          ("p" "person" plain "%?"
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" ":PROPERTIES:\n:ROAM_REFS: http://who/%^{ldap}\n:ROAM_ALIASES: @%\\1\n:END:\n#+setupfile: ../_setup_roam.org\n#+title: ${title}\n#+category: ${title}\n#+filetags: :person:\n")
+           :unnarrowed t)
+          ("u" "document" plain "%?"
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" ":PROPERTIES:\n%(yrh/record-parsed-document):ROAM_REFS: %(identity -local-ref)\n:ROAM_ALIASES: %(identity -local-title)\n:END:\n#+setupfile: ../_setup_roam.org\n#+title: ${title}\n#+category: ${title}\n#+filetags: :doc:\n")
            :unnarrowed t))
         org-roam-dailies-capture-templates
         '(("d" "default" entry "* %?" :target
@@ -563,6 +569,9 @@ I need a few Roam extensions beyond what's built into Doom.
 #+end_src
 
 ***** UI
+:PROPERTIES:
+:ID:       9934b0ec-6192-40bf-8f52-6c62d54557fa
+:END:
 The Roam UI feature requires websocket support.
 #+begin_src emacs-lisp :tangle modules/config/private/packages.el
 (when (modulep! :lang org +roam2)
@@ -584,6 +593,9 @@ The Roam UI feature requires websocket support.
 #+end_src
 
 ***** Vulpea
+:PROPERTIES:
+:ID:       49bc1b23-8198-4a74-899e-d1d9a2ef9613
+:END:
 Backlinks are managed using the =vulpea= package. They work by automatically
 populating additional DB tables based on the content of the newly saved files.
 #+begin_src emacs-lisp :tangle modules/config/private/packages.el
@@ -699,6 +711,27 @@ tasks."
               (entry (bibtex-completion-get-entry citekey))
               (url (funcall orb-bibtex-entry-get-value-function "url" entry)))
     (org-roam-ref-add url)))
+
+;;;###autoload
+(defun yrh/parse-document-representation (&optional repr)
+  (interactive)
+  (unless repr
+    (setq repr
+          (read-string "Document: ")))
+  (cond ((string-match "\\[\\(.+\\)\\](\\(.*\\))" repr)
+         (cons (match-string 1 repr) (match-string 2 repr)))
+        ((string-match-p "https?://.*")
+         (cons repr repr))
+        (t
+         (cons "" ""))))
+
+;;;###autoload
+(defun yrh/record-parsed-document ()
+  (let ((repr (yrh/parse-document-representation)))
+    (set (make-local-variable '-local-title) (car repr))
+    (set (make-local-variable '-local-ref) (cdr repr))
+    ""))
+
 #+end_src
 
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
