@@ -21,13 +21,13 @@ let
   systemBuild = if isDarwin then ''
     ${pkgs.nixFlakes}/bin/nix build ".#darwinConfigurations.`hostname -s`.system" --experimental-features "flakes nix-command" --show-trace
   '' else ''
-    ${pkgs.nixFlakes}/bin/nix run ".#home-manager" --  build --flake ".#`hostname -s`"
+    ${pkgs.nixFlakes}/bin/nix run ".#home-manager" --experimental-features "flakes nix-command" --  build --flake ".#`hostname -s`"
   '';
 
   systemActivate = if isDarwin then ''
     sudo ./result/activate
   '' else ''
-    ${pkgs.nixFlakes}/bin/nix run ".#home-manager" --  switch --flake ".#`hostname -s`"
+    ${pkgs.nixFlakes}/bin/nix run ".#home-manager" --experimental-features "flakes nix-command" --  switch --flake ".#`hostname -s`"
   '';
 
   systemInstall = pkgs.writeShellScriptBin "systemInstall" ''
