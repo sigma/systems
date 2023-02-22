@@ -37,6 +37,9 @@
     nix-doom-emacs.inputs.flake-compat.follows = "flake-compat";
     fenix.url = "github:nix-community/fenix";
     fenix.inputs.nixpkgs.follows = "nixpkgs";
+    devshell.url = "github:numtide/devshell";
+    devshell.inputs.nixpkgs.follows = "nixpkgs";
+    devshell.inputs.flake-utils.follows = "utils";
 
     maschine-hacks.url = github:sigma/maschine-hacks;
     maschine-hacks.inputs.flake-utils.follows = "utils";
@@ -45,7 +48,7 @@
 
   outputs = inputs @ {
     self, nixpkgs, nixos-stable, darwin-stable, nixpkgs-master,
-      darwin, home-manager, comma, emacs, fenix, nix-doom-emacs,
+      darwin, home-manager, comma, emacs, fenix, devshell, nix-doom-emacs,
       maschine-hacks, ...
   }: let
     # Configuration for `nixpkgs`
@@ -71,6 +74,9 @@
         comma.overlays.default
         emacs.overlay
         fenix.overlays.default
+
+        # devshell overlay
+        devshell.overlay
 
         # my overlays
         maschine-hacks.overlays.default
@@ -151,14 +157,21 @@
         shirka = glinux hosts.shirka;
         ghost-wheel = glinux hosts.ghost-wheel;
       };
-
-      packages = home-manager.packages;
-    } // inputs.utils.lib.eachDefaultSystem (system:
+    } // inputs.utils.lib.eachDefaultSystem (system: {
+      packages = let default = home-manager.packages.${system}.home-manager; in {
+        inherit default;
+        home-manager = default;
+      };
+    }) // inputs.utils.lib.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = nixpkgs.legacyPackages.${system} // {
+          devshell = devshell.legacyPackages.${system};
+        };
       in {
         devShells = {
-          default = import ./shell.nix { inherit pkgs; };
+          default = import ./shell.nix {
+            inherit pkgs;
+          };
         };
       });
 }

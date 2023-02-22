@@ -40,6 +40,6 @@ let
     ${systemBuild}
   '';
 
-in pkgs.mkShell {
-  buildInputs = [ pkgs.nixFlakes systemTest systemInstall ];
+in pkgs.devshell.mkShell {
+  packages = [ pkgs.nixFlakes systemTest systemInstall ];
 }
