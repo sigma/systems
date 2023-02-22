@@ -30,16 +30,25 @@ let
     ${pkgs.nixFlakes}/bin/nix run ".#home-manager" --experimental-features "flakes nix-command" --  switch --flake ".#`hostname -s`"
   '';
 
-  systemInstall = pkgs.writeShellScriptBin "systemInstall" ''
-    ${systemSetup}
-    ${systemBuild}
-    ${systemActivate}
-  '';
-
-  systemTest = pkgs.writeShellScriptBin "systemTest" ''
-    ${systemBuild}
-  '';
-
 in pkgs.devshell.mkShell {
-  packages = [ pkgs.nixFlakes systemTest systemInstall ];
+  packages = [ pkgs.nixFlakes ];
+
+  commands = [
+    {
+      name = "systemInstall";
+      category = "system";
+      command = ''
+        ${systemSetup}
+        ${systemBuild}
+        ${systemActivate}
+      '';
+    }
+    {
+      name = "systemTest";
+      category = "system";
+      command = ''
+        ${systemBuild}
+      '';
+    }
+  ];
 }
