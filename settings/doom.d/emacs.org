@@ -922,9 +922,13 @@ tasks."
       '(("y" "Yann view"
          ((agenda "" ((org-agenda-start-day "today")
                       (org-agenda-span 'day)
+                      (org-agenda-start-with-log-mode t)
+                      (org-agenda-log-mode-items '(closed clock state))
+                      (org-agenda-archives-mode t)
                       (org-super-agenda-groups
                        '((:name "Today"
                           :time-grid t
+                          :log t
                           :date today
                           :todo "TODAY"
                           :scheduled today
