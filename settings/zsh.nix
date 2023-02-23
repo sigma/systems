@@ -1,6 +1,4 @@
-{ config, ... }:
-
-{
+{config, ...}: {
   enable = true;
 
   # dotDir = ".config/zsh";
@@ -184,7 +182,7 @@ zstyle ':fzf-tab:complete:cd:*' extra-opts --preview=$extract'exa -1 --color=alw
     }
     {
       name = "junegunn/fzf";
-      tags = ["wait=1" "lucid" "depth=1" "bindmap='^T -> ^F; ^R -> ^X^R; \ec -> ^[g'" "pick=shell/key-bindings.zsh" ];
+      tags = ["wait=1" "lucid" "depth=1" "bindmap='^T -> ^F; ^R -> ^X^R; \ec -> ^[g'" "pick=shell/key-bindings.zsh"];
     }
     {
       name = "chisui/zsh-nix-shell";

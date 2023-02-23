@@ -1,8 +1,11 @@
-{ config, pkgs, user, ... }:
-
 {
+  config,
+  pkgs,
+  user,
+  ...
+}: {
   enable = true;
   new = {
-    tags = [ "new" ];
+    tags = ["new"];
   };
 }

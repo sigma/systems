@@ -1,11 +1,12 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-
-let
-  cfg = config.programs.cloudshell;
-in
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
+  cfg = config.programs.cloudshell;
+in {
   options.programs.cloudshell = {
     enable = mkEnableOption "cloudshell utils";
   };
@@ -37,7 +38,7 @@ in
         done
 
         exec ${pkgs.nmap}/bin/ncat "$HOST" "$PORT"
-        '';
+      '';
 
       executable = true;
     };

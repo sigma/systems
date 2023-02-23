@@ -1,6 +1,5 @@
-final: prev:
-{
-  afsctool = prev.afsctool.overrideAttrs ( old: rec {
+final: prev: {
+  afsctool = prev.afsctool.overrideAttrs (old: rec {
     version = "1.7.3";
     src = final.fetchFromGitHub {
       owner = "RJVB";

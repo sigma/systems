@@ -1,8 +1,15 @@
-{ config, pkgs, machine, user, ... }:
-
 {
+  config,
+  pkgs,
+  machine,
+  user,
+  ...
+}: {
   enable = true;
-  package = if machine.isWork then pkgs.gitGoogle else pkgs.git;
+  package =
+    if machine.isWork
+    then pkgs.gitGoogle
+    else pkgs.git;
 
   aliases = {
     ldiff = "difftool -t latex";
@@ -31,33 +38,33 @@
 
   extraConfig = {
     core = {
-	    deltaBaseCacheLimit = "128m";
+      deltaBaseCacheLimit = "128m";
     };
 
     color = {
-	    diff = "auto";
-	    status = "auto";
-	    branch = "auto";
-	    ui = "auto";
+      diff = "auto";
+      status = "auto";
+      branch = "auto";
+      ui = "auto";
     };
 
     "color.branch" = {
-	    current = "yellow reverse";
-	    local = "yellow";
-	    remote = "green";
+      current = "yellow reverse";
+      local = "yellow";
+      remote = "green";
     };
 
     "color.diff" = {
-	    meta = "yellow bold";
-	    frag = "magenta bold";
-	    old = "red bold";
-	    new = "green bold";
+      meta = "yellow bold";
+      frag = "magenta bold";
+      old = "red bold";
+      new = "green bold";
     };
 
     "color.status" = {
-	    added = "yellow";
-	    changed = "green";
-	    untracked = "cyan";
+      added = "yellow";
+      changed = "green";
+      untracked = "cyan";
     };
 
     branch = {
@@ -69,27 +76,27 @@
     };
 
     "diff.lisp" = {
-	    xfuncname = "^(((;;;+ )|\\(|([ \t]+\\(((cl-|el-patch-)?def(un|var|macro|method|custom)|gb/))).*)$";
+      xfuncname = "^(((;;;+ )|\\(|([ \t]+\\(((cl-|el-patch-)?def(un|var|macro|method|custom)|gb/))).*)$";
     };
 
     "diff.org" = {
-	    xfuncname = "^(\\*+ +.*)$";
+      xfuncname = "^(\\*+ +.*)$";
     };
 
     difftool = {
-	    prompt = false;
+      prompt = false;
     };
 
     rebase = {
-	    autosquash = true;
+      autosquash = true;
     };
 
     push = {
-	    default = "matching";
+      default = "matching";
     };
 
     init = {
-	    defaultBranch = "main";
+      defaultBranch = "main";
       templateDir = "${config.home.homeDirectory}/.git-template";
     };
 
@@ -118,15 +125,33 @@
 
   ignores = [
     # For emacs:
-    "*~" "*.*~" "\\#*" ".\\#*"
+    "*~"
+    "*.*~"
+    "\\#*"
+    ".\\#*"
     # For vim:
-    "*.swp" ".*.sw[a-z]" "*.un~" ".netrwhist"
+    "*.swp"
+    ".*.sw[a-z]"
+    "*.un~"
+    ".netrwhist"
     # OS files
-    ".DS_Store?" ".DS_Store" ".CFUserTextEncoding" ".Trash" ".Xauthority" "thumbs.db" "Thumbs.db" "Icon?"
+    ".DS_Store?"
+    ".DS_Store"
+    ".CFUserTextEncoding"
+    ".Trash"
+    ".Xauthority"
+    "thumbs.db"
+    "Thumbs.db"
+    "Icon?"
     # Code
-    ".ccls-cache/" ".sass-cache/" "__pycache__/"
+    ".ccls-cache/"
+    ".sass-cache/"
+    "__pycache__/"
     # Compiled things
-    "*.class" "*.exe" "*.o" "*.pyc" "*.elc"
+    "*.class"
+    "*.exe"
+    "*.o"
+    "*.pyc"
+    "*.elc"
   ];
-
 }

@@ -1,7 +1,10 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
-let
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
   cfg = config.modules.editors.emacs;
 in {
   options.modules.editors.emacs = {
@@ -33,9 +36,12 @@ in {
       gnutls
 
       # Module dependencies
-      (aspellWithDicts (ds: with ds; [
-        en en-computers en-science
-      ]))
+      (aspellWithDicts (ds:
+        with ds; [
+          en
+          en-computers
+          en-science
+        ]))
       editorconfig-core-c
       sqlite
       texlive.combined.scheme-full

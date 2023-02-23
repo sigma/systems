@@ -1,8 +1,11 @@
-{ user, config, lib, pkgs, ... }:
-
-with lib;
-
-let
+{
+  user,
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
   cfg = config.programs.mailsetup;
 
   pkg = pkgs.stdenv.mkDerivation rec {
@@ -24,10 +27,11 @@ let
       PROFILE=""
 
       ${(builtins.concatStringsSep "\n" (map (prof: ''
-      if [[ "$FROM" =~ "(${builtins.concatStringsSep "|" prof.emails})" ]]; then
-        PROFILE=${prof.name}
-      fi
-      '') user.profiles))}
+          if [[ "$FROM" =~ "(${builtins.concatStringsSep "|" prof.emails})" ]]; then
+            PROFILE=${prof.name}
+          fi
+        '')
+        user.profiles))}
 
       if [ -z "$PROFILE" ]; then
         echo "invalid From address: $FROM" >/dev/stderr
@@ -43,11 +47,12 @@ let
       SCRIPT_DIR=''${0:a:h}
 
       ${(builtins.concatStringsSep "\n" (map (prof: ''
-      PROFILE_DIR=${config.accounts.email.maildirBasePath}/${prof.name}
-      if [ -d "$PROFILE_DIR" ]; then
-        cd "$PROFILE_DIR" && ${pkgs.lieer}/bin/gmi pull && "$SCRIPT_DIR/gmi-tag" && ${pkgs.lieer}/bin/gmi push
-        fi
-      '') user.profiles))}
+          PROFILE_DIR=${config.accounts.email.maildirBasePath}/${prof.name}
+          if [ -d "$PROFILE_DIR" ]; then
+            cd "$PROFILE_DIR" && ${pkgs.lieer}/bin/gmi pull && "$SCRIPT_DIR/gmi-tag" && ${pkgs.lieer}/bin/gmi push
+            fi
+        '')
+        user.profiles))}
       EOF
 
       cat >> $out/bin/gmi-tag << 'EOF'
@@ -60,9 +65,7 @@ let
       chmod a+x $out/bin/gmi-*
     '';
   };
-
-in
-{
+in {
   options.programs.mailsetup = {
     enable = mkEnableOption "mailsetup";
 
@@ -77,49 +80,49 @@ in
     home.packages = [pkg];
 
     home.file.".config/afew/expire.py".text = ''
-    from afew.filters.BaseFilter  import Filter
-    from afew.FilterRegistry import register_filter
+      from afew.filters.BaseFilter  import Filter
+      from afew.FilterRegistry import register_filter
 
-    @register_filter
-    class ExpireFilter(Filter):
-      message = 'Expire tagged messages'
+      @register_filter
+      class ExpireFilter(Filter):
+        message = 'Expire tagged messages'
 
-      def __init__(self, database, tag="", after=""):
-        super().__init__(database)
-        self.query = "(tag:%s AND NOT tag:trash AND date:..%s)" % (tag, after)
+        def __init__(self, database, tag="", after=""):
+          super().__init__(database)
+          self.query = "(tag:%s AND NOT tag:trash AND date:..%s)" % (tag, after)
 
-      def handle_message(self, message):
-        self.add_tags(message, 'trash')
+        def handle_message(self, message):
+          self.add_tags(message, 'trash')
     '';
 
     home.file.".config/afew/kill.py".text = ''
-    from afew.filters.KillThreadsFilter import KillThreadsFilter
-    from afew.FilterRegistry import register_filter
+      from afew.filters.KillThreadsFilter import KillThreadsFilter
+      from afew.FilterRegistry import register_filter
 
-    @register_filter
-    class NewKillThreadsFilter(KillThreadsFilter):
+      @register_filter
+      class NewKillThreadsFilter(KillThreadsFilter):
 
-      def __init__(self, database):
-        super().__init__(database)
-        self.query = "(tag:new AND (%s))" % (self.query)
+        def __init__(self, database):
+          super().__init__(database)
+          self.query = "(tag:new AND (%s))" % (self.query)
     '';
 
     home.file.".config/afew/archive.py".text = ''
-    from afew.filters.ArchiveSentMailsFilter import ArchiveSentMailsFilter
-    from afew.FilterRegistry import register_filter
+      from afew.filters.ArchiveSentMailsFilter import ArchiveSentMailsFilter
+      from afew.FilterRegistry import register_filter
 
-    @register_filter
-    class NewArchiveSentMailsFilter(ArchiveSentMailsFilter):
+      @register_filter
+      class NewArchiveSentMailsFilter(ArchiveSentMailsFilter):
 
-      def __init__(self, database):
-        super().__init__(database)
-        self.query = "(tag:new AND (%s))" % (self.query)
+        def __init__(self, database):
+          super().__init__(database)
+          self.query = "(tag:new AND (%s))" % (self.query)
     '';
 
     launchd.agents.gmi-sync = {
       enable = true;
       config = {
-        ProgramArguments = [ "${pkg}/bin/gmi-sync" ];
+        ProgramArguments = ["${pkg}/bin/gmi-sync"];
         KeepAlive = false;
         RunAtLoad = true;
         StartInterval = 60;

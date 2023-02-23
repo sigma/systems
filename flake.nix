@@ -40,6 +40,7 @@
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
     devshell.inputs.flake-utils.follows = "utils";
+    nix-filter.url = "github:numtide/nix-filter";
 
     maschine-hacks.url = github:sigma/maschine-hacks;
     maschine-hacks.inputs.flake-utils.follows = "utils";
@@ -47,20 +48,34 @@
   };
 
   outputs = inputs @ {
-    self, nixpkgs, nixos-stable, darwin-stable, nixpkgs-master,
-      darwin, home-manager, comma, emacs, fenix, devshell, nix-doom-emacs,
-      maschine-hacks, ...
+    self,
+    comma,
+    darwin,
+    darwin-stable,
+    devshell,
+    emacs,
+    fenix,
+    home-manager,
+    maschine-hacks,
+    nix-doom-emacs,
+    nix-filter,
+    nixos-stable,
+    nixpkgs,
+    nixpkgs-master,
+    ...
   }: let
     # Configuration for `nixpkgs`
     nixpkgsConfig = {
-      config = { allowUnfree = true; };
+      config = {allowUnfree = true;};
       overlays = [
         # Add stable and master package sets for convenience
         (
-          final: prev:
-          let
+          final: prev: let
             system = final.stdenv.system;
-            nixpkgs-stable = if final.stdenv.isDarwin then darwin-stable else nixos-stable;
+            nixpkgs-stable =
+              if final.stdenv.isDarwin
+              then darwin-stable
+              else nixos-stable;
           in {
             master = nixpkgs-master.legacyPackages.${system};
             stable = nixpkgs-stable.legacyPackages.${system};
@@ -75,8 +90,9 @@
         emacs.overlay
         fenix.overlays.default
 
-        # devshell overlay
+        # utils overlay
         devshell.overlay
+        nix-filter.overlays.default
 
         # my overlays
         maschine-hacks.overlays.default
@@ -100,48 +116,62 @@
     };
 
     mac = machine: let
-      user = if machine.isWork then users.corpUser else users.personalUser;
-      specialArgs = { inherit user machine; };
-    in darwin.lib.darwinSystem {
-      inherit (machine) system;
-      inherit specialArgs;
-      modules = nixpkgs.lib.attrValues darwinModules ++ [
-        # Main `nix-darwin` config
-        ./configuration.nix
-        ./mac-user.nix
-        # `home-manager` module
-        home-manager.darwinModules.home-manager
-        {
-          nixpkgs = nixpkgsConfig;
-          # `home-manager` config
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.${user.login} = nixpkgs.lib.mkMerge hmModules;
-          home-manager.extraSpecialArgs = specialArgs;
-        }
-      ];
-    };
+      user =
+        if machine.isWork
+        then users.corpUser
+        else users.personalUser;
+      specialArgs = {inherit user machine;};
+    in
+      darwin.lib.darwinSystem {
+        inherit (machine) system;
+        inherit specialArgs;
+        modules =
+          nixpkgs.lib.attrValues darwinModules
+          ++ [
+            # Main `nix-darwin` config
+            ./configuration.nix
+            ./mac-user.nix
+            # `home-manager` module
+            home-manager.darwinModules.home-manager
+            {
+              nixpkgs = nixpkgsConfig;
+              # `home-manager` config
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.${user.login} = nixpkgs.lib.mkMerge hmModules;
+              home-manager.extraSpecialArgs = specialArgs;
+            }
+          ];
+      };
 
     glinux = machine: let
       user = users.corpUser;
-      specialArgs = { 
+      specialArgs = {
         inherit user;
-        machine= {isInteractive = false; system = "x86_64-linux";} // machine // {isWork = true;};
+        machine =
+          {
+            isInteractive = false;
+            system = "x86_64-linux";
+          }
+          // machine
+          // {isWork = true;};
       };
-    in home-manager.lib.homeManagerConfiguration {
-      pkgs = builtins.getAttr "x86_64-linux" nixpkgs.outputs.legacyPackages // nixpkgsConfig;
-      modules = hmModules ++ [
-        {
-          home = {
-            username = user.login;
-            homeDirectory = "/usr/local/google/home/${user.login}";
-            stateVersion = "22.11";
-          };
-        }
-      ];
-      extraSpecialArgs = specialArgs;
-    };
-
+    in
+      home-manager.lib.homeManagerConfiguration {
+        pkgs = builtins.getAttr "x86_64-linux" nixpkgs.outputs.legacyPackages // nixpkgsConfig;
+        modules =
+          hmModules
+          ++ [
+            {
+              home = {
+                username = user.login;
+                homeDirectory = "/usr/local/google/home/${user.login}";
+                stateVersion = "22.11";
+              };
+            }
+          ];
+        extraSpecialArgs = specialArgs;
+      };
   in
     {
       # My `nix-darwin` configs
@@ -157,21 +187,26 @@
         shirka = glinux hosts.shirka;
         ghost-wheel = glinux hosts.ghost-wheel;
       };
-    } // inputs.utils.lib.eachDefaultSystem (system: {
-      packages = let default = home-manager.packages.${system}.home-manager; in {
+    }
+    // inputs.utils.lib.eachDefaultSystem (system: {
+      packages = let
+        default = home-manager.packages.${system}.home-manager;
+      in {
         inherit default;
         home-manager = default;
       };
-    }) // inputs.utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system} // {
+    })
+    // inputs.utils.lib.eachDefaultSystem (system: let
+      pkgs =
+        nixpkgs.legacyPackages.${system}
+        // {
           devshell = devshell.legacyPackages.${system};
         };
-      in {
-        devShells = {
-          default = import ./shell.nix {
-            inherit pkgs;
-          };
+    in {
+      devShells = {
+        default = import ./shell.nix {
+          inherit pkgs;
         };
-      });
+      };
+    });
 }

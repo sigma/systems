@@ -1,5 +1,11 @@
-{ config, lib, pkgs, machine, user, ... }:
-
+{
+  config,
+  lib,
+  pkgs,
+  machine,
+  user,
+  ...
+}:
 lib.optionalAttrs machine.isWork {
   enable = true;
   package = pkgs.fig;

@@ -1,14 +1,15 @@
-{ ... }:
-
-{
+{...}: {
   enable = true;
   config = {
     theme = "OneHalfDark";
     style = "numbers,changes,header";
     italic-text = "always";
     map-syntax = [
-      "jsonnet:json" "libsonnet:json"
-      "bazel:py" "BUILD:py" "WORKSPACE:py"
+      "jsonnet:json"
+      "libsonnet:json"
+      "bazel:py"
+      "BUILD:py"
+      "WORKSPACE:py"
     ];
   };
 }

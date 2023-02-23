@@ -1,5 +1,3 @@
-final: prev:
-
-{
+final: prev: {
   nix = prev.nixFlakes;
 }

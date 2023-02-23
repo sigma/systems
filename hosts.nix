@@ -1,21 +1,28 @@
-{ lib }:
-
-let
+{lib}: let
   dockerPort = 2375;
   codeserverPort = 49363;
 
   sshHost = r: {
-    name = if builtins.hasAttr "alias" r then r.alias else r.name;
-    value = {
-      sendEnv = ["WINDOW"];
-    } // (lib.optionalAttrs (builtins.hasAttr "name" r) {
-      hostname = r.name;
-    }) // (lib.optionalAttrs (builtins.hasAttr "user" r) {
-      user = r.user;
-    }) // (lib.optionalAttrs (builtins.hasAttr "sshOpts" r) r.sshOpts);
+    name =
+      if builtins.hasAttr "alias" r
+      then r.alias
+      else r.name;
+    value =
+      {
+        sendEnv = ["WINDOW"];
+      }
+      // (lib.optionalAttrs (builtins.hasAttr "name" r) {
+        hostname = r.name;
+      })
+      // (lib.optionalAttrs (builtins.hasAttr "user" r) {
+        user = r.user;
+      })
+      // (lib.optionalAttrs (builtins.hasAttr "sshOpts" r) r.sshOpts);
   };
-  sshBlocks = mac: if builtins.hasAttr "remotes" mac then
-    builtins.listToAttrs (builtins.map sshHost mac.remotes) else {};
+  sshBlocks = mac:
+    if builtins.hasAttr "remotes" mac
+    then builtins.listToAttrs (builtins.map sshHost mac.remotes)
+    else {};
 
   cloudshellCmd = proj: "/usr/bin/env DEVSHELL_PROJECT_ID=${proj} bash -l";
 
@@ -29,24 +36,34 @@ let
     host.port = codeserverPort;
   };
 
-  unmanaged = mac: mac // {
-    isInteractive = false;
-    isWork = false;
-  };
-  work = mac: mac // {
-    isInteractive = false;
-    isWork = true;
-    sshMatchBlocks = sshBlocks mac;
-  };
-  cloudshell = mac: (unmanaged mac) // {
-    system = "x86_64-linux";
-  };
-  cloudtop = mac: (work mac) // {
-    system = "x86_64-linux";
-  };
-  gmac = mac: (work mac) // {
-    isInteractive = true;
-  };
+  unmanaged = mac:
+    mac
+    // {
+      isInteractive = false;
+      isWork = false;
+    };
+  work = mac:
+    mac
+    // {
+      isInteractive = false;
+      isWork = true;
+      sshMatchBlocks = sshBlocks mac;
+    };
+  cloudshell = mac:
+    (unmanaged mac)
+    // {
+      system = "x86_64-linux";
+    };
+  cloudtop = mac:
+    (work mac)
+    // {
+      system = "x86_64-linux";
+    };
+  gmac = mac:
+    (work mac)
+    // {
+      isInteractive = true;
+    };
 in rec {
   cs = cloudshell {
     alias = "cs";

@@ -1,6 +1,4 @@
-final: prev:
-
-{
+final: prev: {
   zinit = prev.zinit.overrideAttrs (oldAttrs: rec {
     version = "v3.9.0";
     src = final.fetchFromGitHub {

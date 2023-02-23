@@ -1,11 +1,21 @@
-{ config, lib, pkgs, user, ... }:
-
+{
+  config,
+  lib,
+  pkgs,
+  user,
+  ...
+}:
 pkgs.stdenv.mkDerivation {
   pname = "emacs-config";
   version = "dev";
-  src = ./. ;
+  src = pkgs.nix-filter {
+    root = ./.;
+    include = [
+      "emacs.org"
+    ];
+  };
 
-  buildInputs = [ pkgs.emacs pkgs.coreutils ];
+  buildInputs = [pkgs.emacs pkgs.coreutils];
   buildPhase = ''
     cat <<EOF > +id.el
     (setq user-full-name "${user.name}"
