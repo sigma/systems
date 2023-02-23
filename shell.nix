@@ -43,7 +43,7 @@ in
 
     commands = [
       {
-        name = "systemInstall";
+        name = "system-install";
         category = "system";
         command = ''
           ${systemSetup}
@@ -52,7 +52,7 @@ in
         '';
       }
       {
-        name = "systemTest";
+        name = "system-test";
         category = "system";
         command = ''
           ${systemBuild}
