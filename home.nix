@@ -114,7 +114,9 @@ in
     prettyping
 
     # Useful nix related tools
-    cachix # adding/managing alternative binary caches hosted by Cachix
+    cachix
+    statix
+    alejandra
     comma
 
     nix
