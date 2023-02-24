@@ -355,7 +355,6 @@ the purpose.
 (setq custom-file "~/.emacs.d/custom.el")
 #+end_src
 
-
 * Modules
 I have a small number of private packages to make available to Doom Emacs.
 
@@ -1200,4 +1199,14 @@ to disable uniquify when using persp-mode"
 
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
 (use-package! d2-mode)
+#+end_src
+**** envrc
+#+begin_src emacs-lisp :tangle modules/config/private/packages.el
+(package! envrc)
+#+end_src
+
+#+begin_src emacs-lisp :tangle modules/config/private/config.el
+(use-package! envrc
+  :config
+  (envrc-global-mode))
 #+end_src
