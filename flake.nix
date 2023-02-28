@@ -91,7 +91,7 @@
         fenix.overlays.default
 
         # utils overlay
-        devshell.overlay
+        devshell.overlays.default
         nix-filter.overlays.default
 
         # my overlays
