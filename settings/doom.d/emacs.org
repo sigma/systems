@@ -675,11 +675,14 @@ tasks."
    (seq-map
     #'car
     (org-roam-db-query
-     [:select [nodes:file]
-      :from tags
-      :left-join nodes
-      :on (= tags:node-id nodes:id)
-      :where (like tag (quote "%\"roam_tasks\"%"))]))))
+     (vconcat
+      [:select [nodes:file]
+       :from tags
+       :left-join nodes
+       :on (= tags:node-id nodes:id)
+       :where
+       ]
+      (list `(like tag (quote ,(format "%%\"%s\"%%" yrh/roam-tasks-tag)))))))))
 
 ;;;###autoload
 (defun yrh/inject-vulpea-project-files (org-agenda-files--output)
