@@ -563,8 +563,58 @@ I need a few Roam extensions beyond what's built into Doom.
            (file+head "%<%Y%m%d%H%M%S>-${slug}.org" ":PROPERTIES:\n%(yrh/record-parsed-document):ROAM_REFS: %(identity -local-ref)\n:ROAM_ALIASES: %(identity -local-title)\n:END:\n#+setupfile: ../_setup_roam.org\n#+title: ${title}\n#+category: ${title}\n#+filetags: :doc:\n")
            :unnarrowed t))
         org-roam-dailies-capture-templates
-        '(("d" "default" entry "* %?" :target
-           (file+head "%<%Y-%m-%d>.org" "#+setupfile: ../../_setup_roam_diary.org\n#+title: %<%Y-%m-%d>\n#+filetags: :journal:\n")))))
+        '(("d" "default" plain "** %?" :target
+           (file+head+olp "%<%G-%m>.org" "#+setupfile: ../../_setup_roam_diary.org\n#+title: %<%G-%m>\n#+filetags: :journal:\n"
+                       ("[%<%Y-%m-%d %a>]"))))))
+#+end_src
+***** Dailies
+#+begin_src emacs-lisp :tangle modules/config/private/autoload/roam.el
+(require 'calendar)
+
+;;;###autoload
+(defun yrh/org-roam-dailies-add-ids ()
+  (interactive)
+  (org-map-entries #'org-id-get-create "LEVEL=1"))
+
+;;;###autoload
+(defun yrh/org-roam-dailies-entries (month year)
+  (let* ((query (vconcat
+                 [:select [title]
+                  :from nodes
+                  :where
+                  ]
+                 (list `(like title (quote ,(format "%%[%04d-%02d-%%" year month))))))
+         (db-entries (org-roam-db-query query)))
+    (mapcar (lambda (e)
+              (let ((p (parse-time-string (car e))))
+                (list (nth 4 p) (nth 3 p) (nth 5 p))))
+            db-entries)))
+
+;;;###autoload
+(defun yrh/org-roam-dailies-calendar-mark-monthly-entries ()
+  "Mark days in the calendar for which a daily-note is present."
+  (let ((dailies-dir (expand-file-name org-roam-dailies-directory org-roam-directory)))
+    (when (file-exists-p dailies-dir)
+      (let* ((month displayed-month)
+             (year displayed-year)
+             (range (list (calendar-increment-month-cons -1 month year)
+                          (cons month year)
+                          (calendar-increment-month-cons 1 month year))))
+        (mapc (lambda (item)
+                (let ((fname (expand-file-name (format "%04d-%02d.org" (cdr item) (car item)) dailies-dir)))
+                  (when (file-exists-p fname)
+                    (let ((entries (yrh/org-roam-dailies-entries (car item) (cdr item))))
+                      (mapc (lambda (e)
+                              (when (calendar-date-is-visible-p e)
+                                (calendar-mark-visible-date e 'org-roam-dailies-calendar-note)))
+                            entries)))))
+              range)))))
+#+end_src
+
+#+begin_src emacs-lisp :tangle modules/config/private/config.el
+(add-hook 'org-roam-dailies-find-file-hook #'yrh/org-roam-dailies-add-ids)
+(add-hook 'calendar-today-visible-hook #'yrh/org-roam-dailies-calendar-mark-monthly-entries)
+(add-hook 'calendar-today-invisible-hook #'yrh/org-roam-dailies-calendar-mark-monthly-entries)
 #+end_src
 
 ***** UI
@@ -969,6 +1019,9 @@ tasks."
 #+end_src
 
 **** Capture
+:PROPERTIES:
+:ID:       eeb75e34-60cd-4782-99a5-a869384a7e93
+:END:
 Declarative templates
 #+begin_src emacs-lisp :tangle modules/config/private/packages.el
 (package! doct)
