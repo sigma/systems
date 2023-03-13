@@ -616,7 +616,77 @@ I need a few Roam extensions beyond what's built into Doom.
 (add-hook 'calendar-today-visible-hook #'yrh/org-roam-dailies-calendar-mark-monthly-entries)
 (add-hook 'calendar-today-invisible-hook #'yrh/org-roam-dailies-calendar-mark-monthly-entries)
 #+end_src
+***** Roam-dwim
+#+begin_src emacs-lisp :tangle modules/config/private/autoload/roam.el
+(defvar yrh/org-roam-capture-dwim-functions
+  '(yrh/org-roam-capture-link
+    yrh/org-roam-capture-ldap))
 
+(defvar yrh/org-roam-capture-dwim-templates
+  '(("l" "link" plain "
+- author :: [[roam:${author}]]
+- link :: [[${url}][${title}]]
+%?"
+     :target
+     (file+head
+      "%<%Y%m%d%H%M%S>-${slug}.org"
+      ":PROPERTIES:
+:AUTHOR: ${author}
+:ROAM_REFS: ${url}
+:END:
+,#+setupfile: ../_setup_roam.org
+,#+title: ${title}
+,#+category: ${title}
+,#+filetags: :doc:
+")
+     :unnarrowed t)
+    ("p" "person" plain "
+- link :: [[https://who.corp.google.com/${ldap}][who/${ldap}]]
+- history :: [[https://whostory.corp.google.com/${ldap}][whos/${ldap}]]
+%?"
+     :target
+     (file+head
+      "%<%Y%m%d%H%M%S>-${slug}.org"
+      ":PROPERTIES:
+:ROAM_ALIASES: @{ldap}
+:ROAM_REFS: http://who/${ldap}
+:END:
+,#+setupfile: ../_setup_roam.org
+,#+title: ${title}
+,#+category: ${title}
+,#+filetags: :person:
+")
+     :unnarrowed t)
+    ))
+
+;;;###autoload
+(defun yrh/org-roam-capture-dwim ()
+  (interactive)
+  (let* ((txt (read-from-minibuffer "Capture: "))
+         (res (run-hook-with-args-until-success 'yrh/org-roam-capture-dwim-functions txt)))
+    (when res
+      (org-roam-capture-
+       :node (org-roam-node-create :title (plist-get res :title))
+       :info (plist-get res :info)
+       :templates yrh/org-roam-capture-dwim-templates
+       :keys (plist-get res :keys)))))
+
+;;;###autoload
+(defun yrh/org-roam-capture-link (txt)
+  (let ((repr (yrh/parse-document-representation txt)))
+    (when (not (string-blank-p (car repr)))
+      (list :title (car repr)
+            :info (list :url (cdr repr) :author (read-from-minibuffer "Author: "))
+            :keys "l"))))
+
+;;;###autoload
+(defun yrh/org-roam-capture-ldap (txt)
+  (when (string-prefix-p "@" txt)
+    (let ((ldap (substring txt 1)))
+      (list :title (read-from-minibuffer "Name: ")
+            :info (list :ldap ldap)
+            :keys "p"))))
+#+end_src
 ***** UI
 :PROPERTIES:
 :ID:       9934b0ec-6192-40bf-8f52-6c62d54557fa
@@ -913,14 +983,15 @@ tasks."
   (let ((outfile (org-export-output-file-name ".md" subtreep)))
     (org-export-to-file 'g3doc outfile async subtreep visible-only)))
 #+end_src
-***** Keybingins
+***** Keybindings
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
 (map! :leader
       (:prefix-map ("n" . "notes")
        (:when (modulep! :lang org +roam2)
         (:prefix ("r" . "roam")
          :desc "Insert node immediately" "I" #'yrh/org-roam-node-insert-immediate
-         :desc "Find backlink" "b" #'vulpea-find-backlink))))
+         :desc "Find backlink" "b" #'vulpea-find-backlink
+         :desc "Capture to node (DWIM)" "N" #'yrh/org-roam-capture-dwim))))
 #+end_src
 
 #+begin_src emacs-lisp :tangle modules/config/private/autoload/roam.el
