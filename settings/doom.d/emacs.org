@@ -556,11 +556,11 @@ I need a few Roam extensions beyond what's built into Doom.
         '(("d" "default" plain "%?" :target
            (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+setupfile: ../_setup_roam.org\n#+title: ${title}\n#+category: ${title}\n")
            :unnarrowed t)
-          ("p" "person" plain "%?"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" ":PROPERTIES:\n:ROAM_REFS: http://who/%^{ldap}\n:ROAM_ALIASES: @%\\1\n:END:\n#+setupfile: ../_setup_roam.org\n#+title: ${title}\n#+category: ${title}\n#+filetags: :person:\n")
+          ("p" "person" plain "%?" :target
+           (file+head "%<%Y%m%d%H%M%S>-${slug}.org" ":PROPERTIES:\n:ROAM_REFS: http://who/%^{ldap}\n:ROAM_ALIASES: @%\\1\n:END:\n#+setupfile: ../_setup_roam.org\n#+title: ${title}\n#+category: ${title}\n#+filetags: :person:\n")
            :unnarrowed t)
-          ("u" "document" plain "%?"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" ":PROPERTIES:\n%(yrh/record-parsed-document):ROAM_REFS: %(identity -local-ref)\n:ROAM_ALIASES: %(identity -local-title)\n:END:\n#+setupfile: ../_setup_roam.org\n#+title: ${title}\n#+category: ${title}\n#+filetags: :doc:\n")
+          ("u" "document" plain "%?" :target
+           (file+head "%<%Y%m%d%H%M%S>-${slug}.org" ":PROPERTIES:\n%(yrh/record-parsed-document):ROAM_REFS: %(identity -local-ref)\n:ROAM_ALIASES: %(identity -local-title)\n:END:\n#+setupfile: ../_setup_roam.org\n#+title: ${title}\n#+category: ${title}\n#+filetags: :doc:\n")
            :unnarrowed t))
         org-roam-dailies-capture-templates
         '(("d" "default" entry "* %?" :target
