@@ -27,7 +27,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
       binutils
-      ((emacsPackagesFor emacsUnstable).emacsWithPackages (epkgs: [
+      ((emacsPackagesFor emacs).emacsWithPackages (epkgs: [
         epkgs.vterm
       ]))
 

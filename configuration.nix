@@ -40,7 +40,7 @@
       coreutils
       htop
       vim
-      emacsUnstable
+      emacs
 
       nixFlakes
     ]
