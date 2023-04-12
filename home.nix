@@ -40,6 +40,8 @@ in {
   programs =
     {
       zsh = loadSettings "zsh";
+      nushell = loadSettings "nushell";
+      starship = loadSettings "starship";
 
       doom-emacs = loadSettings "doom-emacs";
 
