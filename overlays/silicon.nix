@@ -1,15 +1,13 @@
-(nixpkgs: stable: master: config: final: prev:
-    nixpkgs.lib.optionalAttrs (prev.stdenv.system == "aarch64-darwin") rec {
-      x86 = import nixpkgs {
-        system = "x86_64-darwin";
-        inherit config;
-      };
-      x86-stable = import stable {
-        system = "x86_64-darwin";
-        inherit config;
-      };
-      x86-master = import master {
-        system = "x86_64-darwin";
-        inherit config;
-      };
-    })
+inputs: config:
+(let
+  extra = pkgset: import pkgset {
+    system = "x86_64-darwin";
+    inherit config;
+  };
+in
+  final: prev:
+  inputs.nixpkgs.lib.optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
+    x86 = extra inputs.nixpkgs;
+    x86-stable = extra inputs.stable;
+    x86-master = extra inputs.master;
+  })

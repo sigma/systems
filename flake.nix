@@ -83,7 +83,7 @@
         )
 
         # silicon package sets
-        (import ./overlays/silicon.nix nixpkgs darwin-stable nixpkgs-master nixpkgsConfig.config)
+        (import ./overlays/silicon.nix inputs nixpkgsConfig.config)
 
         # community overlays
         comma.overlays.default
