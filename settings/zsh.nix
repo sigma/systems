@@ -90,6 +90,8 @@
     fi
   '';
 
+  enableCompletion = false;
+
   zinit.enable = true;
 
   zinit.pre = ''
@@ -121,7 +123,7 @@
     }
     {
       name = "zdharma-continuum/fast-syntax-highlighting";
-      tags = ["wait=1" "lucid" "atinit=\"ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay\""];
+      tags = ["wait=1" "lucid" "atinit=\"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay\""];
     }
     {
       name = "zsh-users/zsh-autosuggestions";
@@ -135,11 +137,11 @@
     }
     {
       name = "zsh-users/zsh-completions";
-      tags = ["wait=1" "lucid" "blockf"];
+      tags = ["wait=1" "lucid" "blockf" "atinit=\"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay\""];
     }
     {
       name = "spwhitt/nix-zsh-completions";
-      tags = ["wait=1" "lucid" "blockf"];
+      tags = ["wait=1" "lucid" "blockf" "atinit=\"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay\""];
     }
     {
       name = "hlissner/zsh-autopair";
@@ -172,13 +174,6 @@ zstyle ':fzf-tab:complete:_zlua:*' query-string input
 zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts --preview=$extract'ps --pid=$in[(w)1] -o cmd --no-headers -w -w' --preview-window=down:3:wrap
 zstyle ':fzf-tab:complete:cd:*' extra-opts --preview=$extract'exa -1 --color=always $realpath'
 ";
-    }
-    {
-      name = "Aloxaf/gencomp";
-      light = true;
-      pre = ''
-        GENCOMP_DIR=$HOME/.zcompletions
-      '';
     }
     {
       name = "junegunn/fzf";
