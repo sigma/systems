@@ -19,13 +19,9 @@ in {
       ./modules/zsh-plugins
       ./modules/bat-syntaxes
       ./modules/cloud-shell.nix
-    ]
-    ++ lib.optionals machine.isWork [
-      ./modules/blaze.nix
-      ./modules/gcert.nix
-    ]
-    ++ lib.optionals machine.isInteractive [
       ./modules/mailsetup.nix
+      ./modules/gcert.nix
+      ./modules/blaze.nix
     ];
 
   accounts.email.maildirBasePath = ".mail";
@@ -50,23 +46,21 @@ in {
       bat = loadSettings "bat";
 
       git = loadSettings "git";
+      gitui.enable = true;
+      mercurial = loadSettings "mercurial";
 
       tmux = loadSettings "tmux";
 
       ssh = loadSettings "ssh";
+      cloudshell.enable = true;
+
       notmuch = loadSettings "notmuch";
       afew = loadSettings "afew";
-
-      gitui.enable = true;
-      cloudshell.enable = true;
       lieer.enable = true;
-    }
-    // lib.optionalAttrs machine.isWork {
-      gcert.enable = true;
-      mercurial = loadSettings "mercurial";
-    }
-    // lib.optionalAttrs machine.isInteractive {
-      mailsetup.enable = true;
+      mailsetup.enable = machine.isInteractive;
+
+      blaze.enable = machine.isWork;
+      gcert.enable = machine.isWork;
     };
 
   home.packages = with pkgs;

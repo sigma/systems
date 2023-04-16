@@ -1,20 +1,28 @@
 {
+  user,
   config,
   lib,
   pkgs,
+  isMac,
   ...
 }: let
-  platform =
-    if pkgs.stdenv.hostPlatform.isDarwin
-    then "darwin"
-    else "linux";
+  cfg = config.programs.blaze;
+  platform = if isMac then "darwin" else "linux";
 in {
-  home.file.".blazerc".text = ''
-    try-import %workspace%/experimental/users/yhodique/config/${platform}.blazerc
-    import %workspace%/experimental/users/yhodique/config/blazerc
-  '';
+  options.programs.blaze = {
+    enable = lib.mkEnableOption "blaze";
+  };
 
-  home.file.".exoblazerc".text = ''
-    startup --noexoblaze
-  '';
+  config = lib.mkIf cfg.enable {
+    home.file = {
+     ".blazerc".text = ''
+       try-import %workspace%/experimental/users/${user.login}/config/${platform}.blazerc
+       import %workspace%/experimental/users/${user.login}/config/blazerc
+     '';
+    } // lib.optionalAttrs isMac {
+      ".exoblazerc".text = ''
+        startup --noexoblaze
+      '';
+    };
+  };
 }

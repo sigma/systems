@@ -120,7 +120,10 @@
         if machine.isWork
         then users.corpUser
         else users.personalUser;
-      specialArgs = {inherit user machine;};
+      specialArgs = {
+        inherit user machine;
+        isMac = true;
+      };
     in
       darwin.lib.darwinSystem {
         inherit (machine) system;
@@ -155,6 +158,7 @@
           }
           // machine
           // {isWork = true;};
+        isMac = false;
       };
     in
       home-manager.lib.homeManagerConfiguration {
