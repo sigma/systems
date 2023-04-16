@@ -90,8 +90,6 @@
     fi
   '';
 
-  enableCompletion = false;
-
   zinit.enable = true;
 
   zinit.pre = ''

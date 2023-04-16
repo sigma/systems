@@ -59,6 +59,8 @@ in {
   config = mkIf cfg.enable {
     home.packages = [pkgs.zinit];
 
+    programs.zsh.enableCompletion = false;
+
     programs.zsh.initExtraBeforeCompInit = ''
       source ${pkgs.zinit}/share/zinit/zinit.zsh
 
