@@ -1,4 +1,6 @@
 {pkgs}: let
+  nixFlags = "--experimental-features \"flakes nix-command\"";
+
   isDarwin = pkgs.stdenvNoCC.isDarwin;
 
   systemSetup =
@@ -25,10 +27,10 @@
   systemBuild =
     if isDarwin
     then ''
-      ${pkgs.nixFlakes}/bin/nix build ".#darwinConfigurations.`hostname -s`.system" --experimental-features "flakes nix-command" --show-trace
+      ${pkgs.nixFlakes}/bin/nix build ".#darwinConfigurations.`hostname -s`.system" ${nixFlags}
     ''
     else ''
-      ${pkgs.nixFlakes}/bin/nix run ".#home-manager" --experimental-features "flakes nix-command" --  build --flake ".#`hostname -s`"
+      ${pkgs.nixFlakes}/bin/nix run ".#home-manager" ${nixFlags} --  build --flake ".#`hostname -s`"
     '';
 
   systemActivate =
@@ -37,7 +39,7 @@
       sudo ./result/activate
     ''
     else ''
-      ${pkgs.nixFlakes}/bin/nix run ".#home-manager" --experimental-features "flakes nix-command" --  switch --flake ".#`hostname -s`"
+      ${pkgs.nixFlakes}/bin/nix run ".#home-manager" ${nixFlags} --  switch --flake ".#`hostname -s`"
     '';
 in
   pkgs.devshell.mkShell {
