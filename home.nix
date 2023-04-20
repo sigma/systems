@@ -1,16 +1,11 @@
-{
+args@{
   config,
   pkgs,
   lib,
   user,
   machine,
   ...
-}: let
-  loadSettings = prog:
-    import ./settings/${prog}.nix {
-      inherit config pkgs lib user machine;
-    };
-in {
+}: {
   home.stateVersion = "22.11";
 
   imports =
@@ -34,31 +29,11 @@ in {
   };
 
   programs =
-    {
-      zsh = loadSettings "zsh";
-      nushell = loadSettings "nushell";
-      starship = loadSettings "starship";
-
-      doom-emacs = loadSettings "doom-emacs";
-
-      direnv = loadSettings "direnv";
-      htop = loadSettings "htop";
-      bat = loadSettings "bat";
-
-      git = loadSettings "git";
-      gitui.enable = true;
-      mercurial = loadSettings "mercurial";
-
-      tmux = loadSettings "tmux";
-
-      ssh = loadSettings "ssh";
+    (import ./settings args) // {
       cloudshell.enable = true;
-
-      notmuch = loadSettings "notmuch";
-      afew = loadSettings "afew";
       lieer.enable = true;
       mailsetup.enable = machine.isInteractive;
-
+      gitui.enable = true;
       blaze.enable = machine.isWork;
       gcert.enable = machine.isWork;
     };
