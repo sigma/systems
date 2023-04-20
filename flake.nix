@@ -88,8 +88,9 @@
           // {
             devshell = devshell.legacyPackages.${system};
           };
-      in {
         default = import ./shell.nix {inherit pkgs; };
+      in {
+        inherit default;
       };
     });
 }

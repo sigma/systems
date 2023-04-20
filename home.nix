@@ -104,14 +104,14 @@ args@{
 
       nix
     ]
-    ++ lib.optionals stdenv.isDarwin [
+    ++ lib.optionals stdenvNoCC.isDarwin [
       m-cli # useful macOS CLI commands
       afsctool
       maschine-hacks
     ];
 
   # make sure our home-manager applications are dockable
-  home.activation = lib.mkIf pkgs.stdenv.isDarwin {
+  home.activation = lib.mkIf pkgs.stdenvNoCC.isDarwin {
     copyApplications = let
       apps = pkgs.buildEnv {
         name = "home-manager-applications";
