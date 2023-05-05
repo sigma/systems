@@ -30,7 +30,7 @@
     comma.inputs.nixpkgs.follows = "nixpkgs";
     comma.inputs.flake-compat.follows = "flake-compat";
     comma.inputs.utils.follows = "utils";
-    nix-doom-emacs.url = github:nix-community/nix-doom-emacs;
+#    nix-doom-emacs.url = github:nix-community/nix-doom-emacs;
     nix-doom-emacs.inputs.emacs-overlay.follows = "emacs";
     nix-doom-emacs.inputs.nixpkgs.follows = "nixpkgs";
     nix-doom-emacs.inputs.flake-utils.follows = "utils";
@@ -45,6 +45,11 @@
     maschine-hacks.url = github:sigma/maschine-hacks;
     maschine-hacks.inputs.flake-utils.follows = "utils";
     maschine-hacks.inputs.nixpkgs.follows = "nixpkgs";
+
+    doom-emacs.url = "github:doomemacs/doomemacs/81f5a8f052045afaa984db42bde7bdfcce16f417";
+    doom-emacs.flake = false;
+    nix-doom-emacs.inputs.doom-emacs.follows = "doom-emacs";
+    nix-doom-emacs.url = github:sigma/nix-doom-emacs/experimental;
   };
 
   outputs = inputs @ {

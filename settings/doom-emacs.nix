@@ -6,7 +6,7 @@
   machine,
   ...
 }: {
-  enable = true;
+  enable = false;
   doomPrivateDir = (import ./doom.d) {
     inherit config lib pkgs user;
   };

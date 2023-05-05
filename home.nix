@@ -72,6 +72,7 @@ args@{
 
       # editors
       zile
+      emacsUnstable
 
       # git
       gitAndTools.gh
