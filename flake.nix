@@ -48,7 +48,7 @@
     nix-filter.url = "github:numtide/nix-filter";
 
     maschine-hacks.url = github:sigma/maschine-hacks;
-    maschine-hacks.inputs.flake-utils.follows = "utils";
+    maschine-hacks.inputs.systems.follows = "systems";
     maschine-hacks.inputs.nixpkgs.follows = "nixpkgs";
 
     doom-emacs.url = "github:doomemacs/doomemacs/81f5a8f052045afaa984db42bde7bdfcce16f417";
