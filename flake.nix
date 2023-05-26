@@ -2,6 +2,10 @@
   description = "Yann's systems";
 
   inputs = {
+    # Systems
+    systems.url = "path:./flake.systems.nix";
+    systems.flake = false;
+
     # Package sets
     nixpkgs.url = github:nixos/nixpkgs/nixpkgs-unstable;
     nixos-stable.url = github:NixOS/nixpkgs/nixos-22.11;
@@ -13,7 +17,6 @@
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = github:nix-community/home-manager;
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.inputs.utils.follows = "utils";
 
     # Flake compat
     flake-compat = {
@@ -22,7 +25,9 @@
     };
 
     # Other sources
-    utils.url = github:gytis-ivaskevicius/flake-utils-plus;
+    utils.url = github:numtide/flake-utils;
+    utils.inputs.systems.follows = "systems";
+
     emacs.url = github:nix-community/emacs-overlay;
     emacs.inputs.nixpkgs.follows = "nixpkgs";
     emacs.inputs.flake-utils.follows = "utils";
@@ -39,7 +44,7 @@
     fenix.inputs.nixpkgs.follows = "nixpkgs";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
-    devshell.inputs.flake-utils.follows = "utils";
+    devshell.inputs.systems.follows = "systems";
     nix-filter.url = "github:numtide/nix-filter";
 
     maschine-hacks.url = github:sigma/maschine-hacks;
