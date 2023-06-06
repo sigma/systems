@@ -325,6 +325,7 @@ Let's standardize on ~/org as the root of all orgs.
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory (file-truename (expand-file-name "~/org/")))
+(setq org-roam-directory (expand-file-name "roam" org-directory))
 (setq org-id-locations-file (expand-file-name ".orgids" org-directory))
 #+end_src
 
