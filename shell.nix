@@ -41,6 +41,45 @@
     else ''
       ${pkgs.nixFlakes}/bin/nix run ".#home-manager" ${nixFlags} --  switch --flake ".#`hostname -s`"
     '';
+
+  package = pkgs.stdenv.mkDerivation {
+    pname = "nix-cfg-pkg";
+
+    version = "dev";
+
+    src = pkgs.nix-filter {
+      root = ./.;
+    };
+#    buildInputs = [pkgs.gitMinimal];
+
+    dontUnpack = true;
+
+    buildPhase = ''
+      ${pkgs.coreutils}/bin/true
+    '';
+
+    installPhase = ''
+      mkdir -p $out/bin
+
+      cat > $out/bin/publish <<EOF
+      #!/bin/bash
+      set -e
+
+      function publish() {
+        if [ -d "\$2" ]; then
+          ${pkgs.rsync}/bin/rsync -av --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r -p --delete "\$1" "\$2"
+        else
+          echo "\$2 does not exist"
+          return 1
+        fi
+      }
+
+      publish $src /google/src/cloud/yhodique/personal/google3/experimental/users/yhodique/config/nix
+      EOF
+
+      chmod a+x $out/bin/publish
+    '';
+  };
 in
   pkgs.devshell.mkShell {
     packages = [pkgs.nixFlakes];
@@ -60,6 +99,13 @@ in
         category = "system";
         command = ''
           ${systemBuild}
+        '';
+      }
+      {
+        name = "publish";
+        category = "dev";
+        command = ''
+          ${package}/bin/publish
         '';
       }
     ];

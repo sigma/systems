@@ -61,6 +61,7 @@
     self,
     darwin,
     devshell,
+    nix-filter,
     home-manager,
     nixpkgs,
     ...
@@ -93,11 +94,13 @@
       };
 
       devShells = let
-        pkgs =
-          nixpkgs.legacyPackages.${system}
-          // {
-            devshell = devshell.legacyPackages.${system};
-          };
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [
+            devshell.overlays.default
+            nix-filter.overlays.default
+          ];
+        };
         default = import ./shell.nix {inherit pkgs; };
       in {
         inherit default;
