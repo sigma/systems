@@ -85,6 +85,21 @@ in {
     '';
   };
 
+  emacsGoogle = final.stdenv.mkDerivation rec {
+    pname = "emacs";
+    version = "goog";
+
+    buildInputs = [final.makeWrapper];
+    dontUnpack = true;
+    installPhase = ''
+      mkdir -p $out/bin
+      makeWrapper ${helpers.nativeWrapper}/bin/native-wrapper $out/bin/emacs --set NATIVE_WRAPPER_BIN /usr/bin/google-emacs
+      makeWrapper ${helpers.nativeWrapper}/bin/native-wrapper $out/bin/emacsclient --set NATIVE_WRAPPER_BIN /usr/bin/emacsclient.google-emacs
+    '';
+  };
+
+  emacs = (if final.stdenvNoCC.isLinux then final.emacsGoogle else final.emacsUnstable);
+
   fig = final.stdenv.mkDerivation rec {
     pname = "fig";
     version = "goog";

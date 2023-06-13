@@ -40,7 +40,6 @@
       coreutils
       htop
       vim
-      emacs
 
       nixFlakes
     ]
