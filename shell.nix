@@ -24,6 +24,15 @@
     ''
     else "";
 
+  systemBootstrap =
+    if isDarwin
+    then ""
+    else ''
+      if [ -d /google ]; then
+        sudo apt install ciderd google-emacs
+      fi
+    '';
+
   systemBuild =
     if isDarwin
     then ''
@@ -50,7 +59,6 @@
     src = pkgs.nix-filter {
       root = ./.;
     };
-#    buildInputs = [pkgs.gitMinimal];
 
     dontUnpack = true;
 
@@ -86,10 +94,18 @@ in
 
     commands = [
       {
+        name = "system-bootstrap";
+        category = "system";
+        command = ''
+          ${systemBootstrap}
+        '';
+      }
+      {
         name = "system-install";
         category = "system";
         command = ''
           ${systemSetup}
+          ${systemBootstrap}
           ${systemBuild}
           ${systemActivate}
         '';
