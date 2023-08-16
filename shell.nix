@@ -29,7 +29,8 @@
     then ""
     else ''
       if [ -d /google ]; then
-        sudo apt install ciderd google-emacs
+        [ ! -e /etc/default/ciderd ] && sudo apt install ciderd
+        [ ! -x /usr/bin/google-emacs ] && sudo apt install google-emacs
       fi
     '';
 
