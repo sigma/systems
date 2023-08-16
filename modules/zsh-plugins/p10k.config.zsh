@@ -4,6 +4,8 @@ else
   [[ ! -f ~/.p10k.pure.zsh ]] || source ~/.p10k.pure.zsh
 fi
 
+[[ ! -f ~/.p10k.generated.config.zsh ]] || source ~/.p10k.generated.config.zsh
+
 typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
   hi
   os_icon
@@ -83,8 +85,6 @@ function instant_prompt_hi() {
 typeset -g POWERLEVEL9K_CERT_VALIDITY_TIME=72000
 # 1 hour warning
 typeset -g POWERLEVEL9K_CERT_ADVANCE_WARNING=3600
-# location of the gcert cookie
-typeset -g POWERLEVEL9K_CERT_COOKIE_FILE=${HOME}/.sso/cookie
 # gcert glyph
 typeset -g POWERLEVEL9K_CERT_GLYPH=$'\uf623 '
 
