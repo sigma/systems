@@ -54,9 +54,9 @@ final: prev: let
     })
   ];
 in {
-  emacs = final.emacsUnstable;
+  emacs = final.emacs-unstable;
 
-  emacsUnstable = prev.emacsUnstable.overrideAttrs (oldAttrs: rec {
+  emacs-unstable = prev.emacs-unstable.overrideAttrs (oldAttrs: rec {
     patches = oldAttrs.patches ++ emacs28Patches;
   });
 
