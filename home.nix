@@ -32,8 +32,8 @@ args@{
     (import ./settings args) // {
       cloudshell.enable = true;
       # notmuch python module is broken on darwin
-      # lieer.enable = true;
-      # mailsetup.enable = machine.isWork;
+      lieer.enable = true;
+      mailsetup.enable = machine.isWork;
       gitui.enable = true;
       blaze.enable = machine.isWork;
       gcert.enable = machine.isWork;
