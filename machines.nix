@@ -81,7 +81,7 @@ in
             home = {
               username = user.login;
               homeDirectory = "/usr/local/google/home/${user.login}";
-              stateVersion = "22.11";
+              stateVersion = "23.05";
             };
           }
         ];
