@@ -58,8 +58,6 @@
   };
 
   outputs = inputs @ {
-    self,
-    darwin,
     devshell,
     nix-filter,
     home-manager,
