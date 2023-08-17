@@ -31,6 +31,16 @@ in
       inherit specialArgs;
       modules =
         inputs.nixpkgs.lib.attrValues darwinModules
+        ++ inputs.nixpkgs.lib.optionals (machine.isWork) [
+          ({ ... }: {
+            # those files are handled by corp and will be reverted anyway, so
+            # skip the warning about them being overwritten.
+            environment.etc."shells".copy = true;
+            environment.etc."zshrc".copy = true;
+            # leave bashrc alone, I don't use bash
+            environment.etc."bashrc".enable = false;
+          })
+        ]
         ++ [
           # Main `nix-darwin` config
           ./configuration.nix
