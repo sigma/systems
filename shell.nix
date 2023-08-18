@@ -118,6 +118,7 @@ in
           ${systemBuild}
         '';
       }
+    ] ++ pkgs.lib.optionals (!isDarwin) [
       {
         name = "publish";
         category = "dev";
