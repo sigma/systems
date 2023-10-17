@@ -56,7 +56,7 @@ args@{
       btop
       coreutils
       d2
-      exa
+      eza
       fd
       fzf
       htop

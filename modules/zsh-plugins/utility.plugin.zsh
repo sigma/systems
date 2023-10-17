@@ -22,8 +22,8 @@ if (( ${+commands[dircolors]} )); then
     eval "$(dircolors --sh)"
   fi
 
-  if [ "$+commands[exa]" -ne 0 ]; then
-    alias ls="exa --group-directories-first"
+  if [ "$+commands[eza]" -ne 0 ]; then
+    alias ls="eza --group-directories-first"
   else
     alias ls='ls --group-directories-first --color=auto'
   fi
