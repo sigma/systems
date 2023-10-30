@@ -17,7 +17,7 @@ zstyle ':vcs_info:*' enable git hg svn citc
 
 # use chg instead of hg
 alias hg=chg
-zstyle ':vcs_info:hg:*:-all-' command /usr/bin/chg
+zstyle ':vcs_info:hg:*:-all-' command chg
 
 # Citc integration
 VCS_INFO_detect_citc() {
@@ -32,7 +32,7 @@ VCS_INFO_detect_citc() {
 VCS_INFO_get_data_citc() {
     if [[ ${PWD} =~ '(/google/src/cloud/[^/]+/(.+))/google3(.*)' ]]; then
         if [[ -d "${match[1]}/.hg" ]]; then
-            HG_DETAILS=$(/usr/bin/chg log -l 1)
+            HG_DETAILS=$(chg log -l 1)
             HG_CL_NUMBER=$(echo $HG_DETAILS | grep -m2 "pending CL:" | tail -n1 | awk '{print $3}')
             CUSTOM_GLYPH=$'\uf407'
             VCS_INFO_formats "" "$CUSTOM_GLYPH $HG_CL_NUMBER" "" "" "" "" ""
