@@ -1011,6 +1011,9 @@ tasks."
 #+end_src
 
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
+(use-package! all-the-icons
+  :if (display-graphic-p))
+
 (after! org-agenda
   (setq org-agenda-skip-scheduled-if-done t
       org-agenda-skip-deadline-if-done t
