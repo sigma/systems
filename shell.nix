@@ -91,7 +91,10 @@
   };
 in
   pkgs.devshell.mkShell {
-    packages = [pkgs.nixFlakes];
+    packages = [
+      pkgs.nixFlakes
+      pkgs.rnix-lsp # for VSCode integration.
+    ];
 
     commands = [
       {
