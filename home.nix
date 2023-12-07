@@ -4,9 +4,10 @@ args@{
   lib,
   user,
   machine,
+  stateVersion,
   ...
 }: {
-  home.stateVersion = "23.05";
+  home.stateVersion = stateVersion;
 
   imports =
     [

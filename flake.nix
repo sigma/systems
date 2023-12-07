@@ -8,8 +8,8 @@
 
     # Package sets
     nixpkgs.url = github:nixos/nixpkgs/nixpkgs-unstable;
-    nixos-stable.url = github:NixOS/nixpkgs/nixos-23.05;
-    darwin-stable.url = github:NixOS/nixpkgs/nixpkgs-23.05-darwin;
+    nixos-stable.url = github:NixOS/nixpkgs/nixos-23.11;
+    darwin-stable.url = github:NixOS/nixpkgs/nixpkgs-23.11-darwin;
     nixpkgs-master.url = github:NixOS/nixpkgs/master;
 
     # Environment/system management
@@ -64,10 +64,11 @@
     nixpkgs,
     ...
   }: let
+    stateVersion = "23.11";
     hosts = import ./hosts.nix {
       inherit (nixpkgs) lib;
     };
-    machines = import ./machines.nix {inherit inputs; };
+    machines = import ./machines.nix {inherit inputs stateVersion; };
   in
     {
       # My `nix-darwin` configs

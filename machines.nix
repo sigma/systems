@@ -1,4 +1,7 @@
-{ inputs }:
+{ 
+  inputs,
+  stateVersion
+}:
 
 let
   users = import ./users.nix;
@@ -22,7 +25,7 @@ in
       then users.corpUser
       else users.personalUser;
     specialArgs = {
-      inherit user machine;
+      inherit user machine stateVersion;
       isMac = true;
     };
   in
@@ -61,7 +64,7 @@ in
   glinux = machine: let
     user = users.corpUser;
     specialArgs = {
-      inherit user;
+      inherit user stateVersion;
       machine =
         {
           isInteractive = false;
@@ -81,7 +84,7 @@ in
             home = {
               username = user.login;
               homeDirectory = "/usr/local/google/home/${user.login}";
-              stateVersion = "23.05";
+              inherit stateVersion;
             };
           }
         ];
