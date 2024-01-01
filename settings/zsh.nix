@@ -120,6 +120,26 @@
       light = true;
     }
     {
+      name = "Aloxaf/fzf-tab";
+      tags = ["wait=1" "lucid"];
+      pre = "
+local extract=\"
+# trim input
+local in=\\\${\\\${\\\"\\\$(<{f})\\\"%\\\$'\\0'*}#*\\\$'\\0'}
+# get ctxt for current completion
+local -A ctxt=(\\\"\\\${(@ps:\\2:)CTXT}\\\")
+# real path
+local realpath=\\\${ctxt[IPREFIX]}\\\${ctxt[hpre]}\\\$in
+realpath=\\\${(Qe)~realpath}
+\"
+
+zstyle ':fzf-tab:*' single-group ''
+zstyle ':fzf-tab:complete:_zlua:*' query-string input
+zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts --preview=$extract'ps --pid=$in[(w)1] -o cmd --no-headers -w -w' --preview-window=down:3:wrap
+zstyle ':fzf-tab:complete:cd:*' extra-opts --preview=$extract'eza -1 --color=always $realpath'
+";
+    }
+    {
       name = "zdharma-continuum/fast-syntax-highlighting";
       tags = ["wait=1" "lucid" "atinit=\"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay\""];
     }
@@ -152,26 +172,6 @@
     {
       name = "hchbaw/zce.zsh";
       tags = ["wait=1" "lucid" "atload=\"bindkey '^Xz' zce\""];
-    }
-    {
-      name = "Aloxaf/fzf-tab";
-      tags = ["wait=1" "lucid"];
-      pre = "
-local extract=\"
-# trim input
-local in=\\\${\\\${\\\"\\\$(<{f})\\\"%\\\$'\\0'*}#*\\\$'\\0'}
-# get ctxt for current completion
-local -A ctxt=(\\\"\\\${(@ps:\\2:)CTXT}\\\")
-# real path
-local realpath=\\\${ctxt[IPREFIX]}\\\${ctxt[hpre]}\\\$in
-realpath=\\\${(Qe)~realpath}
-\"
-
-zstyle ':fzf-tab:*' single-group ''
-zstyle ':fzf-tab:complete:_zlua:*' query-string input
-zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts --preview=$extract'ps --pid=$in[(w)1] -o cmd --no-headers -w -w' --preview-window=down:3:wrap
-zstyle ':fzf-tab:complete:cd:*' extra-opts --preview=$extract'eza -1 --color=always $realpath'
-";
     }
     {
       name = "junegunn/fzf";
