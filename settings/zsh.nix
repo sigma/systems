@@ -18,8 +18,6 @@
         export PATH="$HOME/.nix-profile/bin:$PATH"
     fi
 
-    export DOTREPO=$HOME/.dotdrop
-
     # Set the list of directories that Zsh searches for programs.
     path=(
         $HOME/bin
