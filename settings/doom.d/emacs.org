@@ -582,6 +582,14 @@ I need a few Roam extensions beyond what's built into Doom.
 (use-package! org-roam
   :after org
   :config
+  (add-hook! org-mode (lambda ()
+                        (setq-local time-stamp-active t
+                                    time-stamp-line-limit 18
+                                    time-stamp-start "^#\\+last_modified: [ \t]*"
+                                    time-stamp-end "$"
+                                    time-stamp-format "\[%Y-%m-%d %a %H:%M\]")
+                        (add-hook! 'before-save-hook :local #'time-stamp)))
+
   (setq org-id-link-to-org-use-id t
         org-roam-capture-templates
         '(("d" "default" plain "%?" :target
