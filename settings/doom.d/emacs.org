@@ -13,6 +13,9 @@
 #+end_src
 
 ** OS detection
+:PROPERTIES:
+:ID:       05647178-d190-4be9-9f74-b1b4f2c7659a
+:END:
 I need to detect Google flavor of OS, and this needs to gate loading some
 modules, so let's define this early.
 #+begin_src emacs-lisp :tangle init.el
@@ -20,6 +23,9 @@ modules, so let's define this early.
 #+end_src
 
 ** Modules activation
+:PROPERTIES:
+:ID:       2e411e0c-af9a-4e48-916c-d76c09834c43
+:END:
 This is the default Doom Emacs =init.el=, tuned to my liking.
 #+begin_src emacs-lisp :tangle init.el
 ;; This file controls what Doom modules are enabled and what order they load
@@ -281,6 +287,9 @@ for documentation purpose.
 #+end_src
 
 ** User data
+:PROPERTIES:
+:ID:       305b9e0e-8c8f-4acb-9bb2-10cff3ce2538
+:END:
 This =+id.el= file is generated from outside (by Nix), based on machine context.
 We still need to load it here.
 #+begin_src emacs-lisp :tangle config.el
@@ -288,6 +297,9 @@ We still need to load it here.
 #+end_src
 
 ** UI tweaks
+:PROPERTIES:
+:ID:       032eb03e-e0c1-4be0-ba71-833e43987d5a
+:END:
 A few definitions for theme and font to use.
 #+begin_src emacs-lisp :tangle config.el
 (load! "+ui")
@@ -319,6 +331,9 @@ A few definitions for theme and font to use.
 #+end_src
 
 ** Org location
+:PROPERTIES:
+:ID:       ebf34de2-5cdb-4146-8bf8-59acbdd8a189
+:END:
 The way Doom organizes things, we must set a few org-related locations early on.
 Let's standardize on ~/org as the root of all orgs.
 #+begin_src emacs-lisp :tangle config.el
@@ -330,6 +345,9 @@ Let's standardize on ~/org as the root of all orgs.
 #+end_src
 
 ** Paths
+:PROPERTIES:
+:ID:       b7aa22f0-d926-48dd-bca2-e30dcdb6ac69
+:END:
 For some reason path is not properly setup when running Emacs.app, we sidestep
 that issue here.
 
@@ -349,6 +367,9 @@ that issue here.
 #+end_src
 
 ** Custom
+:PROPERTIES:
+:ID:       fa2f0d87-4273-4da0-b754-bf74ee83f78e
+:END:
 By default, `custom-file` points to a non-writable location, which kinda defeats
 the purpose.
 
@@ -360,6 +381,9 @@ the purpose.
 I have a small number of private packages to make available to Doom Emacs.
 
 ** Google
+:PROPERTIES:
+:ID:       5c392da2-a16c-4210-8e71-57abafb19c5d
+:END:
 #+begin_src emacs-lisp :tangle modules/os/google/packages.el :comments no
 <<elisp-header>>
 #+end_src
@@ -422,6 +446,9 @@ I use org-mode for various purposes. In particular, I maintain a personal
 knowledge base using =org-roam=, which I also export using custom formats.
 
 **** Config
+:PROPERTIES:
+:ID:       2581040b-f5e7-414b-aead-3f6adcff557b
+:END:
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
 (after! org-clock
   ;; Resume clocking task when emacs is restarted
@@ -471,6 +498,9 @@ knowledge base using =org-roam=, which I also export using custom formats.
 #+end_src
 
 **** Yank DWIM
+:PROPERTIES:
+:ID:       1c1c1dc9-a86f-4c29-8ae3-2ac0d7b16729
+:END:
 I also maintain some logic to facilitate yanking text into an org file without too much hassle.
 
 It leverages language-detection to handle code blocks
@@ -562,20 +592,38 @@ I need a few Roam extensions beyond what's built into Doom.
            :unnarrowed t)
           ("u" "document" plain "%?" :target
            (file+head "%<%Y%m%d%H%M%S>-${slug}.org" ":PROPERTIES:\n%(yrh/record-parsed-document):ROAM_REFS: %(identity -local-ref)\n:ROAM_ALIASES: %(identity -local-title)\n:END:\n#+setupfile: ../_setup_roam.org\n#+title: ${title}\n#+category: ${title}\n#+filetags: :doc:\n")
+           :unnarrowed t)
+          ("n" "document note" plain
+           "%?"
+           :target
+           (file+head
+            "%(expand-file-name citar-org-roam-subdir org-roam-directory)/${citar-citekey}.org"
+            ":PROPERTIES:\n:ROAM_REFS: [cite:@${citar-citekey}] ${citar-url}\n:END:\n#+setupfile: ../../_setup_roam.org\n#+title: ${citar-citekey} :: ${note-title}.\n#+created: %U\n#+last_modified: %U\n\n")
            :unnarrowed t))
         org-roam-dailies-capture-templates
-        '(("d" "default" plain "** %?" :target
-           (file+head+olp "%<%G-%m>.org" "#+setupfile: ../../_setup_roam_diary.org\n#+title: %<%G-%m>\n#+filetags: :journal:\n"
-                       ("[%<%Y-%m-%d %a>]"))))))
+        '(("d" "default" plain "**** %?\n" :target
+           (file+head+olp "journal.org" "#+setupfile: ../../_setup_roam_diary.org\n#+title: Dear diary\n#+filetags: :journal:\n"
+                          ("%<%Y>" "%<%Y-%m>" "[%<%Y-%m-%d %a>]"))))))
 #+end_src
 ***** Dailies
+:PROPERTIES:
+:ID:       9db185ef-8126-4016-bc98-57ce952e249d
+:END:
 #+begin_src emacs-lisp :tangle modules/config/private/autoload/roam.el
 (require 'calendar)
 
 ;;;###autoload
-(defun yrh/org-roam-dailies-add-ids ()
+(defun yrh/org-roam-dailies-fixup-properties ()
   (interactive)
-  (org-map-entries #'org-id-get-create "LEVEL=1"))
+  (org-map-entries
+   (lambda ()
+     (org-id-get-create)
+     (let ((date (org-element-property :raw-value (org-element-context))))
+       (org-set-property "EXPORT_FILE_NAME"
+                         (car (split-string (substring date 1 -1))))
+       (org-set-property "EXPORT_DATE" date)
+       (org-set-property "DATE" date)))
+   "LEVEL=3" 'file 'archive 'comment))
 
 ;;;###autoload
 (defun yrh/org-roam-dailies-entries (month year)
@@ -602,22 +650,23 @@ I need a few Roam extensions beyond what's built into Doom.
                           (cons month year)
                           (calendar-increment-month-cons 1 month year))))
         (mapc (lambda (item)
-                (let ((fname (expand-file-name (format "%04d-%02d.org" (cdr item) (car item)) dailies-dir)))
-                  (when (file-exists-p fname)
-                    (let ((entries (yrh/org-roam-dailies-entries (car item) (cdr item))))
+                (let ((entries (yrh/org-roam-dailies-entries (car item) (cdr item))))
                       (mapc (lambda (e)
                               (when (calendar-date-is-visible-p e)
                                 (calendar-mark-visible-date e 'org-roam-dailies-calendar-note)))
-                            entries)))))
+                            entries)))
               range)))))
 #+end_src
 
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
-(add-hook 'org-roam-dailies-find-file-hook #'yrh/org-roam-dailies-add-ids)
+(add-hook 'org-roam-dailies-find-file-hook #'yrh/org-roam-dailies-fixup-properties)
 (add-hook 'calendar-today-visible-hook #'yrh/org-roam-dailies-calendar-mark-monthly-entries)
 (add-hook 'calendar-today-invisible-hook #'yrh/org-roam-dailies-calendar-mark-monthly-entries)
 #+end_src
 ***** Roam-dwim
+:PROPERTIES:
+:ID:       c76db251-f3df-4e6a-a21e-eedd85575bcf
+:END:
 #+begin_src emacs-lisp :tangle modules/config/private/autoload/roam.el
 (defvar yrh/org-roam-capture-dwim-functions
   '(yrh/org-roam-capture-link
@@ -811,6 +860,9 @@ tasks."
 #+end_src
 
 ***** Bibtex integration
+:PROPERTIES:
+:ID:       219163ad-351a-4844-81a3-2f8a6a99c353
+:END:
 #+begin_src emacs-lisp :tangle modules/config/private/packages.el
 (package! org-roam-bibtex
   :recipe (:host github :repo "org-roam/org-roam-bibtex"))
@@ -901,9 +953,24 @@ tasks."
             ":PROPERTIES:\n:ROAM_REFS: cite:${=key=} ${url}\n:END:\n#+TITLE: Notes on: ${title} by ${author-or-editor} (${year})\n#+hugo_lastmod: Time-stamp: <>\n#+ROAM_KEY: cite:${=key=}\n\n- source :: cite:${=key=}
   \n\n* TODO Summary\n* TODO Comments\n\n"
             ))))
+
+(use-package! citar-org-roam
+  :when (and (modulep! :lang org +roam2)
+             (modulep! :completion vertico))
+  :after citar org-roam
+  :config
+  (citar-org-roam-mode)
+  (setq citar-org-roam-note-title-template "Notes on ${title}"
+        citar-org-roam-capture-template-key "n"
+        citar-org-roam-subdir "bib")
+  (unless (assoc :citar-url citar-org-roam-template-fields)
+    (add-to-list 'citar-org-roam-template-fields '(:citar-url . ("url")))))
 #+end_src
 
 ***** Export
+:PROPERTIES:
+:ID:       9848a111-8580-43b1-b95a-1599950f17ce
+:END:
 #+begin_src emacs-lisp :tangle modules/config/private/packages.el
 (when (modulep! :lang org)
   (package! ox-gfm))
@@ -985,6 +1052,9 @@ tasks."
     (org-export-to-file 'g3doc outfile async subtreep visible-only)))
 #+end_src
 ***** Keybindings
+:PROPERTIES:
+:ID:       d67ea762-0d5c-4ad1-a287-e7ca916df8a7
+:END:
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
 (map! :leader
       (:prefix-map ("n" . "notes")
@@ -1005,6 +1075,9 @@ tasks."
     (apply #'org-roam-node-insert args)))
 #+end_src
 **** Agenda
+:PROPERTIES:
+:ID:       19f8920a-899b-4c19-b473-1811e901735c
+:END:
 #+begin_src emacs-lisp :tangle modules/config/private/packages.el
 (package! org-super-agenda
   :recipe (:host github :repo "alphapapa/org-super-agenda"))
@@ -1231,8 +1304,32 @@ Declarative templates
                           (let ((map (make-sparse-keymap)))
                             (define-key map [header-line mouse-1] 'org-capture-kill)
                             map)))))
+
+;;;###autoload
+(defun yrh/bibtex-link-capture-template ()
+  (pcase-let ((`(,title . ,url) (yrh/parse-document-representation)))
+    (format "* %s
+:PROPERTIES:
+:BTYPE: online
+:TITLE: %s
+:AUTHOR: %%^{author}
+:YEAR: %%^{year}
+:URL: %s
+:END:
+" title title url)))
+
+;;;###autoload
+(defun yrh/bibtex-set-short-link-id ()
+  ;; to be used in before-finalize hook
+  (let ((url (org-bibtex-get "URL")))
+    (when (string-match (concat "http://\\(" short-link-regexp "\\)") url)
+      (org-bibtex-put org-bibtex-key-property (match-string 1 url)))))
+
 #+end_src
 **** Protocol
+:PROPERTIES:
+:ID:       1524c1a3-af21-489b-a0ee-60cbd88eb1b9
+:END:
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
 (after! org-protocol
   (defvar yrh/org-protocol-capture nil)
@@ -1247,6 +1344,9 @@ Declarative templates
 #+end_src
 
 *** Buffers
+:PROPERTIES:
+:ID:       7c4d5b40-564a-4a91-ba9d-7bac56e04fcb
+:END:
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
 (after! dired-x
   (setq dired-find-subdir nil))
@@ -1269,6 +1369,9 @@ Declarative templates
   (auto-revert-mode 1))
 #+end_src
 *** Perspectives
+:PROPERTIES:
+:ID:       eb914859-7a9b-4d3c-a727-99e0ee6188a9
+:END:
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
 (use-package! persp-mode
   :config
@@ -1298,6 +1401,9 @@ to disable uniquify when using persp-mode"
    sl))
 #+end_src
 *** Window moves
+:PROPERTIES:
+:ID:       08dc5a3d-1d1c-48f2-a41f-9cd4e83344a1
+:END:
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
 (use-package! windmove
   :config
@@ -1307,6 +1413,9 @@ to disable uniquify when using persp-mode"
         "C-c <down>"  #'windmove-down))
 #+end_src
 *** Notmuch
+:PROPERTIES:
+:ID:       cfc7bdaf-2fda-4ed8-a649-f8749d8de4db
+:END:
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
 (after! notmuch
   (setq sendmail-program "gmi-sendmail")
@@ -1334,6 +1443,9 @@ to disable uniquify when using persp-mode"
   (add-hook! 'message-mode-hook 'visual-line-mode))
 #+end_src
 *** Write room
+:PROPERTIES:
+:ID:       75495eb9-a3e8-4a3c-801d-e1c2ac7abcfb
+:END:
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
 (after! writeroom-mode
   (setq writeroom-fullscreen-effect 'maximized
@@ -1343,6 +1455,9 @@ to disable uniquify when using persp-mode"
 #+end_src
 *** Misc
 **** d2-mode
+:PROPERTIES:
+:ID:       d982f8ab-cad5-4496-b736-b5a67b947ebf
+:END:
 #+begin_src emacs-lisp :tangle modules/config/private/packages.el
 (package! d2-mode
   :recipe (:host github :repo "andorsk/d2-mode"))
@@ -1352,6 +1467,9 @@ to disable uniquify when using persp-mode"
 (use-package! d2-mode)
 #+end_src
 **** envrc
+:PROPERTIES:
+:ID:       b54e43f2-6922-4c3e-b8ec-989ce7f44059
+:END:
 #+begin_src emacs-lisp :tangle modules/config/private/packages.el
 (package! envrc)
 #+end_src
