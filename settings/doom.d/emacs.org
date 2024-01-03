@@ -935,13 +935,22 @@ tasks."
   (map! :map org-mode-map
         "C-c ]" #'org-ref-insert-link))
 
+(after! org-bibtex
+  (unless (assoc :online org-bibtex-types)
+    (add-to-list 'org-bibtex-types
+             '(:online
+               (:description . "An online reference")
+               (:required :author :title :year :url)
+               (:optional :subtitle :titleaddon :language :version :note :organization :month :addendum :pubstate :eprintclass :eprinttype :urldate)))))
+
 (after! org
   (let* ((dir (file-name-as-directory (expand-file-name org-directory)))
          (bibfiles (mapcar
                     (lambda (f) (concat dir f))
                     (directory-files dir nil "\\.bib"))))
     (after! citar
-      (setq citar-bibliography bibfiles))
+      (setq citar-bibliography bibfiles)
+      (setq citar-notes-paths (list (file-name-as-directory (expand-file-name "bib" org-roam-directory)))))
     (after! bibtex-completion
       (setq bibtex-completion-bibliography bibfiles
             bibtex-completion-notes-path (concat (file-name-as-directory org-roam-directory) "notes")
@@ -1218,13 +1227,27 @@ Declarative templates
                             ("Project changelog" :keys "c"
                              :function +org-capture-central-project-changelog-file
                              :headline "Changelog"
-                             :template "* %U %?\n%i\n%a"))))))
+                             :template "* %U %?\n%i\n%a")))
+                ("Bibliography" :keys "b"
+                 :prepend t
+                 :after-finalize (lambda ()
+                                   (org-bibtex-check)
+                                   (org-bibtex "biblio.bib"))
+                 :before-finalize yrh/bibtex-set-short-link-id
+                 :children (("golink" :keys "g"
+                             :headline "Misc"
+                             :file "biblio.org"
+                             :template-file "templates/bibtex_golink_entry.txt")
+                            ("link" :keys "l"
+                             :headline "Misc"
+                             :file "biblio.org"
+                             :template yrh/bibtex-link-capture-template)))))))
 
   ;; sanitize headings argument
   (advice-add '+org--capture-ensure-heading
               :around (lambda (orig-fn headings &optional initial-level)
                         (funcall orig-fn (delete nil headings) initial-level)
-                        (buffer-file-name))))
+                        (buffer-file-name)))
 #+end_src
 
 #+begin_src emacs-lisp :tangle modules/config/private/autoload/org.el
