@@ -895,9 +895,9 @@ tasks."
           (read-string "Document: ")))
   (cond ((string-match "\\[\\(.+\\)\\](\\(.*\\))" repr)
          (cons (match-string 1 repr) (match-string 2 repr)))
-        ((string-match "\\[\\[\\(.+\\)\\]\\](\\[\\[.*\\]\\])" repr)
+        ((string-match "\\[\\[\\(.+\\)\\]\\[\\(.*\\)\\]\\]" repr)
          (cons (match-string 2 repr) (match-string 1 repr)))
-        ((string-match-p "https?://.*")
+        ((string-match-p "https?://.*" repr)
          (cons repr repr))
         (t
          (cons "" ""))))
