@@ -606,7 +606,7 @@ I need a few Roam extensions beyond what's built into Doom.
            :target
            (file+head
             "%(expand-file-name citar-org-roam-subdir org-roam-directory)/${citar-citekey}.org"
-            ":PROPERTIES:\n:ROAM_REFS: [cite:@${citar-citekey}] ${citar-url}\n:END:\n#+setupfile: ../../_setup_roam.org\n#+title: ${citar-citekey} :: ${note-title}.\n#+created: %U\n#+last_modified: %U\n\n")
+            ":PROPERTIES:\n:ROAM_REFS: [cite:&${citar-citekey}] ${citar-url}\n:END:\n#+setupfile: ../../_setup_roam.org\n#+title: ${citar-citekey} :: ${note-title}.\n#+created: %U\n#+last_modified: %U\n\n")
            :unnarrowed t))
         org-roam-dailies-capture-templates
         '(("d" "default" plain "**** %?\n" :target
@@ -943,7 +943,7 @@ tasks."
   (map! :map org-mode-map
         "C-c ]" #'org-ref-insert-link))
 
-(after! org-bibtex
+(after! org
   (unless (assoc :online org-bibtex-types)
     (add-to-list 'org-bibtex-types
              '(:online
@@ -1354,7 +1354,7 @@ Declarative templates
   ;; to be used in before-finalize hook
   (let ((url (org-bibtex-get "URL")))
     (when (string-match (concat "http://\\(" short-link-regexp "\\)") url)
-      (org-bibtex-put org-bibtex-key-property (match-string 1 url)))))
+      (org-bibtex-put org-bibtex-key-property (s-replace "/" "::" (match-string 1 url))))))
 
 #+end_src
 **** Protocol
