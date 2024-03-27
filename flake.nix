@@ -44,7 +44,7 @@
     fenix.inputs.nixpkgs.follows = "nixpkgs";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
-    devshell.inputs.systems.follows = "systems";
+    devshell.inputs.flake-utils.follows = "utils";
     nix-filter.url = "github:numtide/nix-filter";
 
     maschine-hacks.url = github:sigma/maschine-hacks;
