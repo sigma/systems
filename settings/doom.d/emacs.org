@@ -606,7 +606,7 @@ I need a few Roam extensions beyond what's built into Doom.
            :target
            (file+head
             "%(expand-file-name citar-org-roam-subdir org-roam-directory)/${citar-citekey}.org"
-            ":PROPERTIES:\n:ROAM_REFS: [cite:&${citar-citekey}] ${citar-url}\n:END:\n#+setupfile: ../../_setup_roam.org\n#+title: ${citar-citekey} :: ${note-title}.\n#+created: %U\n#+last_modified: %U\n\n")
+            ":PROPERTIES:\n:ROAM_REFS: [cite:@${citar-citekey}] ${citar-url}\n:END:\n#+setupfile: ../../_setup_roam.org\n#+title: ${citar-citekey} :: ${note-title}.\n#+created: %U\n#+last_modified: %U\n\n")
            :unnarrowed t))
         org-roam-dailies-capture-templates
         '(("d" "default" plain "**** %?\n" :target
@@ -875,9 +875,6 @@ tasks."
 (package! org-roam-bibtex
   :recipe (:host github :repo "org-roam/org-roam-bibtex"))
 
-(package! org-ref
-  :recipe (:host github :repo "jkitchin/org-ref"))
-
 ;; When using bibtex-completion via the `biblio` module
 (when (modulep! :tools biblio)
   (unpin! bibtex-completion helm-bibtex ivy-bibtex))
@@ -885,15 +882,6 @@ tasks."
 
 #+begin_src emacs-lisp :tangle modules/config/private/autoload/roam.el
 (require 'org-roam-capture)
-
-;;;###autoload
-(defun yrh/orb--insert-captured-ref-url ()
-  (when-let* ((ref (plist-get org-roam-capture--info :ref))
-              ;; just get the key for the first ref, there should be only one anyway
-              (citekey (plist-get (car (plist-get (org-ref-parse-cite-path ref) :references)) :key))
-              (entry (bibtex-completion-get-entry citekey))
-              (url (funcall orb-bibtex-entry-get-value-function "url" entry)))
-    (org-roam-ref-add url)))
 
 ;;;###autoload
 (defun yrh/parse-document-representation (&optional repr)
@@ -923,12 +911,7 @@ tasks."
 (use-package! org-roam-bibtex
   :after org-roam
   :config
-  (require 'org-ref)
-  (setq orb-roam-ref-format 'org-ref-v3)
-  (add-hook! 'org-roam-bibtex-mode-on-hook
-    (add-hook! 'org-roam-capture-new-node-hook #'yrh/orb--insert-captured-ref-url))
-  (add-hook! 'org-roam-bibtex-mode-off-hook
-    (remove-hook! 'org-roam-capture-new-node-hook #'yrh/orb--insert-captured-ref-url))
+  (setq orb-roam-ref-format 'org-cite)
   (add-hook! org-roam-mode
     (org-roam-bibtex-mode 1)))
 
@@ -939,11 +922,8 @@ tasks."
   (add-hook! bibtex-mode
     (add-hook! 'before-save-hook :local #'bibtex-reformat)))
 
-(after! org-ref
-  (map! :map org-mode-map
-        "C-c ]" #'org-ref-insert-link))
-
 (after! org
+  (require 'ol-bibtex)
   (unless (assoc :online org-bibtex-types)
     (add-to-list 'org-bibtex-types
              '(:online
