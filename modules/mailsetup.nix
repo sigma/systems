@@ -8,7 +8,7 @@
 with lib; let
   cfg = config.programs.mailsetup;
 
-  pkg = pkgs.stdenv.mkDerivation rec {
+  pkg = pkgs.stdenv.mkDerivation {
     pname = "gmi";
     version = "v0.1";
 

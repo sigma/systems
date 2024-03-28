@@ -19,8 +19,8 @@ final: prev: let
       }
     );
 
-  helpers = rec {
-    nativeWrapper = final.stdenv.mkDerivation rec {
+  helpers = {
+    nativeWrapper = final.stdenv.mkDerivation {
       pname = "native-wrapper";
       version = "goog";
 
@@ -40,7 +40,7 @@ final: prev: let
       '';
     };
 
-    gitGoogleWrapped = final.stdenv.mkDerivation rec {
+    gitGoogleWrapped = final.stdenv.mkDerivation {
       pname = "git";
       version = "goog-wrapped";
 
@@ -67,7 +67,7 @@ final: prev: let
 in {
   # a fake git package that just links to the google-one. To be used in
   # home-manager git config for example.
-  gitGoogle = final.stdenv.mkDerivation rec {
+  gitGoogle = final.stdenv.mkDerivation {
     pname = "git";
     version = "goog";
 
@@ -85,7 +85,7 @@ in {
     '';
   };
 
-  emacsGoogle = final.stdenv.mkDerivation rec {
+  emacsGoogle = final.stdenv.mkDerivation {
     pname = "emacs";
     version = "goog";
 
@@ -100,7 +100,7 @@ in {
 
   emacs = (if final.stdenvNoCC.isLinux then final.emacsGoogle else final.emacs-unstable);
 
-  fig = final.stdenv.mkDerivation rec {
+  fig = final.stdenv.mkDerivation {
     pname = "fig";
     version = "goog";
 
@@ -114,7 +114,7 @@ in {
     '';
   };
 
-  gcert = final.stdenv.mkDerivation rec {
+  gcert = final.stdenv.mkDerivation {
     pname = "gcert";
     version = "goog";
 

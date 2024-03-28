@@ -2,7 +2,6 @@
   user,
   config,
   lib,
-  pkgs,
   isMac,
   ...
 }: let

@@ -7,31 +7,31 @@
     systems.flake = false;
 
     # Package sets
-    nixpkgs.url = github:nixos/nixpkgs/nixpkgs-unstable;
-    nixos-stable.url = github:NixOS/nixpkgs/nixos-23.11;
-    darwin-stable.url = github:NixOS/nixpkgs/nixpkgs-23.11-darwin;
-    nixpkgs-master.url = github:NixOS/nixpkgs/master;
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixos-stable.url = "github:NixOS/nixpkgs/nixos-23.11";
+    darwin-stable.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
+    nixpkgs-master.url = "github:NixOS/nixpkgs/master";
 
     # Environment/system management
-    darwin.url = github:lnl7/nix-darwin/master;
+    darwin.url = "github:lnl7/nix-darwin/master";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.url = github:nix-community/home-manager;
+    home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # Flake compat
     flake-compat = {
-      url = github:edolstra/flake-compat;
+      url = "github:edolstra/flake-compat";
       flake = false;
     };
 
     # Other sources
-    utils.url = github:numtide/flake-utils;
+    utils.url = "github:numtide/flake-utils";
     utils.inputs.systems.follows = "systems";
 
-    emacs.url = github:nix-community/emacs-overlay;
+    emacs.url = "github:nix-community/emacs-overlay";
     emacs.inputs.nixpkgs.follows = "nixpkgs";
     emacs.inputs.flake-utils.follows = "utils";
-    comma.url = github:nix-community/comma;
+    comma.url = "github:nix-community/comma";
     comma.inputs.nixpkgs.follows = "nixpkgs";
     comma.inputs.flake-compat.follows = "flake-compat";
     comma.inputs.utils.follows = "utils";
@@ -47,14 +47,14 @@
     devshell.inputs.flake-utils.follows = "utils";
     nix-filter.url = "github:numtide/nix-filter";
 
-    maschine-hacks.url = github:sigma/maschine-hacks;
+    maschine-hacks.url = "github:sigma/maschine-hacks";
     maschine-hacks.inputs.systems.follows = "systems";
     maschine-hacks.inputs.nixpkgs.follows = "nixpkgs";
 
     doom-emacs.url = "github:doomemacs/doomemacs/81f5a8f052045afaa984db42bde7bdfcce16f417";
     doom-emacs.flake = false;
     nix-doom-emacs.inputs.doom-emacs.follows = "doom-emacs";
-    nix-doom-emacs.url = github:sigma/nix-doom-emacs/experimental;
+    nix-doom-emacs.url = "github:sigma/nix-doom-emacs/experimental";
   };
 
   outputs = inputs @ {

@@ -12,7 +12,7 @@ in {
       type = types.bool;
       default = false;
     };
-    doom = rec {
+    doom = {
       repoUrl = mkOption {
         type = types.str;
         default = "https://github.com/doomemacs/doomemacs";

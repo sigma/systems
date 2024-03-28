@@ -1,8 +1,5 @@
 {
   user,
-  config,
-  lib,
-  pkgs,
   ...
 }: let
   login = user.login;

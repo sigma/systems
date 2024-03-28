@@ -3,7 +3,6 @@
   lib,
   pkgs,
   user,
-  machine,
   ...
 }: {
   enable = false;
