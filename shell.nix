@@ -1,4 +1,4 @@
-{pkgs}: let
+{pkgs, filter}: let
   nixFlags = "--experimental-features \"flakes nix-command\"";
 
   isDarwin = pkgs.stdenvNoCC.isDarwin;
@@ -57,7 +57,7 @@
 
     version = "dev";
 
-    src = pkgs.nix-filter {
+    src = filter {
       root = ./.;
     };
 
