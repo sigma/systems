@@ -11,13 +11,13 @@ args@{
 
   imports =
     [
-      ./modules/zinit.nix
-      ./modules/zsh-plugins
-      ./modules/bat-syntaxes
-      ./modules/cloud-shell.nix
-      ./modules/mailsetup.nix
-      ./modules/gcert.nix
-      ./modules/blaze.nix
+      ./home-modules/zinit.nix
+      ./home-modules/zsh-plugins
+      ./home-modules/bat-syntaxes
+      ./home-modules/cloud-shell.nix
+      ./home-modules/mailsetup.nix
+      ./home-modules/gcert.nix
+      ./home-modules/blaze.nix
     ];
 
   accounts.email.maildirBasePath = ".mail";
