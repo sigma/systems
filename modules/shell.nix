@@ -59,7 +59,7 @@
       version = "dev";
 
       src = inputs.nix-filter.lib {
-        root = ./.;
+        root = ../.;
       };
 
       dontUnpack = true;

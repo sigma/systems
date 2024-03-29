@@ -76,10 +76,10 @@
         # introduce proper options for homeConfigurations and darwinConfigurations.
         # This is useful mostly during the transition phase from native flake attributes
         # to `ez-configs`, as os configurations get defined in both and need to be merged.
-        ./flake-options.nix
+        ./modules/flake-options.nix
 
         inputs.devshell.flakeModule
-        ./shell-module.nix
+        ./modules/shell.nix
 
         inputs.ez-configs.flakeModule
       ];
