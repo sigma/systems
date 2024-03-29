@@ -71,6 +71,7 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         inputs.devshell.flakeModule
+        ./shell-module.nix
       ];
 
       flake = let
@@ -101,9 +102,7 @@
       perSystem = { config, system, pkgs, inputs', ... }: {
         _module.args.pkgs = import nixpkgs {
           inherit system;
-          overlays = [
-            inputs.devshell.overlays.default
-          ];
+          overlays = [ ];
           config = { };
         };
 
@@ -112,11 +111,6 @@
         in {
           inherit default;
           home-manager = default;
-        };
-
-        devShells.default = import ./shell.nix {
-          inherit pkgs; 
-          filter = inputs.nix-filter.lib;
         };
       };
     };
