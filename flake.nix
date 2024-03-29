@@ -6,10 +6,6 @@
     systems.url = "path:./flake.systems.nix";
     systems.flake = false;
 
-    # flake-parts
-    flake-parts.url = "github:hercules-ci/flake-parts";
-    flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs-lib";
-
     # Package sets
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixpkgs-lib.url = "github:NixOS/nixpkgs/nixos-unstable?dir=lib";
@@ -17,17 +13,24 @@
     darwin-stable.url = "github:NixOS/nixpkgs/nixpkgs-23.11-darwin";
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
 
+    # flake-parts
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs-lib";
+
     # Environment/system management
     darwin.url = "github:lnl7/nix-darwin/master";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    # ez-configs
+    ez-configs.url = "github:ehllie/ez-configs";
+    ez-configs.inputs.nixpkgs.follows = "nixpkgs";
+    ez-configs.inputs.flake-parts.follows = "flake-parts";
+
     # Flake compat
-    flake-compat = {
-      url = "github:edolstra/flake-compat";
-      flake = false;
-    };
+    flake-compat.url = "github:edolstra/flake-compat";
+    flake-compat.flake = false;
 
     # Other sources
     utils.url = "github:numtide/flake-utils";
@@ -70,8 +73,15 @@
   }: 
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
+        # introduce proper options for homeConfigurations and darwinConfigurations.
+        # This is useful mostly during the transition phase from native flake attributes
+        # to `ez-configs`, as os configurations get defined in both and need to be merged.
+        ./flake-options.nix
+
         inputs.devshell.flakeModule
         ./shell-module.nix
+
+        inputs.ez-configs.flakeModule
       ];
 
       flake = let
@@ -98,6 +108,11 @@
         };
 
       systems = import inputs.systems;
+
+      ezConfigs = {
+        root = ./.;
+        globalArgs = { inherit inputs; };
+      };
 
       perSystem = { config, system, pkgs, inputs', ... }: {
         _module.args.pkgs = import nixpkgs {
