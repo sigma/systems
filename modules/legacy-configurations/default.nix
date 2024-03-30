@@ -1,9 +1,9 @@
-{inputs, ...}:
+{inputs, lib, ...}:
 {
   flake = let
     stateVersion = "23.11";
     hosts = import ../../hosts.nix {
-      lib = import inputs.nixpkgs-lib;
+      inherit lib;
     };
     machines = import ../../machines.nix {inherit inputs stateVersion; };
   in
