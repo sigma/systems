@@ -95,9 +95,11 @@
       perSystem = { config, system, pkgs, inputs', ... }: {
         _module.args.pkgs = import nixpkgs {
           inherit system;
-          config = { };
           overlays = import ./overlays {
             inherit inputs config;
+          };
+          config = {
+            allowUnfree = true;
           };
         };
 
