@@ -93,6 +93,8 @@
   in
     {
       devshells.default = {
+        devshell.name = "system-shell";
+
         packages = [
           pkgs.nixFlakes
           pkgs.nil # for VSCode integration.
