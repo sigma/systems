@@ -95,8 +95,10 @@
       perSystem = { config, system, pkgs, inputs', ... }: {
         _module.args.pkgs = import nixpkgs {
           inherit system;
-          overlays = [ ];
           config = { };
+          overlays = import ./overlays {
+            inherit inputs config;
+          };
         };
 
         packages = let

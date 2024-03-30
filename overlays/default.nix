@@ -16,7 +16,7 @@
   )
 
   # silicon package sets
-  (import ./overlays/silicon.nix inputs config)
+  (import ./silicon.nix inputs config)
 
   # community overlays
   inputs.comma.overlays.default
@@ -31,5 +31,5 @@
   inputs.maschine-hacks.overlays.default
 
   # packages hacks
-  (import ./overlays/pkg)
+  (import ./pkg)
 ]

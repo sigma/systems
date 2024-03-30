@@ -8,7 +8,7 @@ let
   # Configuration for `nixpkgs`
   nixpkgsConfig = rec {
     config = {allowUnfree = true;};
-    overlays = import ./overlays.nix { inherit inputs config; };
+    overlays = import ./overlays { inherit inputs config; };
   };
   hmModules = [
     ./home.nix
