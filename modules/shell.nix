@@ -77,7 +77,7 @@
 
         function publish() {
           if [ -d "\$2" ]; then
-            ${pkgs.rsync}/bin/rsync -av --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r -p --delete "\$1" "\$2"
+            ${pkgs.rsync}/bin/rsync -av --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r -p --exclude='auth/' --delete "\$1" "\$2"
           else
             echo "\$2 does not exist"
             return 1
