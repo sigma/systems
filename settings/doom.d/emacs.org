@@ -1066,7 +1066,7 @@ tasks."
 #+end_src
 
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
-(use-package! all-the-icons
+(use-package! nerd-icons
   :if (display-graphic-p))
 
 (after! org-agenda
@@ -1095,10 +1095,10 @@ tasks."
                                                     (org-agenda-format-date-aligned date)))
       org-cycle-separator-lines 2
       org-agenda-category-icon-alist
-      `(("Work" ,(list (all-the-icons-faicon "cogs")) nil nil :ascent center)
-        ("Personal" ,(list (all-the-icons-material "person")) nil nil :ascent center)
-        ("Calendar" ,(list (all-the-icons-faicon "calendar")) nil nil :ascent center)
-        ("Reading" ,(list (all-the-icons-faicon "book")) nil nil :ascent center))))
+      `(("Work" ,(list (nerd-icons-faicon "nf-fa-cogs")) nil nil :ascent center)
+        ("Personal" ,(list (nerd-icons-octicon "nf-oct-person")) nil nil :ascent center)
+        ("Calendar" ,(list (nerd-icons-faicon "nf-fa-calendar")) nil nil :ascent center)
+        ("Reading" ,(list (nerd-icons-faicon "nf-fa-book")) nil nil :ascent center))))
 
 (use-package! org-super-agenda
   :config
