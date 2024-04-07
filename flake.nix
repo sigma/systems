@@ -23,35 +23,21 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Flake compat
-    flake-compat.url = "github:edolstra/flake-compat";
-    flake-compat.flake = false;
-
     # Other sources
-    utils.url = "github:numtide/flake-utils";
-    utils.inputs.systems.follows = "systems";
-
     emacs.url = "github:nix-community/emacs-overlay";
     emacs.inputs.nixpkgs.follows = "nixpkgs";
-    emacs.inputs.flake-utils.follows = "utils";
     comma.url = "github:nix-community/comma";
     comma.inputs.nixpkgs.follows = "nixpkgs";
-    comma.inputs.flake-compat.follows = "flake-compat";
-    comma.inputs.utils.follows = "utils";
 #    nix-doom-emacs.url = github:nix-community/nix-doom-emacs;
     nix-doom-emacs.inputs.emacs-overlay.follows = "emacs";
     nix-doom-emacs.inputs.nixpkgs.follows = "nixpkgs";
-    nix-doom-emacs.inputs.flake-utils.follows = "utils";
-    nix-doom-emacs.inputs.flake-compat.follows = "flake-compat";
     fenix.url = "github:nix-community/fenix";
     fenix.inputs.nixpkgs.follows = "nixpkgs";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
-    devshell.inputs.flake-utils.follows = "utils";
     nix-filter.url = "github:numtide/nix-filter";
 
     maschine-hacks.url = "github:sigma/maschine-hacks";
-    maschine-hacks.inputs.systems.follows = "systems";
     maschine-hacks.inputs.nixpkgs.follows = "nixpkgs";
 
     doom-emacs.url = "github:doomemacs/doomemacs/81f5a8f052045afaa984db42bde7bdfcce16f417";
