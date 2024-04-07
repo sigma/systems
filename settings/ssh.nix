@@ -4,10 +4,7 @@
   pkgs,
   machine,
   ...
-}: let
-  codeserverPort = 49363;
-in
-  {
+}: {
     enable = true;
 
     compression = true;
