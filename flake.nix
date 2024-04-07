@@ -23,11 +23,6 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    # ez-configs
-    ez-configs.url = "github:ehllie/ez-configs";
-    ez-configs.inputs.nixpkgs.follows = "nixpkgs";
-    ez-configs.inputs.flake-parts.follows = "flake-parts";
-
     # Flake compat
     flake-compat.url = "github:edolstra/flake-compat";
     flake-compat.flake = false;
@@ -83,16 +78,10 @@
         # definitions for machine types, hosts, users.
         ./modules/defs
 
-        ./modules/legacy-configurations
-        inputs.ez-configs.flakeModule
+        ./modules/configurations
       ];
 
       systems = import inputs.systems;
-
-      ezConfigs = {
-        root = ./.;
-        globalArgs = { inherit inputs; };
-      };
 
       perSystem = { config, system, pkgs, inputs', ... }: {
         _module.args.pkgs = import nixpkgs {

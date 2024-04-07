@@ -11,7 +11,7 @@ let
     overlays = import ../../overlays { inherit inputs config; };
   };
   hmModules = [
-    ../../home.nix
+    ../../home-modules
     inputs.nix-doom-emacs.hmModule
   ];
 in

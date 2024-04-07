@@ -1,23 +1,24 @@
 args@{
-  config,
   pkgs,
   lib,
   user,
   machine,
   stateVersion,
+  isMac,
   ...
 }: {
   home.stateVersion = stateVersion;
 
   imports =
     [
-      ./home-modules/zinit.nix
-      ./home-modules/zsh-plugins
-      ./home-modules/bat-syntaxes
-      ./home-modules/cloud-shell.nix
-      ./home-modules/mailsetup.nix
-      ./home-modules/gcert.nix
-      ./home-modules/blaze.nix
+      ./zinit.nix
+      ./zsh-plugins
+      ./bat-syntaxes
+      ./cloud-shell.nix
+      ./mailsetup.nix
+      ./gcert.nix
+      ./blaze.nix
+      ./darwin-apps.nix
     ];
 
   accounts.email.maildirBasePath = ".mail";
@@ -106,32 +107,9 @@ args@{
 
       nix
     ]
-    ++ lib.optionals stdenvNoCC.isDarwin [
+    ++ lib.optionals isMac [
       m-cli # useful macOS CLI commands
       afsctool
       maschine-hacks
     ];
-
-  # make sure our home-manager applications are dockable
-  home.activation = lib.mkIf pkgs.stdenvNoCC.isDarwin {
-    copyApplications = let
-      apps = pkgs.buildEnv {
-        name = "home-manager-applications";
-        paths = config.home.packages;
-        pathsToLink = "/Applications";
-      };
-    in
-      lib.hm.dag.entryAfter ["writeBoundary"] ''
-        baseDir="$HOME/Applications/Local"
-        if [ -d "$baseDir" ]; then
-          rm -rf "$baseDir"
-        fi
-        mkdir -p "$baseDir"
-        for appFile in ${apps}/Applications/*; do
-          target="$baseDir/$(basename "$appFile")"
-          $DRY_RUN_CMD cp ''${VERBOSE_ARG:+-v} -fHRL "$appFile" "$baseDir"
-          $DRY_RUN_CMD chmod ''${VERBOSE_ARG:+-v} -R +w "$target"
-        done
-      '';
-  };
 }
