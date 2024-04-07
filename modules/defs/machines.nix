@@ -6,10 +6,7 @@
 
 let
   # Configuration for `nixpkgs`
-  nixpkgsConfig = rec {
-    config = {allowUnfree = true;};
-    overlays = import ../../overlays { inherit inputs config; };
-  };
+  nixpkgsConfig = import ../../pkg-config.nix { inherit inputs; };
   hmModules = [
     ../../home-modules
     inputs.nix-doom-emacs.hmModule
@@ -32,9 +29,7 @@ in
       modules =
         [
           # Main `nix-darwin` config
-          ../../configuration.nix
-          ../../darwin-modules/gmac.nix
-          ../../darwin-modules/mac-user.nix
+          ../../darwin-modules
           # `home-manager` module
           inputs.home-manager.darwinModules.home-manager
           {
@@ -49,13 +44,14 @@ in
     };
 
   glinux = machine: let
+    system = "x86_64-linux";
     user = users.corpUser;
     specialArgs = {
       inherit user stateVersion;
       machine =
         {
-          isInteractive = false;
-          system = "x86_64-linux";
+          inherit system;
+          isInteractive = false;      
         }
         // machine
         // {isWork = true;};
@@ -63,7 +59,7 @@ in
     };
   in
     inputs.home-manager.lib.homeManagerConfiguration {
-      pkgs = builtins.getAttr "x86_64-linux" inputs.nixpkgs.outputs.legacyPackages // nixpkgsConfig;
+      pkgs = builtins.getAttr system inputs.nixpkgs.outputs.legacyPackages // nixpkgsConfig;
       modules =
         hmModules
         ++ [

@@ -72,12 +72,14 @@
         # Also add a defs option for the definitions module below.
         ./modules/flake-options.nix
 
+        # shell support
         inputs.devshell.flakeModule
         ./modules/shell.nix
 
         # definitions for machine types, hosts, users.
         ./modules/defs
 
+        # configurations for home-manager, darwin, etc.
         ./modules/configurations
       ];
 
@@ -86,13 +88,9 @@
       perSystem = { config, system, pkgs, inputs', ... }: {
         _module.args.pkgs = import nixpkgs {
           inherit system;
-          overlays = import ./overlays {
-            inherit inputs config;
-          };
-          config = {
-            allowUnfree = true;
-          };
-        };
+        } // (import ./pkg-config.nix {
+          inherit inputs;
+        });
 
         packages = let
           default = inputs'.home-manager.packages.home-manager;
