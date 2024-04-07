@@ -1,24 +1,21 @@
 { 
   inputs,
-  stateVersion
+  stateVersion,
+  users
 }:
 
 let
-  users = import ./users.nix;
   # Configuration for `nixpkgs`
   nixpkgsConfig = rec {
     config = {allowUnfree = true;};
-    overlays = import ./overlays { inherit inputs config; };
+    overlays = import ../../overlays { inherit inputs config; };
   };
   hmModules = [
-    ./home.nix
+    ../../home.nix
     inputs.nix-doom-emacs.hmModule
   ];
-  darwinModules = {};
 in
 {
-  inherit darwinModules;
-
   mac = machine: let
     user =
       if machine.isWork
@@ -33,21 +30,11 @@ in
       inherit (machine) system;
       inherit specialArgs;
       modules =
-        inputs.nixpkgs.lib.attrValues darwinModules
-        ++ inputs.nixpkgs.lib.optionals (machine.isWork) [
-          ({ ... }: {
-            # those files are handled by corp and will be reverted anyway, so
-            # skip the warning about them being overwritten.
-            environment.etc."shells".copy = true;
-            environment.etc."zshrc".copy = true;
-            # leave bashrc alone, I don't use bash
-            environment.etc."bashrc".enable = false;
-          })
-        ]
-        ++ [
+        [
           # Main `nix-darwin` config
-          ./configuration.nix
-          ./mac-user.nix
+          ../../configuration.nix
+          ../../darwin-modules/gmac.nix
+          ../../darwin-modules/mac-user.nix
           # `home-manager` module
           inputs.home-manager.darwinModules.home-manager
           {

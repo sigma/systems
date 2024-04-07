@@ -31,6 +31,13 @@ in
         example = literalExpression ''
         '';
       };
+      defs = mkOption {
+        type = types.lazyAttrsOf types.raw;
+        default = { };
+        description = ''
+          Definitions.
+        '';
+      };
     };
   };
 }

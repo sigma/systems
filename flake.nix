@@ -74,12 +74,14 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         # introduce proper options for homeConfigurations and darwinConfigurations.
-        # This is useful mostly during the transition phase from native flake attributes
-        # to `ez-configs`, as os configurations get defined in both and need to be merged.
+        # Also add a defs option for the definitions module below.
         ./modules/flake-options.nix
 
         inputs.devshell.flakeModule
         ./modules/shell.nix
+
+        # definitions for machine types, hosts, users.
+        ./modules/defs
 
         ./modules/legacy-configurations
         inputs.ez-configs.flakeModule

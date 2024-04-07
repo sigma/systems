@@ -1,11 +1,7 @@
-{inputs, lib, ...}:
+{self, ...}:
 {
   flake = let
-    stateVersion = "23.11";
-    hosts = import ../../hosts.nix {
-      inherit lib;
-    };
-    machines = import ../../machines.nix {inherit inputs stateVersion; };
+    inherit (self.lib) machines hosts;
   in
     {
       # My `nix-darwin` configs
@@ -13,7 +9,6 @@
         yhodique-macbookpro = machines.mac hosts.yhodique-macbookpro;
         yhodique-macmini = machines.mac hosts.yhodique-macmini;
       };
-      inherit (machines) darwinModules;
 
       # My home-manager only configs
       homeConfigurations = {
