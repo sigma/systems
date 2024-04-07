@@ -53,6 +53,7 @@ args@{
       # build tools
       gnumake
       ninja
+      master.buck2
 
       # console tools
       btop
