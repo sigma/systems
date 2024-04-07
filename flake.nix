@@ -62,7 +62,6 @@
 
   outputs = inputs @ {
     nixpkgs,
-    nixpkgs-lib,
     flake-parts,
     ...
   }: 
