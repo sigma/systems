@@ -606,7 +606,7 @@ I need a few Roam extensions beyond what's built into Doom.
            :target
            (file+head
             "%(expand-file-name citar-org-roam-subdir org-roam-directory)/${citar-citekey}.org"
-            ":PROPERTIES:\n:ROAM_REFS: [cite:@${citar-citekey}] ${citar-url}\n:END:\n#+setupfile: ../../_setup_roam.org\n#+title: ${citar-citekey} :: ${note-title}.\n#+created: %U\n#+last_modified: %U\n\n")
+            ":PROPERTIES:\n:ROAM_REFS: [cite:@${citar-citekey}] ${citar-url}\n:END:\n#+setupfile: ../../_setup_roam_bib.org\n#+title: ${citar-citekey} :: ${note-title}.\n#+created: %U\n#+last_modified: %U\n\n")
            :unnarrowed t))
         org-roam-dailies-capture-templates
         '(("d" "default" plain "**** %?\n" :target
@@ -993,21 +993,6 @@ tasks."
               (lambda (a s v b)
                 (if a (org-g3doc-export-to-markdown t s v)
                   (org-open-file (org-g3doc-export-to-markdown nil s v)))))))))
-
-(after! ox-hugo
-  (defadvice! yrh/hugo-ref-note (fn contents info)
-    :around #'org-hugo-inner-template
-    (let* ((title (car (plist-get info :title)))
-           (refs (plist-get (cadr (plist-get info :parse-tree)) :ROAM_REFS))
-           (ref
-            (when refs
-              (car (cl-remove-if-not
-                    (lambda (s) (s-starts-with-p "http" s))
-                    (split-string refs " ")))))
-           (content (funcall fn contents info)))
-      (if ref
-          (org-trim (concat "> Important: these are my notes for [" title "](" ref ")\n\n" content))
-        content))))
 #+end_src
 
 #+begin_src emacs-lisp :tangle modules/config/private/autoload/org.el
