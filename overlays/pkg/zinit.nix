@@ -1,11 +1,11 @@
 final: prev: {
   zinit = prev.zinit.overrideAttrs (oldAttrs: rec {
-    version = "v3.12.1";
+    version = "v3.13.1";
     src = final.fetchFromGitHub {
       owner = "zdharma-continuum";
       repo = "zinit";
       rev = version;
-      hash = "sha256-REd997dop9gAosG4QkEKIc3jYIRLeB3MYBPiYMlDGUs=";
+      hash = "sha256-fnBV0LmC/wJm0pOITJ1mhiBqsg2F8AQJWvn0p/Bgo5Q=";
     };
 
     installPhase = ''
