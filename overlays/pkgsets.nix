@@ -1,4 +1,4 @@
-inputs: config:
+{inputs, config, ...}:
   final: prev: let
     system = final.stdenv.system;
     nixpkgs-stable =

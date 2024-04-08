@@ -1,9 +1,9 @@
-{ inputs, config }:
+{ inputs, config, ... }:
 
 [
   # Add stable and master package sets for convenience,
   # and x86 variants (for rosetta) for darwin on ARM.
-  (import ./pkgsets.nix inputs config)
+  (import ./pkgsets.nix {inherit inputs config;})
 
   # community overlays
   inputs.comma.overlays.default

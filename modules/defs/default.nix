@@ -6,7 +6,9 @@
     hosts = import ./hosts.nix {
       inherit lib;
     };
-    machines = import ./machines.nix {inherit inputs stateVersion users;};
+    machines = import ./machines.nix {
+      inherit inputs stateVersion users;
+    };
   in {
     defs = {
       inherit hosts machines users;
