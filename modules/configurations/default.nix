@@ -1,7 +1,7 @@
 {self, ...}:
 {
   flake = let
-    inherit (self.lib) machines hosts;
+    inherit (self.defs) machines hosts;
   in
     {
       # My `nix-darwin` configs

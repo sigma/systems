@@ -8,7 +8,7 @@
     };
     machines = import ./machines.nix {inherit inputs stateVersion users;};
   in {
-    lib = lib // {
+    defs = {
       inherit hosts machines users;
     };
   };
