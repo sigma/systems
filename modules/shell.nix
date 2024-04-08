@@ -84,7 +84,7 @@
           fi
         }
         cd $src
-        publish . /google/src/cloud/yhodique/personal/google3/experimental/users/yhodique/config/nix
+        publish . /google/src/cloud/yhodique/personal/google3/experimental/users/yhodique/config/nix-systems
         EOF
 
         chmod a+x $out/bin/publish
