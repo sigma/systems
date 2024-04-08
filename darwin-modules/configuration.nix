@@ -1,5 +1,4 @@
 {
-  machine,
   pkgs,
   lib,
   ...
@@ -42,9 +41,6 @@
       vim
 
       nixFlakes
-    ]
-    ++ lib.optionals machine.isWork [
-      gitGoogle
     ];
 
   environment.shells = with pkgs; [

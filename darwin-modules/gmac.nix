@@ -1,4 +1,4 @@
-{ lib, machine, ... }: 
+{ lib, pkgs, machine, ... }: 
   lib.optionalAttrs (machine.isWork) {
     # those files are handled by corp and will be reverted anyway, so
     # skip the warning about them being overwritten.
@@ -8,4 +8,8 @@
       # leave bashrc alone, I don't use bash
       "bashrc".enable = false;
     };
+
+    environment.systemPackages = [
+      pkgs.gitGoogle
+    ];
   }
