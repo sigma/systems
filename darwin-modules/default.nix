@@ -1,8 +1,10 @@
 {...}:
   {
     imports = [
-      ./configuration.nix
+      ./fonts.nix
       ./gmac.nix
       ./mac-user.nix
+      ./nix.nix
+      ./system.nix
     ];
   }
