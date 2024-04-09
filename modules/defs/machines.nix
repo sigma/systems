@@ -10,6 +10,7 @@ let
   hmModules = [
     ../../home-modules
     inputs.nix-doom-emacs.hmModule
+    inputs.nix-index-database.hmModules.nix-index
   ];
 in
 {
