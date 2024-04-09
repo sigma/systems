@@ -1,7 +1,6 @@
 args@{
   pkgs,
   lib,
-  user,
   machine,
   stateVersion,
   isMac,
@@ -11,24 +10,16 @@ args@{
 
   imports =
     [
+      ./accounts.nix
+      ./bat-syntaxes
+      ./blaze.nix
+      ./cloud-shell.nix
+      ./darwin-apps.nix
+      ./gcert.nix
+      ./mailsetup.nix
       ./zinit.nix
       ./zsh-plugins
-      ./bat-syntaxes
-      ./cloud-shell.nix
-      ./mailsetup.nix
-      ./gcert.nix
-      ./blaze.nix
-      ./darwin-apps.nix
     ];
-
-  accounts.email.maildirBasePath = ".mail";
-  accounts.email.accounts.${user.login} = {
-    primary = true;
-    notmuch.enable = true;
-    realName = user.name;
-    address = user.email;
-    aliases = user.aliases;
-  };
 
   programs =
     (import ./settings args) // {
