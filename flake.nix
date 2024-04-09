@@ -58,7 +58,6 @@
         ./modules/flake-options.nix
 
         # shell support
-        inputs.devshell.flakeModule
         ./modules/shell.nix
 
         # definitions for machine types, hosts, users.

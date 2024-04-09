@@ -1,4 +1,8 @@
 {inputs, ...}: {
+  imports = [
+    inputs.devshell.flakeModule
+  ];
+
   perSystem = {pkgs, ...}: let
     nixFlags = "--experimental-features \"flakes nix-command\"";
 
