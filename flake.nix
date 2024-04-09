@@ -28,9 +28,6 @@
     emacs.inputs.nixpkgs.follows = "nixpkgs";
     comma.url = "github:nix-community/comma";
     comma.inputs.nixpkgs.follows = "nixpkgs";
-#    nix-doom-emacs.url = github:nix-community/nix-doom-emacs;
-    nix-doom-emacs.inputs.emacs-overlay.follows = "emacs";
-    nix-doom-emacs.inputs.nixpkgs.follows = "nixpkgs";
     fenix.url = "github:nix-community/fenix";
     fenix.inputs.nixpkgs.follows = "nixpkgs";
     devshell.url = "github:numtide/devshell";
@@ -39,11 +36,14 @@
 
     maschine-hacks.url = "github:sigma/maschine-hacks";
     maschine-hacks.inputs.nixpkgs.follows = "nixpkgs";
+    maschine-hacks.inputs.flake-parts.follows = "flake-parts";
 
     doom-emacs.url = "github:doomemacs/doomemacs/81f5a8f052045afaa984db42bde7bdfcce16f417";
     doom-emacs.flake = false;
-    nix-doom-emacs.inputs.doom-emacs.follows = "doom-emacs";
     nix-doom-emacs.url = "github:sigma/nix-doom-emacs/experimental";
+    nix-doom-emacs.inputs.doom-emacs.follows = "doom-emacs";
+    nix-doom-emacs.inputs.emacs-overlay.follows = "emacs";
+    nix-doom-emacs.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs @ {
