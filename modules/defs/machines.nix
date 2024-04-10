@@ -60,7 +60,7 @@ in
     };
   in
     inputs.home-manager.lib.homeManagerConfiguration {
-      pkgs = builtins.getAttr system inputs.nixpkgs.outputs.legacyPackages // nixpkgsConfig;
+      pkgs = inputs.nixpkgs.legacyPackages.${system} // nixpkgsConfig;
       modules =
         hmModules
         ++ [
