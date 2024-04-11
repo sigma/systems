@@ -109,7 +109,11 @@
     };
 
     devshells.default = {
-      devshell.name = "system-shell";
+      devshell = {
+        name = "system-shell";
+        # automatically enable pre-commit hooks in that shell
+        startup.pre-commit.text = config.pre-commit.installationScript;
+      };
 
       packages = [
         pkgs.nixFlakes
@@ -141,11 +145,6 @@
             command = ''
               ${systemBuild}
             '';
-          }
-          {
-            name = "pre-commit-install";
-            category = "dev";
-            command = config.pre-commit.installationScript;
           }
         ]
         ++ pkgs.lib.optionals (!isDarwin) [
