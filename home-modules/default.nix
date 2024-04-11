@@ -1,4 +1,4 @@
-args@{
+args @ {
   pkgs,
   lib,
   machine,
@@ -8,21 +8,21 @@ args@{
 }: {
   home.stateVersion = stateVersion;
 
-  imports =
-    [
-      ./accounts.nix
-      ./bat-syntaxes
-      ./blaze.nix
-      ./cloud-shell.nix
-      ./darwin-apps.nix
-      ./gcert.nix
-      ./mailsetup.nix
-      ./zinit.nix
-      ./zsh-plugins
-    ];
+  imports = [
+    ./accounts.nix
+    ./bat-syntaxes
+    ./blaze.nix
+    ./cloud-shell.nix
+    ./darwin-apps.nix
+    ./gcert.nix
+    ./mailsetup.nix
+    ./zinit.nix
+    ./zsh-plugins
+  ];
 
   programs =
-    (import ./settings args) // {
+    (import ./settings args)
+    // {
       cloudshell.enable = true;
       lieer.enable = true;
       mailsetup.enable = machine.isWork;

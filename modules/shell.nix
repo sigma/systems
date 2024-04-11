@@ -94,17 +94,17 @@
         chmod a+x $out/bin/publish
       '';
     };
-  in
-    {
-      devshells.default = {
-        devshell.name = "system-shell";
+  in {
+    devshells.default = {
+      devshell.name = "system-shell";
 
-        packages = [
-          pkgs.nixFlakes
-          pkgs.nil # for VSCode integration.
-        ];
+      packages = [
+        pkgs.nixFlakes
+        pkgs.nil # for VSCode integration.
+      ];
 
-        commands = [
+      commands =
+        [
           {
             name = "system-bootstrap";
             category = "system";
@@ -129,7 +129,8 @@
               ${systemBuild}
             '';
           }
-        ] ++ pkgs.lib.optionals (!isDarwin) [
+        ]
+        ++ pkgs.lib.optionals (!isDarwin) [
           {
             name = "publish";
             category = "dev";
@@ -138,6 +139,6 @@
             '';
           }
         ];
-      };
     };
-  }
+  };
+}

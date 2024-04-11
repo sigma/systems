@@ -1,39 +1,45 @@
-{ inputs, lib, ... }:
-let
+{
+  inputs,
+  lib,
+  ...
+}: let
   fplib = inputs.flake-parts.lib;
-  inherit (lib)
+  inherit
+    (lib)
     mkOption
     types
     literalExpression
     ;
-  inherit (fplib)
+  inherit
+    (fplib)
     mkSubmoduleOptions
     ;
-in
-{
+in {
   options = {
     flake = mkSubmoduleOptions {
       darwinConfigurations = mkOption {
         type = types.lazyAttrsOf types.raw;
-        default = { };
+        default = {};
         description = ''
           Instantiated Darwin configurations.
         '';
-        example = literalExpression ''
-        '';
+        example =
+          literalExpression ''
+          '';
       };
       homeConfigurations = mkOption {
         type = types.lazyAttrsOf types.raw;
-        default = { };
+        default = {};
         description = ''
           Instantiated home-manager configurations.
         '';
-        example = literalExpression ''
-        '';
+        example =
+          literalExpression ''
+          '';
       };
       defs = mkOption {
         type = types.lazyAttrsOf types.raw;
-        default = { };
+        default = {};
         description = ''
           Definitions.
         '';

@@ -1,5 +1,8 @@
-{inputs, lib, ...}:
 {
+  inputs,
+  lib,
+  ...
+}: {
   flake = let
     stateVersion = "23.11";
     users = import ./users.nix;

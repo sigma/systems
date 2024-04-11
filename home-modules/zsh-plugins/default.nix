@@ -32,13 +32,16 @@
       ".p10k.zsh".source = ./p10k.zsh;
       ".p10k.pure.zsh".source = ./p10k.pure.zsh;
 
-      ".p10k.generated.config.zsh".text = if machine.system == "x86_64-linux" then ''
-        # location of the gcert cookie
-        typeset -g POWERLEVEL9K_CERT_COOKIE_FILE="/var/run/ccache/sso-$USER/cookie"
-      '' else ''
-        # location of the gcert cookie
-        typeset -g POWERLEVEL9K_CERT_COOKIE_FILE="$HOME/.sso/cookie"
-      '';
+      ".p10k.generated.config.zsh".text =
+        if machine.system == "x86_64-linux"
+        then ''
+          # location of the gcert cookie
+          typeset -g POWERLEVEL9K_CERT_COOKIE_FILE="/var/run/ccache/sso-$USER/cookie"
+        ''
+        else ''
+          # location of the gcert cookie
+          typeset -g POWERLEVEL9K_CERT_COOKIE_FILE="$HOME/.sso/cookie"
+        '';
     }
     // lib.optionalAttrs machine.isWork {
       ".zsh-plugins/google/google.plugin.zsh".source = ./google.plugin.zsh;

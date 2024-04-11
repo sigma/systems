@@ -1,10 +1,9 @@
-{...}:
-  {
-    imports = [
-      ./fonts.nix
-      ./gmac.nix
-      ./mac-user.nix
-      ./nix.nix
-      ./system.nix
-    ];
-  }
+{...}: {
+  imports = [
+    ./fonts.nix
+    ./gmac.nix
+    ./mac-user.nix
+    ./nix.nix
+    ./system.nix
+  ];
+}

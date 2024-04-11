@@ -98,7 +98,10 @@ in {
     '';
   };
 
-  emacs = (if final.stdenvNoCC.isLinux then final.emacsGoogle else final.emacs-unstable);
+  emacs =
+    if final.stdenvNoCC.isLinux
+    then final.emacsGoogle
+    else final.emacs-unstable;
 
   fig = final.stdenv.mkDerivation {
     pname = "fig";

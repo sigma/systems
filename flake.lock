@@ -305,6 +305,21 @@
         "type": "github"
       }
     },
+    "flake-root": {
+      "locked": {
+        "lastModified": 1692742795,
+        "narHash": "sha256-f+Y0YhVCIJ06LemO+3Xx00lIcqQxSKJHXT/yk1RTKxw=",
+        "owner": "srid",
+        "repo": "flake-root",
+        "rev": "d9a70d9c7a5fd7f3258ccf48da9335e9b47c3937",
+        "type": "github"
+      },
+      "original": {
+        "owner": "srid",
+        "repo": "flake-root",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems_2"
@@ -744,6 +759,7 @@
         "emacs": "emacs",
         "fenix": "fenix",
         "flake-parts": "flake-parts",
+        "flake-root": "flake-root",
         "home-manager": "home-manager",
         "maschine-hacks": "maschine-hacks",
         "nix-doom-emacs": "nix-doom-emacs",
@@ -753,7 +769,8 @@
         "nixpkgs": "nixpkgs",
         "nixpkgs-lib": "nixpkgs-lib",
         "nixpkgs-master": "nixpkgs-master",
-        "systems": "systems_5"
+        "systems": "systems_5",
+        "treefmt-nix": "treefmt-nix"
       }
     },
     "rotate-text": {
@@ -876,6 +893,26 @@
       "original": {
         "path": "./flake.systems.nix",
         "type": "path"
+      }
+    },
+    "treefmt-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1711963903,
+        "narHash": "sha256-N3QDhoaX+paWXHbEXZapqd1r95mdshxToGowtjtYkGI=",
+        "owner": "numtide",
+        "repo": "treefmt-nix",
+        "rev": "49dc4a92b02b8e68798abd99184f228243b6e3ac",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "treefmt-nix",
+        "type": "github"
       }
     },
     "ts-fold": {

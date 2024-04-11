@@ -47,15 +47,22 @@
 
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+
+    treefmt-nix.url = "github:numtide/treefmt-nix";
+    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+    flake-root.url = "github:srid/flake-root";
   };
 
   outputs = inputs @ {
     nixpkgs,
     flake-parts,
     ...
-  }: 
-    flake-parts.lib.mkFlake { inherit inputs; } {
+  }:
+    flake-parts.lib.mkFlake {inherit inputs;} {
       imports = [
+        inputs.treefmt-nix.flakeModule
+        inputs.flake-root.flakeModule
+
         # introduce proper options for homeConfigurations and darwinConfigurations.
         # Also add a defs option for the definitions module below.
         ./modules/flake-options.nix
@@ -72,18 +79,33 @@
 
       systems = import inputs.systems;
 
-      perSystem = { config, system, pkgs, inputs', ... }: {
-        _module.args.pkgs = import nixpkgs {
-          inherit system;
-        } // (import ./pkg-config.nix {
-          inherit inputs;
-        });
+      perSystem = {
+        config,
+        system,
+        pkgs,
+        inputs',
+        ...
+      }: {
+        _module.args.pkgs =
+          import nixpkgs {
+            inherit system;
+          }
+          // (import ./pkg-config.nix {
+            inherit inputs;
+          });
 
         packages = let
           default = inputs'.home-manager.packages.home-manager;
         in {
           inherit default;
           home-manager = default;
+        };
+
+        treefmt.config = {
+          inherit (config.flake-root) projectRootFile;
+          package = pkgs.treefmt;
+          # formats .nix files
+          programs.alejandra.enable = true;
         };
       };
     };

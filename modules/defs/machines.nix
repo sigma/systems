@@ -1,19 +1,16 @@
-{ 
+{
   inputs,
   stateVersion,
-  users
-}:
-
-let
+  users,
+}: let
   # Configuration for `nixpkgs`
-  nixpkgsConfig = import ../../pkg-config.nix { inherit inputs; };
+  nixpkgsConfig = import ../../pkg-config.nix {inherit inputs;};
   hmModules = [
     ../../home-modules
     inputs.nix-doom-emacs.hmModule
     inputs.nix-index-database.hmModules.nix-index
   ];
-in
-{
+in {
   mac = machine: let
     user =
       if machine.isWork
@@ -27,21 +24,20 @@ in
     inputs.darwin.lib.darwinSystem {
       inherit (machine) system;
       inherit specialArgs;
-      modules =
-        [
-          # Main `nix-darwin` config
-          ../../darwin-modules
-          # `home-manager` module
-          inputs.home-manager.darwinModules.home-manager
-          {
-            nixpkgs = nixpkgsConfig;
-            # `home-manager` config
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.${user.login} = inputs.nixpkgs.lib.mkMerge hmModules;
-            home-manager.extraSpecialArgs = specialArgs;
-          }
-        ];
+      modules = [
+        # Main `nix-darwin` config
+        ../../darwin-modules
+        # `home-manager` module
+        inputs.home-manager.darwinModules.home-manager
+        {
+          nixpkgs = nixpkgsConfig;
+          # `home-manager` config
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.${user.login} = inputs.nixpkgs.lib.mkMerge hmModules;
+          home-manager.extraSpecialArgs = specialArgs;
+        }
+      ];
     };
 
   glinux = machine: let
@@ -52,7 +48,7 @@ in
       machine =
         {
           inherit system;
-          isInteractive = false;      
+          isInteractive = false;
         }
         // machine
         // {isWork = true;};
