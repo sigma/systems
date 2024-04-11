@@ -107,8 +107,10 @@
         treefmt.config = {
           inherit (config.flake-root) projectRootFile;
           package = pkgs.treefmt;
-          # formats .nix files
+          # formatters
           programs.alejandra.enable = true;
+          programs.mdformat.enable = true;
+          programs.beautysh.enable = true;
         };
       };
     };
