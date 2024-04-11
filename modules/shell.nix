@@ -106,6 +106,8 @@
 
       treefmt.settings.formatters = [
         pkgs.alejandra
+        pkgs.mdformat
+        pkgs.beautysh
       ];
     };
 
