@@ -1,9 +1,14 @@
 {inputs, ...}: {
   imports = [
     inputs.devshell.flakeModule
+    inputs.pre-commit-hooks-nix.flakeModule
   ];
 
-  perSystem = {pkgs, ...}: let
+  perSystem = {
+    pkgs,
+    config,
+    ...
+  }: let
     nixFlags = "--experimental-features \"flakes nix-command\"";
 
     isDarwin = pkgs.stdenvNoCC.isDarwin;
@@ -95,6 +100,14 @@
       '';
     };
   in {
+    pre-commit.settings.hooks = {
+      treefmt.enable = true;
+
+      treefmt.settings.formatters = [
+        pkgs.alejandra
+      ];
+    };
+
     devshells.default = {
       devshell.name = "system-shell";
 
@@ -128,6 +141,11 @@
             command = ''
               ${systemBuild}
             '';
+          }
+          {
+            name = "pre-commit-install";
+            category = "dev";
+            command = config.pre-commit.installationScript;
           }
         ]
         ++ pkgs.lib.optionals (!isDarwin) [
