@@ -120,42 +120,39 @@
         pkgs.nil # for VSCode integration.
       ];
 
-      commands =
-        [
-          {
-            name = "system-bootstrap";
-            category = "system";
-            command = ''
-              ${systemBootstrap}
-            '';
-          }
-          {
-            name = "system-install";
-            category = "system";
-            command = ''
-              ${systemSetup}
-              ${systemBootstrap}
-              ${systemBuild}
-              ${systemActivate}
-            '';
-          }
-          {
-            name = "system-test";
-            category = "system";
-            command = ''
-              ${systemBuild}
-            '';
-          }
-        ]
-        ++ pkgs.lib.optionals (!isDarwin) [
-          {
-            name = "publish";
-            category = "dev";
-            command = ''
-              ${package}/bin/publish
-            '';
-          }
-        ];
+      commands = [
+        {
+          name = "system-bootstrap";
+          category = "system";
+          command = ''
+            ${systemBootstrap}
+          '';
+        }
+        {
+          name = "system-install";
+          category = "system";
+          command = ''
+            ${systemSetup}
+            ${systemBootstrap}
+            ${systemBuild}
+            ${systemActivate}
+          '';
+        }
+        {
+          name = "system-test";
+          category = "system";
+          command = ''
+            ${systemBuild}
+          '';
+        }
+        {
+          name = "publish";
+          category = "dev";
+          command = ''
+            ${package}/bin/publish
+          '';
+        }
+      ];
     };
   };
 }
