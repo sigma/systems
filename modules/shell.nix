@@ -101,6 +101,7 @@
     };
   in {
     pre-commit.settings.hooks = {
+      markdownlint.enable = true;
       treefmt.enable = true;
 
       treefmt.settings.formatters = [

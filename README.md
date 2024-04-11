@@ -9,8 +9,8 @@ It is implemented using the flakes feature available from nix 2.8.
 
 For example:
 
-```
-$ darwin-rebuild switch --flake .
+```shell
+darwin-rebuild switch --flake .
 ```
 
 (assuming the current hostname has an entry in `darwinConfigurations`)
@@ -19,11 +19,12 @@ $ darwin-rebuild switch --flake .
 
 For example:
 
+```shell
+nix profile install --profile $HOME/.nix-default-profile "nixpkgs#nixFlakes"
+export PATH=~/.nix-default-profile/bin:$PATH
+nix run ".#home-manager" --  switch --flake ".#glinux"
 ```
-$ nix profile install --profile $HOME/.nix-default-profile "nixpkgs#nixFlakes"
-$ export PATH=~/.nix-default-profile/bin:$PATH
-$ nix run ".#home-manager" --  switch --flake ".#glinux"
-```
+
 ## Speed run
 
 With just a recent `nix` and `direnv` installed, a set of convenience helpers
