@@ -202,7 +202,7 @@ zstyle ':fzf-tab:complete:cd:*' extra-opts --preview=$extract'eza -1 --color=alw
     {
       name = "chriskempson/base16-shell";
       light = true;
-      tags = ["lucid" "atload=base16_solarized-dark"];
+      tags = ["lucid" "atload=base16_monokai"];
     }
     {
       name = "romkatv/powerlevel10k";
