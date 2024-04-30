@@ -98,6 +98,9 @@ args @ {
       comma
 
       nix
+
+      # windows helpers
+      innoextract
     ]
     ++ lib.optionals isMac [
       m-cli # useful macOS CLI commands
