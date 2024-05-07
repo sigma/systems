@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   enable = true;
   config = {
     theme = "OneHalfDark";
@@ -12,4 +12,5 @@
       "WORKSPACE:py"
     ];
   };
+  extraPackages = with pkgs.bat-extras; [batdiff batman batgrep batwatch batpipe prettybat];
 }
