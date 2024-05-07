@@ -10,7 +10,6 @@ args @ {
 
   imports = [
     ./accounts.nix
-    ./bat-syntaxes
     ./blaze.nix
     ./cloud-shell.nix
     ./darwin-apps.nix
