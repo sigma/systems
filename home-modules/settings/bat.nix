@@ -5,11 +5,12 @@
     style = "numbers,changes,header";
     italic-text = "always";
     map-syntax = [
-      "jsonnet:json"
-      "libsonnet:json"
-      "bazel:py"
-      "BUILD:py"
-      "WORKSPACE:py"
+      "*.jsonnet:JSON"
+      "*.libsonnet:JSON"
+      "*.bazel:Python"
+      "BUILD:Python"
+      "WORKSPACE:Python"
+      "flake.lock:JSON"
     ];
   };
   extraPackages = with pkgs.bat-extras; [batdiff batman batgrep batwatch batpipe prettybat];
