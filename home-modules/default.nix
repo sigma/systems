@@ -63,7 +63,6 @@ args @ {
       silver-searcher
       skim
       tldr
-      tmux
       tree
 
       # editors
