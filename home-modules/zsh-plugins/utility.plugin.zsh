@@ -21,13 +21,6 @@ if (( ${+commands[dircolors]} )); then
   else
     eval "$(dircolors --sh)"
   fi
-
-  if [ "$+commands[eza]" -ne 0 ]; then
-    alias ls="eza --group-directories-first"
-  else
-    alias ls='ls --group-directories-first --color=auto'
-  fi
-  
 else
   # BSD
 
@@ -58,21 +51,6 @@ if [[ ${OSTYPE} == openbsd* ]]; then
 else
  alias grep='grep --color=auto'
 fi
-
-
-#
-# ls Aliases
-#
-
-alias l='ls -lah'         # all files, human-readable sizes
-alias lm="l | ${PAGER}"   # all files, human-readable sizes, use pager
-alias ll='ls -lh'         # human-readable sizes
-alias lr='ll -R'          # human-readable sizes, recursive
-alias lx='ll -XB'         # human-readable sizes, sort by extension (GNU only)
-alias lk='ll -Sr'         # human-readable sizes, largest last
-alias lt='ll -tr'         # human-readable sizes, most recent last
-alias lc='lt -c'          # human-readable sizes, most recent last, change time
-
 
 #
 # File Downloads

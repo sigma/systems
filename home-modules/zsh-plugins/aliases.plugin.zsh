@@ -4,8 +4,6 @@ if [ "$+commands[bat]" -ne 0 ]; then
     alias cat="bat -pp"
 fi
 
-alias ll='ls -l'
-
 alias grep='command grep --color'
 
 # alias -g ...=../..

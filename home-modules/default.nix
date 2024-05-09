@@ -23,6 +23,7 @@ args @ {
     (import ./settings args)
     // {
       cloudshell.enable = true;
+      fd.enable = true;
       gitui.enable = true;
       lieer.enable = true;
       thefuck.enable = true;
@@ -52,8 +53,6 @@ args @ {
       btop
       coreutils
       d2
-      eza
-      fd
       fzf
       htop
       jq
