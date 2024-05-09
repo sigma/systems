@@ -57,6 +57,8 @@ args @ {
       jsonnet
       less
       pinfo
+      rm-improved
+      safe-rm
       silver-searcher
       skim
       tldr

@@ -113,6 +113,14 @@ if (( ${+commands[safe-rm]} )) && (( ! ${+commands[safe-rmdir]} )); then
   alias rm='safe-rm'
 fi
 
+if (( ${+commands[rip]} )); then
+  # same defaults as safe-rm
+  if [[ $OSTYPE == darwin* ]]; then
+    alias rip='rip --graveyard ~/.Trash'
+  else
+    alias rip='rip --graveyard ~/.local/share/Trash/files'
+  fi
+fi
 
 #
 # Misc

@@ -1,17 +1,5 @@
 #!/bin/zsh
 
-if [ "$+commands[nix-shell]" -ne 0 ]; then
-   function dotdrop() {
-     nix-shell ${DOTREPO}/shell.nix --run "${DOTREPO}/dotdrop.sh --cfg=${DOTREPO}/config.yaml $*"
-   }
-elif [ -d ${DOTREPO}/venv/bin ]; then
-    alias dotdrop="PATH=${DOTREPO}/venv/bin:$PATH ${DOTREPO}/dotdrop.sh --cfg=${DOTREPO}/config.yaml"
-else
-    alias dotdrop="${DOTREPO}/dotdrop.sh --cfg=${DOTREPO}/config.yaml"
-fi
-alias dotgit="git -C ${DOTREPO}"
-alias dotsync="dotgit pull && dotgit add -A && dotgit commit && dotgit push; dotdrop install"
-
 if [ "$+commands[bat]" -ne 0 ]; then
     alias cat="bat -pp"
 fi
@@ -72,10 +60,6 @@ alias man='nocorrect man'
 alias find='noglob find'
 alias gcc='nocorrect gcc'
 alias mkdir='nocorrect mkdir'
-
-alias mysql='nocorrect mysql'
-alias mysqlshow='nocorrect mysqlshow'
-alias rj='nocorrect rj'
 
 # enable ^Z for nano
 alias nano='/usr/bin/nano -z'

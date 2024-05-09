@@ -31,6 +31,9 @@
       ".p10k.config.zsh".source = ./p10k.config.zsh;
       ".p10k.zsh".source = ./p10k.zsh;
       ".p10k.pure.zsh".source = ./p10k.pure.zsh;
+    }
+    // lib.optionalAttrs machine.isWork {
+      ".zsh-plugins/google/google.plugin.zsh".source = ./google.plugin.zsh;
 
       ".p10k.generated.config.zsh".text =
         if machine.system == "x86_64-linux"
@@ -42,8 +45,5 @@
           # location of the gcert cookie
           typeset -g POWERLEVEL9K_CERT_COOKIE_FILE="$HOME/.sso/cookie"
         '';
-    }
-    // lib.optionalAttrs machine.isWork {
-      ".zsh-plugins/google/google.plugin.zsh".source = ./google.plugin.zsh;
     };
 }
