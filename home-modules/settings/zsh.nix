@@ -172,10 +172,6 @@ zstyle ':fzf-tab:complete:cd:*' extra-opts --preview=$extract'eza -1 --color=alw
       tags = ["wait=1" "lucid" "atload=\"bindkey '^Xz' zce\""];
     }
     {
-      name = "junegunn/fzf";
-      tags = ["wait=1" "lucid" "depth=1" "bindmap='^T -> ^F; ^R -> ^X^R; \ec -> ^[g'" "pick=shell/key-bindings.zsh"];
-    }
-    {
       name = "chisui/zsh-nix-shell";
       tags = ["wait=2" "lucid"];
     }
@@ -213,29 +209,6 @@ zstyle ':fzf-tab:complete:cd:*' extra-opts --preview=$extract'eza -1 --color=alw
 
   initExtra = ''
     zinit pack for dircolors-material
-
-    export FZF_COMPLETION_TRIGGER='~~'
-    export FZF_COMPLETION_OPTS='+c -x'
-    export FZF_DEFAULT_OPTS="--multi --inline-info --bind='ctrl-o:execute(code {})+abort'"
-    export FZF_CTRL_R_OPTS='--sort'
-
-    if [ "$+commands[fd]" -ne 0 ]; then
-        export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --ansi"
-        export FZF_DEFAULT_COMMAND="fd --type f --color=always"
-        export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND --hidden"
-        export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude ".git" .'
-        _fzf_compgen_path() {
-            fd --hidden --follow --exclude ".git" . "$1"
-        }
-
-        _fzf_compgen_dir() {
-            fd --type d --hidden --follow --exclude ".git" . "$1"
-        }
-    fi
-
-    if [ "$+commands[bat]" -ne 0 ]; then
-        export FZF_CTRL_T_OPTS="--preview-window 'right:60%' --preview 'bat --color=always --style=header,grid --line-range :300 {}'"
-    fi
 
     [[ -s $HOME/.localrc ]] && source $HOME/.localrc
 

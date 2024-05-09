@@ -53,7 +53,6 @@ args @ {
       btop
       coreutils
       d2
-      fzf
       htop
       jq
       jsonnet
