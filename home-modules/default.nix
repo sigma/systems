@@ -23,11 +23,14 @@ args @ {
     (import ./settings args)
     // {
       cloudshell.enable = true;
-      lieer.enable = true;
-      mailsetup.enable = machine.isWork;
       gitui.enable = true;
+      lieer.enable = true;
+      thefuck.enable = true;
+
+      # work-only
       blaze.enable = machine.isWork;
       gcert.enable = machine.isWork;
+      mailsetup.enable = machine.isWork;
     };
 
   home.packages = with pkgs;

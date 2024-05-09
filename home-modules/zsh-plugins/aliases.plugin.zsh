@@ -50,7 +50,7 @@ if (( $+commands[pinfo] )); then
     alias info='pinfo'
 fi
 
-alias f=finger
+alias f=fuck
 
 alias mv='nocorrect mv'
 #alias cd='nocorrect cd'
