@@ -24,7 +24,10 @@ args @ {
     // {
       cloudshell.enable = true;
       fd.enable = true;
+      gh.enable = true;
+      gh-dash.enable = true;
       gitui.enable = true;
+      jq.enable = true;
       lieer.enable = true;
       thefuck.enable = true;
 
@@ -54,7 +57,6 @@ args @ {
       coreutils
       d2
       htop
-      jq
       jsonnet
       less
       pinfo
@@ -70,7 +72,6 @@ args @ {
       emacs
 
       # git
-      gitAndTools.gh
       git-review
       tig
 
