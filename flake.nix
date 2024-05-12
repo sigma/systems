@@ -38,13 +38,6 @@
     maschine-hacks.inputs.nixpkgs.follows = "nixpkgs";
     maschine-hacks.inputs.flake-parts.follows = "flake-parts";
 
-    doom-emacs.url = "github:doomemacs/doomemacs/81f5a8f052045afaa984db42bde7bdfcce16f417";
-    doom-emacs.flake = false;
-    nix-doom-emacs.url = "github:sigma/nix-doom-emacs/experimental";
-    nix-doom-emacs.inputs.doom-emacs.follows = "doom-emacs";
-    nix-doom-emacs.inputs.emacs-overlay.follows = "emacs";
-    nix-doom-emacs.inputs.nixpkgs.follows = "nixpkgs";
-
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -54,6 +47,11 @@
     pre-commit-hooks-nix.url = "github:cachix/pre-commit-hooks.nix";
     pre-commit-hooks-nix.inputs.nixpkgs.follows = "nixpkgs";
     pre-commit-hooks-nix.inputs.nixpkgs-stable.follows = "nixos-stable";
+
+    chemacs2nix.url = "github:league/chemacs2nix";
+    chemacs2nix.inputs.home-manager.follows = "home-manager";
+    chemacs2nix.inputs.emacs-overlay.follows = "emacs";
+    chemacs2nix.inputs.pre-commit-hooks.follows = "pre-commit-hooks-nix";
   };
 
   outputs = inputs @ {

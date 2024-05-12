@@ -2,24 +2,25 @@
   config,
   lib,
   pkgs,
+  user,
   ...
 }:
 with lib; let
-  cfg = config.modules.editors.emacs;
+  cfg = config.programs.emacs;
+  emacsConfig = pkgs.emacsConfigFor {
+    inherit user;
+    emacs = cfg.package;
+  };
 in {
-  options.modules.editors.emacs = {
-    enable = mkOption {
-      type = types.bool;
-      default = false;
-    };
+  options.programs.emacs = {
     doom = {
       repoUrl = mkOption {
         type = types.str;
         default = "https://github.com/doomemacs/doomemacs";
       };
-      configRepoUrl = mkOption {
+      dir = mkOption {
         type = types.str;
-        default = "git@github.com:sigma/doom-emacs-private";
+        default = "${config.home.homeDirectory}/.config/emacs";
       };
     };
   };
@@ -27,9 +28,6 @@ in {
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
       binutils
-      ((emacsPackagesFor emacs).emacsWithPackages (epkgs: [
-        epkgs.vterm
-      ]))
 
       # Doom dependencies
       (ripgrep.override {withPCRE2 = true;})
@@ -50,9 +48,10 @@ in {
 
     home.activation = {
       doomActivationAction = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        test -d $HOME/.emacs.d || $DRY_RUN_CMD ${pkgs.git}/bin/git clone ${cfg.doom.repoUrl} $HOME/.emacs.d
-        test -d $HOME/.config/doom || $DRY_RUN_CMD ${pkgs.git}/bin/git clone ${cfg.doom.configRepoUrl} $HOME/.config/doom
+        test -d ${cfg.doom.dir} || $DRY_RUN_CMD ${pkgs.git}/bin/git clone ${cfg.doom.repoUrl} ${cfg.doom.dir}
       '';
     };
+
+    home.file.".config/doom".source = "${emacsConfig}";
   };
 }

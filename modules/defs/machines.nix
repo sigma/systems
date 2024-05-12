@@ -7,7 +7,7 @@
   nixpkgsConfig = import ../../pkg-config.nix {inherit inputs;};
   hmModules = [
     ../../home-modules
-    inputs.nix-doom-emacs.hmModule
+    inputs.chemacs2nix.homeModule
     inputs.nix-index-database.hmModules.nix-index
   ];
 in {

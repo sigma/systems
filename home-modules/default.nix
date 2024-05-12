@@ -13,6 +13,7 @@ args @ {
     ./blaze.nix
     ./cloud-shell.nix
     ./darwin-apps.nix
+    ./editors
     ./gcert.nix
     ./mailsetup.nix
     ./zinit.nix
@@ -69,7 +70,6 @@ args @ {
 
       # editors
       zile
-      emacs
 
       # git
       git-review
