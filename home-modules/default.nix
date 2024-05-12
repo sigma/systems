@@ -16,27 +16,26 @@ args @ {
     ./editors
     ./gcert.nix
     ./mailsetup.nix
+    ./settings
     ./zinit.nix
     ./zsh-plugins
   ];
 
-  programs =
-    (import ./settings args)
-    // {
-      cloudshell.enable = true;
-      fd.enable = true;
-      gh.enable = true;
-      gh-dash.enable = true;
-      gitui.enable = true;
-      jq.enable = true;
-      lieer.enable = true;
-      thefuck.enable = true;
+  programs = {
+    cloudshell.enable = true;
+    fd.enable = true;
+    gh.enable = true;
+    gh-dash.enable = true;
+    gitui.enable = true;
+    jq.enable = true;
+    lieer.enable = true;
+    thefuck.enable = true;
 
-      # work-only
-      blaze.enable = machine.isWork;
-      gcert.enable = machine.isWork;
-      mailsetup.enable = machine.isWork;
-    };
+    # work-only
+    blaze.enable = machine.isWork;
+    gcert.enable = machine.isWork;
+    mailsetup.enable = machine.isWork;
+  };
 
   home.packages = with pkgs;
     [
