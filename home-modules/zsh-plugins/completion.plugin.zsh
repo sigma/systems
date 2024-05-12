@@ -43,3 +43,5 @@ zstyle ':completion:*:*:git:*' user-commands ${${(M)${(k)commands}:#git-*}/git-/
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 setopt complete_in_word
+
+zstyle ':completion:*:directory-stack' list-colors '=(#b) #([0-9]#)*( *)==95=38;5;12'

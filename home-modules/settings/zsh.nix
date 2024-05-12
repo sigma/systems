@@ -64,9 +64,6 @@
 
     export CLICOLOR=1
 
-    # I like my case-semi-sensitive completion better
-    zstyle ':completion:*:complete:*' matcher-list 'm:{a-z}={A-Z}'
-
     WORDCHARS=""
 
     # I abuse this variable in non-screen contexts to convey TERM_PROGRAM, which I
@@ -121,20 +118,11 @@
       name = "Aloxaf/fzf-tab";
       tags = ["wait=1" "lucid"];
       pre = "
-local extract=\"
-# trim input
-local in=\\\${\\\${\\\"\\\$(<{f})\\\"%\\\$'\\0'*}#*\\\$'\\0'}
-# get ctxt for current completion
-local -A ctxt=(\\\"\\\${(@ps:\\2:)CTXT}\\\")
-# real path
-local realpath=\\\${ctxt[IPREFIX]}\\\${ctxt[hpre]}\\\$in
-realpath=\\\${(Qe)~realpath}
-\"
-
 zstyle ':fzf-tab:*' single-group ''
 zstyle ':fzf-tab:complete:_zlua:*' query-string input
-zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts --preview=$extract'ps --pid=$in[(w)1] -o cmd --no-headers -w -w' --preview-window=down:3:wrap
-zstyle ':fzf-tab:complete:cd:*' extra-opts --preview=$extract'eza -1 --color=always $realpath'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+zstyle ':fzf-tab:complete:cd:*' query-string prefix longest
+zstyle ':fzf-tab:*' switch-group '<' '>'
 ";
     }
     {

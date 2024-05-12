@@ -22,6 +22,9 @@ setopt PUSHD_SILENT
 # Have pushd with no arguments act like ‘pushd ${HOME}’.
 setopt PUSHD_TO_HOME
 
+# exchange the meanings of '+' and '-'
+setopt PUSHD_MINUS
+
 #
 # Globbing and fds
 #
