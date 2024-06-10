@@ -41,6 +41,10 @@
       deltaBaseCacheLimit = "128m";
     };
 
+    colomn = {
+      ui = "auto";
+    };
+
     color = {
       diff = "auto";
       status = "auto";
@@ -69,6 +73,7 @@
 
     branch = {
       autosetupmerge = true;
+      sort = "-committerdate";
     };
 
     "difftool.latex" = {
@@ -89,6 +94,7 @@
 
     rebase = {
       autosquash = true;
+      updateRefs = true;
     };
 
     push = {
@@ -114,6 +120,10 @@
 
     include = {
       path = "${config.home.homeDirectory}/.gitconfig.private";
+    };
+
+    rerere = {
+      enabled = true;
     };
   };
 
