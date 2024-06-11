@@ -17,9 +17,11 @@
     co = "checkout";
     lc = "log ORIG_HEAD.. --stat --no-merges";
     st = "status";
+    lg = "log --graph --date=relative --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ad)%Creset'";
     ll = "log --graph --pretty=oneline --abbrev-commit --decorate=full";
     lla = "log --graph --pretty=oneline --abbrev-commit --decorate=full --all";
     cdiff = "difftool -y -x \"diff -cp\"";
+    oops = "commit --amend --no-edit";
     pu = "log master...next --cherry-pick --oneline --graph --decorate=full --no-merges --right-only";
     new = "!sh -c 'git log $1@{1}..$1@{0} \"$@\"'";
     whois = "!sh -c 'git log -i -1 --pretty=\"format:%an <%ae>\n\" --author=\"$1\"' -";
@@ -76,6 +78,11 @@
       sort = "-committerdate";
     };
 
+    diff = {
+      mnemonicPrefix = true;
+      renames = true;
+    };
+
     "difftool.latex" = {
       cmd = "git-latexdiff \"$LOCAL\" \"$REMOTE\"";
     };
@@ -92,13 +99,27 @@
       prompt = false;
     };
 
+    log = {
+      abbrevCommit = true;
+      follow = true;
+    };
+
+    merge = {
+      conflictstyle = "zdiff3";
+    };
+
     rebase = {
       autosquash = true;
       updateRefs = true;
     };
 
+    pull = {
+      rebase = "merges";
+    };
+
     push = {
       default = "matching";
+      followTags = true;
     };
 
     init = {
@@ -123,7 +144,23 @@
     };
 
     rerere = {
+      autoUpdate = true;
       enabled = true;
+    };
+
+    tag = {
+      sort = "version:refname";
+    };
+
+    versionsort = {
+      prereleaseSuffix = [
+        "-pre"
+        ".pre"
+        "-beta"
+        ".beta"
+        "-rc"
+        ".rc"
+      ];
     };
   };
 
