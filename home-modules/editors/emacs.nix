@@ -50,6 +50,12 @@ in {
       doomActivationAction = lib.hm.dag.entryAfter ["writeBoundary"] ''
         test -d ${cfg.doom.dir} || $DRY_RUN_CMD ${pkgs.git}/bin/git clone ${cfg.doom.repoUrl} ${cfg.doom.dir}
       '';
+
+      googleEmacsActivationAction = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        mkdir -p $HOME/bin
+        test -d /etc/glinux && $DRY_RUN_CMD ln -sf /usr/bin/google-emacs $HOME/bin/emacs
+        test -d /etc/glinux && $DRY_RUN_CMD ln -sf /usr/bin/emacsclient.google-emacs $HOME/bin/emacsclient
+      '';
     };
 
     home.file.".config/doom".source = "${emacsConfig}";
