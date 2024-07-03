@@ -1,10 +1,16 @@
 {
   config,
   pkgs,
+  lib,
   machine,
   user,
   ...
-}: {
+}: let
+  profileEmail = name: let
+    prof = builtins.head (builtins.filter (prof: prof.name == name) user.profiles);
+  in
+    builtins.head prof.emails;
+in {
   enable = true;
   package =
     if machine.isWork
@@ -31,138 +37,174 @@
   delta.enable = true;
   delta.options = {
     syntax-theme = "OneHalfDark";
+    navigate = true;
   };
 
   lfs.enable = true;
 
-  userName = "${user.name}";
-  userEmail = "${user.email}";
+  includes =
+    [
+      # defaults
+      {
+        contents = {
+          core = {
+            deltaBaseCacheLimit = "128m";
+          };
 
-  extraConfig = {
-    core = {
-      deltaBaseCacheLimit = "128m";
-    };
+          colomn = {
+            ui = "auto";
+          };
 
-    colomn = {
-      ui = "auto";
-    };
+          color = {
+            diff = "auto";
+            status = "auto";
+            branch = "auto";
+            ui = "auto";
+          };
 
-    color = {
-      diff = "auto";
-      status = "auto";
-      branch = "auto";
-      ui = "auto";
-    };
+          "color.branch" = {
+            current = "yellow reverse";
+            local = "yellow";
+            remote = "green";
+          };
 
-    "color.branch" = {
-      current = "yellow reverse";
-      local = "yellow";
-      remote = "green";
-    };
+          "color.diff" = {
+            meta = "yellow bold";
+            frag = "magenta bold";
+            old = "red bold";
+            new = "green bold";
+          };
 
-    "color.diff" = {
-      meta = "yellow bold";
-      frag = "magenta bold";
-      old = "red bold";
-      new = "green bold";
-    };
+          "color.status" = {
+            added = "yellow";
+            changed = "green";
+            untracked = "cyan";
+          };
 
-    "color.status" = {
-      added = "yellow";
-      changed = "green";
-      untracked = "cyan";
-    };
+          branch = {
+            autosetupmerge = true;
+            sort = "-committerdate";
+          };
 
-    branch = {
-      autosetupmerge = true;
-      sort = "-committerdate";
-    };
+          diff = {
+            mnemonicPrefix = true;
+            renames = true;
+          };
 
-    diff = {
-      mnemonicPrefix = true;
-      renames = true;
-    };
+          "difftool.latex" = {
+            cmd = "git-latexdiff \"$LOCAL\" \"$REMOTE\"";
+          };
 
-    "difftool.latex" = {
-      cmd = "git-latexdiff \"$LOCAL\" \"$REMOTE\"";
-    };
+          "diff.lisp" = {
+            xfuncname = "^(((;;;+ )|\\(|([ \t]+\\(((cl-|el-patch-)?def(un|var|macro|method|custom)|gb/))).*)$";
+          };
 
-    "diff.lisp" = {
-      xfuncname = "^(((;;;+ )|\\(|([ \t]+\\(((cl-|el-patch-)?def(un|var|macro|method|custom)|gb/))).*)$";
-    };
+          "diff.org" = {
+            xfuncname = "^(\\*+ +.*)$";
+          };
 
-    "diff.org" = {
-      xfuncname = "^(\\*+ +.*)$";
-    };
+          difftool = {
+            prompt = false;
+          };
 
-    difftool = {
-      prompt = false;
-    };
+          log = {
+            abbrevCommit = true;
+            follow = true;
+          };
 
-    log = {
-      abbrevCommit = true;
-      follow = true;
-    };
+          merge = {
+            conflictstyle = "zdiff3";
+          };
 
-    merge = {
-      conflictstyle = "zdiff3";
-    };
+          rebase = {
+            autosquash = true;
+            updateRefs = true;
+          };
 
-    rebase = {
-      autosquash = true;
-      updateRefs = true;
-    };
+          pull = {
+            rebase = "merges";
+          };
 
-    pull = {
-      rebase = "merges";
-    };
+          push = {
+            default = "matching";
+            followTags = true;
+          };
 
-    push = {
-      default = "matching";
-      followTags = true;
-    };
+          init = {
+            defaultBranch = "main";
+            templateDir = "${config.home.homeDirectory}/.git-template";
+          };
 
-    init = {
-      defaultBranch = "main";
-      templateDir = "${config.home.homeDirectory}/.git-template";
-    };
+          gitreview = {
+            remote = "origin";
+          };
 
-    gitreview = {
-      remote = "origin";
-    };
+          ghq = {
+            root = "${config.home.homeDirectory}/src";
+          };
 
-    ghq = {
-      root = "${config.home.homeDirectory}/src";
-    };
+          http = {
+            cookiefile = "${config.home.homeDirectory}/.gitcookies";
+          };
 
-    http = {
-      cookiefile = "${config.home.homeDirectory}/.gitcookies";
-    };
+          rerere = {
+            autoUpdate = true;
+            enabled = true;
+          };
 
-    include = {
-      path = "${config.home.homeDirectory}/.gitconfig.private";
-    };
+          tag = {
+            sort = "version:refname";
+          };
 
-    rerere = {
-      autoUpdate = true;
-      enabled = true;
-    };
+          versionsort = {
+            prereleaseSuffix = [
+              "-pre"
+              ".pre"
+              "-beta"
+              ".beta"
+              "-rc"
+              ".rc"
+            ];
+          };
+        };
 
-    tag = {
-      sort = "version:refname";
-    };
+        contentSuffix = "defaults";
+      }
+      # id-related
+      {
+        contents = {
+          user.name = "${user.name}";
+          # default to personal email. We'll override in work repos
+          user.email = "${profileEmail "perso"}";
 
-    versionsort = {
-      prereleaseSuffix = [
-        "-pre"
-        ".pre"
-        "-beta"
-        ".beta"
-        "-rc"
-        ".rc"
-      ];
-    };
-  };
+          github.user = "${user.githubHandle}";
+          # force-use ssh for my own github repos
+          url."ssh://git@github.com/${user.githubHandle}/".insteadOf = "https://github.com/${user.githubHandle}/";
+        };
+
+        contentSuffix = "id";
+      }
+      # auth tokens and the likes, stored outside of nix
+      {
+        path = "${config.home.homeDirectory}/.gitconfig.private";
+      }
+    ]
+    ++ lib.optionals machine.isWork [
+      {
+        condition = "hasconfig:remote.*.url:sso://**";
+        contents = {
+          user.email = "${user.email}";
+        };
+        contentSuffix = "gob";
+      }
+      {
+        condition = "hasconfig:remote.*.url:git@github.com:kubernetes/**";
+        contents = {
+          user.email = "${user.email}";
+        };
+        contentSuffix = "k8s";
+      }
+    ];
 
   attributes = [
     "*.lisp  diff=lisp"

@@ -1,5 +1,6 @@
 let
   name = "Yann Hodique";
+  githubHandle = "sigma";
   workProfile = {
     name = "work";
     emails = ["yhodique@google.com" "yrh@google.com"];
@@ -18,7 +19,7 @@ let
     };
 in {
   corpUser = expandUser {
-    inherit name;
+    inherit name githubHandle;
     login = "yhodique";
     profiles = [
       workProfile
@@ -27,7 +28,7 @@ in {
   };
 
   personalUser = expandUser {
-    inherit name;
+    inherit name githubHandle;
     login = "yann";
     profiles = [
       persoProfile
