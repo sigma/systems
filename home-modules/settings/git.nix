@@ -5,12 +5,7 @@
   machine,
   user,
   ...
-}: let
-  profileEmail = name: let
-    prof = builtins.head (builtins.filter (prof: prof.name == name) user.profiles);
-  in
-    builtins.head prof.emails;
-in {
+}: {
   enable = true;
   package =
     if machine.isWork
@@ -187,7 +182,12 @@ in {
       }
       # id-related
       {
-        contents = {
+        contents = let
+          profileEmail = name: let
+            prof = builtins.head (builtins.filter (prof: prof.name == name) user.profiles);
+          in
+            builtins.head prof.emails;
+        in {
           user.name = "${user.name}";
           # default to personal email. We'll override in work repos
           user.email = "${profileEmail "perso"}";
