@@ -14,7 +14,6 @@
       # instances that I can't be bothered to register here.
       glinux = machines.glinux {};
       shirka = machines.glinux hosts.shirka;
-      ghost-wheel = machines.glinux hosts.ghost-wheel;
     };
   };
 }

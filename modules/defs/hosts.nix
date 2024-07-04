@@ -108,17 +108,7 @@ in rec {
   shirka = cloudtop {
     name = "shirka.c.googlers.com";
     alias = "dev";
-    remotes = [pdev cs ghost-wheel];
-    sshOpts = {
-      forwardAgent = true;
-      localForwards = [dockerFwd codeserverFwd];
-    };
-  };
-
-  ghost-wheel = cloudtop {
-    name = "ghost-wheel.c.googlers.com";
-    alias = "cdev";
-    remotes = [pdev cs shirka];
+    remotes = [pdev cs];
     sshOpts = {
       forwardAgent = true;
       localForwards = [dockerFwd codeserverFwd];
@@ -128,12 +118,12 @@ in rec {
   yhodique-macbookpro = gmac {
     name = "yhodique-macbookpro.roam.internal";
     system = "aarch64-darwin";
-    remotes = [ghost-wheel shirka pdev cs csp];
+    remotes = [shirka pdev cs csp];
   };
 
   yhodique-macmini = gmac {
     name = "yhodique-macmini.roam.corp.google.com";
     system = "x86_64-darwin";
-    remotes = [ghost-wheel shirka pdev cs csp];
+    remotes = [shirka pdev cs csp];
   };
 }
