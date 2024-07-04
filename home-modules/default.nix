@@ -1,4 +1,4 @@
-args @ {
+{
   pkgs,
   lib,
   machine,
@@ -21,21 +21,23 @@ args @ {
     ./zsh-plugins
   ];
 
-  programs = {
-    cloudshell.enable = true;
-    fd.enable = true;
-    gh.enable = true;
-    gh-dash.enable = true;
-    gitui.enable = true;
-    jq.enable = true;
-    lieer.enable = true;
-    thefuck.enable = true;
-
-    # work-only
-    blaze.enable = machine.isWork;
-    gcert.enable = machine.isWork;
-    mailsetup.enable = machine.isWork;
-  };
+  programs =
+    {
+      cloudshell.enable = true;
+      fd.enable = true;
+      gh.enable = true;
+      gh-dash.enable = true;
+      gitui.enable = true;
+      jq.enable = true;
+      lieer.enable = true;
+      thefuck.enable = true;
+    }
+    // lib.optionalAttrs machine.isWork {
+      # work-only
+      blaze.enable = true;
+      gcert.enable = true;
+      mailsetup.enable = true;
+    };
 
   home.packages = with pkgs;
     [
