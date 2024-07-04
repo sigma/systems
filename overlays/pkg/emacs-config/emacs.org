@@ -402,18 +402,19 @@ install it externally.
 A small hack is required to pretend =google-emacs= is loading the code.
 
 #+begin_src emacs-lisp :tangle modules/os/google/config.el
-(use-package! google
-  :preface
-  (when IS-GLINUX
-    (let ((load-path (append load-path '("/usr/local/share/google-emacs/site-lisp"))))
-      (load "/usr/share/emacsen-common/debian-startup.el")
-      (load "/etc/google-emacs/site-start.d/50emacs-google-config.el")))
-  :init
-  (setq google-emacs-version 'something)
-  :config
-  (when (fboundp 'google-emacs-support-show-upgrade-mode)
-    (google-emacs-support-show-upgrade-mode 0))
-  (makunbound 'google-emacs-version))
+(unless (and (boundp 'debian-emacs-flavor) (eq debian-emacs-flavor 'google-emacs))
+  (use-package! google
+    :preface
+    (when IS-GLINUX
+      (let ((load-path (append load-path '("/usr/local/share/google-emacs/site-lisp"))))
+        (load "/usr/share/emacsen-common/debian-startup.el")
+        (load "/usr/lib/emacs-google-config/site-start.el")))
+    :init
+    (setq google-emacs-version 'something)
+    :config
+    (when (fboundp 'google-emacs-support-show-upgrade-mode)
+      (google-emacs-support-show-upgrade-mode 0))
+    (makunbound 'google-emacs-version)))
 #+end_src
 
 ** Private config
