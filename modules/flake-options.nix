@@ -37,13 +37,13 @@ in {
           literalExpression ''
           '';
       };
-      defs = mkOption {
-        type = types.lazyAttrsOf types.raw;
-        default = {};
-        description = ''
-          Definitions.
-        '';
-      };
+    };
+    defs = mkOption {
+      type = types.lazyAttrsOf types.raw;
+      default = {};
+      description = ''
+        Definitions.
+      '';
     };
   };
 }

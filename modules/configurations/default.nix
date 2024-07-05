@@ -1,6 +1,6 @@
-{self, ...}: {
+{config, ...}: {
   flake = let
-    inherit (self.defs) machines hosts;
+    inherit (config.defs) machines hosts;
   in {
     # My `nix-darwin` configs
     darwinConfigurations = {

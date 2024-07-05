@@ -3,7 +3,7 @@
   lib,
   ...
 }: {
-  flake = let
+  config = let
     stateVersion = "23.11";
     users = import ./users.nix;
     hosts = import ./hosts.nix {
