@@ -6,6 +6,7 @@
 
   initExtraFirst = ''
     # for nix-darwin, in case we can't install it as /etc/zshrc
+    # It's idempotent anyway, so it doesn't matter if /etc/zshrc was actually installed.
     if [ -e /etc/static/zshrc ]; then
         source /etc/static/zshrc
     fi
@@ -78,6 +79,7 @@
     USE_NERD_FONTS="$USE_NERD_FONTS"
     if [[ -z "$USE_NERD_FONTS" ]]; then
       if [[ "$TERM_PROGRAM" == sshapp ]]; then
+        # chromeos. I guess it'd be possible to try harder, but I can't be bothered.
         USE_NERD_FONTS=""
       elif [[ "$TERM_PROGRAM" == iTerm.app || "$TERM_PROGRAM" == vscode || -n "$SSH_AUTH_SOCK" ]]; then
         USE_NERD_FONTS=1
@@ -198,6 +200,7 @@ zstyle ':fzf-tab:*' switch-group '<' '>'
   initExtra = ''
     zinit pack for dircolors-material
 
+    # local settings
     [[ -s $HOME/.localrc ]] && source $HOME/.localrc
 
     function rehash () {
