@@ -85,8 +85,6 @@ in {
     '';
   };
 
-  emacs = final.emacs-unstable;
-
   fig = final.stdenv.mkDerivation {
     pname = "fig";
     version = "goog";
