@@ -58,40 +58,4 @@ in {
     postPatch = oldAttrs.postPatch + iconPhase;
     patches = oldAttrs.patches ++ emacs30Patches;
   });
-
-  emacsConfigFor = {
-    user,
-    emacs ? final.emacs,
-  }:
-    final.stdenv.mkDerivation {
-      pname = "emacs-config";
-      version = "dev";
-      src = final.nix-filter {
-        root = ./emacs-config;
-        include = [
-          "emacs.org"
-        ];
-      };
-
-      buildInputs = [final.emacs final.coreutils];
-      buildPhase = ''
-        cat <<EOF > +id.el
-        (setq user-full-name "${user.name}"
-          user-mail-address "${user.email}")
-        EOF
-
-        # Tangle org files
-        ${final.coreutils}/bin/cp $src/emacs.org .
-        ${emacs}/bin/emacs --batch -Q \
-          -l org \
-          emacs.org \
-          -f org-babel-tangle
-      '';
-
-      dontUnpack = true;
-
-      installPhase = ''
-        ${final.findutils}/bin/find . -name "*.el" -exec ${final.coreutils}/bin/install -vDm 755 {} $out/{} \;
-      '';
-    };
 }

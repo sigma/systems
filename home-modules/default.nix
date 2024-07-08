@@ -18,7 +18,6 @@
     ./mailsetup.nix
     ./settings
     ./zinit.nix
-    ./zsh-plugins
   ];
 
   programs =

@@ -7,7 +7,7 @@
 }:
 with lib; let
   cfg = config.programs.emacs;
-  emacsConfig = pkgs.emacsConfigFor {
+  emacsConfig = pkgs.emacs-config.override {
     inherit user;
     emacs = cfg.package;
   };

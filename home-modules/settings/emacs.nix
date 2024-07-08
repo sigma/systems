@@ -12,7 +12,7 @@ in {
 
     doom-dev = {
       userDir = doomDir;
-      env.DOOMDIR = "~/.config/nix/overlays/pkg/emacs-config";
+      env.DOOMDIR = "~/.config/nix/overlays/pkg/local/emacs-config";
     };
   };
 }

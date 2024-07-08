@@ -1,4 +1,12 @@
-{...}: {
+{
+  pkgs,
+  machine,
+  ...
+}: let
+  zsh-config = pkgs.zsh-config.override {
+    inherit (machine) isWork;
+  };
+in {
   enable = true;
 
   # dotDir = ".config/zsh";
@@ -90,8 +98,9 @@
   zinit.enable = true;
 
   zinit.pre = ''
-    for plug in ~/.zsh-plugins/*; do
-      zinit load $plug
+    fpath+=${zsh-config}/functions
+    for plug in ${zsh-config}/*.plugin.zsh; do
+      source $plug
     done
   '';
 
@@ -193,7 +202,7 @@ zstyle ':fzf-tab:*' switch-group '<' '>'
     {
       name = "romkatv/powerlevel10k";
       light = true;
-      tags = ["depth:1" "lucid" "atload:'source ~/.p10k.config.zsh; _p9k_precmd'" "nocd"];
+      tags = ["depth:1" "lucid" "atload:'source ${zsh-config}/p10k.config.zsh; _p9k_precmd'" "nocd"];
     }
   ];
 

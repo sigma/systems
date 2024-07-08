@@ -86,14 +86,16 @@
         pkgs,
         inputs',
         ...
-      }: {
-        _module.args.pkgs =
+      }: let
+        pkgs' =
           import nixpkgs {
             inherit system;
           }
           // (import ./pkg-config.nix {
             inherit inputs;
           });
+      in {
+        _module.args.pkgs = pkgs';
 
         packages = let
           default = inputs'.home-manager.packages.home-manager;

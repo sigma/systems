@@ -1,10 +1,12 @@
+export ROOT=${0:a:h}
+
 if [[ -n "$USE_NERD_FONTS" ]]; then
-  [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+  [[ ! -f ${ROOT}/p10k.zsh ]] || source ${ROOT}/p10k.zsh
 else
-  [[ ! -f ~/.p10k.pure.zsh ]] || source ~/.p10k.pure.zsh
+  [[ ! -f ${ROOT}/p10k.pure.zsh ]] || source ${ROOT}/p10k.pure.zsh
 fi
 
-[[ ! -f ~/.p10k.generated.config.zsh ]] || source ~/.p10k.generated.config.zsh
+[[ ! -f ${ROOT}/p10k.generated.config.zsh ]] || source ${ROOT}/p10k.generated.config.zsh
 
 typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
   hi
