@@ -99,10 +99,16 @@
 
         packages = let
           default = inputs'.home-manager.packages.home-manager;
-        in {
-          inherit default;
-          home-manager = default;
-        };
+          localPackages = import ./overlays/pkg/local {
+            pkgs = pkgs';
+            nix-filter = inputs.nix-filter.lib;
+          };
+        in
+          {
+            inherit default;
+            home-manager = default;
+          }
+          // localPackages;
 
         treefmt.config = {
           inherit (config.flake-root) projectRootFile;
