@@ -18,7 +18,6 @@ in {
       else users.personalUser;
     specialArgs = {
       inherit user machine stateVersion;
-      isMac = true;
     };
   in
     inputs.darwin.lib.darwinSystem {
@@ -52,7 +51,6 @@ in {
         }
         // machine
         // {isWork = true;};
-      isMac = false;
     };
   in
     inputs.home-manager.lib.homeManagerConfiguration {

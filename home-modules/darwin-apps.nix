@@ -3,10 +3,10 @@
   config,
   pkgs,
   lib,
-  isMac,
+  machine,
   ...
 }: {
-  config = lib.mkIf isMac {
+  config = lib.mkIf machine.isMac {
     home.activation = {
       copyApplications = let
         apps = pkgs.buildEnv {

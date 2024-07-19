@@ -58,11 +58,13 @@
     (work mac)
     // {
       system = "x86_64-linux";
+      isMac = false;
     };
   gmac = mac:
     (work mac)
     // {
       isInteractive = true;
+      isMac = true;
     };
 in rec {
   cs = cloudshell {

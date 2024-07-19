@@ -3,7 +3,6 @@
   lib,
   machine,
   stateVersion,
-  isMac,
   ...
 }: {
   home.stateVersion = stateVersion;
@@ -104,7 +103,7 @@
       # windows helpers
       innoextract
     ]
-    ++ lib.optionals isMac [
+    ++ lib.optionals machine.isMac [
       m-cli # useful macOS CLI commands
       afsctool
       maschine-hacks

@@ -1,13 +1,13 @@
 {
   user,
+  machine,
   config,
   lib,
-  isMac,
   ...
 }: let
   cfg = config.programs.blaze;
   platform =
-    if isMac
+    if machine.isMac
     then "darwin"
     else "linux";
 in {
@@ -23,7 +23,7 @@ in {
           import %workspace%/experimental/users/${user.login}/config/blazerc
         '';
       }
-      // lib.optionalAttrs isMac {
+      // lib.optionalAttrs machine.isMac {
         ".exoblazerc".text = ''
           startup --noexoblaze
         '';

@@ -23,4 +23,5 @@
         (builtins.attrNames (builtins.readDir ./${dir}))));
 in {
   programs = loader "programs";
+  targets = loader "targets";
 }
