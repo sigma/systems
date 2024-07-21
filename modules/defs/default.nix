@@ -4,7 +4,7 @@
   ...
 }: {
   config = let
-    stateVersion = "23.11";
+    stateVersion = "24.05";
     users = import ./users.nix;
     hosts = import ./hosts.nix {
       inherit lib;
