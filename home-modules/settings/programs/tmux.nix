@@ -78,4 +78,6 @@
 
   shortcut = "z";
   terminal = "screen-256color";
+
+  tmuxp.enable = true;
 }
