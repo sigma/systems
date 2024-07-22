@@ -1,4 +1,10 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  lib,
+  user,
+  machine,
+  ...
+}: {
   enable = true;
 
   aggressiveResize = false;
@@ -80,4 +86,28 @@
   terminal = "screen-256color";
 
   tmuxp.enable = true;
+  tmuxp.workspaces = let
+    g3Workspace = name: props:
+      props
+      // {
+        session_name = name;
+        start_directory = "/google/src/cloud/${user.login}/${name}/google3";
+      };
+  in
+    {
+    }
+    // lib.optionalAttrs machine.isWork {
+      mars = g3Workspace "mars" {
+        windows = [
+          {
+            window_name = "main";
+            panes = [
+              {
+                focus = true;
+              }
+            ];
+          }
+        ];
+      };
+    };
 }

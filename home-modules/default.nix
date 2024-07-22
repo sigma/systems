@@ -16,6 +16,7 @@
     ./gcert.nix
     ./mailsetup.nix
     ./settings
+    ./tmuxp.nix
     ./zinit.nix
   ];
 
