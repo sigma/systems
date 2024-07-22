@@ -33,6 +33,7 @@ with lib; let
     options = {
       session_name = mkOption {
         type = types.str;
+        default = "";
         description = "The name of the session";
       };
 
@@ -57,16 +58,17 @@ in {
 
   config = mkIf cfg.enable {
     home.file = builtins.listToAttrs (builtins.attrValues (builtins.mapAttrs (name: value: {
-      name = ".tmuxp/${name}.yaml";
-      value = let
-        doc =
-          {
-            session_name = name;
-          }
-          // value;
-      in {
-        source = (pkgs.formats.yaml {}).generate name doc;
-      };
-    }) cfg.workspaces));
+        name = ".tmuxp/${name}.yaml";
+        value = let
+          doc =
+            {
+              session_name = name;
+            }
+            // value;
+        in {
+          source = (pkgs.formats.yaml {}).generate name doc;
+        };
+      })
+      cfg.workspaces));
   };
 }

@@ -95,6 +95,19 @@
       };
   in
     {
+      nix = {
+        start_directory = ''''${HOME}/.config/nix'';
+        windows = [
+          {
+            window_name = "main";
+            panes = [
+              {
+                focus = true;
+              }
+            ];
+          }
+        ];
+      };
     }
     // lib.optionalAttrs machine.isWork {
       mars = g3Workspace "mars" {
@@ -104,6 +117,8 @@
             panes = [
               {
                 focus = true;
+              }
+              {
               }
             ];
           }
