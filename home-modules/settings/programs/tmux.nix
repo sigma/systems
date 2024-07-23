@@ -90,7 +90,6 @@
     g3Workspace = name: props:
       props
       // {
-        session_name = name;
         start_directory = "/google/src/cloud/${user.login}/${name}/google3";
       };
   in

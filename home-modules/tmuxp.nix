@@ -48,6 +48,11 @@ with lib; let
       };
     };
   });
+  normalize = name: workspace:
+    workspace
+    // lib.optionalAttrs (workspace.session_name == "") {
+      session_name = name;
+    };
 in {
   options.programs.tmux.tmuxp = {
     workspaces = mkOption {
@@ -59,14 +64,8 @@ in {
   config = mkIf cfg.enable {
     home.file = builtins.listToAttrs (builtins.attrValues (builtins.mapAttrs (name: value: {
         name = ".tmuxp/${name}.yaml";
-        value = let
-          doc =
-            {
-              session_name = name;
-            }
-            // value;
-        in {
-          source = (pkgs.formats.yaml {}).generate name doc;
+        value = {
+          source = (pkgs.formats.yaml {}).generate name (normalize name value);
         };
       })
       cfg.workspaces));
