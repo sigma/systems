@@ -109,6 +109,15 @@
         pkgs.mdformat
         pkgs.beautysh
       ];
+
+      flake-lock = {
+        enable = true;
+        name = "Unique flake inputs";
+        description = "Check that all inputs are at a single version";
+        files = "^flake\\.lock$";
+        entry = "${pkgs.bash}/bin/bash -c '! ${pkgs.ripgrep}/bin/rg _\\\\d flake.lock'";
+        pass_filenames = false;
+      };
     };
 
     devshells.default = {
