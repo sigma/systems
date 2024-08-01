@@ -13,6 +13,11 @@
     darwin-stable.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
 
+    # Utils
+    flake-compat.url = "github:edolstra/flake-compat";
+    flake-utils.url = "github:numtide/flake-utils";
+    flake-utils.inputs.systems.follows = "systems";
+
     # flake-parts
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs-lib";
@@ -26,8 +31,11 @@
     # Other sources
     emacs.url = "github:nix-community/emacs-overlay";
     emacs.inputs.nixpkgs.follows = "nixpkgs";
+    emacs.inputs.flake-utils.follows = "flake-utils";
     comma.url = "github:nix-community/comma";
     comma.inputs.nixpkgs.follows = "nixpkgs";
+    comma.inputs.flake-compat.follows = "flake-compat";
+    comma.inputs.utils.follows = "flake-utils";
     fenix.url = "github:nix-community/fenix";
     fenix.inputs.nixpkgs.follows = "nixpkgs";
     devshell.url = "github:numtide/devshell";
@@ -47,6 +55,7 @@
     pre-commit-hooks-nix.url = "github:cachix/pre-commit-hooks.nix";
     pre-commit-hooks-nix.inputs.nixpkgs.follows = "nixpkgs";
     pre-commit-hooks-nix.inputs.nixpkgs-stable.follows = "nixos-stable";
+    pre-commit-hooks-nix.inputs.flake-compat.follows = "flake-compat";
 
     chemacs2nix.url = "github:league/chemacs2nix";
     chemacs2nix.inputs.home-manager.follows = "home-manager";
