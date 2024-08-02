@@ -13,11 +13,6 @@
     darwin-stable.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
 
-    # Utils
-    flake-compat.url = "github:edolstra/flake-compat";
-    flake-utils.url = "github:numtide/flake-utils";
-    flake-utils.inputs.systems.follows = "systems";
-
     # flake-parts
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs-lib";
@@ -28,39 +23,46 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Other sources
-    emacs.url = "github:nix-community/emacs-overlay";
-    emacs.inputs.nixpkgs.follows = "nixpkgs";
-    emacs.inputs.flake-utils.follows = "flake-utils";
-    comma.url = "github:nix-community/comma";
-    comma.inputs.nixpkgs.follows = "nixpkgs";
-    comma.inputs.flake-compat.follows = "flake-compat";
-    comma.inputs.utils.follows = "flake-utils";
-    fenix.url = "github:nix-community/fenix";
-    fenix.inputs.nixpkgs.follows = "nixpkgs";
-    devshell.url = "github:numtide/devshell";
-    devshell.inputs.nixpkgs.follows = "nixpkgs";
-    nix-filter.url = "github:numtide/nix-filter";
-
+    # Personal flakes
     maschine-hacks.url = "github:sigma/maschine-hacks";
     maschine-hacks.inputs.nixpkgs.follows = "nixpkgs";
     maschine-hacks.inputs.flake-parts.follows = "flake-parts";
 
-    nix-index-database.url = "github:nix-community/nix-index-database";
-    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
-
-    treefmt-nix.url = "github:numtide/treefmt-nix";
-    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
-    flake-root.url = "github:srid/flake-root";
-    pre-commit-hooks-nix.url = "github:cachix/pre-commit-hooks.nix";
-    pre-commit-hooks-nix.inputs.nixpkgs.follows = "nixpkgs";
-    pre-commit-hooks-nix.inputs.nixpkgs-stable.follows = "nixos-stable";
-    pre-commit-hooks-nix.inputs.flake-compat.follows = "flake-compat";
-
+    # Emacs
+    emacs.url = "github:nix-community/emacs-overlay";
+    emacs.inputs.nixpkgs.follows = "nixpkgs";
+    emacs.inputs.flake-utils.follows = "flake-utils";
     chemacs2nix.url = "github:league/chemacs2nix";
     chemacs2nix.inputs.home-manager.follows = "home-manager";
     chemacs2nix.inputs.emacs-overlay.follows = "emacs";
     chemacs2nix.inputs.pre-commit-hooks.follows = "pre-commit-hooks-nix";
+
+    # Rust
+    fenix.url = "github:nix-community/fenix";
+    fenix.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Utils
+    flake-compat.url = "github:edolstra/flake-compat";
+    flake-utils.url = "github:numtide/flake-utils";
+    flake-utils.inputs.systems.follows = "systems";
+    flake-root.url = "github:srid/flake-root";
+    nix-filter.url = "github:numtide/nix-filter";
+
+    # Shell utils
+    comma.url = "github:nix-community/comma";
+    comma.inputs.nixpkgs.follows = "nixpkgs";
+    comma.inputs.flake-compat.follows = "flake-compat";
+    comma.inputs.utils.follows = "flake-utils";
+    devshell.url = "github:numtide/devshell";
+    devshell.inputs.nixpkgs.follows = "nixpkgs";
+    nix-index-database.url = "github:nix-community/nix-index-database";
+    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+    treefmt-nix.url = "github:numtide/treefmt-nix";
+    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
+    pre-commit-hooks-nix.url = "github:cachix/pre-commit-hooks.nix";
+    pre-commit-hooks-nix.inputs.nixpkgs.follows = "nixpkgs";
+    pre-commit-hooks-nix.inputs.nixpkgs-stable.follows = "nixos-stable";
+    pre-commit-hooks-nix.inputs.flake-compat.follows = "flake-compat";
   };
 
   outputs = inputs:
