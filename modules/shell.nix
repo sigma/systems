@@ -2,6 +2,8 @@
   imports = [
     inputs.devshell.flakeModule
     inputs.pre-commit-hooks-nix.flakeModule
+    inputs.treefmt-nix.flakeModule
+    inputs.flake-root.flakeModule
   ];
 
   perSystem = {
@@ -118,6 +120,15 @@
         entry = "${pkgs.bash}/bin/bash -c '! ${pkgs.ripgrep}/bin/rg _\\\\d flake.lock'";
         pass_filenames = false;
       };
+    };
+
+    treefmt.config = {
+      inherit (config.flake-root) projectRootFile;
+      package = pkgs.treefmt;
+      # formatters
+      programs.alejandra.enable = true;
+      programs.mdformat.enable = true;
+      programs.beautysh.enable = true;
     };
 
     devshells.default = {

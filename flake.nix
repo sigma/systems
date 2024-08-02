@@ -70,21 +70,7 @@
   }:
     flake-parts.lib.mkFlake {inherit inputs;} {
       imports = [
-        inputs.treefmt-nix.flakeModule
-        inputs.flake-root.flakeModule
-
-        # introduce proper options for homeConfigurations and darwinConfigurations.
-        # Also add a defs option for the definitions module below.
-        ./modules/flake-options.nix
-
-        # shell support
-        ./modules/shell.nix
-
-        # definitions for machine types, hosts, users.
-        ./modules/defs
-
-        # configurations for home-manager, darwin, etc.
-        ./modules/configurations
+        ./modules
       ];
 
       systems = import inputs.systems;
@@ -118,15 +104,6 @@
             home-manager = default;
           }
           // localPackages;
-
-        treefmt.config = {
-          inherit (config.flake-root) projectRootFile;
-          package = pkgs.treefmt;
-          # formatters
-          programs.alejandra.enable = true;
-          programs.mdformat.enable = true;
-          programs.beautysh.enable = true;
-        };
       };
     };
 }
