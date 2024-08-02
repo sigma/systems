@@ -15,19 +15,19 @@ with lib; let
       };
 
       enter = mkOption {
-        type = types.nullOr(types.bool);
+        type = types.nullOr (types.bool);
         default = null;
         description = "Whether to run the command";
       };
 
       sleep_before = mkOption {
-        type = types.nullOr(types.ints.unsigned);
+        type = types.nullOr (types.ints.unsigned);
         default = null;
         description = "How long to sleep before the command";
       };
 
       sleep_after = mkOption {
-        type = types.nullOr(types.ints.unsigned);
+        type = types.nullOr (types.ints.unsigned);
         default = null;
         description = "How long to sleep after the command";
       };
@@ -42,7 +42,7 @@ with lib; let
   pane = types.submodule ({...}: {
     options = {
       focus = mkOption {
-        type = types.nullOr(types.bool);
+        type = types.nullOr (types.bool);
         default = null;
         description = "Whether to focus this pane";
       };
@@ -54,13 +54,13 @@ with lib; let
       };
 
       shell_command = mkOption {
-        type = types.nullOr(cmd);
+        type = types.nullOr cmd;
         default = null;
         description = "Command to run";
       };
 
       environment = mkOption {
-        type = types.nullOr(types.attrsOf types.str);
+        type = types.nullOr (types.attrsOf types.str);
         default = null;
         description = "Environment";
       };
@@ -93,7 +93,7 @@ with lib; let
       };
 
       shell_command_before = mkOption {
-        type = types.nullOr(cmd);
+        type = types.nullOr cmd;
         default = null;
         description = "Command to run before";
       };
@@ -111,19 +111,19 @@ with lib; let
       };
 
       options = mkOption {
-        type = types.nullOr(types.attrsOf types.str);
+        type = types.nullOr (types.attrsOf types.str);
         default = null;
         description = "Options";
       };
 
       options_after = mkOption {
-        type = types.nullOr(types.attrsOf types.str);
+        type = types.nullOr (types.attrsOf types.str);
         default = null;
         description = "Options after panes creation";
       };
 
       environment = mkOption {
-        type = types.nullOr(types.attrsOf types.str);
+        type = types.nullOr (types.attrsOf types.str);
         default = null;
         description = "Environment";
       };
@@ -150,25 +150,25 @@ with lib; let
       };
 
       shell_command_before = mkOption {
-        type = types.nullOr(cmd);
+        type = types.nullOr cmd;
         default = null;
         description = "Command to run before";
       };
 
       before_script = mkOption {
-        type = types.nullOr(cmd);
+        type = types.nullOr cmd;
         default = null;
         description = "Command to run before";
       };
 
       global_options = mkOption {
-        type = types.nullOr(types.attrsOf types.str);
+        type = types.nullOr (types.attrsOf types.str);
         default = null;
         description = "Global tmux options";
       };
 
       options = mkOption {
-        type = types.nullOr(types.attrsOf types.str);
+        type = types.nullOr (types.attrsOf types.str);
         default = null;
         description = "Options";
       };
@@ -182,13 +182,11 @@ with lib; let
   });
   # tmuxp doesn't have well-defined defaults, so we need to exclude all null values from the result.
   filterNullAttrs = v:
-    if isAttrs v then
-      filterAttrs (k: v: v != null) (mapAttrs (path: filterNullAttrs) v)
-    else
-      if isList v then
-        filter (v: v != null) (map filterNullAttrs v)
-      else
-        v;
+    if isAttrs v
+    then filterAttrs (k: v: v != null) (mapAttrs (path: filterNullAttrs) v)
+    else if isList v
+    then filter (v: v != null) (map filterNullAttrs v)
+    else v;
   # normalize does the filtering, and then sets defaults.
   normalize = name: workspace:
     (filterNullAttrs workspace)
