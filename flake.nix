@@ -63,12 +63,8 @@
     chemacs2nix.inputs.pre-commit-hooks.follows = "pre-commit-hooks-nix";
   };
 
-  outputs = inputs @ {
-    nixpkgs,
-    flake-parts,
-    ...
-  }:
-    flake-parts.lib.mkFlake {inherit inputs;} {
+  outputs = inputs:
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
       imports = [
         ./modules
       ];
@@ -83,7 +79,7 @@
         ...
       }: let
         pkgs' =
-          import nixpkgs {
+          import inputs.nixpkgs {
             inherit system;
           }
           // (import ./pkg-config.nix {
