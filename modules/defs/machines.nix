@@ -10,6 +10,20 @@
     inputs.chemacs2nix.homeModule
     inputs.nix-index-database.hmModules.nix-index
   ];
+
+  # Common home-manager configuration
+  homeManagerConfig = {
+    user,
+    machine,
+  }: {
+    nixpkgs = nixpkgsConfig;
+    home-manager = {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+      users.${user.login} = inputs.nixpkgs.lib.mkMerge hmModules;
+      extraSpecialArgs = {inherit user machine stateVersion;};
+    };
+  };
 in {
   mac = machine: let
     user =
@@ -28,14 +42,7 @@ in {
         ../../darwin-modules
         # `home-manager` module
         inputs.home-manager.darwinModules.home-manager
-        {
-          nixpkgs = nixpkgsConfig;
-          # `home-manager` config
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.${user.login} = inputs.nixpkgs.lib.mkMerge hmModules;
-          home-manager.extraSpecialArgs = specialArgs;
-        }
+        (homeManagerConfig {inherit user machine;})
       ];
     };
 
@@ -67,5 +74,22 @@ in {
           }
         ];
       extraSpecialArgs = specialArgs;
+    };
+
+  nixos = machine: let
+    user = users.personalUser;
+    specialArgs = {
+      inherit user machine stateVersion;
+    };
+  in
+    inputs.nixpkgs.lib.nixosSystem {
+      inherit (machine) system;
+      inherit specialArgs;
+      modules = [
+        ../../nixos-modules
+        # 'home-manager' module
+        inputs.home-manager.nixosModules.home-manager
+        (homeManagerConfig {inherit user machine;})
+      ];
     };
 }
