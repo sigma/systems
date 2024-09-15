@@ -3,7 +3,7 @@
   programs.zsh.enable = true;
 
   environment.systemPackages = with pkgs; [
-    coreutils
+    coreutils-full
     htop
     vim
   ];
@@ -13,4 +13,33 @@
     fish
     zsh
   ];
+
+  homebrew = {
+    enable = true;
+    onActivation.cleanup = "zap";
+
+    taps = [
+      "nikitabobko/tap" # provides `aerospace`
+      "FelixKratz/formulae" # provides `borders`
+    ];
+    brews = [
+      "borders"
+    ];
+    casks = [
+      "aerospace"
+      "alfred"
+      "google-chrome"
+      "loopback"
+      "notion"
+      "notion-calendar"
+      "slack"
+      "soundsource"
+      "spotify"
+      "visual-studio-code"
+      "wezterm"
+      "whatsapp"
+    ];
+    masApps = {};
+    whalebrews = [];
+  };
 }
