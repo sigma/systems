@@ -58,6 +58,7 @@
     systemActivate =
       if isDarwin
       then ''
+        ./result/activate-user
         sudo ./result/activate
       ''
       else ''
