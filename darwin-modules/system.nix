@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  machine,
+  ...
+}: {
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.zsh.enable = true;
 
@@ -43,4 +47,6 @@
     masApps = {};
     whalebrews = [];
   };
+
+  security.pam.enableSudoTouchIdAuth = !machine.isWork; # this would be overridden by corp.
 }
