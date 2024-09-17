@@ -17,6 +17,7 @@
     ./mailsetup.nix
     ./settings
     ./tmuxp.nix
+    ./wm
     ./zinit.nix
   ];
 
@@ -36,6 +37,12 @@
       blaze.enable = true;
       gcert.enable = true;
       mailsetup.enable = true;
+    }
+    // lib.optionalAttrs machine.isMac {
+      aerospace = {
+        enable = true;
+        autostart = true;
+      };
     };
 
   home.packages = with pkgs;
