@@ -92,7 +92,8 @@ typeset -g POWERLEVEL9K_CERT_VALIDITY_TIME=72000
 # 1 hour warning
 typeset -g POWERLEVEL9K_CERT_ADVANCE_WARNING=3600
 # gcert glyph
-typeset -g POWERLEVEL9K_CERT_GLYPH=$'\uf623 '
+typeset -g POWERLEVEL9K_CERT_OK_GLYPH=$'\u2714 '
+typeset -g POWERLEVEL9K_CERT_EXPIRED_GLYPH=$'\u2718 '
 
 function prompt_gcert() {
     # Use mtime on ~/.sso/cookie as an approximation of valid cert. While not
@@ -102,11 +103,11 @@ function prompt_gcert() {
     if [[ -e ${POWERLEVEL9K_CERT_COOKIE_FILE} ]]; then
         local valid=$(($POWERLEVEL9K_CERT_VALIDITY_TIME - $EPOCHSECONDS + $(zstat +mtime ${POWERLEVEL9K_CERT_COOKIE_FILE})))
         if (( valid < 0 )); then
-            p10k segment -b red -f 255 -t ${POWERLEVEL9K_CERT_GLYPH}
+            p10k segment -b red -f 255 -t ${POWERLEVEL9K_CERT_EXPIRED_GLYPH}
         elif (( valid < POWERLEVEL9K_CERT_ADVANCE_WARNING )); then
-            p10k segment -b yellow -f 255 -t ${POWERLEVEL9K_CERT_GLYPH}
+            p10k segment -b yellow -f 255 -t ${POWERLEVEL9K_CERT_OK_GLYPH}
         else
-            p10k segment -b green -f 255 -t ${POWERLEVEL9K_CERT_GLYPH}
+            p10k segment -b green -f 255 -t ${POWERLEVEL9K_CERT_OK_GLYPH}
         fi
     fi
 }
