@@ -1,4 +1,5 @@
-{...}: let
+{lib, ...}: let
+  helpers = import ./helpers.nix {inherit lib;};
   internalID = {
     vendor_id = 1452;
     product_id = 835;
@@ -10,36 +11,20 @@
       identifiers = [internalID];
     }
   ];
-  remap = from: to: {
-    from = {
-      key_code = from;
+  remap = from: to:
+    helpers.remap {
+      inherit from to;
     };
-    to = [
-      {
-        key_code = to;
-      }
-    ];
-  };
-  remap_fn = from: to: {
-    from = {
-      key_code = from;
+  remap_fn = from: to:
+    helpers.remap {
+      inherit from to;
+      keyType = "consumer_key_code";
     };
-    to = [
-      {
-        consumer_key_code = to;
-      }
-    ];
-  };
-  remap_vendor = from: to: {
-    from = {
-      key_code = from;
+  remap_vendor = from: to:
+    helpers.remap {
+      inherit from to;
+      keyType = "apple_vendor_keyboard_key_code";
     };
-    to = [
-      {
-        apple_vendor_keyboard_key_code = to;
-      }
-    ];
-  };
 in {
   profiles = [
     {
@@ -73,20 +58,10 @@ in {
       ];
 
       # hack to prevent karabiner from remapping function keys in external keyboards
-      fn_function_keys = [
-        (remap "f1" "f1")
-        (remap "f2" "f2")
-        (remap "f3" "f3")
-        (remap "f4" "f4")
-        (remap "f5" "f5")
-        (remap "f6" "f6")
-        (remap "f7" "f7")
-        (remap "f8" "f8")
-        (remap "f9" "f9")
-        (remap "f10" "f10")
-        (remap "f11" "f11")
-        (remap "f12" "f12")
-      ];
+      fn_function_keys = let
+        fKeys = map (n: "f${toString n}") (lib.range 1 12);
+      in
+        map (key: remap key key) fKeys;
 
       complex_modifications = {
         rules = [
@@ -114,121 +89,48 @@ in {
                 type = "basic";
                 conditions = forInternalID;
               }
-              {
-                from = {
-                  key_code = "right_control";
-                  modifiers = {
-                    optional = [
-                      "any"
-                    ];
-                  };
-                };
-                to = [
-                  {
-                    key_code = "right_option";
-                    modifiers = [
-                      "right_command"
-                      "right_control"
-                    ];
-                  }
-                ];
-                type = "basic";
-                conditions = forInternalID;
-              }
             ];
           }
 
           {
             description = "Shift_L tap -> '(', Shift_R tap -> ')'";
             manipulators = [
-              {
-                from = {
-                  key_code = "left_shift";
-                  modifiers = {
-                    optional = [
-                      "any"
-                    ];
-                  };
+              (helpers.tapManipulator {
+                from = "left_shift";
+                tap = helpers.keyDef {
+                  key_code = "9";
+                  modifiers = ["left_shift"];
                 };
-                to = {
-                  key_code = "left_shift";
-                };
-                to_if_alone = [
-                  {
-                    key_code = "9";
-                    modifiers = [
-                      "left_shift"
-                    ];
-                  }
-                ];
-                type = "basic";
+                hold = "left_shift";
                 conditions = forInternalID;
-              }
-              {
-                from = {
-                  key_code = "right_shift";
-                  modifiers = {
-                    optional = [
-                      "any"
-                    ];
-                  };
+              })
+              (helpers.tapManipulator {
+                from = "right_shift";
+                tap = helpers.keyDef {
+                  key_code = "0";
+                  modifiers = ["right_shift"];
                 };
-                to = {
-                  key_code = "right_shift";
-                };
-                to_if_alone = [
-                  {
-                    key_code = "0";
-                    modifiers = [
-                      "right_shift"
-                    ];
-                  }
-                ];
-                type = "basic";
+                hold = "right_shift";
                 conditions = forInternalID;
-              }
+              })
             ];
           }
 
           {
             description = "Caps Lock / Enter tap for Enter, hold for Control";
             manipulators = [
-              {
-                from = {
-                  key_code = "caps_lock";
-                  modifiers = {
-                    optional = ["any"];
-                  };
-                };
-                to = [
-                  {
-                    key_code = "left_control";
-                  }
-                ];
-                to_if_alone = {
-                  key_code = "return_or_enter";
-                };
-                type = "basic";
+              (helpers.tapManipulator {
+                from = "caps_lock";
+                tap = "return_or_enter";
+                hold = "left_control";
                 conditions = forInternalID;
-              }
-
-              {
-                from = {
-                  key_code = "return_or_enter";
-                  modifiers = {
-                    optional = ["any"];
-                  };
-                };
-                to = {
-                  key_code = "right_control";
-                };
-
-                to_if_alone = {
-                  key_code = "return_or_enter";
-                };
-                type = "basic";
+              })
+              (helpers.tapManipulator {
+                from = "return_or_enter";
+                tap = "return_or_enter";
+                hold = "right_control";
                 conditions = forInternalID;
-              }
+              })
             ];
           }
         ];
