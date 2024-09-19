@@ -20,6 +20,26 @@
       }
     ];
   };
+  remap_fn = from: to: {
+    from = {
+      key_code = from;
+    };
+    to = [
+      {
+        consumer_key_code = to;
+      }
+    ];
+  };
+  remap_vendor = from: to: {
+    from = {
+      key_code = from;
+    };
+    to = [
+      {
+        apple_vendor_keyboard_key_code = to;
+      }
+    ];
+  };
 in {
   profiles = [
     {
@@ -34,7 +54,38 @@ in {
             (remap "right_command" "right_option")
             (remap "right_option" "right_command")
           ];
+          # because of the hack below, we need to remap the function keys for the internal keyboard.
+          fn_function_keys = [
+            (remap_fn "f1" "display_brightness_decrement")
+            (remap_fn "f2" "display_brightness_increment")
+            (remap_vendor "f3" "mission_control")
+            (remap_vendor "f4" "spotlight")
+            (remap_fn "f5" "dictation")
+            (remap "f6" "f16") # "do not disturb" key is not supported natively by Karabiner. Remap to f16, and rely on the keyboard settings being aligned.
+            (remap_fn "f7" "rewind")
+            (remap_fn "f8" "play_or_pause")
+            (remap_fn "f9" "fast_forward")
+            (remap_fn "f10" "mute")
+            (remap_fn "f11" "volume_decrement")
+            (remap_fn "f12" "volume_increment")
+          ];
         }
+      ];
+
+      # hack to prevent karabiner from remapping function keys in external keyboards
+      fn_function_keys = [
+        (remap "f1" "f1")
+        (remap "f2" "f2")
+        (remap "f3" "f3")
+        (remap "f4" "f4")
+        (remap "f5" "f5")
+        (remap "f6" "f6")
+        (remap "f7" "f7")
+        (remap "f8" "f8")
+        (remap "f9" "f9")
+        (remap "f10" "f10")
+        (remap "f11" "f11")
+        (remap "f12" "f12")
       ];
 
       complex_modifications = {
