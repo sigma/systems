@@ -1,12 +1,14 @@
 {
   pkgs,
   nix-filter ? pkgs.nix-filter,
-}: {
-  emacs-config = pkgs.callPackage ./emacs-config.nix {
+}: let
+  params = {
     inherit nix-filter;
   };
+in {
+  emacs-config = pkgs.callPackage ./emacs-config.nix params;
 
-  zsh-config = pkgs.callPackage ./zsh-config.nix {
-    inherit nix-filter;
-  };
+  wezterm-config = pkgs.callPackage ./wezterm-config.nix params;
+
+  zsh-config = pkgs.callPackage ./zsh-config.nix params;
 }
