@@ -3,8 +3,7 @@
 
   inputs = {
     # Systems
-    systems.url = "path:./flake.systems.nix";
-    systems.flake = false;
+    systems.url = "github:nix-systems/default";
 
     # Package sets
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
