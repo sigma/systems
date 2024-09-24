@@ -41,6 +41,7 @@ in {
       darwinConfigurations = {
         yhodique-macbookpro = machines.mac hosts.yhodique-macbookpro;
         yhodique-macmini = machines.mac hosts.yhodique-macmini;
+        spectre = machines.mac hosts.spectre;
       };
 
       # My home-manager only configs

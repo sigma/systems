@@ -60,6 +60,14 @@
       system = "x86_64-linux";
       isMac = false;
     };
+  mac = mac:
+    mac
+    // {
+      isInteractive = true;
+      isMac = true;
+      isWork = false;
+      sshMatchBlocks = sshBlocks mac;
+    };
   gmac = mac:
     (work mac)
     // {
@@ -127,5 +135,12 @@ in rec {
     name = "yhodique-macmini.roam.corp.google.com";
     system = "x86_64-darwin";
     remotes = [shirka pdev cs csp];
+  };
+
+  spectre = mac {
+    name = "spectre.local";
+    system = "aarch64-darwin";
+    user = "yann";
+    remotes = [pdev csp];
   };
 }
