@@ -49,4 +49,5 @@
   };
 
   security.pam.enableSudoTouchIdAuth = !machine.isWork; # this would be overridden by corp.
+  system.stateVersion = 5;
 }
