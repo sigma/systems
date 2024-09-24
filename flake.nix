@@ -100,6 +100,7 @@
           {
             inherit default;
             home-manager = default;
+            darwin-rebuild = inputs'.darwin.packages.darwin-rebuild;
           }
           // localPackages;
       };

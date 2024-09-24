@@ -36,7 +36,7 @@ final: prev: let
     })
     (final.fetchpatch {
       url = "https://github.com/d12frosted/homebrew-emacs-plus/raw/master/patches/emacs-30/poll.patch";
-      sha256 = "sha256-HPuHrsKq17ko8xP8My+IYcJV+PKio4jK41qID6QFXFs=";
+      sha256 = "sha256-bQW9LPmJhMAtP2rftndTdjw0uipPyOp5oXqtIcs7i/Q=";
     })
     (final.fetchpatch {
       url = "https://github.com/d12frosted/homebrew-emacs-plus/raw/master/patches/emacs-30/round-undecorated-frame.patch";
@@ -51,7 +51,7 @@ in {
 
   emacs-unstable = prev.emacs-unstable.overrideAttrs (oldAttrs: {
     postPatch = oldAttrs.postPatch + iconPhase;
-    patches = oldAttrs.patches ++ emacs29Patches;
+    patches = oldAttrs.patches ++ emacs30Patches;
   });
 
   emacs-git = prev.emacs-git.overrideAttrs (oldAttrs: {
