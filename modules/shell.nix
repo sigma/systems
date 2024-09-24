@@ -58,8 +58,7 @@
     systemActivate =
       if isDarwin
       then ''
-        ./result/activate-user
-        sudo ./result/activate
+        ${pkgs.nixFlakes}/bin/nix run ".#darwin-rebuild" -- switch --flake ".#`hostname -s`"
       ''
       else ''
         ${pkgs.nixFlakes}/bin/nix run ".#home-manager" ${nixFlags} --  switch --flake ".#`hostname -s`"
