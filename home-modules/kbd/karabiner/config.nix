@@ -5,6 +5,11 @@
     product_id = 835;
     is_keyboard = true;
   };
+  kinesisPedalID = {
+    vendor_id = 10730;
+    product_id = 256;
+    is_keyboard = true;
+  };
   forInternalID = [
     {
       type = "device_if";
@@ -53,6 +58,12 @@ in {
             (remap_fn "f10" "mute")
             (remap_fn "f11" "volume_decrement")
             (remap_fn "f12" "volume_increment")
+          ];
+        }
+        {
+          identifiers = kinesisPedalID;
+          simple_modifications = [
+            (remap_fn "left_option" "dictation")
           ];
         }
       ];
