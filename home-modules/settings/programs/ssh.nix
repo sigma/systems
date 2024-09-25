@@ -19,8 +19,3 @@
 // lib.optionalAttrs (builtins.hasAttr "sshMatchBlocks" machine) {
   matchBlocks = machine.sshMatchBlocks;
 }
-// lib.optionalAttrs (machine.isMac) {
-  extraConfig = ''
-    IdentityAgent /Users/${user.login}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh
-  '';
-}
