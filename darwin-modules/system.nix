@@ -28,6 +28,14 @@
       "loopback"
       "notion"
       "notion-calendar"
+      {
+        name = "orbstack";
+        args = {appdir = "/Applications";};
+      }
+      {
+        name = "secretive";
+        args = {appdir = "/Applications";};
+      }
       "slack"
       "soundsource"
       "spotify"
