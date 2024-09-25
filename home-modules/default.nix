@@ -9,11 +9,10 @@
 
   imports = [
     ./accounts.nix
-    ./blaze.nix
     ./cloud-shell.nix
     ./darwin-apps.nix
     ./editors
-    ./gcert.nix
+    ./google.nix
     ./mailsetup.nix
     ./settings
     ./tmuxp.nix
@@ -33,8 +32,6 @@
     }
     // lib.optionalAttrs machine.isWork {
       # work-only
-      blaze.enable = true;
-      gcert.enable = true;
       mailsetup.enable = true;
     };
 
