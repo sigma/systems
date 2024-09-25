@@ -14,6 +14,7 @@ lib.optionalAttrs (machine.isWork) {
     ];
     "zshrc".knownSha256Hashes = [
       "7055352423251faa46af6bb3b1754b0119558f5460c4b49d27189a9cac794bc3"
+      "0c65e335c154a6b4a88f635c7b2aee8c6f49bd48ee522fd3685f75e2686b6af3"
     ];
     # leave bashrc alone, I don't use bash
     "bashrc".enable = false;
