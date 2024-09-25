@@ -27,22 +27,13 @@ stdenv.mkDerivation {
       if stdenv.system == "x86_64-linux"
       then "/var/run/ccache/sso-$USER/cookie"
       else "$HOME/.sso/cookie";
-    hiElement =
-      if google
-      then "hi"
-      else "";
-    citcElement =
-      if google
-      then "citc"
-      else "";
+    hiElement = lib.optionalString google "hi";
+    citcElement = lib.optionalString google "citc";
     dirElement =
       if google
       then "gdir"
       else "dir";
-    gcertElement =
-      if google
-      then "gcert"
-      else "";
+    gcertElement = lib.optionalString google "gcert";
     generated = writeText "p10k.generated.config.zsh" ''
       ${
         if google
@@ -111,13 +102,10 @@ stdenv.mkDerivation {
 
       typeset -g POWERLEVEL9K_VCS_BACKENDS=(git hg ${citcElement})
     '';
-  in
-    ''
-      ${coreutils}/bin/cp -R $src/zsh-config/* .
-    ''
-    + lib.optionalString google ''
-      ${coreutils}/bin/cp ${generated} ./p10k.generated.config.zsh
-    '';
+  in ''
+    ${coreutils}/bin/cp -R $src/zsh-config/* .
+    ${coreutils}/bin/cp ${generated} ./p10k.generated.config.zsh
+  '';
 
   installPhase = ''
     ${findutils}/bin/find . -exec ${coreutils}/bin/install -vDm 755 {} $out/{} \;
