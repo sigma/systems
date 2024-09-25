@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   user,
   ...
 }:
@@ -44,6 +45,6 @@ in {
       ];
     };
 
-    home-manager.users.${user.login}.home.file.".aerospace.toml".text = import ./aerospace/config.nix cfg;
+    home-manager.users.${user.login}.home.file.".aerospace.toml".text = import ./aerospace/config.nix {inherit cfg pkgs;};
   };
 }

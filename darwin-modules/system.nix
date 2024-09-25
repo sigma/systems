@@ -32,7 +32,6 @@
       "soundsource"
       "spotify"
       "visual-studio-code"
-      "wezterm"
       "whatsapp"
     ];
     masApps = {};
