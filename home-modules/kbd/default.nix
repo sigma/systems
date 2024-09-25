@@ -1,5 +1,0 @@
-{...}: {
-  imports = [
-    ./karabiner.nix
-  ];
-}

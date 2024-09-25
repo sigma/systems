@@ -14,7 +14,6 @@
     ./darwin-apps.nix
     ./editors
     ./gcert.nix
-    ./kbd
     ./mailsetup.nix
     ./settings
     ./tmuxp.nix
@@ -37,9 +36,6 @@
       blaze.enable = true;
       gcert.enable = true;
       mailsetup.enable = true;
-    }
-    // lib.optionalAttrs machine.isMac {
-      karabiner.enable = true;
     };
 
   home.packages = with pkgs;

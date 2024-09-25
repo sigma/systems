@@ -25,7 +25,6 @@
     casks = [
       "alfred"
       "google-chrome"
-      "karabiner-elements"
       "loopback"
       "notion"
       "notion-calendar"

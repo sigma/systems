@@ -1,11 +1,14 @@
 {machine, ...}: {
   imports = [
     ./aerospace.nix
+    ./karabiner.nix
     ./secretive.nix
   ];
 
   programs = {
     aerospace.enable = true;
+
+    karabiner.enable = true;
 
     secretive = {
       enable = true;
