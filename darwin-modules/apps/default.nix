@@ -1,12 +1,17 @@
 {machine, ...}: {
   imports = [
+    ./aerospace.nix
     ./secretive.nix
   ];
 
-  programs.secretive = {
-    enable = true;
-    # don't get in the way of gnubby
-    globalAgentIntegration = !machine.isWork;
-    zshIntegration = !machine.isWork;
+  programs = {
+    aerospace.enable = true;
+
+    secretive = {
+      enable = true;
+      # don't get in the way of gnubby
+      globalAgentIntegration = !machine.isWork;
+      zshIntegration = !machine.isWork;
+    };
   };
 }

@@ -18,7 +18,6 @@
     ./mailsetup.nix
     ./settings
     ./tmuxp.nix
-    ./wm
     ./zinit.nix
   ];
 
@@ -40,10 +39,6 @@
       mailsetup.enable = true;
     }
     // lib.optionalAttrs machine.isMac {
-      aerospace = {
-        enable = true;
-        autostart = true;
-      };
       karabiner.enable = true;
     };
 

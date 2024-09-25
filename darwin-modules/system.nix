@@ -22,15 +22,7 @@
     enable = true;
     onActivation.cleanup = "zap";
 
-    taps = [
-      "nikitabobko/tap" # provides `aerospace`
-      "FelixKratz/formulae" # provides `borders`
-    ];
-    brews = [
-      "borders"
-    ];
     casks = [
-      "aerospace"
       "alfred"
       "google-chrome"
       "karabiner-elements"
