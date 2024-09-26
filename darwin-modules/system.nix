@@ -1,43 +1,25 @@
-{
-  pkgs,
-  machine,
-  ...
-}: {
-  # Create /etc/bashrc that loads the nix-darwin environment.
+{pkgs, ...}: {
   programs.zsh.enable = true;
 
-  environment.systemPackages = with pkgs; [
-    coreutils-full
-    htop
-    vim
-  ];
+  environment = with pkgs; {
+    systemPackages = [
+      coreutils-full
+      htop
+      vim
+    ];
 
-  environment.shells = with pkgs; [
-    bash
-    fish
-    zsh
-  ];
+    shells = [
+      bash
+      fish
+      zsh
+    ];
+  };
 
   homebrew = {
     enable = true;
     onActivation.cleanup = "zap";
-
-    casks = [
-      "alfred"
-      "google-chrome"
-      "loopback"
-      "notion"
-      "notion-calendar"
-      "slack"
-      "soundsource"
-      "spotify"
-      "visual-studio-code"
-      "whatsapp"
-    ];
-    masApps = {};
-    whalebrews = [];
   };
 
-  security.pam.enableSudoTouchIdAuth = !machine.isWork; # this would be overridden by corp.
+  security.pam.enableSudoTouchIdAuth = true;
   system.stateVersion = 5;
 }

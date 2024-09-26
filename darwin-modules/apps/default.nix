@@ -6,6 +6,19 @@
     ./secretive.nix
   ];
 
+  homebrew.casks = [
+    "alfred"
+    "google-chrome"
+    "loopback"
+    "notion"
+    "notion-calendar"
+    "slack"
+    "soundsource"
+    "spotify"
+    "visual-studio-code"
+    "whatsapp"
+  ];
+
   programs = {
     aerospace.enable = true;
 

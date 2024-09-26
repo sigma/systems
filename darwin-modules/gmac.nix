@@ -23,4 +23,6 @@ lib.optionalAttrs (machine.isWork) {
   environment.systemPackages = [
     pkgs.gitGoogle
   ];
+
+  security.pam.enableSudoTouchIdAuth = lib.mkForce false; # this would be overridden by corp.
 }
