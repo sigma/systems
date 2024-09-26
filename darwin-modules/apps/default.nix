@@ -2,6 +2,7 @@
   imports = [
     ./aerospace.nix
     ./karabiner.nix
+    ./orbstack.nix
     ./secretive.nix
   ];
 
@@ -9,6 +10,9 @@
     aerospace.enable = true;
 
     karabiner.enable = true;
+
+    # virtualization is not allowed on corp machines
+    orbstack.enable = !machine.isWork;
 
     secretive = {
       enable = true;
