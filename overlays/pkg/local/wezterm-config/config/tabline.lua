@@ -56,7 +56,7 @@ local tabline_opts = {
     tabline_y = {
      { "datetime", style = "%a %d %b %Y %H:%M", hour_to_icon = "" },
     },
-    tabline_z = { "battery" },
+    tabline_z = { "workspace" },
   },
   extensions = {},
 }
