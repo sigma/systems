@@ -6,7 +6,7 @@
   machine,
   ...
 }: {
-  config = lib.mkIf machine.isMac {
+  config = lib.mkIf machine.features.mac {
     home.activation = {
       copyApplications = let
         apps = pkgs.buildEnv {

@@ -1,10 +1,8 @@
 {
   lib,
   pkgs,
-  machine,
   ...
-}:
-lib.optionalAttrs (machine.isWork) {
+}: {
   # those files are handled by corp and will be reverted anyway, so
   # skip the warning about them being overwritten.
   environment.etc = {
@@ -24,5 +22,11 @@ lib.optionalAttrs (machine.isWork) {
     pkgs.gitGoogle
   ];
 
-  security.pam.enableSudoTouchIdAuth = lib.mkForce false; # this would be overridden by corp.
+  # The following are disallowed on corp machines
+  services.tailscale.enable = lib.mkForce false;
+  security.pam.enableSudoTouchIdAuth = lib.mkForce false;
+  programs.orbstack.enable = lib.mkForce false;
+  # allow secretive, but don't interfere with gnubby auth
+  programs.secretive.globalAgentIntegration = lib.mkForce false;
+  programs.secretive.zshIntegration = lib.mkForce false;
 }

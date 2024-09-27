@@ -4,7 +4,7 @@
   ...
 }: let
   zsh-config = pkgs.zsh-config.override {
-    google = machine.isWork;
+    google = machine.features.google;
   };
 in {
   enable = true;

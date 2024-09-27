@@ -5,7 +5,7 @@
   user,
   ...
 }:
-lib.optionalAttrs machine.isWork {
+lib.optionalAttrs machine.features.google {
   enable = true;
   package = pkgs.fig;
 

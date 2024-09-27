@@ -30,7 +30,7 @@
       lieer.enable = true;
       thefuck.enable = true;
     }
-    // lib.optionalAttrs machine.isWork {
+    // lib.optionalAttrs machine.features.work {
       # work-only
       mailsetup.enable = true;
     };
@@ -101,9 +101,11 @@
       # windows helpers
       innoextract
     ]
-    ++ lib.optionals machine.isMac [
+    ++ lib.optionals machine.features.mac [
       m-cli # useful macOS CLI commands
       afsctool
+    ]
+    ++ lib.optionals machine.features.music [
       maschine-hacks
     ];
 }

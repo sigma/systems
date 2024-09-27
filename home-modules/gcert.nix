@@ -23,7 +23,7 @@ in {
   };
 
   config = mkIf cfg.enable (let
-    glinux = machine.isWork && machine.system == "x86_64-linux";
+    glinux = machine.features.google && machine.features.linux;
     gcertstatus = "${cfg.package}/bin/gcertstatus";
     gcert = "${cfg.package}/bin/gcert";
   in {

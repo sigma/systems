@@ -108,7 +108,7 @@
         ];
       };
     }
-    // lib.optionalAttrs machine.isWork {
+    // lib.optionalAttrs machine.features.google {
       mars = g3Workspace "mars" {
         windows = [
           {

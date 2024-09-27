@@ -3,7 +3,7 @@
   lib,
   ...
 }:
-lib.optionalAttrs machine.isWork {
+lib.optionalAttrs machine.features.google {
   imports = [
     ./blaze.nix
     ./gcert.nix

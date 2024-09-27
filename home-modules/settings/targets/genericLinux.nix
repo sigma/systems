@@ -1,3 +1,3 @@
 {machine, ...}: {
-  enable = machine.isWork && !machine.isMac;
+  enable = machine.features.linux;
 }

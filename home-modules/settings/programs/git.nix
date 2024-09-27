@@ -8,7 +8,7 @@
 }: {
   enable = true;
   package =
-    if machine.isWork
+    if machine.features.google
     then pkgs.gitGoogle
     else pkgs.git;
 
@@ -204,7 +204,7 @@
         path = "${config.home.homeDirectory}/.gitconfig.private";
       }
     ]
-    ++ lib.optionals machine.isWork [
+    ++ lib.optionals machine.features.google [
       {
         condition = "hasconfig:remote.*.url:sso://**";
         contents = {

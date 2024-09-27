@@ -1,4 +1,8 @@
-{machine, ...}: {
+{
+  machine,
+  lib,
+  ...
+}: {
   imports = [
     ./aerospace.nix
     ./karabiner.nix
@@ -6,32 +10,26 @@
     ./secretive.nix
   ];
 
-  homebrew.casks = [
-    "alfred"
-    "google-chrome"
-    "loopback"
-    "notion"
-    "notion-calendar"
-    "slack"
-    "soundsource"
-    "spotify"
-    "visual-studio-code"
-    "whatsapp"
-  ];
+  homebrew.casks =
+    [
+      "alfred"
+      "google-chrome"
+      "notion"
+      "notion-calendar"
+      "slack"
+      "spotify"
+      "visual-studio-code"
+      "whatsapp"
+    ]
+    ++ lib.optionals machine.features.music [
+      "loopback"
+      "soundsource"
+    ];
 
   programs = {
     aerospace.enable = true;
-
     karabiner.enable = true;
-
-    # virtualization is not allowed on corp machines
-    orbstack.enable = !machine.isWork;
-
-    secretive = {
-      enable = true;
-      # don't get in the way of gnubby
-      globalAgentIntegration = !machine.isWork;
-      zshIntegration = !machine.isWork;
-    };
+    orbstack.enable = true;
+    secretive.enable = true;
   };
 }
