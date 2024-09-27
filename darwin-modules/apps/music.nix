@@ -2,7 +2,8 @@
   config,
   lib,
   ...
-}: let
+}:
+with lib; let
   cfg = config.programs.music;
 in {
   options.programs.music = {
@@ -11,6 +12,7 @@ in {
 
   config = mkIf cfg.enable {
     homebrew.casks = [
+      "ableton-live-suite"
       "arturia-software-center"
       "loopback"
       "native-access"

@@ -14,6 +14,7 @@
     "notion-calendar"
     "slack"
     "spotify"
+    "tailscale"
     "visual-studio-code"
     "whatsapp"
   ];
