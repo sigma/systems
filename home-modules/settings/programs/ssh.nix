@@ -1,10 +1,4 @@
-{
-  lib,
-  machine,
-  user,
-  ...
-}:
-{
+{...}: {
   enable = true;
 
   compression = true;
@@ -15,7 +9,4 @@
 
   serverAliveInterval = 30;
   serverAliveCountMax = 3;
-}
-// lib.optionalAttrs (builtins.hasAttr "sshMatchBlocks" machine) {
-  matchBlocks = machine.sshMatchBlocks;
 }
