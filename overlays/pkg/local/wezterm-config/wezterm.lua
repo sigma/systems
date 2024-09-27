@@ -44,7 +44,7 @@ tabline.setup {
      tab_active = {
        { Attribute = { Intensity = "Bold" } },
        { Foreground = { Color = accent_colors.ansi[3] } },
-       "tab_index",
+       "index",
        "ResetAttributes",
        { Foreground = { Color = accent_colors.foreground } },
        { "process", icons_only = true },
@@ -53,7 +53,7 @@ tabline.setup {
      },
      tab_inactive = {
        { Foreground = { Color = accent_colors.ansi[6] } },
-       "tab_index",
+       "index",
        "ResetAttributes",
        { "process", icons_only = true },
        { Attribute = { Intensity = "Bold" } },
