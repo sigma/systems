@@ -11,6 +11,7 @@
   inputs.comma.overlays.default
   inputs.emacs.overlay
   inputs.fenix.overlays.default
+  inputs.vscode-extensions.overlays.default
 
   # utils overlay
   inputs.devshell.overlays.default

@@ -40,6 +40,12 @@
     fenix.url = "github:nix-community/fenix";
     fenix.inputs.nixpkgs.follows = "nixpkgs";
 
+    # VS Code
+    vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
+    vscode-extensions.inputs.nixpkgs.follows = "nixpkgs";
+    vscode-extensions.inputs.flake-utils.follows = "flake-utils";
+    vscode-extensions.inputs.flake-compat.follows = "flake-compat";
+
     # Utils
     flake-compat.url = "github:edolstra/flake-compat";
     flake-utils.url = "github:numtide/flake-utils";
