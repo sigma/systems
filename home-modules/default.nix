@@ -49,6 +49,7 @@
       gnumake
       ninja
       master.buck2
+      bump2version
 
       # console tools
       btop
@@ -70,6 +71,7 @@
 
       # git
       git-review
+      pre-commit
       tig
 
       # languages
