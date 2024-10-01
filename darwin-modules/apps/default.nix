@@ -5,6 +5,7 @@
     ./music.nix
     ./orbstack.nix
     ./secretive.nix
+    ./tailscale.nix
   ];
 
   homebrew.casks = [
@@ -15,7 +16,6 @@
     "slack"
     "spotify"
     "soundsource"
-    "tailscale"
     "visual-studio-code"
     "whatsapp"
   ];
@@ -26,5 +26,6 @@
     music.enable = machine.features.music;
     orbstack.enable = true;
     secretive.enable = true;
+    tailscale.enable = true;
   };
 }

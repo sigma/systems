@@ -23,6 +23,7 @@
   ];
 
   # The following are disallowed on corp machines
+  programs.tailscale.enable = lib.mkForce false;
   services.tailscale.enable = lib.mkForce false;
   security.pam.enableSudoTouchIdAuth = lib.mkForce false;
   programs.orbstack.enable = lib.mkForce false;
