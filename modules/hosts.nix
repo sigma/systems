@@ -9,7 +9,7 @@
       name = "yhodique-macbookpro.roam.internal";
       system = "aarch64-darwin";
       remotes = [shirka pdev cs csp];
-      features = ["managed" "mac" "work" "google"];
+      features = ["managed" "laptop" "mac" "work" "google"];
     };
 
     yhodique-macmini = {

@@ -12,7 +12,7 @@ with lib; let
     inherit inputs lib cfg helpers;
     stateVersion = "24.05";
   };
-  defaultFeatures = ["managed" "linux" "mac" "nixos" "interactive"];
+  defaultFeatures = ["managed" "linux" "mac" "nixos" "interactive" "laptop"];
 in {
   options = {
     nebula = {
