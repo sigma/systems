@@ -12,6 +12,10 @@ in {
       name = "perso";
       emails = ["yann.hodique@gmail.com" "yann@hodique.info"];
     };
+    oplabsProfile = {
+      name = "oplabs";
+      emails = ["yann@oplabs.co"];
+    };
   in {
     personalUser = {
       inherit name githubHandle;
@@ -29,10 +33,24 @@ in {
         persoProfile
       ];
     };
+
+    oplabsUser = {
+      inherit name githubHandle;
+      login = "yann";
+      profiles = [
+        oplabsProfile
+        persoProfile
+      ];
+    };
   };
 
   nebula.userSelector = machine:
-    if machine.features.google
-    then cfg.users.googleUser
+    if machine.features.work
+    then
+      (
+        if machine.features.google
+        then cfg.users.googleUser
+        else cfg.users.oplabsUser
+      )
     else cfg.users.personalUser;
 }

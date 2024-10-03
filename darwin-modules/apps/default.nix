@@ -1,5 +1,6 @@
 {machine, ...}: {
   imports = [
+    ./1password.nix
     ./aerospace.nix
     ./karabiner.nix
     ./music.nix

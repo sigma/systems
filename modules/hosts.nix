@@ -1,5 +1,5 @@
 {
-  nebula.features = ["work" "google" "music"];
+  nebula.features = ["work" "google" "oplabs" "music"];
 
   nebula.hosts = let
     cloudshellCmd = proj: "/usr/bin/env DEVSHELL_PROJECT_ID=${proj} bash -l";
@@ -33,6 +33,13 @@
       system = "aarch64-darwin";
       remotes = [pdev csp];
       features = ["managed" "mac" "music"];
+    };
+
+    ash = {
+      name = "ash.local";
+      system = "aarch64-darwin";
+      remotes = [pdev csp];
+      features = ["managed" "laptop" "mac" "work" "oplabs" "music"];
     };
 
     pdev = {
