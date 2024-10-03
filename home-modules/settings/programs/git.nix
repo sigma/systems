@@ -229,6 +229,7 @@
         condition = "hasconfig:remote.*.url:git@github.com:kubernetes/**";
         contents = {
           user.email = "${user.email}";
+          commit.gpgsign = true;
         };
         contentSuffix = "k8s";
       }
