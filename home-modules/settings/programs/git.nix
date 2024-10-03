@@ -199,6 +199,17 @@
 
         contentSuffix = "id";
       }
+      {
+        contents = {
+          "gpg" = {
+            format = "ssh";
+          };
+          "gpg.ssh" = {
+            defaultKeyCommand = "sh -c 'echo key::$(ssh-add -L)'";
+          };
+        };
+        contentSuffix = "signing";
+      }
       # auth tokens and the likes, stored outside of nix
       {
         path = "${config.home.homeDirectory}/.gitconfig.private";
