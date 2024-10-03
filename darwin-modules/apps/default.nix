@@ -18,6 +18,7 @@
     "soundsource"
     "visual-studio-code"
     "whatsapp"
+    "yubico-yubikey-manager"
   ];
 
   programs = {
