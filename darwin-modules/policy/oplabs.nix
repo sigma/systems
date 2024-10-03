@@ -1,6 +1,7 @@
 {
   lib,
   machine,
+  user,
   ...
 }:
 with lib; {
@@ -13,5 +14,19 @@ with lib; {
     internalKeyboardID = {
       is_keyboard = true;
     };
+  };
+
+  home-manager.users.${user.login}.programs.git = {
+    # make sure to use the right email for work repos.
+    includes = [
+      {
+        condition = "hasconfig:remote.*.url:git@github.com:oplabspbc/**";
+        contents = {
+          user.email = "${user.email}";
+          commit.gpgsign = true;
+        };
+        contentSuffix = "oplabs";
+      }
+    ];
   };
 }

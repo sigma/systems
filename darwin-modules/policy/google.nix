@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  user,
   ...
 }: {
   # those files are handled by corp and will be reverted anyway, so
@@ -21,6 +22,29 @@
   environment.systemPackages = [
     pkgs.gitGoogle
   ];
+  home-manager.users.${user.login}.programs.git = {
+    package = pkgs.gitGoogle;
+
+    # <ake sure to use the right email for google internal repos and k8s ones.
+    # Also make sure to sign k8s commits
+    includes = [
+      {
+        condition = "hasconfig:remote.*.url:sso://**";
+        contents = {
+          user.email = "${user.email}";
+        };
+        contentSuffix = "gob";
+      }
+      {
+        condition = "hasconfig:remote.*.url:git@github.com:kubernetes/**";
+        contents = {
+          user.email = "${user.email}";
+          commit.gpgsign = true;
+        };
+        contentSuffix = "k8s";
+      }
+    ];
+  };
 
   # The following are disallowed on corp machines
   programs.tailscale.enable = lib.mkForce false;

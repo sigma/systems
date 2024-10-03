@@ -1,16 +1,11 @@
 {
   config,
-  pkgs,
   lib,
   machine,
   user,
   ...
 }: {
   enable = true;
-  package =
-    if machine.features.google
-    then pkgs.gitGoogle
-    else pkgs.git;
 
   aliases = {
     ldiff = "difftool -t latex";
@@ -52,188 +47,168 @@
 
   lfs.enable = true;
 
-  includes =
-    [
-      # defaults
-      {
-        contents = {
-          core = {
-            deltaBaseCacheLimit = "128m";
-          };
-
-          colomn = {
-            ui = "auto";
-          };
-
-          color = {
-            diff = "auto";
-            status = "auto";
-            branch = "auto";
-            ui = "auto";
-          };
-
-          "color.branch" = {
-            current = "yellow reverse";
-            local = "yellow";
-            remote = "green";
-          };
-
-          "color.diff" = {
-            meta = "yellow bold";
-            frag = "magenta bold";
-            old = "red bold";
-            new = "green bold";
-          };
-
-          "color.status" = {
-            added = "yellow";
-            changed = "green";
-            untracked = "cyan";
-          };
-
-          branch = {
-            autosetupmerge = true;
-            sort = "-committerdate";
-          };
-
-          diff = {
-            mnemonicPrefix = true;
-            renames = true;
-          };
-
-          "difftool.latex" = {
-            cmd = "git-latexdiff \"$LOCAL\" \"$REMOTE\"";
-          };
-
-          "diff.lisp" = {
-            xfuncname = "^(((;;;+ )|\\(|([ \t]+\\(((cl-|el-patch-)?def(un|var|macro|method|custom)|gb/))).*)$";
-          };
-
-          "diff.org" = {
-            xfuncname = "^(\\*+ +.*)$";
-          };
-
-          difftool = {
-            prompt = false;
-          };
-
-          log = {
-            abbrevCommit = true;
-            follow = true;
-          };
-
-          merge = {
-            conflictstyle = "zdiff3";
-          };
-
-          rebase = {
-            autosquash = true;
-            updateRefs = true;
-          };
-
-          pull = {
-            rebase = "merges";
-          };
-
-          push = {
-            default = "matching";
-            followTags = true;
-          };
-
-          init = {
-            defaultBranch = "main";
-            templateDir = "${config.home.homeDirectory}/.git-template";
-          };
-
-          gitreview = {
-            remote = "origin";
-          };
-
-          ghq = {
-            root = "${config.home.homeDirectory}/src";
-          };
-
-          http = {
-            cookiefile = "${config.home.homeDirectory}/.gitcookies";
-          };
-
-          rerere = {
-            autoUpdate = true;
-            enabled = true;
-          };
-
-          tag = {
-            sort = "version:refname";
-          };
-
-          versionsort = {
-            prereleaseSuffix = [
-              "-pre"
-              ".pre"
-              "-beta"
-              ".beta"
-              "-rc"
-              ".rc"
-            ];
-          };
+  includes = [
+    # defaults
+    {
+      contents = {
+        core = {
+          deltaBaseCacheLimit = "128m";
         };
 
-        contentSuffix = "defaults";
-      }
-      # id-related
-      {
-        contents = let
-          profileEmail = name: let
-            prof = builtins.head (builtins.filter (prof: prof.name == name) user.profiles);
-          in
-            builtins.head prof.emails;
-        in {
-          user.name = "${user.name}";
-          # default to personal email. We'll override in work repos
-          user.email = "${profileEmail "perso"}";
-
-          github.user = "${user.githubHandle}";
-          # force-use ssh for my own github repos
-          url."ssh://git@github.com/${user.githubHandle}/".insteadOf = "https://github.com/${user.githubHandle}/";
+        colomn = {
+          ui = "auto";
         };
 
-        contentSuffix = "id";
-      }
-      {
-        contents = {
-          "gpg" = {
-            format = "ssh";
-          };
-          "gpg.ssh" = {
-            defaultKeyCommand = "sh -c 'echo key::$(ssh-add -L)'";
-          };
+        color = {
+          diff = "auto";
+          status = "auto";
+          branch = "auto";
+          ui = "auto";
         };
-        contentSuffix = "signing";
-      }
-      # auth tokens and the likes, stored outside of nix
-      {
-        path = "${config.home.homeDirectory}/.gitconfig.private";
-      }
-    ]
-    ++ lib.optionals machine.features.google [
-      {
-        condition = "hasconfig:remote.*.url:sso://**";
-        contents = {
-          user.email = "${user.email}";
+
+        "color.branch" = {
+          current = "yellow reverse";
+          local = "yellow";
+          remote = "green";
         };
-        contentSuffix = "gob";
-      }
-    ]
-    ++ lib.optionals machine.features.work [
-      {
-        condition = "hasconfig:remote.*.url:git@github.com:kubernetes/**";
-        contents = {
-          user.email = "${user.email}";
-          commit.gpgsign = true;
+
+        "color.diff" = {
+          meta = "yellow bold";
+          frag = "magenta bold";
+          old = "red bold";
+          new = "green bold";
         };
-        contentSuffix = "k8s";
-      }
-    ];
+
+        "color.status" = {
+          added = "yellow";
+          changed = "green";
+          untracked = "cyan";
+        };
+
+        branch = {
+          autosetupmerge = true;
+          sort = "-committerdate";
+        };
+
+        diff = {
+          mnemonicPrefix = true;
+          renames = true;
+        };
+
+        "difftool.latex" = {
+          cmd = "git-latexdiff \"$LOCAL\" \"$REMOTE\"";
+        };
+
+        "diff.lisp" = {
+          xfuncname = "^(((;;;+ )|\\(|([ \t]+\\(((cl-|el-patch-)?def(un|var|macro|method|custom)|gb/))).*)$";
+        };
+
+        "diff.org" = {
+          xfuncname = "^(\\*+ +.*)$";
+        };
+
+        difftool = {
+          prompt = false;
+        };
+
+        log = {
+          abbrevCommit = true;
+          follow = true;
+        };
+
+        merge = {
+          conflictstyle = "zdiff3";
+        };
+
+        rebase = {
+          autosquash = true;
+          updateRefs = true;
+        };
+
+        pull = {
+          rebase = "merges";
+        };
+
+        push = {
+          default = "matching";
+          followTags = true;
+        };
+
+        init = {
+          defaultBranch = "main";
+          templateDir = "${config.home.homeDirectory}/.git-template";
+        };
+
+        gitreview = {
+          remote = "origin";
+        };
+
+        ghq = {
+          root = "${config.home.homeDirectory}/src";
+        };
+
+        http = {
+          cookiefile = "${config.home.homeDirectory}/.gitcookies";
+        };
+
+        rerere = {
+          autoUpdate = true;
+          enabled = true;
+        };
+
+        tag = {
+          sort = "version:refname";
+        };
+
+        versionsort = {
+          prereleaseSuffix = [
+            "-pre"
+            ".pre"
+            "-beta"
+            ".beta"
+            "-rc"
+            ".rc"
+          ];
+        };
+      };
+
+      contentSuffix = "defaults";
+    }
+    # id-related
+    {
+      contents = let
+        profileEmail = name: let
+          prof = builtins.head (builtins.filter (prof: prof.name == name) user.profiles);
+        in
+          builtins.head prof.emails;
+      in {
+        user.name = "${user.name}";
+        # default to personal email. We'll override in work repos
+        user.email = "${profileEmail "perso"}";
+
+        github.user = "${user.githubHandle}";
+        # force-use ssh for my own github repos
+        url."ssh://git@github.com/${user.githubHandle}/".insteadOf = "https://github.com/${user.githubHandle}/";
+      };
+
+      contentSuffix = "id";
+    }
+    {
+      contents = {
+        "gpg" = {
+          format = "ssh";
+        };
+        "gpg.ssh" = {
+          defaultKeyCommand = "sh -c 'echo key::$(ssh-add -L)'";
+        };
+      };
+      contentSuffix = "signing";
+    }
+    # auth tokens and the likes, stored outside of nix
+    {
+      path = "${config.home.homeDirectory}/.gitconfig.private";
+    }
+  ];
 
   attributes = [
     "*.lisp  diff=lisp"
