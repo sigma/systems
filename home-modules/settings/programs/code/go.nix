@@ -1,5 +1,14 @@
-{...}: {
+{pkgs, ...}: {
   userSettings = {
+    "go.alternateTools" = {
+      "go" = "${pkgs.go}/bin/go";
+      "gopls" = "${pkgs.gopls}/bin/gopls";
+      "dlv" = "${pkgs.delve}/bin/dlv";
+      "gomodifytags" = "${pkgs.gomodifytags}/bin/gomodifytags";
+      "gotests" = "${pkgs.gotests}/bin/gotests";
+      "impl" = "${pkgs.impl}/bin/impl";
+      "staticcheck" = "${pkgs.go-tools}/bin/staticcheck";
+    };
     "go.autocompleteUnimportedPackages" = true;
     "go.coverageDecorator" = {
       "type" = "gutter";

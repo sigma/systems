@@ -23,6 +23,7 @@ in
     ./code/custom.nix
     ./code/go.nix
     ./code/git.nix
+    ./code/k8s.nix
     ./code/nix.nix
     ./code/bazel.nix
   ])
