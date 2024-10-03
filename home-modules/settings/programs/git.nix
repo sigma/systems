@@ -212,6 +212,8 @@
         };
         contentSuffix = "gob";
       }
+    ]
+    ++ lib.optionals machine.features.work [
       {
         condition = "hasconfig:remote.*.url:git@github.com:kubernetes/**";
         contents = {
