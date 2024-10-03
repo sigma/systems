@@ -47,10 +47,7 @@ final: prev: let
     ${final.coreutils}/bin/cp -f ${icon} nextstep/Cocoa/Emacs.base/Contents/Resources/Emacs.icns
   '';
 in {
-  emacs = prev.emacs29.overrideAttrs (oldAttrs: {
-    postPatch = oldAttrs.postPatch + iconPhase;
-    patches = oldAttrs.patches ++ emacs29Patches;
-  });
+  emacs = prev.emacs29;
 
   emacs-unstable = prev.emacs-unstable.overrideAttrs (oldAttrs: {
     postPatch = oldAttrs.postPatch + iconPhase;
