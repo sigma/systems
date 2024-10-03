@@ -31,16 +31,18 @@ in
         }
       ];
 
-      home-manager.users.${user.login} = {
+      home-manager.users.${user.login} = let
+        secretiveSocket = "/Users/${user.login}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh";
+      in {
         programs.ssh = mkIf cfg.globalAgentIntegration {
           extraConfig = ''
-            IdentityAgent /Users/${user.login}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh
+            IdentityAgent ${secretiveSocket}
           '';
         };
 
         programs.zsh = mkIf cfg.zshIntegration {
           initExtra = ''
-            export SSH_AUTH_SOCK=/Users/${user.login}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh
+            export SSH_AUTH_SOCK=${secretiveSocket}
           '';
         };
       };
