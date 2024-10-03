@@ -11,6 +11,7 @@
       modules = [./code/module.nix] ++ modules;
       specialArgs = {
         inherit config pkgs lib machine user;
+        extSet = pkgs.forVSCodeVersion pkgs.vscode.version;
       };
     })
     .config;
@@ -21,6 +22,7 @@ in
   }
   // (makeProfile [
     ./code/custom.nix
+    ./code/emacs.nix
     ./code/go.nix
     ./code/git.nix
     ./code/k8s.nix

@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  extSet,
+  ...
+}: {
   userSettings = {
     "editor.cursorBlinking" = "solid";
     "editor.cursorSurroundingLines" = 5;
@@ -116,10 +120,6 @@
     }
 
     {
-      "key" = "ctrl+s";
-      "command" = "findJump.activate";
-    }
-    {
       "key" = "cmd+`";
       "command" = "workbench.action.focusPanel";
     }
@@ -130,15 +130,32 @@
     }
   ];
 
-  extensions = [
-    (pkgs.vscode-utils.buildVscodeMarketplaceExtension
-      {
-        mktplcRef = {
-          name = "sigmapack";
-          publisher = "sigma";
-          version = "0.3.1";
-          sha256 = "sha256-72AtcslGGCjvD1n6qV9g+Gyf9IX76H0f3Jkbm9ITMp4=";
-        };
-      })
-  ];
+  extensions =
+    (with extSet.vscode-marketplace; [
+      fill-labs.dependi
+      dustypomerleau.rust-syntax
+      ms-toolsai.jupyter-keymap
+      ms-toolsai.jupyter-renderers
+      ms-toolsai.vscode-jupyter-cell-tags
+      ms-toolsai.vscode-jupyter-slideshow
+      ms-toolsai.jupyter
+      ms-python.debugpy
+      ms-python.python
+      ms-python.vscode-pylance
+      ms-vscode-remote.remote-containers
+      ms-vscode-remote.remote-ssh
+      ms-vscode-remote.remote-ssh-edit
+      ms-vscode.remote-explorer
+      ms-vscode.remote-repositories
+      ms-vscode.remote-server
+      zhuangtongfa.material-theme
+      vscode-icons-team.vscode-icons
+      esbenp.prettier-vscode
+      ms-vscode.vscode-speech
+      tamasfe.even-better-toml
+      shd101wyy.markdown-preview-enhanced
+    ])
+    ++ (with extSet.vscode-marketplace-release; [
+      rust-lang.rust-analyzer
+    ]);
 }

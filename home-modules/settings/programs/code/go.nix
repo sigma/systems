@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  extSet,
+  ...
+}: {
   userSettings = {
     "go.alternateTools" = {
       "go" = "${pkgs.go}/bin/go";
@@ -38,4 +42,8 @@
     };
     "go.toolsManagement.autoUpdate" = true;
   };
+
+  extensions = with extSet.vscode-marketplace; [
+    golang.go
+  ];
 }
