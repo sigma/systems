@@ -15,13 +15,17 @@
       "command" = "magit.status";
     }
     {
-      "key" = "ctrl+s";
+      "key" = "ctrl+;";
       "command" = "findJump.activate";
     }
     {
-      "key" = "ctrl+s";
+      "key" = "ctrl+;";
       "command" = "findJump.activateWithSelection";
       "when" = "editorHasSelection";
+    }
+    {
+      "key" = "enter";
+      "command" = "-emacs-mcx.isearchExit";
     }
   ];
 }
