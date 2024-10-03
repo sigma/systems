@@ -23,9 +23,11 @@ in
   // (makeProfile [
     ./code/custom.nix
     ./code/emacs.nix
+    ./code/format.nix
     ./code/go.nix
     ./code/git.nix
     ./code/k8s.nix
     ./code/nix.nix
+    ./code/python.nix
     ./code/bazel.nix
   ])

@@ -5,6 +5,14 @@
     "git.allowForcePush" = true;
     "git.confirmForcePush" = false;
     "git.enableSmartCommit" = true;
+
+    "github.copilot.editor.enableAutoCompletions" = true;
+    "github.copilot.enable" = {
+      "*" = true;
+      "plaintext" = false;
+      "markdown" = false;
+      "scminput" = false;
+    };
   };
 
   extensions =

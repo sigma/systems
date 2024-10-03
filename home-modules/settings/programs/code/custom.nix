@@ -4,6 +4,8 @@
   ...
 }: {
   userSettings = {
+    "diffEditor.ignoreTrimWhitespace" = false;
+
     "editor.cursorBlinking" = "solid";
     "editor.cursorSurroundingLines" = 5;
     "editor.fontFamily" = "Fira Code, Menlo, Monaco, 'Courier New', monospace";
@@ -34,13 +36,7 @@
       ];
     };
 
-    "github.copilot.editor.enableAutoCompletions" = true;
-    "github.copilot.enable" = {
-      "*" = true;
-      "plaintext" = false;
-      "markdown" = false;
-      "scminput" = false;
-    };
+    "files.autoSave" = "onFocusChange";
 
     "telemetry.telemetryLevel" = "off";
 
@@ -61,23 +57,8 @@
       "*.ipynb" = "jupyter-notebook";
     };
 
-    "files.autoSave" = "onFocusChange";
-    "diffEditor.ignoreTrimWhitespace" = false;
     "vsicons.dontShowNewVersionMessage" = true;
-    "[typescript]" = {
-      "editor.defaultFormatter" = "esbenp.prettier-vscode";
-    };
-    "[jsonc]" = {
-      "editor.defaultFormatter" = "esbenp.prettier-vscode";
-    };
-    "[yaml]" = {
-      "editor.defaultFormatter" = "redhat.vscode-yaml";
-    };
-    "[javascript]" = {
-      "editor.defaultFormatter" = "esbenp.prettier-vscode";
-    };
-    "redhat.telemetry.enabled" = false;
-    "python.languageServer" = "Default";
+
     "cursor.cpp.disabledLanguages" = [
       "plaintext"
       "markdown"
@@ -134,14 +115,6 @@
     (with extSet.vscode-marketplace; [
       fill-labs.dependi
       dustypomerleau.rust-syntax
-      ms-toolsai.jupyter-keymap
-      ms-toolsai.jupyter-renderers
-      ms-toolsai.vscode-jupyter-cell-tags
-      ms-toolsai.vscode-jupyter-slideshow
-      ms-toolsai.jupyter
-      ms-python.debugpy
-      ms-python.python
-      ms-python.vscode-pylance
       ms-vscode-remote.remote-containers
       ms-vscode-remote.remote-ssh
       ms-vscode-remote.remote-ssh-edit
@@ -150,7 +123,6 @@
       ms-vscode.remote-server
       zhuangtongfa.material-theme
       vscode-icons-team.vscode-icons
-      esbenp.prettier-vscode
       ms-vscode.vscode-speech
       tamasfe.even-better-toml
       shd101wyy.markdown-preview-enhanced
