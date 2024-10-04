@@ -11,6 +11,7 @@
 
   homebrew.casks = [
     "alfred"
+    "elgato-stream-deck"
     "google-chrome"
     "notion"
     "notion-calendar"
