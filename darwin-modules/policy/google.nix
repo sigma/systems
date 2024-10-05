@@ -2,7 +2,6 @@
   lib,
   pkgs,
   user,
-  machine,
   ...
 }:
 with lib; {
