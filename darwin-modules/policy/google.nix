@@ -26,7 +26,7 @@ with lib; {
   home-manager.users.${user.login}.programs.git = {
     package = pkgs.gitGoogle;
 
-    # <ake sure to use the right email for google internal repos and k8s ones.
+    # Make sure to use the right email for google internal repos and k8s ones.
     # Also make sure to sign k8s commits
     includes = [
       {
