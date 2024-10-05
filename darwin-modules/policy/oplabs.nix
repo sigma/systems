@@ -27,4 +27,19 @@ with lib; {
       }
     ];
   };
+
+  programs.aerospace.workspaces = mkBefore [
+    {
+      name = "W"; # Work
+      display = "main";
+    }
+  ];
+  programs.aerospace.windowRules = mkBefore [
+    {
+      appId = "com.google.Chrome";
+      layout = "tiling";
+      windowTitleRegexSubstring = ".*\\(OPLabs\\)$";
+      workspace = "W";
+    }
+  ];
 }
