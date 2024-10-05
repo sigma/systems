@@ -25,7 +25,6 @@
 
   programs = {
     aerospace.enable = true;
-    karabiner.enable = machine.features.laptop;
     music.enable = machine.features.music;
     orbstack.enable = true;
     secretive.enable = true;

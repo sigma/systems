@@ -4,19 +4,11 @@
   ...
 }: let
   helpers = import ./helpers.nix {inherit lib;};
-  kinesisPedalID = {
-    vendor_id = 10730;
-    product_id = 256;
-    is_keyboard = true;
-  };
-  keychronID = {
-    vendor_id = 13364;
-    is_keyboard = true;
-  };
+  internalKeyboardID = helpers.kbdToID cfg.internalKeyboard;
   forInternalID = [
     {
       type = "device_if";
-      identifiers = [cfg.internalKeyboardID];
+      identifiers = [internalKeyboardID];
     }
   ];
   remap = from: to:
@@ -33,31 +25,34 @@ in {
     {
       name = "Default profile";
       selected = true;
-      devices = [
-        {
-          identifiers = cfg.internalKeyboardID;
-          simple_modifications = [
-            (remap "left_option" "left_command")
-            (remap "left_command" "left_option")
-            (remap "right_command" "right_option")
-            (remap "right_option" "right_command")
-          ];
-          fn_function_keys = [
-            (remap "f6" "f16") # "do not disturb" key is not supported natively by Karabiner. Remap to f16, and rely on the keyboard settings being aligned.
-          ];
-        }
-        {
-          identifiers = kinesisPedalID;
-          simple_modifications = [
-            (remap_fn "left_option" "dictation")
-          ];
-        }
-        {
-          # ignore my keychron keyboards, they're configured natively.
-          identifiers = keychronID;
-          ignore = true;
-        }
-      ];
+      devices =
+        [
+          {
+            identifiers = internalKeyboardID;
+            simple_modifications = [
+              (remap "left_option" "left_command")
+              (remap "left_command" "left_option")
+              (remap "right_command" "right_option")
+              (remap "right_option" "right_command")
+            ];
+            fn_function_keys = [
+              (remap "f6" "f16") # "do not disturb" key is not supported natively by Karabiner. Remap to f16, and rely on the keyboard settings being aligned.
+            ];
+          }
+        ]
+        ++ lib.optionals (cfg.pedal != null) [
+          {
+            identifiers = helpers.kbdToID cfg.pedal;
+            simple_modifications = [
+              (remap_fn "left_option" "dictation")
+            ];
+          }
+        ]
+        ++ (map (kbd: {
+            identifiers = helpers.kbdToID kbd;
+            ignore = true;
+          })
+          cfg.ignoreKeyboards);
 
       complex_modifications = {
         rules = [

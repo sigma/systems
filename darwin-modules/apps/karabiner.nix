@@ -7,18 +7,44 @@
 with lib; let
   cfg = config.programs.karabiner;
   cfgTxt = builtins.toJSON (import ./karabiner/config.nix {inherit lib cfg;});
+
+  kbdType = types.submodule {
+    options = {
+      vendorId = mkOption {
+        type = types.nullOr types.int;
+        default = null;
+        description = "The vendor ID of the keyboard";
+      };
+      productId = mkOption {
+        type = types.nullOr types.int;
+        default = null;
+        description = "The product ID of the keyboard";
+      };
+    };
+  };
 in {
   options.programs.karabiner = {
     enable = mkEnableOption "Karabiner";
 
-    internalKeyboardID = mkOption {
-      type = types.raw;
-      description = "The internal keyboard ID for a laptop";
+    internalKeyboard = mkOption {
+      type = kbdType;
+      description = "The internal keyboard for a laptop";
       default = {
-        vendor_id = 1452;
-        product_id = 835;
-        is_keyboard = true;
+        vendorId = 1452;
+        productId = 835;
       };
+    };
+
+    pedal = mkOption {
+      type = types.nullOr kbdType;
+      description = "The pedal keyboard";
+      default = null;
+    };
+
+    ignoreKeyboards = mkOption {
+      type = types.listOf kbdType;
+      description = "The keyboards to ignore";
+      default = [];
     };
   };
 

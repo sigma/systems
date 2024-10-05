@@ -2,8 +2,10 @@
   lib,
   pkgs,
   user,
+  machine,
   ...
-}: {
+}:
+with lib; {
   # those files are handled by corp and will be reverted anyway, so
   # skip the warning about them being overwritten.
   environment.etc = {
@@ -47,11 +49,11 @@
   };
 
   # The following are disallowed on corp machines
-  programs.tailscale.enable = lib.mkForce false;
-  services.tailscale.enable = lib.mkForce false;
-  security.pam.enableSudoTouchIdAuth = lib.mkForce false;
-  programs.orbstack.enable = lib.mkForce false;
+  programs.tailscale.enable = mkForce false;
+  services.tailscale.enable = mkForce false;
+  security.pam.enableSudoTouchIdAuth = mkForce false;
+  programs.orbstack.enable = mkForce false;
   # allow secretive, but don't interfere with gnubby auth
-  programs.secretive.globalAgentIntegration = lib.mkForce false;
-  programs.secretive.zshIntegration = lib.mkForce false;
+  programs.secretive.globalAgentIntegration = mkForce false;
+  programs.secretive.zshIntegration = mkForce false;
 }
