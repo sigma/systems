@@ -86,6 +86,12 @@
       ])
       rust-analyzer-nightly
 
+      # k8s/yaml helpers
+      jsonnet
+      jsonnet-bundler
+      tanka
+      yq
+
       # network tools
       autossh
       lftp
