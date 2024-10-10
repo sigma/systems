@@ -99,6 +99,7 @@
       comma
 
       nix
+      devenv
 
       # windows helpers
       innoextract
