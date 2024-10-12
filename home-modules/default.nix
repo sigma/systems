@@ -12,12 +12,11 @@
     ./cloud-shell.nix
     ./darwin-apps.nix
     ./editors
-    ./fish-tide.nix
     ./google.nix
     ./mailsetup.nix
     ./settings
+    ./shells
     ./tmuxp.nix
-    ./zinit.nix
   ];
 
   programs =
