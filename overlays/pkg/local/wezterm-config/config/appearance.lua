@@ -10,7 +10,8 @@ return {
    webgpu_preferred_adapter = gpu_adapters:pick_best(),
 
    -- color scheme
-   colors = colors,
+   color_scheme = 'Subliminal',
+   -- colors = colors,
 
    -- scrollbar
    enable_scroll_bar = true,
