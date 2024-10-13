@@ -44,6 +44,12 @@ in
             "java"
             "ruby"
             "go"
+            "gcloud"
+            "kubectl"
+            "distrobox"
+            "toolbox"
+            "terraform"
+            "aws"
             "nix_shell"
           ];
         };

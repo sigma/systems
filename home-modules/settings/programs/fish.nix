@@ -14,6 +14,7 @@
       inherit (pkgs.fishPlugins.${name}) src;
     }) ([
         "autopair"
+        "plugin-git"
       ]
       ++ lib.optionals config.programs.fzf.enable [
         "fzf-fish"
@@ -37,29 +38,19 @@
     "--transient=No"
   ];
 
-  tideRightSegments = [
-    "status"
-    "cmd_duration"
-    "context"
-    "jobs"
-    "direnv"
-    "newline" # move languages to the second line
-    "node"
-    "python"
-    "rustc"
-    "java"
-    "ruby"
-    "go"
-    "gcloud"
-    "kubectl"
-    "distrobox"
-    "toolbox"
-    "terraform"
-    "aws"
-    "nix_shell"
-  ];
+  shellAliases =
+    lib.optionalAttrs config.programs.bat.enable {
+      "cat" = "bat -pp";
+    }
+    // lib.optionalAttrs config.programs.thefuck.enable {
+      "f" = "fuck";
+    };
 
-  shellAliases = lib.optionalAttrs config.programs.bat.enable {
-    "cat" = "bat -pp";
+  functions = {
+    "mkcd" = {
+      body = "mkdir -p $argv[1] && cd $argv[1]";
+      description = "Create a directory and navigate into it";
+      wraps = "mkdir";
+    };
   };
 }
