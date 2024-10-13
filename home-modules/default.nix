@@ -52,13 +52,18 @@
       bump2version
 
       # console tools
+      broot
       btop
+      chafa
       coreutils
       d2
+      hexyl
       htop
       jsonnet
       less
       pinfo
+      procs
+      ripgrep
       rm-improved
       safe-rm
       silver-searcher

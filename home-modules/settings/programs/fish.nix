@@ -9,16 +9,28 @@
   preferAbbrs = true;
 
   plugins =
-    builtins.map (name: {
-      inherit name;
-      inherit (pkgs.fishPlugins.${name}) src;
-    }) ([
-        "autopair"
-        "plugin-git"
-      ]
-      ++ lib.optionals config.programs.fzf.enable [
-        "fzf-fish"
-      ]);
+    (builtins.map (name: {
+        inherit name;
+        inherit (pkgs.fishPlugins.${name}) src;
+      }) ([
+          "autopair"
+          "plugin-git"
+        ]
+        ++ lib.optionals config.programs.fzf.enable [
+          "fzf-fish"
+          "fifc"
+        ]))
+    ++ [
+      {
+        name = "fish-abbreviation-tips";
+        src = pkgs.fetchFromGitHub {
+          owner = "gazorby";
+          repo = "fish-abbreviation-tips";
+          rev = "0.7.0";
+          sha256 = "sha256-F1t81VliD+v6WEWqj1c1ehFBXzqLyumx5vV46s/FZRU=";
+        };
+      }
+    ];
 
   useTide = true;
 
@@ -47,6 +59,7 @@
     };
 
   functions = {
+    "fish_greeting" = "";
     "mkcd" = {
       body = "mkdir -p $argv[1] && cd $argv[1]";
       description = "Create a directory and navigate into it";
