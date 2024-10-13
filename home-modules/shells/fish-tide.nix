@@ -66,10 +66,9 @@ in
             echo "Configuring tide prompt"
             # Suppress output so that the screen isn't cleared
             ${pkgs.fish}/bin/fish -c "tide configure --auto ${flags} > /dev/null 2>&1"
-
             echo "Setting tide prompt segments"
-            ${pkgs.fish}/bin/fish -c "set -Ux _tide_left_items ${builtins.concatStringsSep " " cfg.tideLeftSegments}"
-            ${pkgs.fish}/bin/fish -c "set -Ux _tide_right_items ${builtins.concatStringsSep " " cfg.tideRightSegments}"
+            ${pkgs.fish}/bin/fish -c "set -Ux tide_left_prompt_items ${builtins.concatStringsSep " " cfg.tideLeftSegments}"
+            ${pkgs.fish}/bin/fish -c "set -Ux tide_right_prompt_items ${builtins.concatStringsSep " " cfg.tideRightSegments}"
           '';
       };
     };

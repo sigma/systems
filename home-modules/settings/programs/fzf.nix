@@ -3,6 +3,9 @@
 in {
   enable = true;
 
+  # Disable fish integration to avoid conflicts with fzf-fish
+  enableFishIntegration = false;
+
   defaultOptions = [
     "--multi"
     "--inline-info"
