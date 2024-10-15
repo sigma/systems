@@ -3,24 +3,22 @@
   lib,
   config,
   ...
-}: {
+}: let
+  normalizePlugin = plugin:
+    if builtins.typeOf plugin == "string"
+    then {
+      name = plugin;
+      inherit (pkgs.fishPlugins.${plugin}) src;
+    }
+    else plugin;
+in {
   enable = true;
 
   preferAbbrs = true;
 
-  plugins =
-    (builtins.map (name: {
-        inherit name;
-        inherit (pkgs.fishPlugins.${name}) src;
-      }) ([
-          "autopair"
-          "plugin-git"
-        ]
-        ++ lib.optionals config.programs.fzf.enable [
-          "fzf-fish"
-          "fifc"
-        ]))
-    ++ [
+  plugins = builtins.map normalizePlugin ([
+      "autopair"
+      "plugin-git"
       {
         name = "fish-abbreviation-tips";
         src = pkgs.fetchFromGitHub {
@@ -30,7 +28,11 @@
           sha256 = "sha256-F1t81VliD+v6WEWqj1c1ehFBXzqLyumx5vV46s/FZRU=";
         };
       }
-    ];
+    ]
+    ++ lib.optionals config.programs.fzf.enable [
+      "fzf-fish"
+      "fifc"
+    ]);
 
   useTide = true;
 
