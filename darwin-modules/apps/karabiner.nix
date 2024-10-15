@@ -1,12 +1,13 @@
 {
   config,
   lib,
+  machine,
   user,
   ...
 }:
 with lib; let
   cfg = config.programs.karabiner;
-  cfgTxt = builtins.toJSON (import ./karabiner/config.nix {inherit lib cfg;});
+  cfgTxt = builtins.toJSON (import ./karabiner/config.nix {inherit lib cfg machine user;});
 
   kbdType = types.submodule {
     options = {
