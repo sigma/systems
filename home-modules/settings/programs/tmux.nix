@@ -1,126 +1,84 @@
-{
-  pkgs,
-  lib,
-  user,
-  machine,
-  ...
-}: {
+{pkgs, ...}: {
   enable = true;
+  sesh.enable = true;
 
-  aggressiveResize = false;
-  clock24 = true;
-
-  extraConfig = ''
-    set-window-option -g automatic-rename on
-    set -g bell-action none
-
-    bind i choose-window
-
-    bind m setw monitor-activity
-
-    bind y setw force-width 81
-    bind u setw force-width 0
-
-    bind D detach \; lock
-    bind N neww \; splitw -d
-
-    bind '~' split-window "exec htop"
-    bind / command-prompt -p man: "splitw 'exec man %%'"
-
-    # shorten command delay
-    set -sg escape-time 1
-
-    # reload ~/.tmux.conf using PREFIX r
-    bind r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
-
-    # explicitly enable mouse control
-    set -g mouse on
-
-    # ----------------------
-    # Status Bar
-    # -----------------------
-    set-option -g status on                # turn the status bar on
-    #set -g status-utf8 on                  # set utf-8 for the status bar
-    set -g status-interval 5               # set update frequencey (default 15 seconds)
-    set -g status-justify centre           # center window list for clarity
-    # set-option -g status-position top    # position the status bar at top of screen
-
-    # visual notification of activity in other windows
-    setw -g monitor-activity on
-    set -g visual-activity on
-
-    # show host name and IP address on left side of status bar
-    set -g status-left-length 70
-    set -g status-left "#[fg=green]: #h : #[fg=yellow]#(ifconfig en0 | grep 'inet ' | awk '{print \"en0 \" $2}') #(ifconfig en1 | grep 'inet ' | awk '{print \"en1 \" $2}') #[fg=red]#(ifconfig tun0 | grep 'inet ' | awk '{print \"vpn \" $2}') "
-
-    # show session name, window & pane number, date and time on right side of
-    # status bar
-    set -g status-right-length 60
-    set -g status-right "#[fg=blue]#S #I:#P #[fg=yellow]:: %d %b %Y #[fg=green]:: %l:%M %p"
-  '';
-
-  newSession = true;
-
-  plugins = with pkgs.tmuxPlugins; [
-    sessionist
-    pain-control
-    yank
-    copycat
-    resurrect
-    continuum
+  sesh.sessions = [
     {
-      plugin = sidebar;
-      extraConfig = ''
-        set -g @sidebar-tree-width '60'
-        set -g @sidebar-tree-command 'tree -C'
-        set -g @sidebar-key-t 'ranger,left,60,focus'
-      '';
+      name = "Downloads 📥";
+      path = "~/Downloads";
+      startupScript = "${pkgs.eza}/bin/eza";
     }
-    logging
-    open
-    fpp
-    power-theme
   ];
 
+  aggressiveResize = true;
+  baseIndex = 1;
+  clock24 = true;
+  escapeTime = 0;
+  historyLimit = 50000;
+  keyMode = "emacs";
+  newSession = true;
+  sensibleOnTop = true;
+  shell = "${pkgs.fish}/bin/fish";
   shortcut = "z";
   terminal = "screen-256color";
 
-  tmuxp.enable = true;
-  tmuxp.workspaces = let
-    g3Workspace = name: props:
-      props
-      // {
-        start_directory = "/google/src/cloud/${user.login}/${name}/google3";
-      };
-  in
+  extraConfig = ''
+    set -g detach-on-destroy off
+    set -g renumber-windows on
+    set -g set-clipboard on
+    set -g pane-active-border-style 'fg=magenta,bg=default'
+    set -g pane-border-style 'fg=brightblack,bg=default'
+  '';
+
+  plugins = with pkgs.tmuxPlugins; [
+    yank
+    resurrect
+
     {
-      nix = {
-        start_directory = ''''${HOME}/.config/nix'';
-        windows = [
-          {
-            window_name = "main";
-            panes = [
-              {
-                focus = true;
-              }
-            ];
-          }
-        ];
-      };
+      plugin = continuum;
+      extraConfig = ''
+        set -g @continuum-restore 'on'
+      '';
     }
-    // lib.optionalAttrs machine.features.google {
-      mars = g3Workspace "mars" {
-        windows = [
-          {
-            window_name = "main";
-            panes = [
-              {
-                focus = true;
-              }
-              "blank"
-            ];
-          }
-        ];
-      };
-    };
+
+    tmux-thumbs
+    tmux-fzf
+    fzf-tmux-url
+
+    {
+      plugin = catppuccin;
+      extraConfig = ''
+        set -g @catppuccin_window_left_separator ""
+        set -g @catppuccin_window_right_separator " "
+        set -g @catppuccin_window_middle_separator " █"
+
+        set -g @catppuccin_window_number_position "right"
+        set -g @catppuccin_window_default_fill "number"
+        set -g @catppuccin_window_default_text "#W"
+        set -g @catppuccin_window_current_fill "number"
+        set -g @catppuccin_window_current_text "#W#{?window_zoomed_flag,(),}"
+
+        set -g @catppuccin_status_modules_right "session"
+        set -g @catppuccin_status_modules_left ""
+
+        set -g @catppuccin_status_left_separator  " "
+        set -g @catppuccin_status_right_separator " "
+        set -g @catppuccin_status_right_separator_inverse "no"
+        set -g @catppuccin_status_fill "icon"
+        set -g @catppuccin_status_connect_separator "no"
+      '';
+    }
+
+    {
+      plugin = tmux-floax;
+      extraConfig = ''
+        set -g @floax-width '80%'
+        set -g @floax-height '80%'
+        set -g @floax-border-color 'magenta'
+        set -g @floax-text-color 'blue'
+        set -g @floax-bind 'p'
+        set -g @floax-change-path 'true'
+      '';
+    }
+  ];
 }
