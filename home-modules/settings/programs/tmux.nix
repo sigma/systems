@@ -16,7 +16,7 @@
   escapeTime = 0;
   historyLimit = 50000;
   keyMode = "emacs";
-  newSession = true;
+  newSession = false;
   sensibleOnTop = true;
   shell = "${pkgs.fish}/bin/fish";
   shortcut = "z";
