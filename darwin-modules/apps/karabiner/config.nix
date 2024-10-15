@@ -1,6 +1,7 @@
 {
   lib,
   cfg,
+  machine,
   ...
 }: let
   helpers = import ./helpers.nix {inherit lib;};
@@ -31,7 +32,8 @@ in {
       selected = true;
       inherit virtual_hid_keyboard;
       devices =
-        [
+        # on a laptop, remap modifiers for the internal keyboard.
+        lib.optionals (machine.features.laptop) [
           {
             identifiers = internalKeyboardID;
             simple_modifications = [
@@ -60,7 +62,9 @@ in {
           cfg.ignoreKeyboards);
 
       complex_modifications = {
-        rules = [
+        # on a laptop, make control a hyper key.
+        # Also setup some tap keys.
+        rules = lib.optionals (machine.features.laptop) [
           {
             description = "Make control a hyper key";
             manipulators = [
