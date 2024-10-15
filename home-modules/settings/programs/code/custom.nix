@@ -12,6 +12,7 @@
     "editor.fontLigatures" = "'cv01', 'cv02', 'cv04', 'ss01', 'ss05', 'cv18', 'ss03', 'cv16', 'cv31'";
     "editor.fontSize" = 14;
     "editor.minimap.enabled" = false;
+    "editor.stickyScroll.enabled" = false;
     "editor.suggestSelection" = "first";
     "editor.tokenColorCustomizations" = {
       "textMateRules" = [
@@ -48,13 +49,17 @@
     "terminal.integrated.inheritEnv" = false;
 
     "workbench.activityBar.orientation" = "vertical";
-    "workbench.colorTheme" = "Monokai Dimmed";
+    "workbench.colorTheme" = "Subliminal Next";
     "workbench.iconTheme" = "vscode-icons";
     "workbench.editor.enablePreviewFromQuickOpen" = false;
     "workbench.editor.enablePreview" = false;
     "workbench.editor.revealIfOpen" = true;
     "workbench.editorAssociations" = {
       "*.ipynb" = "jupyter-notebook";
+    };
+    "workbench.colorCustomizations" = {
+      "editorLineNumber.foreground" = "#545454";
+      "editorLineNumber.activeForeground" = "#ababab";
     };
 
     "vsicons.dontShowNewVersionMessage" = true;
@@ -64,6 +69,10 @@
       "markdown"
       "scminput"
     ];
+
+    "zenMode.fullScreen" = false;
+    "zenMode.showTabs" = "none";
+    "zenMode.hideLineNumbers" = false;
   };
 
   keybindings = [
@@ -121,7 +130,7 @@
       ms-vscode.remote-explorer
       ms-vscode.remote-repositories
       ms-vscode.remote-server
-      zhuangtongfa.material-theme
+      konradkeska.subliminal-next
       vscode-icons-team.vscode-icons
       ms-vscode.vscode-speech
       tamasfe.even-better-toml
