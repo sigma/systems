@@ -16,6 +16,12 @@ in
         description = "Whether to integrate with the global agent.";
       };
 
+      fishIntegration = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether to integrate with the fish shell.";
+      };
+
       zshIntegration = mkOption {
         type = types.bool;
         default = true;
@@ -37,6 +43,12 @@ in
         programs.ssh = mkIf cfg.globalAgentIntegration {
           extraConfig = ''
             IdentityAgent ${secretiveSocket}
+          '';
+        };
+
+        programs.fish = mkIf cfg.fishIntegration {
+          shellInitLast = ''
+            set -gx SSH_AUTH_SOCK ${secretiveSocket}
           '';
         };
 
