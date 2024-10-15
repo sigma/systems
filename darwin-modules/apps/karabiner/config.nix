@@ -20,11 +20,16 @@
       inherit from to;
       keyType = "consumer_key_code";
     };
+  virtual_hid_keyboard = {
+    keyboard_type_v2 = "ansi";
+  };
 in {
+  inherit virtual_hid_keyboard;
   profiles = [
     {
       name = "Default profile";
       selected = true;
+      inherit virtual_hid_keyboard;
       devices =
         [
           {
