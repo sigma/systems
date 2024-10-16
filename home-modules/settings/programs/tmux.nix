@@ -1,14 +1,5 @@
 {pkgs, ...}: {
   enable = true;
-  sesh.enable = true;
-
-  sesh.sessions = [
-    {
-      name = "Downloads 📥";
-      path = "~/Downloads";
-      startupScript = "${pkgs.eza}/bin/eza";
-    }
-  ];
 
   aggressiveResize = true;
   baseIndex = 1;

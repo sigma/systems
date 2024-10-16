@@ -5,10 +5,10 @@
   ...
 }:
 with lib; let
-  cfg = config.programs.tmux.sesh;
+  cfg = config.programs.sesh;
 in {
   options = {
-    programs.tmux.sesh = {
+    programs.sesh = {
       enable = mkEnableOption "Enable sesh";
 
       package = mkOption {
