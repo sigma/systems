@@ -41,7 +41,14 @@
       '';
     }
 
-    tmux-thumbs
+    {
+      plugin = tmux-thumbs;
+      extraConfig = ''
+        set -g @thumbs-osc52 1
+        set -g @thumbs-unique enabled
+        set -g @thumbs-reverse enabled
+      '';
+    }
     tmux-fzf
     fzf-tmux-url
 
