@@ -16,7 +16,6 @@
   remap = {
     from,
     to,
-    keyType ? "key_code",
   }: let
     fromBlock =
       if builtins.isString from
@@ -24,7 +23,7 @@
       else from;
     toBlock =
       if builtins.isString to
-      then [{${keyType} = to;}]
+      then [{key_code = to;}]
       else to;
   in {
     from = fromBlock;

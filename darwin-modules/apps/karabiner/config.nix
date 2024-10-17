@@ -6,20 +6,15 @@
 }: let
   helpers = import ./helpers.nix {inherit lib;};
   internalKeyboardID = helpers.kbdToID cfg.internalKeyboard;
-  forInternalID = [
+  forID = id: [
     {
       type = "device_if";
-      identifiers = [internalKeyboardID];
+      identifiers = [id];
     }
   ];
   remap = from: to:
     helpers.remap {
       inherit from to;
-    };
-  remap_fn = from: to:
-    helpers.remap {
-      inherit from to;
-      keyType = "consumer_key_code";
     };
   virtual_hid_keyboard = {
     keyboard_type_v2 = "ansi";
@@ -50,8 +45,13 @@ in {
         ++ lib.optionals (cfg.pedal != null) [
           {
             identifiers = helpers.kbdToID cfg.pedal;
-            simple_modifications = [
-              (remap_fn "left_option" "dictation")
+            simple_modifications = let
+              dictation = [{consumer_key_code = "dictation";}];
+            in [
+              (remap "left_option" dictation)
+              # sometimes the pedal is recognized as a mouse.
+              (remap {pointing_button = "button1";} dictation)
+              (remap {pointing_button = "button2";} "left_command")
             ];
           }
         ]
@@ -61,79 +61,102 @@ in {
           })
           cfg.ignoreKeyboards);
 
-      complex_modifications = {
-        # on a laptop, make control a hyper key.
-        # Also setup some tap keys.
-        rules = lib.optionals (machine.features.laptop) [
+      complex_modifications = let
+        hyper = [
           {
-            description = "Make control a hyper key";
-            manipulators = [
-              {
-                from = {
-                  key_code = "left_control";
-                  modifiers = {
-                    optional = [
-                      "any"
-                    ];
-                  };
-                };
-                to = [
-                  {
-                    key_code = "left_option";
-                    modifiers = [
-                      "left_command"
-                      "left_control"
-                    ];
-                  }
-                ];
-                type = "basic";
-                conditions = forInternalID;
-              }
-            ];
-          }
-
-          {
-            description = "Shift_L tap -> '(', Shift_R tap -> ')'";
-            manipulators = [
-              (helpers.tapManipulator {
-                from = "left_shift";
-                tap = helpers.keyDef {
-                  key_code = "9";
-                  modifiers = ["left_shift"];
-                };
-                hold = "left_shift";
-                conditions = forInternalID;
-              })
-              (helpers.tapManipulator {
-                from = "right_shift";
-                tap = helpers.keyDef {
-                  key_code = "0";
-                  modifiers = ["right_shift"];
-                };
-                hold = "right_shift";
-                conditions = forInternalID;
-              })
-            ];
-          }
-
-          {
-            description = "Caps Lock / Enter tap for Enter, hold for Control";
-            manipulators = [
-              (helpers.tapManipulator {
-                from = "caps_lock";
-                tap = "return_or_enter";
-                hold = "left_control";
-                conditions = forInternalID;
-              })
-              (helpers.tapManipulator {
-                from = "return_or_enter";
-                tap = "return_or_enter";
-                hold = "right_control";
-                conditions = forInternalID;
-              })
+            key_code = "left_option";
+            modifiers = [
+              "left_command"
+              "left_control"
             ];
           }
         ];
+      in {
+        # on a laptop, make control a hyper key.
+        # Also setup some tap keys.
+        rules =
+          lib.optionals (machine.features.laptop) [
+            {
+              description = "Make control a hyper key";
+              manipulators = [
+                {
+                  from = {
+                    key_code = "left_control";
+                    modifiers = {
+                      optional = [
+                        "any"
+                      ];
+                    };
+                  };
+                  to = hyper;
+                  type = "basic";
+                  conditions = forID internalKeyboardID;
+                }
+              ];
+            }
+
+            {
+              description = "Shift_L tap -> '(', Shift_R tap -> ')'";
+              manipulators = [
+                (helpers.tapManipulator {
+                  from = "left_shift";
+                  tap = helpers.keyDef {
+                    key_code = "9";
+                    modifiers = ["left_shift"];
+                  };
+                  hold = "left_shift";
+                  conditions = forID internalKeyboardID;
+                })
+                (helpers.tapManipulator {
+                  from = "right_shift";
+                  tap = helpers.keyDef {
+                    key_code = "0";
+                    modifiers = ["right_shift"];
+                  };
+                  hold = "right_shift";
+                  conditions = forID internalKeyboardID;
+                })
+              ];
+            }
+
+            {
+              description = "Caps Lock / Enter tap for Enter, hold for Control";
+              manipulators = [
+                (helpers.tapManipulator {
+                  from = "caps_lock";
+                  tap = "return_or_enter";
+                  hold = "left_control";
+                  conditions = forID internalKeyboardID;
+                })
+                (helpers.tapManipulator {
+                  from = "return_or_enter";
+                  tap = "return_or_enter";
+                  hold = "right_control";
+                  conditions = forID internalKeyboardID;
+                })
+              ];
+            }
+          ]
+          ++ lib.optionals (cfg.pedal != null) [
+            {
+              description = "Make pedalbutton 3 a hyper key";
+              manipulators = [
+                {
+                  from = {
+                    pointing_button = "button3";
+                    modifiers = {
+                      optional = [
+                        "any"
+                      ];
+                    };
+                  };
+                  to = hyper;
+                  type = "basic";
+                  conditions = forID (helpers.kbdToID cfg.pedal);
+                }
+              ];
+            }
+          ];
       };
     }
   ];
