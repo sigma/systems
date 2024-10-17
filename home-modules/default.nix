@@ -12,7 +12,6 @@
     ./cloud-shell.nix
     ./darwin-apps.nix
     ./editors
-    ./google.nix
     ./mailsetup.nix
     ./settings
     ./shells

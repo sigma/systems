@@ -15,5 +15,3 @@ typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=black
 typeset -g POWERLEVEL9K_STATUS_OK=false
 
 typeset -g POWERLEVEL9K_DIR_MAX_LENGTH=30%
-
-[[ ! -f ${ROOT}/p10k.google.zsh ]] || source ${ROOT}/p10k.google.zsh

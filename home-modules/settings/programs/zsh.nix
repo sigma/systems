@@ -2,11 +2,7 @@
   pkgs,
   machine,
   ...
-}: let
-  zsh-config = pkgs.zsh-config.override {
-    google = machine.features.google;
-  };
-in {
+}: {
   enable = true;
 
   # dotDir = ".config/zsh";
@@ -98,8 +94,8 @@ in {
   zinit.enable = true;
 
   zinit.pre = ''
-    fpath+=${zsh-config}/functions
-    for plug in ${zsh-config}/*.plugin.zsh; do
+    fpath+=${pkgs.zsh-config}/functions
+    for plug in ${pkgs.zsh-config}/*.plugin.zsh; do
       source $plug
     done
   '';
@@ -202,7 +198,7 @@ zstyle ':fzf-tab:*' switch-group '<' '>'
     {
       name = "romkatv/powerlevel10k";
       light = true;
-      tags = ["depth:1" "lucid" "atload:'source ${zsh-config}/p10k.config.zsh; _p9k_precmd'" "nocd"];
+      tags = ["depth:1" "lucid" "atload:'source ${pkgs.zsh-config}/p10k.config.zsh; _p9k_precmd'" "nocd"];
     }
   ];
 

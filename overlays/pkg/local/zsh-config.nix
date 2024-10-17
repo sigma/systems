@@ -5,7 +5,6 @@
   findutils,
   writeText,
   nix-filter,
-  google ? false,
 }:
 stdenv.mkDerivation {
   pname = "zsh-config";
@@ -15,40 +14,15 @@ stdenv.mkDerivation {
     include = [
       (nix-filter.inDirectory ./zsh-config)
     ];
-    exclude = lib.optionals (!google) [
-      ./zsh-config/google.plugin.zsh
-      ./zsh-config/p10k.google.zsh
-    ];
   };
   dontUnpack = true;
 
   buildPhase = let
-    gcertCookie =
-      if stdenv.system == "x86_64-linux"
-      then "/var/run/ccache/sso-$USER/cookie"
-      else "$HOME/.sso/cookie";
-    hiElement = lib.optionalString google "hi";
-    citcElement = lib.optionalString google "citc";
-    dirElement =
-      if google
-      then "gdir"
-      else "dir";
-    gcertElement = lib.optionalString google "gcert";
     generated = writeText "p10k.generated.config.zsh" ''
-      ${
-        if google
-        then ''
-          typeset -g POWERLEVEL9K_CERT_COOKIE_FILE="${gcertCookie}"
-        ''
-        else ""
-      }
-
       typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-        ${hiElement}
         os_icon
         context
-        ${citcElement}
-        ${dirElement}
+        dir
         vcs
 
         newline
@@ -65,7 +39,6 @@ stdenv.mkDerivation {
 
         newline
 
-        ${gcertElement}
         virtualenv
         anaconda
         pyenv
@@ -100,7 +73,7 @@ stdenv.mkDerivation {
         taskwarrior
       )
 
-      typeset -g POWERLEVEL9K_VCS_BACKENDS=(git hg ${citcElement})
+      typeset -g POWERLEVEL9K_VCS_BACKENDS=(git hg)
     '';
   in ''
     ${coreutils}/bin/cp -R $src/zsh-config/* .
