@@ -23,14 +23,12 @@ elseif platform.is_mac then
       { label = 'Bash', args = { '/run/current-system/sw/bin/bash', '-l' } },
       { label = 'Fish', args = { '/run/current-system/sw/bin/fish', '-l' } },
       { label = 'Nushell', args = { '/run/current-system/sw/bin/nu', '-l' } },
-      { label = 'Zsh', args = { '/run/current-system/sw/bin/zsh', '-l' } },
    }
 elseif platform.is_linux then
    options.default_prog = { 'fish', '-l' }
    options.launch_menu = {
       { label = 'Bash', args = { 'bash', '-l' } },
       { label = 'Fish', args = { 'fish', '-l' } },
-      { label = 'Zsh', args = { 'zsh', '-l' } },
    }
 end
 

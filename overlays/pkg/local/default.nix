@@ -9,6 +9,4 @@ in {
   emacs-config = pkgs.callPackage ./emacs-config.nix params;
 
   wezterm-config = pkgs.callPackage ./wezterm-config.nix params;
-
-  zsh-config = pkgs.callPackage ./zsh-config.nix params;
 }

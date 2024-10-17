@@ -44,7 +44,6 @@
       curl
       direnv
       wget
-      zsh
 
       # build tools
       gnumake

@@ -1,7 +1,6 @@
 {pkgs, ...}: {
   programs.fish.enable = true;
   programs.fish.useBabelfish = true;
-  programs.zsh.enable = true;
 
   environment = with pkgs; {
     systemPackages = [
@@ -13,7 +12,6 @@
     shells = [
       bash
       fish
-      zsh
     ];
   };
 
