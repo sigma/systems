@@ -9,5 +9,6 @@
     ./pam
     ./policy
     ./system.nix
+    ./versions.nix
   ];
 }
