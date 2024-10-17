@@ -10,7 +10,7 @@
     {
       name = "Second Brain 🧠";
       path = "~/org";
-      startupScript = "${pkgs.emacs}/bin/emacs -f org-roam-dailies-goto-today";
+      startupScript = "${pkgs.emacs}/bin/emacs -nw -f org-roam-dailies-goto-today";
     }
   ];
 }
