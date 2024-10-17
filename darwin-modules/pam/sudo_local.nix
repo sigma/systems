@@ -4,9 +4,8 @@
   lib,
   ...
 }:
-with lib; let
+with lib // config.versions.darwin.lib; let
   cfg = config.security.pam.sudo_local;
-  compareTo = config.versions.darwin.compareTo;
 in {
   options.security.pam.sudo_local = {
     entries = mkOption {
@@ -39,7 +38,7 @@ in {
   config = {
     assertions = [
       {
-        assertion = compareTo "14.5" >= 0;
+        assertion = versionAtLeast "14.5";
         message = "security.pam.sudo_local requires MacOS Sonoma (14.5)";
       }
     ];

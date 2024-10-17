@@ -20,10 +20,16 @@ in {
         default = vrs;
       };
 
-      compareTo = mkOption {
-        type = types.functionTo types.int;
-        description = "Function to compare the current version to the provided version";
-        default = builtins.compareVersions cfg.reference;
+      lib = mkOption {
+        type = types.raw;
+        description = "Library functions for version comparison";
+        default = let
+          compareTo = builtins.compareVersions cfg.reference;
+        in {
+          versionAtLeast = version: compareTo version >= 0;
+          versionAtMost = version: compareTo version <= 0;
+          versionEqual = version: compareTo version == 0;
+        };
       };
     };
   };
