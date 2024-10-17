@@ -6,6 +6,7 @@
     ./hid.nix
     ./mac-user.nix
     ./nix.nix
+    ./pam
     ./policy
     ./system.nix
   ];
