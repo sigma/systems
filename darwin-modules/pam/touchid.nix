@@ -31,18 +31,20 @@ in {
       }
     ];
 
-    security.pam.sudo_local.entries = let
-      comment = "security.pam.enableReattachedSudoTouchIdAuth";
-    in [
-      {
-        module = "${cfg.reattachPackage}/lib/pam/pam_reattach.so";
-        inherit comment;
-      }
-      {
-        control = "sufficient";
-        module = "pam_tid.so";
-        inherit comment;
-      }
-    ];
+    security.pam = mkIf cfg.enableReattachedSudoTouchIdAuth {
+      sudo_local.entries = let
+        comment = "security.pam.enableReattachedSudoTouchIdAuth";
+      in [
+        {
+          module = "${cfg.reattachPackage}/lib/pam/pam_reattach.so";
+          inherit comment;
+        }
+        {
+          control = "sufficient";
+          module = "pam_tid.so";
+          inherit comment;
+        }
+      ];
+    };
   };
 }
