@@ -51,7 +51,6 @@ with lib; {
   programs.tailscale.enable = mkForce false;
   services.tailscale.enable = mkForce false;
   security.pam.enableSudoTouchIdAuth = mkForce false;
-  security.pam.enableReattachedSudoTouchIdAuth = mkForce false;
   programs.orbstack.enable = mkForce false;
   # allow secretive, but don't interfere with gnubby auth
   programs.secretive.globalAgentIntegration = mkForce false;
