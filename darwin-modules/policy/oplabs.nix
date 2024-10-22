@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   machine,
   user,
   ...
@@ -12,20 +13,6 @@ with lib; {
     # properly by karabiner. That means I'll have to connect it only to
     # keyboards that are ignored (which fortunately is the case)
     internalKeyboard = mkForce {};
-  };
-
-  home-manager.users.${user.login}.programs.git = {
-    # make sure to use the right email for work repos.
-    includes = [
-      {
-        condition = "hasconfig:remote.*.url:git@github.com:oplabspbc/**";
-        contents = {
-          user.email = "${user.email}";
-          commit.gpgsign = true;
-        };
-        contentSuffix = "oplabs";
-      }
-    ];
   };
 
   programs.aerospace.workspaces = mkBefore [
@@ -42,4 +29,29 @@ with lib; {
       workspace = "W";
     }
   ];
+
+  home-manager.users.${user.login} = {
+    programs.gcloud.enable = mkForce true;
+    programs.gcloud.enableGkeAuthPlugin = mkForce true;
+
+    home.packages = with pkgs; [
+      terraform
+      kubie
+      kubectl
+    ];
+
+    programs.git = {
+      # make sure to use the right email for work repos.
+      includes = [
+        {
+          condition = "hasconfig:remote.*.url:git@github.com:oplabspbc/**";
+          contents = {
+            user.email = "${user.email}";
+            commit.gpgsign = true;
+          };
+          contentSuffix = "oplabs";
+        }
+      ];
+    };
+  };
 }
