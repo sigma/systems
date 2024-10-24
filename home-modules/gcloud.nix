@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   ...
@@ -11,7 +12,7 @@ in {
 
     package = mkOption {
       type = types.package;
-      default = google-cloud-sdk;
+      default = pkgs.google-cloud-sdk;
     };
 
     enableGkeAuthPlugin = mkEnableOption "GKE auth plugin";
