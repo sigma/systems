@@ -27,9 +27,14 @@
     then "true"
     else "false";
 
+  switchToWorkspace = ws:
+    if ws.display != null
+    then "workspace ${ws.name}" # for lettered workspaces, bound to a monitor
+    else "summon-workspace ${ws.name}"; # for numbered workspaces
+
   # Generate workspace keybindings
   workspaceKeybindings = builtins.concatStringsSep "\n" (builtins.map (ws: ''
-      ${mods.primary}-${lib.toLower (builtins.substring 0 1 ws.name)} = 'workspace ${ws.name}'
+      ${mods.primary}-${lib.toLower (builtins.substring 0 1 ws.name)} = '${switchToWorkspace ws}'
       ${mods.secondary}-${lib.toLower (builtins.substring 0 1 ws.name)} = 'move-node-to-workspace ${ws.name}'
     '')
     workspaces);
