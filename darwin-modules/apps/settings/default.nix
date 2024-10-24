@@ -1,6 +1,6 @@
 {machine, ...}: {
   imports = [
-    ./karabiner.nix
+    ./aerospace.nix
   ];
 
   programs = {
