@@ -77,6 +77,7 @@
       # git
       git-review
       pre-commit
+      prs
       tig
 
       # languages
