@@ -1,4 +1,9 @@
-{pkgs, ...}: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   enable = true;
 
   aggressiveResize = true;
@@ -81,7 +86,7 @@
   tmuxp = {
     enable = true;
 
-    workspaces = {
+    workspaces = lib.optionalAttrs (config.programs.gh.enable) {
       "prs" = {
         session_name = "Pull Requests 🔄";
         start_directory = "~/";
