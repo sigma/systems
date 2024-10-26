@@ -27,6 +27,7 @@
       cloudshell.enable = true;
       fd.enable = true;
       gh.enable = true;
+      gh.settings.pager = "${pkgs.delta}/bin/delta";
       gh-dash.enable = true;
       gitui.enable = true;
       jq.enable = true;
