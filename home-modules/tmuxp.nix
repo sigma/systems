@@ -195,8 +195,15 @@ with lib; let
     };
 in {
   options.programs.tmux.tmuxp = {
+    package = mkOption {
+      type = types.package;
+      default = pkgs.tmuxp;
+      description = "The tmuxp package to use.";
+    };
+
     workspaces = mkOption {
       type = types.attrsOf workspace;
+      default = {};
       description = "List of tmuxp workspaces.";
     };
   };

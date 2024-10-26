@@ -11,6 +11,8 @@ in {
     programs.sesh = {
       enable = mkEnableOption "Enable sesh";
 
+      enableTmuxpWorkspaces = mkEnableOption "Enable tmuxp workspaces";
+
       package = mkOption {
         type = types.package;
         default = pkgs.sesh;
@@ -101,5 +103,15 @@ in {
         bind-key "L" run-shell "${sesh} last"
       '';
     };
+
+    programs.sesh.sessions = let
+      tmuxpWorkspace = name: ws: {
+        name = ws.session_name;
+        path = ws.start_directory;
+        startupScript = "${config.programs.tmux.tmuxp.package}/bin/tmuxp load -a ${name}; ${config.programs.tmux.package}/bin/tmux kill-window";
+      };
+      workspaces = config.programs.tmux.tmuxp.workspaces;
+    in
+      mkIf cfg.enableTmuxpWorkspaces (builtins.attrValues (builtins.mapAttrs tmuxpWorkspace workspaces));
   };
 }

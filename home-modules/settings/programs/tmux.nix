@@ -77,4 +77,33 @@
     set -g @catppuccin_status_fill "icon"
     set -g @catppuccin_status_connect_separator "no"
   '';
+
+  tmuxp = {
+    enable = true;
+
+    workspaces = {
+      "prs" = {
+        session_name = "Pull Requests 🔄";
+        start_directory = "~/";
+        windows = [
+          {
+            window_name = "Dashboard";
+            layout = "main-horizontal";
+            options = {
+              "main-pane-height" = "33%";
+            };
+            panes = [
+              {
+                focus = true;
+                shell_command = "exec ${pkgs.prs}/bin/prs -q 'type:pr user-review-requested:@me state:open'";
+              }
+              {
+                shell_command = "exec ${pkgs.prs}/bin/prs -q 'type:pr review-requested:@me -user-review-requested:@me state:open'";
+              }
+            ];
+          }
+        ];
+      };
+    };
+  };
 }

@@ -1,12 +1,8 @@
 {pkgs, ...}: {
   enable = true;
+  enableTmuxpWorkspaces = true;
 
   sessions = [
-    {
-      name = "Downloads 📥";
-      path = "~/Downloads";
-      startupScript = "${pkgs.eza}/bin/eza";
-    }
     {
       name = "Second Brain 🧠";
       path = "~/org";
