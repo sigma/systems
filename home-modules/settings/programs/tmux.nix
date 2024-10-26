@@ -44,30 +44,6 @@
     fzf-tmux-url
 
     {
-      plugin = catppuccin;
-      extraConfig = ''
-        set -g @catppuccin_window_left_separator ""
-        set -g @catppuccin_window_right_separator " "
-        set -g @catppuccin_window_middle_separator " █"
-
-        set -g @catppuccin_window_number_position "right"
-        set -g @catppuccin_window_default_fill "number"
-        set -g @catppuccin_window_default_text "#W"
-        set -g @catppuccin_window_current_fill "number"
-        set -g @catppuccin_window_current_text "#W#{?window_zoomed_flag,(),}"
-
-        set -g @catppuccin_status_modules_right "session"
-        set -g @catppuccin_status_modules_left ""
-
-        set -g @catppuccin_status_left_separator  " "
-        set -g @catppuccin_status_right_separator " "
-        set -g @catppuccin_status_right_separator_inverse "no"
-        set -g @catppuccin_status_fill "icon"
-        set -g @catppuccin_status_connect_separator "no"
-      '';
-    }
-
-    {
       plugin = tmux-floax;
       extraConfig = ''
         set -g @floax-width '80%'
@@ -79,4 +55,25 @@
       '';
     }
   ];
+
+  catppuccin.extraConfig = ''
+    set -g @catppuccin_window_left_separator ""
+    set -g @catppuccin_window_right_separator " "
+    set -g @catppuccin_window_middle_separator " █"
+
+    set -g @catppuccin_window_number_position "right"
+    set -g @catppuccin_window_default_fill "number"
+    set -g @catppuccin_window_default_text "#W"
+    set -g @catppuccin_window_current_fill "number"
+    set -g @catppuccin_window_current_text "#W#{?window_zoomed_flag,(),}"
+
+    set -g @catppuccin_status_modules_right "session"
+    set -g @catppuccin_status_modules_left "null"
+
+    set -g @catppuccin_status_left_separator  " "
+    set -g @catppuccin_status_right_separator " "
+    set -g @catppuccin_status_right_separator_inverse "no"
+    set -g @catppuccin_status_fill "icon"
+    set -g @catppuccin_status_connect_separator "no"
+  '';
 }

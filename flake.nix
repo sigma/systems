@@ -68,6 +68,9 @@
     pre-commit-hooks-nix.inputs.nixpkgs.follows = "nixpkgs";
     pre-commit-hooks-nix.inputs.nixpkgs-stable.follows = "nixos-stable";
     pre-commit-hooks-nix.inputs.flake-compat.follows = "flake-compat";
+
+    # Theme
+    catppuccin.url = "github:catppuccin/nix";
   };
 
   outputs = inputs:

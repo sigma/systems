@@ -13,10 +13,12 @@
     ../home-modules
     inputs.chemacs2nix.homeModule
     inputs.nix-index-database.hmModules.nix-index
+    inputs.catppuccin.homeManagerModules.catppuccin
   ];
 
   nebula.nixosModules = [
     ../nixos-modules
+    inputs.catppuccin.nixosModules.catppuccin
   ];
 
   nebula.darwinModules = [

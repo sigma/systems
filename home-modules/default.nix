@@ -20,6 +20,8 @@
     ./tmuxp.nix
   ];
 
+  catppuccin.enable = true;
+
   programs =
     {
       cloudshell.enable = true;

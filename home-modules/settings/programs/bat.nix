@@ -1,7 +1,6 @@
 {pkgs, ...}: {
   enable = true;
   config = {
-    theme = "OneHalfDark";
     style = "numbers,changes,header";
     italic-text = "always";
     map-syntax = [
