@@ -100,6 +100,8 @@
       jsonnet-bundler
       tanka
       yq
+      kubectl
+      kubeswitch
 
       # network tools
       autossh
