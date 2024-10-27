@@ -52,6 +52,20 @@ in {
     "--transient=No"
   ];
 
+  # manual overrides for catppuccin-like colors
+  tideColorOverrides = {
+    "pwd_bg_color" = "CBA6F7";
+    "pwd_color_anchors" = "000000";
+    "pwd_color_dirs" = "000000";
+    "git_bg_color" = "A6E3A1";
+    "git_bg_color_unstable" = "F9E2AF";
+    "git_bg_color_urgent" = "F38BA8";
+    "nix_shell_bg_color" = "94E2D5";
+    "direnv_bg_color" = "FAB387";
+    "direnv_bg_color_denied" = "F38BA8";
+    "cmd_duration_bg_color" = "F5E0DC";
+  };
+
   shellAliases =
     lib.optionalAttrs config.programs.bat.enable {
       "cat" = "bat -pp";

@@ -53,6 +53,11 @@ in
             "nix_shell"
           ];
         };
+
+        tideColorOverrides = mkOption {
+          type = types.attrsOf types.str;
+          default = {};
+        };
       };
     };
 
@@ -67,15 +72,17 @@ in
       home.activation = lib.optionalAttrs (cfg.useTide && cfg.tideOptions != []) {
         configureTide = let
           flags = builtins.concatStringsSep " " cfg.tideOptions;
+          colorOverrides = builtins.concatStringsSep "\n" (lib.mapAttrsToList (k: v: ''${pkgs.fish}/bin/fish -c "set -Ux tide_${k} ${v}"'') cfg.tideColorOverrides);
         in
-          lib.hm.dag.entryAfter ["writeBoundary"] ''
-            echo "Configuring tide prompt"
-            # Suppress output so that the screen isn't cleared
-            ${pkgs.fish}/bin/fish -c "tide configure --auto ${flags} > /dev/null 2>&1"
-            echo "Setting tide prompt segments"
-            ${pkgs.fish}/bin/fish -c "set -Ux tide_left_prompt_items ${builtins.concatStringsSep " " cfg.tideLeftSegments}"
-            ${pkgs.fish}/bin/fish -c "set -Ux tide_right_prompt_items ${builtins.concatStringsSep " " cfg.tideRightSegments}"
-          '';
+          lib.hm.dag.entryAfter ["writeBoundary"] (''
+              echo "Configuring tide prompt"
+              # Suppress output so that the screen isn't cleared
+              ${pkgs.fish}/bin/fish -c "tide configure --auto ${flags} > /dev/null 2>&1"
+              echo "Setting tide prompt segments"
+              ${pkgs.fish}/bin/fish -c "set -Ux tide_left_prompt_items ${builtins.concatStringsSep " " cfg.tideLeftSegments}"
+              ${pkgs.fish}/bin/fish -c "set -Ux tide_right_prompt_items ${builtins.concatStringsSep " " cfg.tideRightSegments}"
+            ''
+            + lib.optionalString (cfg.tideColorOverrides != {}) colorOverrides);
       };
     };
   }
