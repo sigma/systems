@@ -60,6 +60,7 @@
       chafa
       coreutils
       d2
+      glow
       hexyl
       htop
       jsonnet
@@ -86,6 +87,7 @@
       # languages
       go
       python3
+      poetry
       (fenix.complete.withComponents [
         "cargo"
         "clippy"
