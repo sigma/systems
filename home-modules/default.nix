@@ -32,6 +32,7 @@
       gitui.enable = true;
       jq.enable = true;
       lieer.enable = true;
+      ripgrep.enable = true;
       thefuck.enable = true;
     }
     // lib.optionalAttrs machine.features.work {
@@ -67,7 +68,6 @@
       less
       pinfo
       procs
-      ripgrep
       rm-improved
       safe-rm
       silver-searcher
