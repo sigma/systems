@@ -88,6 +88,7 @@
       go
       python3
       poetry
+      black
       (fenix.complete.withComponents [
         "cargo"
         "clippy"
