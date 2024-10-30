@@ -122,6 +122,9 @@
 
       # windows helpers
       innoextract
+
+      # keyboard QMK tools
+      mdloader
     ]
     ++ lib.optionals machine.features.mac [
       m-cli # useful macOS CLI commands
