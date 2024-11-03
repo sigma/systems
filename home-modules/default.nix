@@ -50,10 +50,14 @@
       wget
 
       # build tools
+      circleci-cli
       gnumake
+      goreleaser
+      just
       ninja
       master.buck2
       bump2version
+      parallel
 
       # console tools
       broot
