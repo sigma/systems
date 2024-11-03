@@ -12,16 +12,6 @@
 <<elisp-header>>
 #+end_src
 
-** OS detection
-:PROPERTIES:
-:ID:       05647178-d190-4be9-9f74-b1b4f2c7659a
-:END:
-I need to detect Google flavor of OS, and this needs to gate loading some
-modules, so let's define this early.
-#+begin_src emacs-lisp :tangle init.el
-(defconst IS-GLINUX (and IS-LINUX (file-exists-p "/etc/google-emacs")))
-#+end_src
-
 ** Modules activation
 :PROPERTIES:
 :ID:       2e411e0c-af9a-4e48-916c-d76c09834c43
@@ -136,7 +126,6 @@ This is the default Doom Emacs =init.el=, tuned to my liking.
 
        :os
        (:if IS-MAC macos)  ; improve compatibility with macOS
-       (:if IS-GLINUX google)
        (tty +osc)               ; improve the terminal Emacs experience
 
        :lang
@@ -380,43 +369,6 @@ the purpose.
 * Modules
 I have a small number of private packages to make available to Doom Emacs.
 
-** Google
-:PROPERTIES:
-:ID:       5c392da2-a16c-4210-8e71-57abafb19c5d
-:END:
-#+begin_src emacs-lisp :tangle modules/os/google/packages.el :comments no
-<<elisp-header>>
-#+end_src
-#+begin_src emacs-lisp :tangle modules/os/google/config.el :comments no
-<<elisp-header>>
-#+end_src
-
-The =google= package is used to make the standard glinux google-emacs
-configuration available. As such, mark it as built-in cause there's no way to
-install it externally.
-
-#+begin_src emacs-lisp :tangle modules/os/google/packages.el
-(package! google :built-in 'prefer)
-#+end_src
-
-A small hack is required to pretend =google-emacs= is loading the code.
-
-#+begin_src emacs-lisp :tangle modules/os/google/config.el
-(unless (and (boundp 'debian-emacs-flavor) (eq debian-emacs-flavor 'google-emacs))
-  (use-package! google
-    :preface
-    (when IS-GLINUX
-      (let ((load-path (append load-path '("/usr/local/share/google-emacs/site-lisp"))))
-        (load "/usr/share/emacsen-common/debian-startup.el")
-        (load "/usr/lib/emacs-google-config/site-start.el")))
-    :init
-    (setq google-emacs-version 'something)
-    :config
-    (when (fboundp 'google-emacs-support-show-upgrade-mode)
-      (google-emacs-support-show-upgrade-mode 0))
-    (makunbound 'google-emacs-version)))
-#+end_src
-
 ** Private config
 #+begin_src emacs-lisp :tangle modules/config/private/config.el :comments no
 <<elisp-header>>
@@ -469,14 +421,12 @@ knowledge base using =org-roam=, which I also export using custom formats.
 
 (defvar short-link-regexp
   (rx bow
-      (or (seq (or "go" "screen" "screenshot")
+      (or (seq "go"
                ?/ alnum (* (any alnum ?/ ?- ?_ ?# ?? ?& ?=)))
-          (seq (or "tap") ?/ alnum (* (any alnum ?/ ?- ?_ ?# ?? ?& ?= ?.)))
-          (seq (or "groups" "g" "cs" "who") ?/ letter (* (any alnum ?- ?_)))
-          (seq (or "b" "cr" "cl" "ariane" "o" "t" "yaqs") ?/
+          (seq "b" ?/
                (+ (any (?0 . ?9)))))
       eow)
-  "A regular expression matching Google-style links (go/, cr/, etc.")
+  "A regular expression matching short links (go/, etc.")
 
 (after! org
   (setq org-log-into-drawer t
@@ -698,25 +648,7 @@ I need a few Roam extensions beyond what's built into Doom.
 ,#+category: ${title}
 ,#+filetags: :doc:
 ")
-     :unnarrowed t)
-    ("p" "person" plain "
-- link :: [[https://who.corp.google.com/${ldap}][who/${ldap}]]
-- history :: [[https://whostory.corp.google.com/${ldap}][whos/${ldap}]]
-%?"
-     :target
-     (file+head
-      "%<%Y%m%d%H%M%S>-${slug}.org"
-      ":PROPERTIES:
-:ROAM_ALIASES: @{ldap}
-:ROAM_REFS: http://who/${ldap}
-:END:
-,#+setupfile: ../_setup_roam.org
-,#+title: ${title}
-,#+category: ${title}
-,#+filetags: :person:
-")
-     :unnarrowed t)
-    ))
+     :unnarrowed t)))
 
 ;;;###autoload
 (defun yrh/org-roam-capture-dwim ()

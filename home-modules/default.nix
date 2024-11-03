@@ -13,7 +13,6 @@
     ./darwin-apps.nix
     ./editors
     ./gcloud.nix
-    ./google.nix
     ./mailsetup.nix
     ./settings
     ./shells

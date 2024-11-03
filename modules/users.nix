@@ -3,11 +3,8 @@
 in {
   nebula.users = let
     name = "Yann Hodique";
+    login = "yann";
     githubHandle = "sigma";
-    googleProfile = {
-      name = "work";
-      emails = ["yhodique@google.com" "yrh@google.com"];
-    };
     persoProfile = {
       name = "perso";
       emails = ["yann.hodique@gmail.com" "yann@hodique.info"];
@@ -18,25 +15,14 @@ in {
     };
   in {
     personalUser = {
-      inherit name githubHandle;
-      login = "yann";
+      inherit name githubHandle login;
       profiles = [
-        persoProfile
-      ];
-    };
-
-    googleUser = {
-      inherit name githubHandle;
-      login = "yhodique";
-      profiles = [
-        googleProfile
         persoProfile
       ];
     };
 
     oplabsUser = {
-      inherit name githubHandle;
-      login = "yann";
+      inherit name githubHandle login;
       profiles = [
         oplabsProfile
         persoProfile
@@ -46,11 +32,6 @@ in {
 
   nebula.userSelector = machine:
     if machine.features.work
-    then
-      (
-        if machine.features.google
-        then cfg.users.googleUser
-        else cfg.users.oplabsUser
-      )
+    then cfg.users.oplabsUser
     else cfg.users.personalUser;
 }

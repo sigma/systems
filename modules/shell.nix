@@ -36,15 +36,7 @@
       ''
       else "";
 
-    systemBootstrap =
-      if isDarwin
-      then ""
-      else ''
-        if [ -d /google ]; then
-          [ ! -e /etc/default/ciderd ] && sudo apt install ciderd
-          [ ! -x /usr/bin/google-emacs ] && sudo apt install google-emacs
-        fi
-      '';
+    systemBootstrap = "";
 
     systemBuild =
       if isDarwin
@@ -63,44 +55,6 @@
       else ''
         ${pkgs.nixFlakes}/bin/nix run ".#home-manager" ${nixFlags} --  switch --flake ".#`hostname -s`"
       '';
-
-    package = pkgs.stdenv.mkDerivation {
-      pname = "nix-cfg-pkg";
-
-      version = "dev";
-
-      src = inputs.nix-filter.lib {
-        root = ../.;
-      };
-
-      dontUnpack = true;
-
-      buildPhase = ''
-        ${pkgs.coreutils}/bin/true
-      '';
-
-      installPhase = ''
-        mkdir -p $out/bin
-
-        cat > $out/bin/publish <<EOF
-        #!/bin/bash
-        set -e
-
-        function publish() {
-          if [ -d "\$2" ]; then
-            ${pkgs.rsync}/bin/rsync -av --chmod=Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r -p --exclude='auth/' --delete "\$1" "\$2"
-          else
-            echo "\$2 does not exist"
-            return 1
-          fi
-        }
-        cd $src
-        publish . /google/src/cloud/yhodique/personal/google3/experimental/users/yhodique/config/nix-systems
-        EOF
-
-        chmod a+x $out/bin/publish
-      '';
-    };
   in {
     pre-commit.settings.hooks = {
       markdownlint.enable = true;
@@ -166,13 +120,6 @@
           category = "system";
           command = ''
             ${systemBuild}
-          '';
-        }
-        {
-          name = "publish";
-          category = "dev";
-          command = ''
-            ${package}/bin/publish
           '';
         }
       ];
