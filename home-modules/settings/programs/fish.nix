@@ -31,7 +31,6 @@ in {
     ]
     ++ lib.optionals config.programs.fzf.enable [
       "fzf-fish"
-      "fifc"
     ]);
 
   useTide = true;
