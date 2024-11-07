@@ -44,7 +44,7 @@ with lib; {
       # make sure to use the right email for work repos.
       includes = [
         {
-          condition = "hasconfig:remote.*.url:git@github.com:oplabspbc/**";
+          condition = "hasconfig:remote.*.url:git@github.com:ethereum-optimism/**";
           contents = {
             user.email = "${user.email}";
             commit.gpgsign = true;
