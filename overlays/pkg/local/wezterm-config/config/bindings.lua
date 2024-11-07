@@ -155,7 +155,7 @@ local mouse_bindings = {
 
 return {
    disable_default_key_bindings = true,
-   leader = { key = 'Space', mods = mod.SUPER_REV },
+   send_composed_key_when_right_alt_is_pressed = true,
    keys = keys,
    key_tables = key_tables,
    mouse_bindings = mouse_bindings,
