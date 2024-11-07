@@ -64,12 +64,6 @@
 
     "vsicons.dontShowNewVersionMessage" = true;
 
-    "cursor.cpp.disabledLanguages" = [
-      "plaintext"
-      "markdown"
-      "scminput"
-    ];
-
     "zenMode.fullScreen" = false;
     "zenMode.showTabs" = "none";
     "zenMode.hideLineNumbers" = false;

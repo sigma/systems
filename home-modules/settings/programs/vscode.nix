@@ -21,6 +21,7 @@ in
     mutableExtensionsDir = true;
   }
   // (makeProfile [
+    ./code/cursor.nix
     ./code/custom.nix
     ./code/emacs.nix
     ./code/format.nix
