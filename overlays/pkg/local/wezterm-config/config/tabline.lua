@@ -2,20 +2,30 @@ local wezterm = require('wezterm')
 
 local accent_colors = wezterm.color.get_builtin_schemes()["Catppuccin Mocha"]
 
+local mantle = accent_colors.background
+local surface0 = mantle
+local blue = accent_colors.ansi[5]
+local text = accent_colors.foreground
+local yellow = accent_colors.ansi[4]
+local green = accent_colors.ansi[3]
+local pink = accent_colors.ansi[6]
+local red = accent_colors.ansi[1]
+
 local tabline_opts = {
   options = {
     icons_enabled = true,
     theme = "Catppuccin Mocha",
     color_overrides = {
-      normal_mode = {
-        a = {},
-        b = { fg = "#A3C3AD" },
-        c = {},
+      font_resize_mode = {
+        a = { fg = mantle, bg = yellow },
+        b = { fg = yellow, bg = surface0 },
+        c = { fg = text, bg = mantle },
       },
-      tab = {
-        active = { bg = "#30463C" },
-        inactive = {},
-      }
+      pane_resize_mode = {
+        a = { fg = mantle, bg = green },
+        b = { fg = green, bg = surface0 },
+        c = { fg = text, bg = mantle },
+      },
     },
     section_separators = {
       left = wezterm.nerdfonts.ple_right_half_circle_thick,
@@ -31,7 +41,14 @@ local tabline_opts = {
     },
   },
   sections = {
-    tabline_a = { },
+    tabline_a = {
+      { 
+        "mode",
+        cond = function(window)
+          return window:active_key_table() ~= nil
+        end,
+      },
+    },
     tabline_b = { },
     tabline_c = { },
     tab_active = {

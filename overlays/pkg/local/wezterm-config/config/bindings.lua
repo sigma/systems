@@ -105,9 +105,9 @@ local keys = {
    -- resizes fonts
    {
       key = 'f',
-      mods = 'LEADER',
+      mods = mod.SUPER_REV,
       action = act.ActivateKeyTable({
-         name = 'resize_font',
+         name = 'font_resize_mode',
          one_shot = false,
          timemout_miliseconds = 1000,
       }),
@@ -115,9 +115,9 @@ local keys = {
    -- resize panes
    {
       key = 'p',
-      mods = 'LEADER',
+      mods = mod.SUPER_REV,
       action = act.ActivateKeyTable({
-         name = 'resize_pane',
+         name = 'pane_resize_mode',
          one_shot = false,
          timemout_miliseconds = 1000,
       }),
@@ -126,7 +126,7 @@ local keys = {
 
 -- stylua: ignore
 local key_tables = {
-   resize_font = {
+   font_resize_mode = {
       { key = 'LeftArrow',      action = act.IncreaseFontSize },
       { key = 'RightArrow',     action = act.DecreaseFontSize },
       { key = 'DownArrow',      action = act.ResetFontSize },
@@ -134,7 +134,7 @@ local key_tables = {
       { key = 'Escape',         action = 'PopKeyTable' },
       { key = 'q',              action = 'PopKeyTable' },
    },
-   resize_pane = {
+   pane_resize_mode = {
       { key = 'UpArrow',      action = act.AdjustPaneSize({ 'Up', 1 }) },
       { key = 'DownArrow',    action = act.AdjustPaneSize({ 'Down', 1 }) },
       { key = 'LeftArrow',    action = act.AdjustPaneSize({ 'Left', 1 }) },
