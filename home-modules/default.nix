@@ -56,6 +56,7 @@
       ninja
       master.buck2
       bump2version
+      mprocs
       parallel
 
       # console tools
@@ -65,6 +66,7 @@
       coreutils
       d2
       glow
+      gum
       hexyl
       htop
       jsonnet
@@ -75,7 +77,8 @@
       safe-rm
       silver-searcher
       skim
-      tldr
+      soft-serve
+      tealdeer
       tree
 
       # editors
