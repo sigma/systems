@@ -53,6 +53,10 @@
     "workbench.iconTheme" = "vscode-icons";
     "workbench.editor.enablePreviewFromQuickOpen" = false;
     "workbench.editor.enablePreview" = false;
+    "workbench.editor.limit.enabled" = true;
+    "workbench.editor.limit.perEditorGroup" = true;
+    "workbench.editor.limit.value" = 10;
+    "workbench.editor.limit.excludeDirty" = true;
     "workbench.editor.revealIfOpen" = true;
     "workbench.editorAssociations" = {
       "*.ipynb" = "jupyter-notebook";
