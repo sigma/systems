@@ -19,6 +19,8 @@
       34
       33 # Application windows
       35
+      64 # Spotlight Search
+      65
       79 # Move left a space
       80
       81 # Move right a space
