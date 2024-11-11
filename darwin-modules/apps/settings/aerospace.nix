@@ -22,7 +22,6 @@
         {name = "6";}
         {name = "7";}
         {name = "8";}
-        {name = "9";}
         # Named workspaces are assigned to displays
         {
           name = "B"; # Browser
