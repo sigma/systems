@@ -11,8 +11,6 @@
     config,
     ...
   }: let
-    nixFlags = "--experimental-features \"flakes nix-command\"";
-
     isDarwin = pkgs.stdenvNoCC.isDarwin;
 
     systemSetup =
@@ -41,19 +39,19 @@
     systemBuild =
       if isDarwin
       then ''
-        ${pkgs.nixFlakes}/bin/nix build ".#darwinConfigurations.`hostname -s`.system" ${nixFlags}
+        ${pkgs.nix}/bin/nix build ".#darwinConfigurations.`hostname -s`.system"
       ''
       else ''
-        ${pkgs.nixFlakes}/bin/nix run ".#home-manager" ${nixFlags} --  build --flake ".#`hostname -s`"
+        ${pkgs.nix}/bin/nix run ".#home-manager" --  build --flake ".#`hostname -s`"
       '';
 
     systemActivate =
       if isDarwin
       then ''
-        ${pkgs.nixFlakes}/bin/nix run ".#darwin-rebuild" -- switch --flake ".#`hostname -s`"
+        ${pkgs.nix}/bin/nix run ".#darwin-rebuild" -- switch --flake ".#`hostname -s`"
       ''
       else ''
-        ${pkgs.nixFlakes}/bin/nix run ".#home-manager" ${nixFlags} --  switch --flake ".#`hostname -s`"
+        ${pkgs.nix}/bin/nix run ".#home-manager" --  switch --flake ".#`hostname -s`"
       '';
   in {
     pre-commit.settings.hooks = {
@@ -92,9 +90,9 @@
         startup.pre-commit.text = config.pre-commit.installationScript;
       };
 
-      packages = [
-        pkgs.nixFlakes
-        pkgs.nil # for VSCode integration.
+      packages = with pkgs; [
+        nix
+        nil # for VSCode integration.
       ];
 
       commands = [

@@ -20,7 +20,7 @@ darwin-rebuild switch --flake .
 For example:
 
 ```shell
-nix profile install --profile $HOME/.nix-default-profile "nixpkgs#nixFlakes"
+nix profile install --profile $HOME/.nix-default-profile "nixpkgs#nixVersions.stable"
 export PATH=~/.nix-default-profile/bin:$PATH
 nix run ".#home-manager" --  switch --flake ".#glinux"
 ```

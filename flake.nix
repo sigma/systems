@@ -30,7 +30,6 @@
     # Emacs
     emacs.url = "github:nix-community/emacs-overlay";
     emacs.inputs.nixpkgs.follows = "nixpkgs";
-    emacs.inputs.flake-utils.follows = "flake-utils";
     chemacs2nix.url = "github:league/chemacs2nix";
     chemacs2nix.inputs.home-manager.follows = "home-manager";
     chemacs2nix.inputs.emacs-overlay.follows = "emacs";
