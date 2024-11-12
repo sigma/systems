@@ -9,18 +9,21 @@
 
     persistent-apps = let
       userApp = name: "/Users/${user.login}/Applications/Local/${name}.app";
+      systemApp = name: "/Applications/${name}.app";
     in [
-      "/Applications/Google Chrome.app"
+      (systemApp "Google Chrome")
       (userApp "WezTerm")
-      "/Applications/Cursor.app"
+      (systemApp "Cursor")
       (userApp "Emacs")
-      "/Applications/Spotify.app"
-      "/Applications/Notion.app"
+      (systemApp "Spotify")
+      (systemApp "Notion")
     ];
 
-    persistent-others = [
-      "/Users/${user.login}/Documents"
-      "/Users/${user.login}/Downloads"
+    persistent-others = let
+      userDir = name: "/Users/${user.login}/${name}";
+    in [
+      (userDir "Documents")
+      (userDir "Downloads")
     ];
   };
 
