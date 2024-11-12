@@ -4,9 +4,9 @@
   ...
 }:
 with lib; let
-  cfg = config.programs.music;
+  cfg = config.features.music;
 in {
-  options.programs.music = {
+  options.features.music = {
     enable = mkEnableOption "Music";
   };
 
