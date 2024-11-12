@@ -19,6 +19,8 @@
       34
       33 # Application windows
       35
+      60 # Input Sources
+      61
       64 # Spotlight Search
       65
       79 # Move left a space
@@ -42,13 +44,15 @@
   </dict>
 </dict>'") hotkeys;
 
-    terminalServices = [
+    services = [
       "com.apple.Terminal - Open man Page in Terminal - openManPage"
       "com.apple.Terminal - Search man Page Index in Terminal - searchManPages"
+      "com.apple.Safari - Search With %WebSearchProvider@ - searchWithWebSearchProvider"
+      "com.apple.ChineseTextConverterService - Convert Text from Simplified to Traditional Chinese - convertTextToTraditionalChinese"
+      "com.apple.ChineseTextConverterService - Convert Text from Traditional to Simplified Chinese - convertTextToSimplifiedChinese"
     ];
-
     # credit: https://apple.stackexchange.com/a/454359
-    disableTerminalServicesCommands = map (key: "defaults write pbs NSServicesStatus -dict-add '${key}' '
+    disableServicesCommands = map (key: "defaults write pbs NSServicesStatus -dict-add '${key}' '
 <dict>
   <key>enabled_context_menu</key><false/>
   <key>enabled_services_menu</key><false/>
@@ -57,7 +61,7 @@
     <key>ContextMenu</key><false/>
     <key>ServicesMenu</key><false/>
   </dict>
-</dict>'") terminalServices;
+</dict>'") services;
   in ''
     echo >&2 "configuring hotkeys..."
 
@@ -68,6 +72,6 @@
 
     echo >&2 "disabling Terminal services..."
 
-    ${lib.concatStringsSep "\n" disableTerminalServicesCommands}
+    ${lib.concatStringsSep "\n" disableServicesCommands}
   '';
 }
