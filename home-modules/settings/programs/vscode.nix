@@ -27,6 +27,7 @@ in
     ./code/format.nix
     ./code/go.nix
     ./code/git.nix
+    ./code/just.nix
     ./code/k8s.nix
     ./code/nix.nix
     ./code/python.nix
