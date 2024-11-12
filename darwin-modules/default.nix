@@ -4,7 +4,7 @@
     ./features
     ./fonts.nix
     ./gui.nix
-    ./hid.nix
+    ./interface
     ./mac-user.nix
     ./nix.nix
     ./pam
