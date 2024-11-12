@@ -3,7 +3,6 @@
     ./1password.nix
     ./aerospace.nix
     ./karabiner.nix
-    ./music.nix
     ./orbstack.nix
     ./secretive.nix
     ./tailscale.nix

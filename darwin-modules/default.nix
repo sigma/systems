@@ -1,6 +1,7 @@
 {...}: {
   imports = [
     ./apps
+    ./features
     ./fonts.nix
     ./gui.nix
     ./hid.nix
