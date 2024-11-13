@@ -27,5 +27,12 @@ in {
     home.file.".zile" = mkIf (cfg.configFile != "") {
       text = "${cfg.configFile}";
     };
+
+    home.sessionVariables = let
+      editor = "${cfg.package}/bin/zile";
+    in {
+      EDITOR = editor;
+      VISUAL = editor;
+    };
   };
 }

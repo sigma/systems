@@ -81,9 +81,6 @@
       tealdeer
       tree
 
-      # editors
-      zile
-
       # git
       git-review
       pre-commit
