@@ -90,5 +90,19 @@ with lib;
         };
       };
     });
+
+    # lightweight registry type
+    registry = types.attrsOf (types.submodule ({...}: {
+      options = {
+        to = mkOption {
+          type = types.attrs;
+          default = {};
+        };
+        flake = mkOption {
+          type = types.nullOr types.attrs;
+          default = null;
+        };
+      };
+    }));
   }
   // types

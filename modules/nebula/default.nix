@@ -55,6 +55,21 @@ in {
         type = types.functionTo types.user;
         default = machine: machine.user;
       };
+
+      userRegistry = mkOption {
+        type = types.nullOr types.registry;
+        default = null;
+      };
+
+      systemRegistry = mkOption {
+        type = types.nullOr types.registry;
+        default = null;
+      };
+
+      homeMergeSystemRegistry = mkOption {
+        type = types.bool;
+        default = true;
+      };
     };
   };
 

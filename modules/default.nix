@@ -7,6 +7,7 @@
     ./nebula
     ./users.nix
     ./hosts.nix
+    ./registry.nix
   ];
 
   nebula.homeModules = [
