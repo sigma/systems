@@ -6,14 +6,6 @@
   helpers,
   ...
 }: let
-  systemRegistryModule = lib.optionalAttrs (cfg.systemRegistry != null) {
-    nix.registry = cfg.systemRegistry;
-  };
-
-  userRegistryModule = lib.optionalAttrs (cfg.userRegistry != null) {
-    nix.registry = cfg.userRegistry;
-  };
-
   userFor = machine:
     helpers.expandUser (cfg.userSelector machine);
 
@@ -28,9 +20,6 @@
       users.${user.login} = inputs.nixpkgs.lib.mkMerge (
         cfg.homeModules
         ++ machine.homeModules
-        ++ [
-          userRegistryModule
-        ]
       );
       extraSpecialArgs = {
         inherit user machine stateVersion;
@@ -54,7 +43,6 @@ in {
           # `home-manager` module
           inputs.home-manager.darwinModules.home-manager
           (homeManagerConfig {inherit user machine;})
-          systemRegistryModule
         ];
     };
 
@@ -68,6 +56,7 @@ in {
       pkgs = inputs.nixpkgs.legacyPackages.${machine.system} // cfg.nixpkgsConfig;
       modules =
         cfg.homeModules
+        ++ cfg.linuxModules
         ++ machine.homeModules
         ++ [
           (lib.optional (machine.homeRoot != null) {
@@ -77,10 +66,6 @@ in {
               inherit stateVersion;
             };
           })
-        ]
-        ++ lib.optionals cfg.homeMergeSystemRegistry [
-          # this will end up in the user registry, as we don't have others
-          systemRegistryModule
         ];
       extraSpecialArgs = specialArgs;
     };
@@ -101,7 +86,6 @@ in {
           # 'home-manager' module
           inputs.home-manager.nixosModules.home-manager
           (homeManagerConfig {inherit user machine;})
-          systemRegistryModule
         ];
     };
 }
