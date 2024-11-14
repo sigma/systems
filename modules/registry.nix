@@ -16,6 +16,8 @@
 
   systemRegistryModule = {
     nix.registry = {
+      # systems
+      systems.flake = inputs.systems;
       nixpkgs.flake = inputs.nixpkgs;
       darwin.flake = inputs.darwin;
 
