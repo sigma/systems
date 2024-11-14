@@ -5,6 +5,11 @@
       productId = pid;
     };
     q1Max = keychron 2064;
+    massdrop = pid: {
+      vendorId = 1240;
+      productId = pid;
+    };
+    ctrl = massdrop 61138;
     wirelessLink = keychron 53296;
     kinesisPedal = {
       vendorId = 10730;
@@ -14,10 +19,13 @@
     # I always use karabiner on my laptops
     enable = mkForce true;
 
-    # My docking station for laptops.
+    # My docking stations for laptops.
     ignoreKeyboards = [
+      # home
       q1Max
       wirelessLink
+      # office
+      ctrl
     ];
     pedal = kinesisPedal;
   };
