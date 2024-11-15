@@ -12,4 +12,11 @@
       )}"
     }
   '';
+
+  config.global = {
+    bash_path = "${pkgs.bash}/bin/bash";
+    disable_stdin = true;
+    strict_env = true;
+    hide_env_diff = true;
+  };
 }

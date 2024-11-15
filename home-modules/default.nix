@@ -45,7 +45,6 @@
       bash
       coreutils
       curl
-      direnv
       wget
 
       # build tools
