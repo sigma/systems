@@ -101,6 +101,7 @@
       rust-analyzer-nightly
 
       # k8s/yaml helpers
+      jaq
       jsonnet
       jsonnet-bundler
       tanka
