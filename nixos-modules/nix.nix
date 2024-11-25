@@ -16,6 +16,8 @@
     auto-optimise-store = true
     allow-import-from-derivation = true
     warn-dirty = false
+
+    extra-experimental-features = nix-command flakes
   '';
 
   # Auto upgrade nix package and the daemon service.
