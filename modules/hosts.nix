@@ -20,6 +20,7 @@
 
     devbox = {
       name = "192.168.77.131";
+      alias = "devbox";
       system = "aarch64-linux";
       features = ["managed" "fusion" "nixos" "work" "oplabs"];
     };
