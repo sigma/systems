@@ -18,7 +18,11 @@
   users.users.${user.login} = {
     isNormalUser = true;
     extraGroups = ["wheel"];
+    shell = pkgs.fish;
   };
+
+  programs.fish.enable = true;
+  programs.fish.useBabelfish = true;
 
   environment = with pkgs; {
     systemPackages = [
