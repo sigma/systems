@@ -1,0 +1,25 @@
+{...}: {
+  nix.settings.substituters = [
+    "https://cache.nixos.org/"
+  ];
+  nix.settings.trusted-public-keys = [
+    "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+  ];
+  nix.settings.trusted-users = [
+    "root"
+  ];
+  nix.configureBuildUsers = true;
+
+  # Enable experimental nix command and flakes
+  # nix.package = pkgs.nixUnstable;
+  nix.extraOptions = ''
+    auto-optimise-store = true
+    allow-import-from-derivation = true
+    warn-dirty = false
+  '';
+
+  # Auto upgrade nix package and the daemon service.
+  services.nix-daemon.enable = true;
+
+  programs.nix-index.enable = true;
+}
