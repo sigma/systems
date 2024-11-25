@@ -42,7 +42,11 @@
         ${pkgs.nix}/bin/nix build ".#darwinConfigurations.`hostname -s`.system"
       ''
       else ''
-        ${pkgs.nix}/bin/nix run ".#home-manager" --  build --flake ".#`hostname -s`"
+        if test -d /etc/nixos; then
+          ${pkgs.nix}/bin/nix run ".#nixos-rebuild" -- build --flake ".#`hostname -s`"
+        else
+          ${pkgs.nix}/bin/nix run ".#home-manager" --  build --flake ".#`hostname -s`"
+        fi
       '';
 
     systemActivate =
@@ -51,7 +55,11 @@
         ${pkgs.nix}/bin/nix run ".#darwin-rebuild" -- switch --flake ".#`hostname -s`"
       ''
       else ''
-        ${pkgs.nix}/bin/nix run ".#home-manager" --  switch --flake ".#`hostname -s`"
+        if test -d /etc/nixos; then
+          ${pkgs.nix}/bin/nix run ".#nixos-rebuild" -- switch --flake ".#`hostname -s`"
+        else
+          ${pkgs.nix}/bin/nix run ".#home-manager" --  switch --flake ".#`hostname -s`"
+        fi
       '';
   in {
     pre-commit.settings.hooks = {
