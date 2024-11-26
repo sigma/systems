@@ -96,6 +96,11 @@
           # Notes
           {
             appId = "notion.id";
+            layout = "floating";
+            windowTitleRegexSubstring = "Tab Preview";
+          }
+          {
+            appId = "notion.id";
             layout = "tiling";
             workspace = "N";
           }
