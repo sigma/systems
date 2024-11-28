@@ -30,6 +30,8 @@
       gh-dash.enable = true;
       gitui.enable = true;
       jq.enable = true;
+      k9s.enable = true;
+      kubeswitch.enable = true;
       lieer.enable = true;
       ripgrep.enable = true;
       thefuck.enable = true;
@@ -108,7 +110,6 @@
       tanka
       yq
       kubectl
-      kubeswitch
 
       # network tools
       autossh
