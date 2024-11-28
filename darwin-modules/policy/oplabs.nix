@@ -6,6 +6,8 @@
   ...
 }:
 with lib; {
+  programs.kurtosis.enable = mkForce true;
+
   programs.onepassword.enable = mkForce true;
 
   programs.karabiner = mkIf machine.features.laptop {

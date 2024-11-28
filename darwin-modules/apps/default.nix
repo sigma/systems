@@ -3,11 +3,16 @@
     ./1password.nix
     ./aerospace.nix
     ./karabiner.nix
+    ./kurtosis.nix
     ./orbstack.nix
     ./secretive.nix
     ./tailscale.nix
 
     ./settings
+  ];
+
+  homebrew.brews = [
+    "libusb"
   ];
 
   homebrew.casks = [
