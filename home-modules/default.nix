@@ -104,6 +104,7 @@
       jaq
       jsonnet
       jsonnet-bundler
+      stable.mimir
       tanka
       yq
       kubectl
