@@ -4,7 +4,6 @@
     ./aerospace.nix
     ./karabiner.nix
     ./kurtosis.nix
-    ./orbstack.nix
     ./secretive.nix
     ./tailscale.nix
 

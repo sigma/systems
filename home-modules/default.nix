@@ -30,8 +30,6 @@
       gh-dash.enable = true;
       gitui.enable = true;
       jq.enable = true;
-      k9s.enable = true;
-      kubeswitch.enable = true;
       lieer.enable = true;
       ripgrep.enable = true;
       thefuck.enable = true;
@@ -102,14 +100,11 @@
       ])
       rust-analyzer-nightly
 
-      # k8s/yaml helpers
+      # json/yaml helpers
       jaq
       jsonnet
       jsonnet-bundler
-      stable.mimir
-      tanka
-      yq
-      kubectl
+      yq-go
 
       # network tools
       autossh
