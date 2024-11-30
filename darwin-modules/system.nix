@@ -20,8 +20,8 @@
     onActivation.cleanup = "zap";
   };
 
-  security.pam.enableReattachedSudoTouchIdAuth = true;
-  security.pam.reattachPackage = pkgs.stable.pam-reattach;
+  security.pam.touchid.enable = true;
+  security.pam.reattach.package = pkgs.stable.pam-reattach;
 
   system.stateVersion = 5;
 }

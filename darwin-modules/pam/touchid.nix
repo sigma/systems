@@ -6,43 +6,32 @@
   ...
 }:
 with lib; let
-  cfg = config.security.pam;
+  cfg = config.security.pam.touchid;
 in {
-  options.security.pam = {
-    enableReattachedSudoTouchIdAuth = mkEnableOption ''
+  options.security.pam.touchid = {
+    enable = mkEnableOption ''
       Enable sudo authentication with Touch ID
       When enabled, this option adds the following line to /etc/pam.d/sudo_local:
-          auth       optional       /path/to/pam_reattach.so
           auth       sufficient     pam_tid.so
     '';
-
-    reattachPackage = mkOption {
-      type = types.package;
-      default = pkgs.pam-reattach;
-      description = "The pam-reattach package to use.";
-    };
   };
 
   config = {
     assertions = [
       {
-        assertion = !(cfg.enableReattachedSudoTouchIdAuth && cfg.enableSudoTouchIdAuth);
-        message = "enableReattachedSudoTouchIdAuth and enableSudoTouchIdAuth cannot be enabled at the same time";
+        assertion = !(cfg.enable && config.security.pam.enableSudoTouchIdAuth);
+        message = "config.security.pam.touchid.enable and config.security.pam.enableSudoTouchIdAuth cannot be enabled at the same time";
       }
     ];
 
-    security.pam = mkIf cfg.enableReattachedSudoTouchIdAuth {
-      sudo_local.entries = let
-        comment = "security.pam.enableReattachedSudoTouchIdAuth";
-      in [
-        {
-          module = "${cfg.reattachPackage}/lib/pam/pam_reattach.so";
-          inherit comment;
-        }
+    security.pam = mkIf cfg.enable {
+      reattach.enable = true;
+
+      sudo_local.entries = mkOrder 600 [
         {
           control = "sufficient";
           module = "pam_tid.so";
-          inherit comment;
+          comment = "security.pam.touchid";
         }
       ];
     };
