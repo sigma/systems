@@ -10,6 +10,12 @@ with lib; let
 in {
   options.features.k8s = {
     enable = mkEnableOption "k8s";
+
+    useJsonnet = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Whether to use jsonnet for k8s.";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -21,16 +27,21 @@ in {
       programs.k9s.enable = true;
 
       home = {
-        packages = with pkgs; [
-          jaq
-          jsonnet
-          jsonnet-bundler
-          stable.mimir
-          tanka
-          yq-go
-          kubectl
-          kubeswitch
-        ];
+        packages = with pkgs;
+          [
+            jaq
+            stable.mimir
+            yq-go
+
+            docker-client
+            kubectl
+            kubeswitch
+          ]
+          ++ lib.optionals cfg.useJsonnet [
+            jsonnet
+            jsonnet-bundler
+            tanka
+          ];
 
         sessionVariables = {
           KUBECONFIG = "$HOME/.kube/config";
