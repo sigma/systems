@@ -39,7 +39,10 @@ in {
     assertions = [
       {
         assertion = cfg.authorizations != [];
-        message = "security.pam.u2f.authorizations must not be empty";
+        message = ''
+          security.pam.u2f.authorizations must not be empty.
+          Populate with the output of ${pkgs.pam_u2f}/bin/pamu2fcfg
+        '';
       }
     ];
 
