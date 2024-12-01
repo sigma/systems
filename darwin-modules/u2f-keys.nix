@@ -13,7 +13,7 @@ with lib; {
     ]
     ++ optionals (machine.name == "ash.local") [
       # laptop low-profile key
-      "${user.login}:WrV88BbMsJUtWG9qzj3sw9i26B8s9vxk/Sg+4vmsbJJlZV6RjsXjK8Ym0b7Jqo3aRVUxz3UM9rigDGg+RM/J+Q==,M1b0VZapkWXjMS8LEN3RaYX7XgXsvYwJ0dOuISfN4RNsBNywqypKpvRnlGC5UvmUY4CL3mPrLRFzQedr4w+xuw==,es256,+presence"
+      "${user.login}:mEJg6bvtXfOO8r3USlUbN6xaW87kBR7xAlVTfeFxdQSAh06vNXqOLgbjQu4XHbM1qdmEQNlfhrErxfR6Jv5M8A==,iiS2fAX/OMD79/nSPRtG/OPVn326dvU/qV2EkxAfVvasuE2I98odrFgGA3IRJyBF8ucC+sEMt/uVekIs01uqhA==,es256,+presence"
     ]
     ++ optionals (machine.name == "spectre.local") [
       # desktop titan
