@@ -10,6 +10,7 @@
     ./pam
     ./policy
     ./system.nix
+    ./u2f-keys.nix
     ./versions.nix
   ];
 }

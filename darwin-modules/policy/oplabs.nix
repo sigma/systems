@@ -56,11 +56,4 @@ with lib; {
       ];
     };
   };
-
-  security.pam.u2f = {
-    enable = true;
-    authorizations = [
-      "yann:kyV+vUjo2i2AlbEuTB2ELQZngbP+t08J2Wy795p0MYa2i210lV7n9/u1LSHtacMdT44fZiZVsGgCCeZcF83IeA==,4GASu9xacpwqaJzrPI+KV8HpuQukawzitokYLG9f7MYSWZngoNnbrFFLp68jelbup2a6o4V4tieLjbhCRVdaFg==,es256,+presence"
-    ];
-  };
 }
