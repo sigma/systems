@@ -103,7 +103,17 @@ in {
           }
           # Chat
           {
-            appNameRegexSubstring = "Slack";
+            appId = "com.tinyspeck.slackmacgap";
+            layout = "tiling";
+            workspace = "C";
+          }
+          {
+            appId = "net.whatsapp.WhatsApp";
+            layout = "tiling";
+            workspace = "C";
+          }
+          {
+            appId = "com.hnc.Discord";
             layout = "tiling";
             workspace = "C";
           }
