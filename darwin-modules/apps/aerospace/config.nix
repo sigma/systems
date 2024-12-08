@@ -41,12 +41,19 @@
 
   concatSep = sep: strings: builtins.concatStringsSep sep (builtins.filter (x: x != "") strings);
 
+  quote = s: "'${s}'";
+
+  displaySpec = display:
+    if builtins.isString display
+    then quote display
+    else "[${builtins.concatStringsSep ", " (builtins.map quote display)}]";
+
   # Generate workspace-to-monitor assignments
   workspaceAssignments = concatSep "\n" (
     builtins.map (
       ws:
         if ws.display != null
-        then "${ws.name} = '${ws.display}'"
+        then "${ws.name} = ${displaySpec ws.display}"
         else ""
     )
     workspaces

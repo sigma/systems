@@ -2,11 +2,14 @@
   config,
   lib,
   pkgs,
+  machine,
   user,
   ...
 }:
 with lib; let
   cfg = config.programs.aerospace;
+
+  monitorType = types.either types.str (types.listOf types.str);
 
   workspaceType = types.submodule {
     options = {
@@ -15,7 +18,7 @@ with lib; let
         description = "Name of the workspace";
       };
       display = mkOption {
-        type = types.nullOr types.str;
+        type = types.nullOr monitorType;
         default = null;
         description = "Display the workspace is connected to";
       };
@@ -65,6 +68,25 @@ in {
       type = types.bool;
       default = true;
       description = "Enable borders";
+    };
+
+    monitors = mkOption {
+      type = types.attrsOf monitorType;
+      default = let
+        main = "main";
+        aux =
+          if machine.features.laptop
+          then "built-in"
+          else main;
+      in {
+        browser = main;
+        chat = aux;
+        editor = main;
+        music = main;
+        notes = aux;
+        terminal = aux;
+      };
+      description = "Symbolic names for monitors to use";
     };
 
     workspaces = mkOption {

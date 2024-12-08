@@ -1,4 +1,27 @@
 {lib, ...}: {
+  # This accounts for my docking stations.
+  # Home config (laptop closed):
+  # - main monitor is Dell
+  # - secondary monitor is LG
+  # Home config (laptop open):
+  # - main monitor is Dell
+  # - secondary monitor is LG
+  # - built-in monitor is the laptop screen
+  # Office config (laptop always open):
+  # - main monitor is Apple
+  # - secondary monitor is the laptop screen
+  # Mobile config (laptop only):
+  # - main monitor is the laptop screen
+  programs.aerospace.monitors = {
+    browser = "main";
+    chat = ["built-in" "secondary" "main"];
+    # use the vertical monitor for coding if it's there
+    editor = ["LG SDQHD" "secondary" "main"];
+    music = "main";
+    notes = ["built-in" "secondary" "main"];
+    terminal = ["built-in" "main"];
+  };
+
   programs.karabiner = with lib; let
     keychron = pid: {
       vendorId = 13364;

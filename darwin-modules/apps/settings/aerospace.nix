@@ -1,18 +1,15 @@
 {
+  config,
   lib,
   machine,
   ...
-}: {
+}: let
+  cfg = config.programs.aerospace;
+in {
   programs = {
     aerospace = {
       enable = true;
-      workspaces = let
-        main = "main";
-        aux =
-          if machine.features.laptop
-          then "built-in"
-          else main;
-      in [
+      workspaces = with cfg.monitors; [
         # Numbered workspaces are floating
         {name = "1";}
         {name = "2";}
@@ -24,28 +21,28 @@
         {name = "8";}
         # Named workspaces are assigned to displays
         {
-          name = "B"; # Browser
-          display = main;
+          name = "B";
+          display = browser;
         }
         {
-          name = "C"; # Chat
-          display = aux;
+          name = "C";
+          display = chat;
         }
         {
-          name = "E"; # Editor
-          display = main;
+          name = "E";
+          display = editor;
         }
         {
-          name = "M"; # Music
-          display = main;
+          name = "M";
+          display = music;
         }
         {
-          name = "N"; # Notes
-          display = aux;
+          name = "N";
+          display = notes;
         }
         {
-          name = "T"; # Terminal
-          display = aux;
+          name = "T";
+          display = terminal;
         }
       ];
       windowRules =
