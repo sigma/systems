@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  user,
   ...
 }:
 with lib; let
@@ -18,6 +19,13 @@ in {
       brews = [
         "kurtosis-tech/tap/kurtosis-cli"
       ];
+    };
+
+    home-manager.users.${user.login} = {
+      programs.fish.interactiveShellInit = ''
+        # kurtosis completion
+        kurtosis completion fish | source
+      '';
     };
   };
 }
