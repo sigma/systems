@@ -66,6 +66,11 @@ in {
           # Browser
           {
             appId = "com.google.Chrome";
+            layout = "floating";
+            windowTitleRegexSubstring = "^$";
+          }
+          {
+            appId = "com.google.Chrome";
             layout = "tiling";
             workspace = "B";
           }
