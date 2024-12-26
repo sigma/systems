@@ -13,6 +13,20 @@
       // optionalAttrs (productId != null) {
         product_id = productId;
       };
+  pointerToID = with lib;
+    {
+      vendorId,
+      productId,
+    }:
+      {
+        is_pointing_device = true;
+      }
+      // optionalAttrs (vendorId != null) {
+        vendor_id = vendorId;
+      }
+      // optionalAttrs (productId != null) {
+        product_id = productId;
+      };
   remap = {
     from,
     to,

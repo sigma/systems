@@ -44,15 +44,15 @@ in {
         ]
         ++ lib.optionals (cfg.pedal != null) [
           {
-            identifiers = helpers.kbdToID cfg.pedal;
+            identifiers = helpers.pointerToID cfg.pedal;
             simple_modifications = let
               dictation = [{consumer_key_code = "dictation";}];
             in [
-              (remap "left_option" dictation)
-              # sometimes the pedal is recognized as a mouse.
               (remap {pointing_button = "button1";} dictation)
-              (remap {pointing_button = "button2";} "left_command")
+              (remap {pointing_button = "button2";} "return_or_enter")
+              (remap {pointing_button = "button3";} "left_command")
             ];
+            ignore = false;
           }
         ]
         ++ (map (kbd: {
