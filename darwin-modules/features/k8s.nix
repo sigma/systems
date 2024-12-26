@@ -19,17 +19,8 @@ in {
   };
 
   config = mkIf cfg.enable {
-    homebrew.casks = [
-      "rancher"
-    ];
-
     home-manager.users.${user.login} = {
       programs.k9s.enable = true;
-
-      programs.fish.interactiveShellInit = ''
-        # rancher desktop binaries
-        fish_add_path ~/.rd/bin
-      '';
 
       programs.fish.shellAliases = {
         "k" = "kubectl";
