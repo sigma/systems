@@ -24,6 +24,12 @@ with lib; {
     }
   ];
   programs.aerospace.windowRules = mkBefore [
+    # this is for meet.google.com PIP mode
+    {
+      appId = "com.google.Chrome";
+      windowTitleRegexSubstring = "^about:blank.*\\(OPLabs\\)$";
+      layout = "floating";
+    }
     {
       appId = "com.google.Chrome";
       layout = "tiling";
