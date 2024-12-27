@@ -47,6 +47,17 @@ in {
       ];
       windowRules =
         [
+          # Finder
+          {
+            appId = "com.apple.finder";
+            windowTitleRegexSubstring = "Timeline Controls";
+            layout = "floating";
+          }
+
+          {
+            appId = "com.apple.finder";
+            layout = "tiling";
+          }
           # Terminals
           {
             appId = "com.github.wez.wezterm";
