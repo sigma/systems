@@ -42,6 +42,22 @@ in {
       default = null;
     };
 
+    pedalKeys = mkOption {
+      type = types.attrsOf (types.either types.str (types.attrsOf types.str));
+      description = "The keys the pedal natively emits";
+      default = {
+        "left" = {pointing_button = "button1";};
+        "right" = {pointing_button = "button2";};
+        "middle" = {pointing_button = "button3";};
+      };
+    };
+
+    pedalComboDevice = mkOption {
+      type = types.bool;
+      description = "Whether the pedal is a combo device";
+      default = false;
+    };
+
     ignoreKeyboards = mkOption {
       type = types.listOf kbdType;
       description = "The keyboards to ignore";

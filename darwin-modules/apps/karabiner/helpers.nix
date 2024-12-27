@@ -17,7 +17,7 @@
     {
       vendorId,
       productId,
-    }:
+    }: comboDevice:
       {
         is_pointing_device = true;
       }
@@ -26,6 +26,9 @@
       }
       // optionalAttrs (productId != null) {
         product_id = productId;
+      }
+      // optionalAttrs comboDevice {
+        is_keyboard = true;
       };
   remap = {
     from,
