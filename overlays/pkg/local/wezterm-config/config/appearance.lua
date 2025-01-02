@@ -1,48 +1,49 @@
-local wezterm = require('wezterm')
 local gpu_adapters = require('utils.gpu_adapter')
-local colors = require('colors.custom')
 
-return {
-   animation_fps = 60,
-   max_fps = 60,
-   front_end = 'WebGpu',
-   webgpu_power_preference = 'HighPerformance',
-   webgpu_preferred_adapter = gpu_adapters:pick_best(),
+local M = {}
+
+M.apply_to_config = function(options, _opts)
+   options.animation_fps = 60
+   options.max_fps = 60
+   options.front_end = 'WebGpu'
+   options.webgpu_power_preference = 'HighPerformance'
+   options.webgpu_preferred_adapter = gpu_adapters:pick_best()
 
    -- color scheme
-   color_scheme = 'Subliminal',
-   -- colors = colors,
+   options.color_scheme = 'Subliminal'
 
    -- scrollbar
-   enable_scroll_bar = true,
+   options.enable_scroll_bar = true
 
    -- tab bar
-   enable_tab_bar = true,
-   hide_tab_bar_if_only_one_tab = false,
-   use_fancy_tab_bar = false,
-   tab_max_width = 30,
-   show_tab_index_in_tab_bar = false,
-   switch_to_last_active_tab_when_closing_tab = true,
+   options.enable_tab_bar = true
+   options.hide_tab_bar_if_only_one_tab = false
+   options.use_fancy_tab_bar = false
+   options.tab_max_width = 30
+   options.show_tab_index_in_tab_bar = false
+   options.switch_to_last_active_tab_when_closing_tab = true
 
    -- window
-   window_padding = {
+   options.window_padding = {
       left = 12,
       right = 10,
       top = 12,
       bottom = 7,
-   },
-   window_background_opacity = 0.9,
-   window_close_confirmation = 'NeverPrompt',
-   window_decorations = "RESIZE",
-   window_frame = {
+   }
+   options.window_background_opacity = 0.9
+   options.window_close_confirmation = 'NeverPrompt'
+   options.window_decorations = "RESIZE"
+   options.window_frame = {
       active_titlebar_bg = '#090909',
       -- font = fonts.font,
       -- font_size = fonts.font_size,
-   },
-   inactive_pane_hsb = {
+   }
+   options.inactive_pane_hsb = {
       saturation = 0.9,
       brightness = 0.65,
-   },
+   }
 
-   macos_window_background_blur = 10,
-}
+   options.macos_window_background_blur = 10
+end
+
+return M

@@ -1,5 +1,7 @@
 local wezterm = require('wezterm')
 local platform = require('utils.platform')()
+local workspace_switcher = require('smart_workspace_switcher')
+
 local act = wezterm.action
 
 local mod = {}
@@ -122,6 +124,18 @@ local keys = {
          timemout_miliseconds = 1000,
       }),
    },
+
+   -- workspace switcher
+   {
+      key = "s",
+      mods = mod.SUPER,
+      action = workspace_switcher.switch_workspace({ extra_args = " | rg 'src/github.com/[^/]*/[^/]*$'" }),
+    },
+    {
+      key = "S",
+      mods = mod.SUPER_REV,
+      action = workspace_switcher.switch_to_prev_workspace(),
+    }
 }
 
 -- stylua: ignore
@@ -154,6 +168,8 @@ local mouse_bindings = {
 }
 
 return {
+   default_workspace = "default",
+
    disable_default_key_bindings = true,
    send_composed_key_when_right_alt_is_pressed = true,
    keys = keys,

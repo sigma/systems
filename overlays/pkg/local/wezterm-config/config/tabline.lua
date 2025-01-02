@@ -1,4 +1,5 @@
 local wezterm = require('wezterm')
+local tabline_config = require('tabline.config')
 
 local accent_colors = wezterm.color.get_builtin_schemes()["Catppuccin Mocha"]
 
@@ -55,19 +56,20 @@ local tabline_opts = {
       { Attribute = { Intensity = "Bold" } },
       { Foreground = { Color = accent_colors.ansi[3] } },
       "index",
-      "ResetAttributes",
       { Foreground = { Color = accent_colors.foreground } },
       { "process", icons_only = true },
       { Attribute = { Intensity = "Bold" } },
-      { "cwd", max_length = 20, padding = { left = 0, right = 1 } },
+      { "tab", max_length = 20, padding = { left = 0, right = 1 } },
+      { 'zoomed', padding = 0 },
+      "ResetAttributes",
     },
     tab_inactive = {
       { Foreground = { Color = accent_colors.ansi[6] } },
       "index",
-      "ResetAttributes",
       { "process", icons_only = true },
       { Attribute = { Intensity = "Bold" } },
-      { "cwd", max_length = 20, padding = { left = 0, right = 1 } },
+      { "tab", max_length = 20, padding = { left = 0, right = 1 } },
+      "ResetAttributes",
     },
     tabline_x = { },
     tabline_y = {
@@ -78,14 +80,18 @@ local tabline_opts = {
   extensions = {},
 }
 
-require('tabline.config').set(tabline_opts)
+local M = {}
 
-wezterm.on('update-status', function(window)
-  require('tabline.component').set_status(window)
-end)
+M.apply_to_config = function(_options, _opts)
+  tabline_config.set(tabline_opts)
 
-wezterm.on('format-tab-title', function(tab, _, _, _, hover, _)
-  return require('tabline.tabs').set_title(tab, hover)
-end)
+  wezterm.on('update-status', function(window)
+    require('tabline.component').set_status(window)
+  end)
+  
+  wezterm.on('format-tab-title', function(tab, _, _, _, hover, _)
+    return require('tabline.tabs').set_title(tab, hover)
+  end)
+  end
 
-return {}
+return M

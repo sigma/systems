@@ -8,7 +8,7 @@ Config.__index = Config
 ---Initialize Config
 ---@return Config
 function Config:init()
-   local config = setmetatable({ options = {} }, self)
+   local config = setmetatable({ options = wezterm.config_builder() }, self)
    return config
 end
 
@@ -26,6 +26,22 @@ function Config:append(new_options)
       end
       self.options[k] = v
       ::continue::
+   end
+   return self
+end
+
+---Apply a plugin to the config
+---@param plugin function|table the plugin to apply
+---@param opts table the options to pass to the plugin
+---@return Config
+function Config:apply(plugin, opts)
+   if not opts then
+      opts = {}
+   end
+   if type(plugin) == 'function' then
+      plugin(self.options, opts)
+   else
+      plugin.apply_to_config(self.options, opts)
    end
    return self
 end

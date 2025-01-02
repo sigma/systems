@@ -1,10 +1,10 @@
-return {
+return function(config, _opts)
    -- ref: https://wezfurlong.org/wezterm/config/lua/SshDomain.html
-   ssh_domains = {},
+   config.ssh_domains = {}
 
    -- ref: https://wezfurlong.org/wezterm/multiplexing.html#unix-domains
-   unix_domains = {},
+   config.unix_domains = {}
 
    -- ref: https://wezfurlong.org/wezterm/config/lua/WslDomain.html
-   wsl_domains = {},
-}
+   config.wsl_domains = {}
+end

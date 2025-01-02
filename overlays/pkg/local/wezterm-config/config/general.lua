@@ -1,13 +1,14 @@
-return {
-   -- behaviours
-   automatically_reload_config = true,
-   exit_behavior = 'CloseOnCleanExit', -- if the shell program exited with a successful status
-   exit_behavior_messaging = 'Verbose',
-   status_update_interval = 1000,
+local M = {}
 
-   scrollback_lines = 5000,
+M.apply_to_config = function(options, _opts)
+   options.automatically_reload_config = true
+   options.exit_behavior = 'CloseOnCleanExit'
+   options.exit_behavior_messaging = 'Verbose'
+   options.status_update_interval = 1000
 
-   hyperlink_rules = {
+   options.scrollback_lines = 5000
+
+   options.hyperlink_rules = {
       -- Matches: a URL in parens: (URL)
       {
          regex = '\\((\\w+://\\S+)\\)',
@@ -42,5 +43,7 @@ return {
          regex = '\\b\\w+@[\\w-]+(\\.[\\w-]+)+\\b',
          format = 'mailto:$0',
       },
-   },
-}
+   }
+end
+
+return M
