@@ -5,7 +5,7 @@
     show-recents = false;
     mru-spaces = false;
     tilesize = 48;
-    expose-group-by-app = true;
+    expose-group-apps = true;
 
     persistent-apps = let
       userApp = name: "/Users/${user.login}/Applications/Local/${name}.app";

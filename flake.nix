@@ -8,8 +8,8 @@
     # Package sets
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixpkgs-lib.url = "github:NixOS/nixpkgs/nixos-unstable?dir=lib";
-    nixos-stable.url = "github:NixOS/nixpkgs/nixos-24.05";
-    darwin-stable.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
+    nixos-stable.url = "github:NixOS/nixpkgs/nixos-24.11";
+    darwin-stable.url = "github:NixOS/nixpkgs/nixpkgs-24.11-darwin";
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
 
     # flake-parts
@@ -65,11 +65,21 @@
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
     pre-commit-hooks-nix.url = "github:cachix/pre-commit-hooks.nix";
     pre-commit-hooks-nix.inputs.nixpkgs.follows = "nixpkgs";
-    pre-commit-hooks-nix.inputs.nixpkgs-stable.follows = "nixos-stable";
     pre-commit-hooks-nix.inputs.flake-compat.follows = "flake-compat";
 
     # Theme
-    catppuccin.url = "github:catppuccin/nix";
+    catppuccin = {
+      url = "github:catppuccin/nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        nixpkgs-stable.follows = "";
+        home-manager.follows = "";
+        home-manager-stable.follows = "";
+        nuscht-search.follows = "";
+        catppuccin-v1_1.follows = "";
+        catppuccin-v1_2.follows = "";
+      };
+    };
   };
 
   outputs = inputs:

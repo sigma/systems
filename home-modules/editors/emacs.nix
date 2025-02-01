@@ -26,7 +26,23 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [
+    home.packages = with pkgs; let
+      tex = texlive.combine {
+        inherit
+          (texlive)
+          scheme-basic
+          dvisvgm
+          dvipng # for preview and export as html
+          wrapfig
+          amsmath
+          ulem
+          hyperref
+          capt-of
+          ;
+        #(setq org-latex-compiler "lualatex")
+        #(setq org-preview-latex-default-process 'dvisvgm)
+      };
+    in [
       binutils
 
       # Doom dependencies
@@ -42,7 +58,7 @@ in {
         ]))
       editorconfig-core-c
       sqlite
-      texlive.combined.scheme-full
+      # texlive.combined.scheme-full
       pandoc
     ];
 

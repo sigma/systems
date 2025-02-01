@@ -30,7 +30,7 @@ M.apply_to_config = function(options, _opts)
       top = 12,
       bottom = 7,
    }
-   options.window_background_opacity = 0.9
+   options.window_background_opacity = 1
    options.window_close_confirmation = 'NeverPrompt'
    options.window_decorations = "RESIZE"
    options.window_frame = {

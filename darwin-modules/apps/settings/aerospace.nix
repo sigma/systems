@@ -74,6 +74,12 @@ in {
             layout = "tiling";
             workspace = "T";
           }
+          # Camera Hub phantom window
+          {
+            appId = "com.elgato.CameraHub";
+            layout = "floating";
+            windowTitleRegexSubstring = "^$";
+          }
           # Browser
           {
             appId = "com.google.Chrome";
@@ -82,6 +88,11 @@ in {
           }
           {
             appId = "com.google.Chrome";
+            layout = "tiling";
+            workspace = "B";
+          }
+          {
+            appId = "com.brave.Browser";
             layout = "tiling";
             workspace = "B";
           }

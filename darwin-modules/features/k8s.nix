@@ -31,7 +31,7 @@ in {
         packages = with pkgs;
           [
             jaq
-            stable.mimir
+            mimir
             yq-go
 
             docker-client

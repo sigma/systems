@@ -36,9 +36,20 @@ with lib; {
       windowTitleRegexSubstring = ".*\\(OPLabs\\)$";
       workspace = "W";
     }
+    {
+      appId = "com.brave.Browser";
+      layout = "tiling";
+      windowTitleRegexSubstring = ".*- Work$";
+      workspace = "W";
+    }
   ];
 
-  home-manager.users.${user.login} = {
+  home-manager.users.${user.login} = let
+    workGithubOrgs = [
+      "ethereum-optimism"
+      "ethpandaops"
+    ];
+  in {
     programs.gcloud.enable = mkForce true;
     programs.gcloud.enableGkeAuthPlugin = mkForce true;
 
@@ -48,18 +59,27 @@ with lib; {
       kubectl
     ];
 
+    programs.open-url = {
+      urlProfiles = builtins.listToAttrs (map (org: {
+          name = "https://github.com/${org}";
+          value = "Work";
+        })
+        workGithubOrgs);
+    };
+
     programs.git = {
       # make sure to use the right email for work repos.
-      includes = [
-        {
-          condition = "hasconfig:remote.*.url:git@github.com:ethereum-optimism/**";
+      includes = let
+        workOrg = org: {
+          condition = "hasconfig:remote.*.url:git@github.com:${org}/**";
           contents = {
             user.email = "${user.email}";
             commit.gpgsign = true;
           };
-          contentSuffix = "oplabs";
-        }
-      ];
+          contentSuffix = org;
+        };
+      in
+        map workOrg workGithubOrgs;
     };
   };
 }

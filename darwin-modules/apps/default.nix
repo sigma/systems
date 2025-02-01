@@ -2,6 +2,7 @@
   imports = [
     ./1password.nix
     ./aerospace.nix
+    ./brave.nix
     ./karabiner.nix
     ./kurtosis.nix
     ./secretive.nix

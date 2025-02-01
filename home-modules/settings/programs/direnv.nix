@@ -1,5 +1,6 @@
 {pkgs, ...}: {
   enable = true;
+  mise.enable = true;
   nix-direnv.enable = true;
   stdlib = ''
     : ''${XDG_CACHE_HOME:=$HOME/.cache}
