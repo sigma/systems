@@ -21,10 +21,10 @@ in {
   config = mkIf cfg.enable {
     home-manager.users.${user.login} = {
       programs.k9s.enable = true;
+      programs.kubeswitch.enable = true;
 
       programs.fish.shellAliases = {
         "k" = "kubectl";
-        "sw" = "switcher";
       };
 
       home = {
@@ -36,7 +36,6 @@ in {
 
             docker-client
             kubectl
-            kubeswitch
           ]
           ++ lib.optionals cfg.useJsonnet [
             jsonnet

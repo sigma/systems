@@ -13,6 +13,7 @@
     ./darwin-apps.nix
     ./editors
     ./gcloud.nix
+    ./kubeswitch.nix
     ./mailsetup.nix
     ./open-url.nix
     ./settings
