@@ -9,40 +9,50 @@ with lib; let
 in {
   options.programs.kubeswitch = {
     enable = mkEnableOption "kubeswitch";
+
+    package = mkOption {
+      type = types.package;
+      default = pkgs.kubeswitch;
+    };
+
+    shellAlias = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+    };
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [
-      kubeswitch
-    ];
+    home = {
+      packages = [
+        # we need switcher to be in the PATH to use kubeswitch
+        cfg.package
+      ];
 
-    programs.bash = {
-      shellAliases = {
-        "sw" = "kubeswitch";
+      shellAliases = lib.mkIf (cfg.shellAlias != null) {
+        ${cfg.shellAlias} = "kubeswitch";
       };
-
-      initExtra = ''
-        source <(${pkgs.kubeswitch}/bin/switcher init bash)
-      '';
     };
 
-    programs.fish = {
-      shellAliases = {
-        "sw" = "kubeswitch";
-      };
+    # For some reason the completion logic is not being picked up by fish.
+    # Force a completion file for "kubeswitch" to be generated (default is "switcher").
+    # Small hack to fix the completion script to use the switcher binary directly.
+    xdg.configFile."fish/completions/kubeswitch.fish".source = pkgs.runCommand "kubeswitch-fish-completion" {} ''
+      ${cfg.package}/bin/switcher completion -c kubeswitch fish | \
+        ${pkgs.gnused}/bin/sed 's|\$args\[1\]|${cfg.package}/bin/switcher|' \
+        > $out
+    '';
 
-      interactiveShellInit = ''
-        ${pkgs.kubeswitch}/bin/switcher init fish | source
+    programs = {
+      bash.initExtra = ''
+        source <("${cfg.package}/bin/switcher init bash")
       '';
-    };
 
-    programs.zsh = {
-      shellAliases = {
-        "sw" = "kubeswitch";
-      };
+      fish.interactiveShellInit = ''
+        ${cfg.package}/bin/switcher init fish | source
+      '';
 
-      initExtra = ''
-        source <(${pkgs.kubeswitch}/bin/switcher init zsh)
+      zsh.initExtra = ''
+        source <("${cfg.package}/bin/switcher init zsh")
       '';
     };
   };

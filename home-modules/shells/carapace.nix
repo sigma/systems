@@ -6,13 +6,11 @@
 with lib; let
   cfg = config.programs.carapace;
 in {
-  options = {
-    programs.carapace = {
-      fishNative = mkOption {
-        type = types.listOf types.str;
-        default = [];
-        description = "Completions to use fish native completions for.";
-      };
+  options.programs.carapace = {
+    fishNative = mkOption {
+      type = types.listOf types.str;
+      default = [];
+      description = "Completions to use fish native completions for.";
     };
   };
 
@@ -31,8 +29,8 @@ in {
         '';
       };
 
-    programs.fish.shellInitLast = mkAfter ''
+    programs.fish.shellInitLast = mkIf (cfg.fishNative != []) (mkAfter ''
       set -gx CARAPACE_EXCLUDES ${builtins.concatStringsSep "," cfg.fishNative}
-    '';
+    '');
   };
 }

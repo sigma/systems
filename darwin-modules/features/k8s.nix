@@ -21,7 +21,10 @@ in {
   config = mkIf cfg.enable {
     home-manager.users.${user.login} = {
       programs.k9s.enable = true;
-      programs.kubeswitch.enable = true;
+      programs.kubeswitch = {
+        enable = true;
+        shellAlias = "sw";
+      };
 
       programs.fish.shellAliases = {
         "k" = "kubectl";
