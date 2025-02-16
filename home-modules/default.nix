@@ -31,23 +31,17 @@
     set -g @catppuccin_window_current_number_color "#{@thm_green}"
   '';
 
-  programs =
-    {
-      cloudshell.enable = true;
-      fd.enable = true;
-      gh.enable = true;
-      gh.settings.pager = "${pkgs.delta}/bin/delta";
-      gh-dash.enable = true;
-      gitui.enable = true;
-      jq.enable = true;
-      lieer.enable = true;
-      ripgrep.enable = true;
-      thefuck.enable = true;
-    }
-    // lib.optionalAttrs machine.features.work {
-      # work-only
-      mailsetup.enable = true;
-    };
+  programs = {
+    cloudshell.enable = true;
+    fd.enable = true;
+    gh.enable = true;
+    gh.settings.pager = "${pkgs.delta}/bin/delta";
+    gh-dash.enable = true;
+    gitui.enable = true;
+    jq.enable = true;
+    ripgrep.enable = true;
+    thefuck.enable = true;
+  };
 
   home.packages = with pkgs;
     [
