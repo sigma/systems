@@ -76,6 +76,7 @@
       d2
       glow
       gum
+      gnutar
       hexyl
       htop
       jsonnet
