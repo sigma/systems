@@ -12,7 +12,6 @@
   nix.settings.trusted-users = [
     "root"
   ];
-  nix.configureBuildUsers = true;
 
   # Enable experimental nix command and flakes
   # nix.package = pkgs.nixUnstable;
@@ -25,9 +24,6 @@
     + lib.optionalString (pkgs.system == "aarch64-darwin") ''
       extra-platforms = x86_64-darwin aarch64-darwin
     '';
-
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
 
   programs.nix-index.enable = true;
 }

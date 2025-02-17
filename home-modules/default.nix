@@ -127,9 +127,6 @@
       nix
       devenv
 
-      # windows helpers
-      innoextract
-
       # keyboard QMK tools
       mdloader
     ]
@@ -139,5 +136,9 @@
     ]
     ++ lib.optionals machine.features.music [
       maschine-hacks
+    ]
+    ++ lib.optionals (!machine.features.work) [
+      # windows helpers
+      innoextract
     ];
 }

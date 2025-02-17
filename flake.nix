@@ -68,18 +68,8 @@
     pre-commit-hooks-nix.inputs.flake-compat.follows = "flake-compat";
 
     # Theme
-    catppuccin = {
-      url = "github:catppuccin/nix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        nixpkgs-stable.follows = "";
-        home-manager.follows = "";
-        home-manager-stable.follows = "";
-        nuscht-search.follows = "";
-        catppuccin-v1_1.follows = "";
-        catppuccin-v1_2.follows = "";
-      };
-    };
+    catppuccin.url = "github:catppuccin/nix";
+    catppuccin.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs:
