@@ -16,7 +16,7 @@
     browser = "main";
     chat = ["built-in" "secondary" "main"];
     # use the vertical monitor for coding if it's there
-    editor = ["LG SDQHD" "secondary" "main"];
+    editor = ["LG SDQHD" "main"];
     music = "main";
     notes = ["built-in" "secondary" "main"];
     terminal = ["built-in" "main"];
