@@ -1,4 +1,10 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  user,
+  ...
+}: let
+  ownColor = "red";
+in {
   enable = true;
   settings = {
     git = {
@@ -9,13 +15,19 @@
       mainBranches = ["main" "master"];
       paging = {
         colorArg = "always";
-        pager = "${pkgs.delta}/bin/delta --paging=never -n -s";
+        pager = "${pkgs.delta}/bin/delta --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format='lazygit-edit://{path}:{line}'";
         useConfig = false;
       };
       parseEmoji = true;
       skipHookPrefix = "WIP";
     };
     gui = {
+      authorColors = {
+        "${user.name}" = ownColor;
+      };
+      branchColors = {
+        "${user.githubHandle}" = ownColor;
+      };
       nerdFontsVersion = "3";
     };
     os = {
