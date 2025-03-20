@@ -34,13 +34,16 @@
   programs = {
     cloudshell.enable = true;
     fd.enable = true;
+    jq.enable = true;
+    ripgrep.enable = true;
+
     gh.enable = true;
     gh.settings.pager = "${pkgs.delta}/bin/delta";
     gh-dash.enable = true;
     gitui.enable = true;
-    jq.enable = true;
-    ripgrep.enable = true;
+
     thefuck.enable = true;
+    thefuck.package = pkgs.stable.thefuck;
   };
 
   home.packages = with pkgs;

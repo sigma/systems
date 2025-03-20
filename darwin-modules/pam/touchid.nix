@@ -16,13 +16,6 @@ in {
   };
 
   config = {
-    assertions = [
-      {
-        assertion = !(cfg.enable && config.security.pam.enableSudoTouchIdAuth);
-        message = "config.security.pam.touchid.enable and config.security.pam.enableSudoTouchIdAuth cannot be enabled at the same time";
-      }
-    ];
-
     security.pam = mkIf cfg.enable {
       reattach.enable = true;
 

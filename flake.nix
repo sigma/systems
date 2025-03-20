@@ -38,12 +38,13 @@
     # Rust
     fenix.url = "github:nix-community/fenix";
     fenix.inputs.nixpkgs.follows = "nixpkgs";
+    naersk.url = "github:nix-community/naersk";
+    naersk.inputs.nixpkgs.follows = "nixpkgs";
 
     # VS Code
     vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
     vscode-extensions.inputs.nixpkgs.follows = "nixpkgs";
     vscode-extensions.inputs.flake-utils.follows = "flake-utils";
-    vscode-extensions.inputs.flake-compat.follows = "flake-compat";
 
     # Utils
     flake-compat.url = "github:edolstra/flake-compat";
@@ -57,6 +58,7 @@
     comma.inputs.nixpkgs.follows = "nixpkgs";
     comma.inputs.flake-compat.follows = "flake-compat";
     comma.inputs.utils.follows = "flake-utils";
+    comma.inputs.naersk.follows = "naersk";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
     nix-index-database.url = "github:nix-community/nix-index-database";

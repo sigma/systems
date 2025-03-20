@@ -10,7 +10,7 @@ with lib; let
   helpers = import ./helpers.nix {inherit lib cfg;};
   configurations = import ./configurations.nix {
     inherit inputs lib cfg helpers;
-    stateVersion = "24.11";
+    stateVersion = "25.05";
   };
   defaultFeatures = ["managed" "linux" "mac" "nixos" "interactive" "laptop"];
 in {
