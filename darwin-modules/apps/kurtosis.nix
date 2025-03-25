@@ -17,7 +17,7 @@ in {
         "kurtosis-tech/tap"
       ];
       brews = [
-        "kurtosis-tech/tap/kurtosis-cli@1.4.3"
+        "kurtosis-tech/tap/kurtosis-cli"
       ];
     };
 
