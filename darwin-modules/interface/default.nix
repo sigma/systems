@@ -12,8 +12,6 @@
     35
     60 # Input Sources
     61
-    64 # Spotlight Search
-    65
     79 # Move left a space
     80
     81 # Move right a space

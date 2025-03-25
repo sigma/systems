@@ -4,6 +4,7 @@
   ];
 
   programs = {
+    alfred.enable = true;
     brave.enable = true;
     secretive.enable = true;
     tailscale.enable = true;

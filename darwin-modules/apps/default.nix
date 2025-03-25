@@ -2,6 +2,7 @@
   imports = [
     ./1password.nix
     ./aerospace.nix
+    ./alfred.nix
     ./brave.nix
     ./karabiner.nix
     ./kurtosis.nix
@@ -16,7 +17,6 @@
   ];
 
   homebrew.casks = [
-    "alfred"
     "calibre"
     "elgato-stream-deck"
     "google-chrome"
