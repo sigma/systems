@@ -70,5 +70,14 @@ in {
       "karabiner-elements"
     ];
     home-manager.users.${user.login}.home.file.".config/karabiner/karabiner.json".text = cfgTxt;
+
+    # Hack for karabiner: register F16 as the "do not disturb" shortcut.
+    system.defaults.CustomUserPreferences."com.apple.symbolichotkeys".AppleSymbolicHotKeys."175" = {
+      enabled = true;
+      value = {
+        parameters = [65535 106 8388608];
+        type = "standard";
+      };
+    };
   };
 }
