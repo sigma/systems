@@ -20,6 +20,7 @@
     "calibre"
     "elgato-stream-deck"
     "google-chrome"
+    "jordanbaird-ice"
     "notion"
     "notion-calendar"
     "slack"
