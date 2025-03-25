@@ -19,6 +19,10 @@ in {
   };
 
   config = mkIf cfg.enable {
+    homebrew.casks = [
+      "orbstack"
+    ];
+
     home-manager.users.${user.login} = {
       programs.k9s.enable = true;
       programs.kubeswitch = {
