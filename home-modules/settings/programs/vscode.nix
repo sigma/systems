@@ -15,12 +15,11 @@
       };
     })
     .config;
-in
-  {
-    enable = true;
-    mutableExtensionsDir = true;
-  }
-  // (makeProfile [
+in {
+  enable = true;
+  mutableExtensionsDir = true;
+
+  profiles.default = makeProfile [
     ./code/cursor.nix
     ./code/custom.nix
     ./code/emacs.nix
@@ -32,4 +31,5 @@ in
     ./code/nix.nix
     ./code/python.nix
     ./code/bazel.nix
-  ])
+  ];
+}
