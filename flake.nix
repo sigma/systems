@@ -72,6 +72,12 @@
     # Theme
     catppuccin.url = "github:catppuccin/nix";
     catppuccin.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Flox
+    flox.url = "github:flox/flox";
+    flox.inputs.nixpkgs.follows = "nixpkgs";
+    flox.inputs.pre-commit-hooks.follows = "pre-commit-hooks-nix";
+    flox.inputs.fenix.follows = "fenix";
   };
 
   outputs = inputs:

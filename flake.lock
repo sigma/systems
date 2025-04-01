@@ -75,6 +75,21 @@
         "type": "github"
       }
     },
+    "crane": {
+      "locked": {
+        "lastModified": 1737689766,
+        "narHash": "sha256-ivVXYaYlShxYoKfSo5+y5930qMKKJ8CLcAoIBPQfJ6s=",
+        "owner": "ipetkov",
+        "repo": "crane",
+        "rev": "6fe74265bbb6d016d663b1091f015e2976c4a527",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ipetkov",
+        "repo": "crane",
+        "type": "github"
+      }
+    },
     "darwin": {
       "inputs": {
         "nixpkgs": [
@@ -241,6 +256,34 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flox": {
+      "inputs": {
+        "crane": "crane",
+        "fenix": [
+          "fenix"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "pre-commit-hooks": [
+          "pre-commit-hooks-nix"
+        ],
+        "t3-src": "t3-src"
+      },
+      "locked": {
+        "lastModified": 1743168180,
+        "narHash": "sha256-yrqNxfLGwqAmwWrZrHyW+hKpIOc6JaIUAXiRbjKtiJQ=",
+        "owner": "flox",
+        "repo": "flox",
+        "rev": "507f7a77ac4d4d794974426d19dacff9ffd0511d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "flox",
+        "repo": "flox",
         "type": "github"
       }
     },
@@ -483,6 +526,7 @@
         "flake-parts": "flake-parts",
         "flake-root": "flake-root",
         "flake-utils": "flake-utils",
+        "flox": "flox",
         "home-manager": "home-manager",
         "maschine-hacks": "maschine-hacks",
         "naersk": "naersk",
@@ -527,6 +571,23 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "t3-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1738681975,
+        "narHash": "sha256-QLaOMYlEYjUZpuXJ/MOKb+UqzrTiOu6Isuqj07HTxkQ=",
+        "owner": "flox",
+        "repo": "t3",
+        "rev": "83caeb1cc47fd07117ee5cf478f82cc177cca598",
+        "type": "github"
+      },
+      "original": {
+        "owner": "flox",
+        "ref": "v1.0.7",
+        "repo": "t3",
         "type": "github"
       }
     },
