@@ -34,6 +34,12 @@ in {
         "k" = "kubectl";
       };
 
+      # orbstack will overwrite these otherwise
+      programs.carapace.fishNative = [
+        "docker"
+        "kubectl"
+      ];
+
       home = {
         packages = with pkgs;
           [
