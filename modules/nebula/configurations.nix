@@ -26,11 +26,17 @@
       };
     };
   };
+
+  nixModule = {
+    nix.settings.substituters = cfg.nixConfig.trusted-substituters;
+    nix.settings.trusted-public-keys = cfg.nixConfig.trusted-public-keys;
+  };
 in {
   mac = machine: let
     user = userFor machine;
     specialArgs = {
       inherit user machine stateVersion;
+      inherit (machine) system;
     };
   in
     inputs.darwin.lib.darwinSystem {
@@ -43,6 +49,7 @@ in {
           # `home-manager` module
           inputs.home-manager.darwinModules.home-manager
           (homeManagerConfig {inherit user machine;})
+          nixModule
         ];
     };
 
@@ -86,6 +93,7 @@ in {
           # 'home-manager' module
           inputs.home-manager.nixosModules.home-manager
           (homeManagerConfig {inherit user machine;})
+          nixModule
         ];
     };
 }

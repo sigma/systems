@@ -13,6 +13,16 @@ with lib; let
     stateVersion = "25.05";
   };
   defaultFeatures = ["managed" "linux" "mac" "nixos" "interactive" "laptop"];
+  nixConfigTypes = types.submodule {
+    options = {
+      trusted-substituters = mkOption {
+        type = types.listOf types.str;
+      };
+      trusted-public-keys = mkOption {
+        type = types.listOf types.str;
+      };
+    };
+  };
 in {
   options = {
     nebula = {
@@ -59,6 +69,11 @@ in {
       userSelector = mkOption {
         type = types.functionTo types.user;
         default = machine: machine.user;
+      };
+
+      nixConfig = mkOption {
+        type = nixConfigTypes;
+        default = {};
       };
     };
   };
