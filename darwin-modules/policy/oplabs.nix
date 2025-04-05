@@ -49,6 +49,7 @@ with lib; {
       "ethereum-optimism"
       "ethpandaops"
     ];
+    email = builtins.head (builtins.filter (e: lib.hasSuffix "@oplabs.co" e) user.allEmails);
   in {
     programs.gcloud.enable = mkForce true;
     programs.gcloud.enableGkeAuthPlugin = mkForce true;
@@ -73,7 +74,7 @@ with lib; {
         workOrg = org: {
           condition = "hasconfig:remote.*.url:git@github.com:${org}/**";
           contents = {
-            user.email = "${user.email}";
+            user.email = "${email}";
             commit.gpgsign = true;
           };
           contentSuffix = org;

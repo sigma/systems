@@ -7,6 +7,9 @@
     lib.optionals machine.features.oplabs [
       ./oplabs.nix
     ]
+    ++ lib.optionals machine.features.firefly [
+      ./firefly.nix
+    ]
     ++ lib.optionals machine.features.laptop [
       ./laptop.nix
     ]

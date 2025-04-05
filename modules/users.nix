@@ -9,6 +9,10 @@ in {
       name = "perso";
       emails = ["yann.hodique@gmail.com" "yann@hodique.info"];
     };
+    fireflyProfile = {
+      name = "firefly";
+      emails = ["yann@firefly.engineering"];
+    };
     oplabsProfile = {
       name = "oplabs";
       emails = ["yann@oplabs.co"];
@@ -17,14 +21,16 @@ in {
     personalUser = {
       inherit name githubHandle login;
       profiles = [
+        fireflyProfile
         persoProfile
       ];
     };
 
-    oplabsUser = {
+    workUser = {
       inherit name githubHandle login;
       profiles = [
         oplabsProfile
+        fireflyProfile
         persoProfile
       ];
     };
@@ -32,6 +38,6 @@ in {
 
   nebula.userSelector = machine:
     if machine.features.work
-    then cfg.users.oplabsUser
+    then cfg.users.workUser
     else cfg.users.personalUser;
 }
