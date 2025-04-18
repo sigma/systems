@@ -23,6 +23,7 @@
     "jordanbaird-ice"
     "notion"
     "notion-calendar"
+    "obsidian"
     "slack"
     "spotify"
     "soundsource"
