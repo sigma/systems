@@ -17,9 +17,11 @@ with lib; let
     options = {
       trusted-substituters = mkOption {
         type = types.listOf types.str;
+        default = [];
       };
       trusted-public-keys = mkOption {
         type = types.listOf types.str;
+        default = [];
       };
     };
   };

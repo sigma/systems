@@ -8,8 +8,6 @@
     brave.enable = true;
     secretive.enable = true;
     tailscale.enable = true;
-
-    flox.enable = true;
   };
 
   services.emacs.enable = true;
