@@ -3,6 +3,8 @@
 in {
   enable = true;
 
+  tmux.enableShellIntegration = true;
+
   # Disable fish integration to avoid conflicts with fzf-fish
   enableFishIntegration = false;
 

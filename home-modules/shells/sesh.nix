@@ -9,28 +9,7 @@ with lib; let
 in {
   options = {
     programs.sesh = {
-      enable = mkEnableOption "Enable sesh";
-
       enableTmuxpWorkspaces = mkEnableOption "Enable tmuxp workspaces";
-
-      package = mkOption {
-        type = types.package;
-        default = pkgs.sesh;
-        defaultText = "pkgs.sesh";
-        description = "The sesh package to use.";
-      };
-
-      enableTmuxIntegration = mkOption {
-        type = types.bool;
-        default = true;
-        description = "Enable tmux integration.";
-      };
-
-      useIcons = mkOption {
-        type = types.bool;
-        default = true;
-        description = "Use icons in sesh.";
-      };
 
       sessions = mkOption {
         type = types.listOf (types.submodule {
@@ -59,9 +38,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [cfg.package];
-
-    home.file.".config/sesh/sesh.toml".source = (pkgs.formats.toml {}).generate "sesh.toml" {
+    programs.sesh.settings = {
       session =
         map (session: {
           name = session.name;
@@ -69,39 +46,6 @@ in {
           startup_command = pkgs.writeShellScript "sesh-${session.name}-startup.sh" session.startupScript;
         })
         cfg.sessions;
-    };
-
-    programs.tmux = mkIf cfg.enableTmuxIntegration {
-      extraConfig = let
-        sesh = "${cfg.package}/bin/sesh";
-        fzf-tmux = "${pkgs.fzf}/bin/fzf-tmux";
-        seshList = "${sesh} list ${
-          if cfg.useIcons
-          then "-i"
-          else ""
-        }";
-        killSession = pkgs.writeShellScript "sesh-kill-session.sh" ''
-          name=''${1${
-            if cfg.useIcons
-            then ":2"
-            else ""
-          }}
-          ${pkgs.tmux}/bin/tmux kill-session -t "$name"
-        '';
-      in ''
-        bind-key "T" run-shell "${sesh} connect \"$(
-         ${seshList} -c -t -H | ${fzf-tmux} -p 55%,60% \
-          --no-sort --ansi --border-label ' sesh ' --prompt '⚡  ' \
-          --header '  ^a all ^t tmux ^g configs ^d tmux kill' \
-          --bind 'tab:down,btab:up' \
-          --bind 'ctrl-a:change-prompt(⚡  )+reload(${seshList} -c -t -H)' \
-          --bind 'ctrl-t:change-prompt(🪟  )+reload(${seshList} -t -H)' \
-          --bind 'ctrl-g:change-prompt(⚙️  )+reload(${seshList} -c -H)' \
-          --bind 'ctrl-d:execute(${killSession} {})+change-prompt(⚡  )+reload(${seshList} -c -t -H)'
-        )\""
-
-        bind-key "L" run-shell "${sesh} last"
-      '';
     };
 
     programs.sesh.sessions = let

@@ -49,7 +49,6 @@
     "terminal.integrated.inheritEnv" = false;
 
     "workbench.activityBar.orientation" = "vertical";
-    "workbench.colorTheme" = "Subliminal Next";
     "workbench.iconTheme" = "vscode-icons";
     "workbench.editor.enablePreviewFromQuickOpen" = false;
     "workbench.editor.enablePreview" = false;
