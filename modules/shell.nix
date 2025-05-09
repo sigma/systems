@@ -99,7 +99,6 @@
       };
 
       packages = with pkgs; [
-        nix
         nil # for VSCode integration.
       ];
 

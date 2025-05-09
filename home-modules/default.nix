@@ -126,9 +126,8 @@
       statix
       alejandra
       comma
-
-      nix
       devenv
+      fh
 
       # keyboard QMK tools
       mdloader

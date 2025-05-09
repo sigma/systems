@@ -72,6 +72,12 @@
     # Theme
     catppuccin.url = "github:catppuccin/nix";
     catppuccin.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Flakehub
+    fh.url = "https://flakehub.com/f/DeterminateSystems/fh/*";
+    fh.inputs.nixpkgs.follows = "nixpkgs";
+    fh.inputs.fenix.follows = "fenix";
+    fh.inputs.naersk.follows = "naersk";
   };
 
   outputs = inputs:
@@ -110,6 +116,7 @@
             inherit default;
             home-manager = default;
             darwin-rebuild = inputs'.darwin.packages.darwin-rebuild;
+            fh = inputs'.packages.default;
           }
           // localPackages;
       };

@@ -3,6 +3,7 @@
   lib,
   ...
 }: {
+  nix.enable = false;
   # Enable experimental nix command and flakes
   # nix.package = pkgs.nixUnstable;
   nix.extraOptions =
