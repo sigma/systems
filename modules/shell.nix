@@ -12,6 +12,7 @@
     ...
   }: let
     isDarwin = pkgs.stdenvNoCC.isDarwin;
+    nixFlags = "--extra-experimental-features 'nix-command flakes'";
 
     systemSetup =
       if isDarwin
@@ -39,26 +40,26 @@
     systemBuild =
       if isDarwin
       then ''
-        ${pkgs.nix}/bin/nix build ".#darwinConfigurations.`hostname -s`.system"
+        ${pkgs.nix}/bin/nix ${nixFlags} build ".#darwinConfigurations.`hostname -s`.system"
       ''
       else ''
         if test -d /etc/nixos; then
-          ${pkgs.nix}/bin/nix run ".#nixos-rebuild" -- build --flake ".#`hostname -s`"
+          ${pkgs.nix}/bin/nix ${nixFlags} run ".#nixos-rebuild" -- build --flake ".#`hostname -s`"
         else
-          ${pkgs.nix}/bin/nix run ".#home-manager" --  build --flake ".#`hostname -s`"
+          ${pkgs.nix}/bin/nix ${nixFlags} run ".#home-manager" --  build --flake ".#`hostname -s`"
         fi
       '';
 
     systemActivate =
       if isDarwin
       then ''
-        ${pkgs.nix}/bin/nix run ".#darwin-rebuild" -- switch --flake ".#`hostname -s`"
+        ${pkgs.nix}/bin/nix ${nixFlags} run ".#darwin-rebuild" -- switch --flake ".#`hostname -s`"
       ''
       else ''
         if test -d /etc/nixos; then
-          ${pkgs.nix}/bin/nix run ".#nixos-rebuild" -- switch --flake ".#`hostname -s`"
+          ${pkgs.nix}/bin/nix ${nixFlags} run ".#nixos-rebuild" -- switch --flake ".#`hostname -s`"
         else
-          ${pkgs.nix}/bin/nix run ".#home-manager" --  switch --flake ".#`hostname -s`"
+          ${pkgs.nix}/bin/nix ${nixFlags} run ".#home-manager" --  switch --flake ".#`hostname -s`"
         fi
       '';
   in {
