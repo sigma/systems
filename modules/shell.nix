@@ -35,31 +35,38 @@
       ''
       else "";
 
+    findNix = ''
+      NIX_BIN=${pkgs.nix}/bin/nix
+      if test -x /usr/local/bin/determinate-nixd; then
+        NIX_BIN=nix
+      fi
+    '';
+
     systemBootstrap = "";
 
     systemBuild =
       if isDarwin
       then ''
-        ${pkgs.nix}/bin/nix ${nixFlags} build ".#darwinConfigurations.`hostname -s`.system"
+        $NIX_BIN ${nixFlags} build ".#darwinConfigurations.`hostname -s`.system"
       ''
       else ''
         if test -d /etc/nixos; then
-          ${pkgs.nix}/bin/nix ${nixFlags} run ".#nixos-rebuild" -- build --flake ".#`hostname -s`"
+          $NIX_BIN ${nixFlags} run ".#nixos-rebuild" -- build --flake ".#`hostname -s`"
         else
-          ${pkgs.nix}/bin/nix ${nixFlags} run ".#home-manager" --  build --flake ".#`hostname -s`"
+          $NIX_BIN ${nixFlags} run ".#home-manager" --  build --flake ".#`hostname -s`"
         fi
       '';
 
     systemActivate =
       if isDarwin
       then ''
-        ${pkgs.nix}/bin/nix ${nixFlags} run ".#darwin-rebuild" -- switch --flake ".#`hostname -s`"
+        $NIX_BIN ${nixFlags} run ".#darwin-rebuild" -- switch --flake ".#`hostname -s`"
       ''
       else ''
         if test -d /etc/nixos; then
-          ${pkgs.nix}/bin/nix ${nixFlags} run ".#nixos-rebuild" -- switch --flake ".#`hostname -s`"
+          $NIX_BIN ${nixFlags} run ".#nixos-rebuild" -- switch --flake ".#`hostname -s`"
         else
-          ${pkgs.nix}/bin/nix ${nixFlags} run ".#home-manager" --  switch --flake ".#`hostname -s`"
+          $NIX_BIN ${nixFlags} run ".#home-manager" --  switch --flake ".#`hostname -s`"
         fi
       '';
   in {
@@ -108,6 +115,7 @@
           name = "system-bootstrap";
           category = "system";
           command = ''
+            ${findNix}
             ${systemBootstrap}
           '';
         }
@@ -115,6 +123,7 @@
           name = "system-install";
           category = "system";
           command = ''
+            ${findNix}
             ${systemSetup}
             ${systemBootstrap}
             ${systemBuild}
@@ -125,6 +134,7 @@
           name = "system-test";
           category = "system";
           command = ''
+            ${findNix}
             ${systemBuild}
           '';
         }
