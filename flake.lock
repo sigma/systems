@@ -320,11 +320,10 @@
         ]
       },
       "locked": {
-        "lastModified": 1712513830,
-        "narHash": "sha256-F+GeELPm3ZmR0y9y0o2DRXzO52T9zk3RWtZ8kCKl+2c=",
+        "lastModified": 1747756023,
         "owner": "sigma",
         "repo": "maschine-hacks",
-        "rev": "7e943fd6ce0e8786915a0607095c300a5544301c",
+        "rev": "0fc2bf9da0e33bf27040190bddce076b3f7448e2",
         "type": "github"
       },
       "original": {
