@@ -4,11 +4,8 @@
   machine,
   ...
 }: {
-  # only enable nix on non-determinate machines
   nix.enable = !machine.features.determinate;
 
-  # Enable experimental nix command and flakes
-  # nix.package = pkgs.nixUnstable;
   nix.extraOptions =
     ''
       auto-optimise-store = true
