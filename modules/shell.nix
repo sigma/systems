@@ -38,7 +38,7 @@
     findNix = ''
       NIX_BIN=${pkgs.nix}/bin/nix
       if test -x /usr/local/bin/determinate-nixd; then
-        NIX_BIN=nix
+        NIX_BIN=${inputs.nix.packages.${pkgs.stdenv.system}.nix}/bin/nix
       fi
     '';
 

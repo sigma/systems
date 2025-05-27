@@ -78,6 +78,15 @@
     fh.inputs.nixpkgs.follows = "nixpkgs";
     fh.inputs.fenix.follows = "fenix";
     fh.inputs.naersk.follows = "naersk";
+
+    nix.url = "https://flakehub.com/f/DeterminateSystems/nix-src/*";
+    nix.inputs = {
+      nixpkgs.follows = "nixpkgs";
+      nixpkgs-regression.follows = "nixpkgs";
+      nixpkgs-23-11.follows = "";
+      flake-parts.follows = "";
+      git-hooks-nix.follows = "";
+    };
   };
 
   outputs = inputs:

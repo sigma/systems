@@ -17,6 +17,12 @@ in
   {
     master = inputs.nixpkgs-master.legacyPackages.${system};
     stable = nixpkgs-stable.legacyPackages.${system};
+
+    # put determinate nix in a separate package set so we can decide which
+    # version to use depending on the machine.
+    determinate = {
+      nix = inputs.nix.packages.${system}.nix;
+    };
   }
   // inputs.nixpkgs.lib.optionalAttrs (prev.stdenv.system == "aarch64-darwin") {
     x86 =
