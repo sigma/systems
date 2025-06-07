@@ -38,4 +38,9 @@
   services.openssh.enable = true;
 
   system.stateVersion = "25.05";
+
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [22 2376];
+  };
 }
