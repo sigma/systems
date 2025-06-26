@@ -15,7 +15,7 @@ in
 
     config =
       mkIf (cfg.disable != []) {
-        system.activationScripts.extraUserActivation.text = let
+        system.activationScripts.services.text = let
           disableServicesCommands = map (key: "defaults write pbs NSServicesStatus -dict-add '${key}' '
 <dict>
   <key>enabled_context_menu</key><false/>
@@ -28,8 +28,7 @@ in
 </dict>'") cfg.disable;
         in ''
           echo >&2 "disabling Terminal services..."
-
-          ${concatStringsSep "\n" disableServicesCommands}
+          ${concatStringsSep "\n" (map (cmd: "sudo -u ${user.login} -- " + cmd) disableServicesCommands)}
         '';
       };
   }

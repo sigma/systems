@@ -2,6 +2,7 @@
   pkgs,
   lib,
   machine,
+  user,
   ...
 }: {
   nix.enable = !machine.features.determinate;
@@ -17,4 +18,6 @@
     '';
 
   programs.nix-index.enable = true;
+
+  system.primaryUser = user.login;
 }
