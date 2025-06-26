@@ -47,7 +47,7 @@
     systemBuild =
       if isDarwin
       then ''
-        $NIX_BIN ${nixFlags} build ".#darwinConfigurations.`hostname -s`.system"
+        sudo $NIX_BIN ${nixFlags} build ".#darwinConfigurations.`hostname -s`.system"
       ''
       else ''
         if test -d /etc/nixos; then
@@ -60,7 +60,7 @@
     systemActivate =
       if isDarwin
       then ''
-        $NIX_BIN ${nixFlags} run ".#darwin-rebuild" -- switch --flake ".#`hostname -s`"
+        sudo $NIX_BIN ${nixFlags} run ".#darwin-rebuild" -- switch --flake ".#`hostname -s`"
       ''
       else ''
         if test -d /etc/nixos; then

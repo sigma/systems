@@ -13,9 +13,9 @@ in {
       name = "firefly";
       emails = ["yann@firefly.engineering"];
     };
-    oplabsProfile = {
-      name = "oplabs";
-      emails = ["yann@oplabs.co"];
+    subzeroProfile = {
+      name = "subzero";
+      emails = ["yann@subzero.xyz"];
     };
   in {
     personalUser = {
@@ -29,7 +29,7 @@ in {
     workUser = {
       inherit name githubHandle login;
       profiles = [
-        oplabsProfile
+        subzeroProfile
         fireflyProfile
         persoProfile
       ];

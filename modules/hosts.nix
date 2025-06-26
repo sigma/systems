@@ -1,5 +1,12 @@
 {
-  nebula.features = ["work" "firefly" "oplabs" "music" "fusion" "determinate"];
+  nebula.features = [
+    "work" # generic work feature
+    "firefly" # specifically for firefly engineering
+    "subzero" # specifically for subzero contracting
+    "music" # music production
+    "fusion" # for Fusion VMs
+    "determinate" # for Determinate Nix
+  ];
 
   nebula.hosts = let
     cloudshellCmd = proj: "/usr/bin/env DEVSHELL_PROJECT_ID=${proj} bash -l";
@@ -15,14 +22,14 @@
       name = "ash.local";
       system = "aarch64-darwin";
       remotes = [pdev csp devbox];
-      features = ["managed" "laptop" "mac" "work" "oplabs" "music" "firefly" "determinate"];
+      features = ["managed" "laptop" "mac" "work" "music" "firefly" "determinate" "subzero"];
     };
 
     devbox = {
       name = "192.168.77.131";
       alias = "devbox";
       system = "aarch64-linux";
-      features = ["managed" "fusion" "nixos" "work" "oplabs"];
+      features = ["managed" "fusion" "nixos" "work" "subzero"];
       sshOpts = {
         forwardAgent = true;
         extraOptions = {

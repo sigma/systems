@@ -4,8 +4,8 @@
   ...
 }: {
   imports =
-    lib.optionals machine.features.oplabs [
-      ./oplabs.nix
+    lib.optionals machine.features.subzero [
+      ./subzero.nix
     ]
     ++ lib.optionals machine.features.firefly [
       ./firefly.nix
