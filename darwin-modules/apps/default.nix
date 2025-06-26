@@ -12,6 +12,8 @@
     ./settings
   ];
 
+  homebrew.global.brewfile = true;
+
   homebrew.brews = [
     "libusb"
   ];
