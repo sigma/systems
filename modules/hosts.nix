@@ -23,6 +23,12 @@
       alias = "devbox";
       system = "aarch64-linux";
       features = ["managed" "fusion" "nixos" "work" "oplabs"];
+      sshOpts = {
+        forwardAgent = true;
+        extraOptions = {
+          AddKeysToAgent = "yes";
+        };
+      };
     };
 
     pdev = {
