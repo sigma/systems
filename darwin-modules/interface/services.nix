@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  user,
   ...
 }: let
   cfg = config.interface.services;
