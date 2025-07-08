@@ -23,6 +23,7 @@
     "elgato-stream-deck"
     "google-chrome"
     "jordanbaird-ice"
+    "linear-linear"
     "notion"
     "notion-calendar"
     "obsidian"
