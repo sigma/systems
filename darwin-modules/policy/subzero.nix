@@ -46,7 +46,7 @@ with lib; {
 
   home-manager.users.${user.login} = let
     workGithubOrgs = [
-      "SubzeroLabs"
+      "subzerolabs"
     ];
     email = builtins.head (builtins.filter (e: lib.hasSuffix "@subzero.xyz" e) user.allEmails);
   in {
