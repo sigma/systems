@@ -46,7 +46,7 @@ with lib; {
 
   home-manager.users.${user.login} = let
     workGithubOrgs = [
-      "subzero"
+      "SubzeroLabs"
     ];
     email = builtins.head (builtins.filter (e: lib.hasSuffix "@subzero.xyz" e) user.allEmails);
   in {
@@ -82,4 +82,13 @@ with lib; {
         map workOrg workGithubOrgs;
     };
   };
+
+  homebrew.brews = [
+    "pkg-config"
+    "openssl"
+  ];
+
+  homebrew.casks = [
+    "1password"
+  ];
 }
