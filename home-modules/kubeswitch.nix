@@ -8,13 +8,6 @@ with lib; let
   cfg = config.programs.kubeswitch;
 in {
   options.programs.kubeswitch = {
-    enable = mkEnableOption "kubeswitch";
-
-    package = mkOption {
-      type = types.package;
-      default = pkgs.kubeswitch;
-    };
-
     shellAlias = mkOption {
       type = types.nullOr types.str;
       default = null;
@@ -23,11 +16,6 @@ in {
 
   config = mkIf cfg.enable {
     home = {
-      packages = [
-        # we need switcher to be in the PATH to use kubeswitch
-        cfg.package
-      ];
-
       shellAliases = lib.mkIf (cfg.shellAlias != null) {
         ${cfg.shellAlias} = "kubeswitch";
       };

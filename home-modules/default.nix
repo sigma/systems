@@ -21,7 +21,10 @@
     ./tmuxp.nix
   ];
 
+  # enable everything except vscode
   catppuccin.enable = true;
+  catppuccin.vscode.profiles.default.enable = false;
+
   catppuccin.flavor = "frappe";
   catppuccin.tmux.extraConfig = ''
     set -g @catppuccin_window_status_style "rounded"
