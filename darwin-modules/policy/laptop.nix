@@ -10,15 +10,22 @@
   # Office config (laptop always open):
   # - main monitor is Apple
   # - secondary monitor is the laptop screen
+  # Travel config (laptop + zenscreen):
+  # - main monitor is the laptop screen
+  # - secondary monitor is the zenscreen
   # Mobile config (laptop only):
   # - main monitor is the laptop screen
-  programs.aerospace.monitors = {
+  programs.aerospace.monitors = let
+    zenscreen = "ASUS MB16AC";
+    lg = "LG SDQHD";
+    force_side = [zenscreen "built-in" "secondary" "main"];
+  in {
     browser = "main";
-    chat = ["built-in" "secondary" "main"];
+    chat = force_side;
     # use the vertical monitor for coding if it's there
-    editor = ["LG SDQHD" "main"];
+    editor = [lg "main"];
     music = "main";
-    notes = ["built-in" "secondary" "main"];
+    notes = force_side;
     terminal = ["built-in" "main"];
   };
 
