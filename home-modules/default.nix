@@ -134,6 +134,9 @@
 
       # keyboard QMK tools
       mdloader
+
+      # for voice generation
+      ffmpeg
     ]
     ++ lib.optionals machine.features.mac [
       m-cli # useful macOS CLI commands
