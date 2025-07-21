@@ -6,9 +6,9 @@
   ...
 }:
 with lib; {
-  # programs.kurtosis.enable = mkForce true;
+  features.ipfs.enable = mkForce false;
 
-  # programs.onepassword.enable = mkForce true;
+  programs.onepassword.enable = mkForce true;
 
   programs.karabiner = mkIf machine.features.laptop {
     # that's horrendous, but for whatever reason the M3 MBP isn't detected
@@ -50,9 +50,6 @@ with lib; {
     ];
     email = builtins.head (builtins.filter (e: lib.hasSuffix "@subzero.xyz" e) user.allEmails);
   in {
-    # programs.gcloud.enable = mkForce true;
-    # programs.gcloud.enableGkeAuthPlugin = mkForce true;
-
     home.packages = with pkgs; [
       terraform
       kubie
@@ -86,9 +83,5 @@ with lib; {
   homebrew.brews = [
     "pkg-config"
     "openssl"
-  ];
-
-  homebrew.casks = [
-    "1password"
   ];
 }

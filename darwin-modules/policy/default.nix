@@ -10,6 +10,9 @@
     ++ lib.optionals machine.features.firefly [
       ./firefly.nix
     ]
+    ++ lib.optionals machine.features.work [
+      ./work.nix
+    ]
     ++ lib.optionals machine.features.laptop [
       ./laptop.nix
     ]
