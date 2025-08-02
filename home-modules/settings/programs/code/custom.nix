@@ -39,6 +39,8 @@
 
     "files.autoSave" = "onFocusChange";
 
+    "rust-analyzer.cargo.targetDir" = true;
+
     "telemetry.telemetryLevel" = "off";
 
     "terminal.external.osxExec" = "${pkgs.wezterm}/bin/wezterm";
