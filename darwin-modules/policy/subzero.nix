@@ -83,5 +83,8 @@ with lib; {
   homebrew.brews = [
     "pkg-config"
     "openssl"
+    "node"
+    "rustup"
+    "socat"
   ];
 }
