@@ -28,9 +28,10 @@
     "notion-calendar"
     "obsidian"
     "slack"
-    "spotify"
     "soundsource"
+    "spotify"
     "visual-studio-code"
+    "warp"
     "whatsapp"
     "yubico-yubikey-manager"
   ];
