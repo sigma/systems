@@ -13,7 +13,7 @@
   nebula.homeModules = [
     ../home-modules
     inputs.chemacs2nix.homeModule
-    inputs.nix-index-database.hmModules.nix-index
+    inputs.nix-index-database.homeModules.nix-index
     inputs.catppuccin.homeModules.catppuccin
   ];
 

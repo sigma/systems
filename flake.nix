@@ -40,6 +40,7 @@
     fenix.inputs.nixpkgs.follows = "nixpkgs";
     naersk.url = "github:nix-community/naersk";
     naersk.inputs.nixpkgs.follows = "nixpkgs";
+    naersk.inputs.fenix.follows = "fenix";
 
     # VS Code
     vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
