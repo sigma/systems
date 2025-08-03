@@ -14,4 +14,3 @@ return Config:init()
    :apply(require('config.fonts'))
    :apply(require('config.general'))
    :apply(require('config.launch'))
-   .options
