@@ -15,6 +15,7 @@
   homebrew.global.brewfile = true;
 
   homebrew.brews = [
+    "jj"
     "libusb"
   ];
 
