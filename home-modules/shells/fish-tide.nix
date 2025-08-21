@@ -54,7 +54,7 @@ in
           ];
         };
 
-        tideColorOverrides = mkOption {
+        tideOverrides = mkOption {
           type = types.attrsOf types.str;
           default = {};
         };
@@ -72,7 +72,7 @@ in
       home.activation = lib.optionalAttrs (cfg.useTide && cfg.tideOptions != []) {
         configureTide = let
           flags = builtins.concatStringsSep " " cfg.tideOptions;
-          colorOverrides = builtins.concatStringsSep "\n" (lib.mapAttrsToList (k: v: ''${pkgs.fish}/bin/fish -c "set -Ux tide_${k} ${v}"'') cfg.tideColorOverrides);
+          overrides = builtins.concatStringsSep "\n" (lib.mapAttrsToList (k: v: ''${pkgs.fish}/bin/fish -c "set -Ux tide_${k} ${v}"'') cfg.tideOverrides);
         in
           lib.hm.dag.entryAfter ["writeBoundary"] (''
               echo "Configuring tide prompt"
@@ -82,7 +82,7 @@ in
               ${pkgs.fish}/bin/fish -c "set -Ux tide_left_prompt_items ${builtins.concatStringsSep " " cfg.tideLeftSegments}"
               ${pkgs.fish}/bin/fish -c "set -Ux tide_right_prompt_items ${builtins.concatStringsSep " " cfg.tideRightSegments}"
             ''
-            + lib.optionalString (cfg.tideColorOverrides != {}) colorOverrides);
+            + lib.optionalString (cfg.tideOverrides != {}) overrides);
       };
     };
   }

@@ -51,8 +51,17 @@ in {
     "--transient=No"
   ];
 
+  tideLeftSegments = [
+    "os"
+    "pwd"
+    "jj"
+    "git"
+    "newline"
+    "character"
+  ];
+
   # manual overrides for catppuccin-like colors
-  tideColorOverrides = {
+  tideOverrides = {
     "pwd_bg_color" = "CBA6F7";
     "pwd_color_anchors" = "000000";
     "pwd_color_dirs" = "000000";
@@ -63,6 +72,8 @@ in {
     "direnv_bg_color" = "FAB387";
     "direnv_bg_color_denied" = "F38BA8";
     "cmd_duration_bg_color" = "F5E0DC";
+
+    "jj_bg_color" = "000000";
   };
 
   shellAliases =
@@ -78,10 +89,62 @@ in {
 
   functions = {
     "fish_greeting" = "";
+
     "mkcd" = {
       body = "mkdir -p $argv[1] && cd $argv[1]";
       description = "Create a directory and navigate into it";
       wraps = "mkdir";
+    };
+
+    "_jj_prompt" = {
+      body = ''
+        # Generate prompt
+        jj log --ignore-working-copy --no-graph --color never -r @ -T '
+            surround(
+                " (",
+                ")",
+                separate(
+                    " ",
+                    bookmarks.join(", "),
+                    coalesce(
+                        surround(
+                            "\"",
+                            "\"",
+                            if(
+                                description.first_line().substr(0, 24).starts_with(description.first_line()),
+                                description.first_line().substr(0, 24),
+                                description.first_line().substr(0, 23) ++ "…"
+                            )
+                        ),
+                        label(if(empty, "empty"), description_placeholder)
+                    ),
+                    change_id.shortest(),
+                    if(conflict, label("conflict", "(conflict)")),
+                    if(empty, label("empty", "(empty)")),
+                    if(divergent, "(divergent)"),
+                    if(hidden, "(hidden)"),
+                )
+            )
+        '
+      '';
+      description = "write out the prompt for the jj segment";
+    };
+
+    "_tide_item_jj" = {
+      body = ''
+        # Is jj installed?
+        if not command -sq jj
+            return
+        end
+
+        # Are we in a jj repo?
+        if not jj root --quiet &>/dev/null
+            return
+        end
+
+        _tide_print_item   jj          ' '   (_jj_prompt)
+      '';
+      description = "jj segment for tide";
     };
   };
 }
