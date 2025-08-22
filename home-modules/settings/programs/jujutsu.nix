@@ -60,6 +60,7 @@ in {
 
       settings = {
         ui.pager = "${pkgs.delta}/bin/delta";
+        ui.diff-formatter = ":git";
       };
     };
   };
