@@ -17,6 +17,7 @@ in {
       email = "${profileEmail "perso"}";
     };
 
+    ui.default-command = "log";
     ui.movement = "edit";
 
     fix.tools.rustfmt = {
@@ -30,6 +31,8 @@ in {
 
     signing.behavior = "own";
     signing.backend = "ssh";
+
+    aliases.l = ["log" "-r" "(main..@):: | (main..@)-"];
   };
 
   scopes = {
@@ -44,6 +47,14 @@ in {
         revset-aliases.work = "heads(::@ ~ description(exact:''))::";
 
         aliases.wip = ["log" "-r" "work"];
+      };
+    };
+
+    log = {
+      commands = ["log"];
+
+      settings = {
+        ui.pager = ":builtin";
       };
     };
 
