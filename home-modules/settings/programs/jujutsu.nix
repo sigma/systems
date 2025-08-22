@@ -27,6 +27,9 @@ in {
 
     git.push-new-bookmarks = true;
     git.private-commits = "description(glob:'wip:*') | description(glob:'private:*')";
+
+    signing.behavior = "own";
+    signing.backend = "ssh";
   };
 
   scopes = {
