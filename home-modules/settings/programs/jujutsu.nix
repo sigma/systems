@@ -27,6 +27,9 @@ in {
 
     git.push-new-bookmarks = true;
     git.private-commits = "description(glob:'wip:*') | description(glob:'private:*')";
+
+    signing.behavior = "own";
+    signing.backend = "ssh";
   };
 
   scopes = {
@@ -57,6 +60,7 @@ in {
 
       settings = {
         ui.pager = "${pkgs.delta}/bin/delta";
+        ui.diff-formatter = ":git";
       };
     };
   };

@@ -9,6 +9,7 @@
     ./nix.nix
     ./pam
     ./policy
+    ./signing-keys.nix
     ./system.nix
     ./u2f-keys.nix
     ./versions.nix
