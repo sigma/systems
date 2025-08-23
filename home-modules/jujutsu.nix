@@ -28,6 +28,16 @@ with lib; let
   };
 in {
   options.programs.jujutsu = {
+    enableUI = mkOption {
+      type = types.bool;
+      default = true;
+    };
+
+    enableMergiraf = mkOption {
+      type = types.bool;
+      default = true;
+    };
+
     scopes = mkOption {
       type = types.attrsOf scopeModule;
       default = {};
@@ -35,6 +45,17 @@ in {
   };
 
   config = mkIf cfg.enable {
+    home.packages =
+      [
+        pkgs.jujutsu
+      ]
+      ++ lib.optionals cfg.enableUI [
+        pkgs.jjui
+      ]
+      ++ lib.optionals cfg.enableMergiraf [
+        pkgs.mergiraf
+      ];
+
     xdg.configFile = lib.mkMerge (
       map
       (
