@@ -18,7 +18,24 @@ in {
     };
 
     ui.default-command = "log";
+    ui.merge-editor = "mergiraf";
     ui.movement = "edit";
+
+    merge-tools.cursor = {
+      program = "cursor";
+      merge-args = ["--wait" "--merge" "$left" "$right" "$base" "$output"];
+      merge-tool-edits-conflict-markers = true;
+      conflict-marker-style = "git";
+      diff-args = ["--diff" "$left" "$right" "--wait"];
+      diff-invocation-mode = "file-by-file";
+      edit-args = [];
+    };
+
+    fix.tools.gofmt = {
+      enabled = true;
+      command = ["gofmt"];
+      patterns = ["glob:'**/*.go'"];
+    };
 
     fix.tools.rustfmt = {
       enabled = true;
