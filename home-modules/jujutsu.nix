@@ -38,6 +38,11 @@ in {
       default = true;
     };
 
+    enableSpr = mkOption {
+      type = types.bool;
+      default = true;
+    };
+
     scopes = mkOption {
       type = types.attrsOf scopeModule;
       default = {};
@@ -54,6 +59,9 @@ in {
       ]
       ++ lib.optionals cfg.enableMergiraf [
         pkgs.mergiraf
+      ]
+      ++ lib.optionals cfg.enableSpr [
+        pkgs.jj-spr
       ];
 
     xdg.configFile = lib.mkMerge (
@@ -75,5 +83,13 @@ in {
       )
       (builtins.attrNames cfg.scopes)
     );
+
+    programs.jujutsu.scopes = lib.optionalAttrs cfg.enableSpr {
+      spr = {
+        settings = {
+          aliases.spr = ["util" "exec" "--" "${pkgs.jj-spr}/bin/jj-spr"];
+        };
+      };
+    };
   };
 }

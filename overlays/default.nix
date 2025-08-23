@@ -19,6 +19,11 @@
 
   # my overlays
   inputs.maschine-hacks.overlays.default
+  (final: prev: {
+    jj-spr = inputs.jj-spr.packages.${final.stdenv.system}.default.overrideAttrs (oldAttrs: {
+      buildInputs = (oldAttrs.buildInputs or []) ++ [final.zlib];
+    });
+  })
 
   # packages hacks
   (import ./pkg)

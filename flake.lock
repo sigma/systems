@@ -269,6 +269,32 @@
         "type": "github"
       }
     },
+    "git-hooks-nix": {
+      "inputs": {
+        "flake-compat": [
+          "flake-compat"
+        ],
+        "gitignore": [
+          "nix"
+        ],
+        "nixpkgs": [
+          "nix",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1755960406,
+        "narHash": "sha256-RF7j6C1TmSTK9tYWO6CdEMtg6XZaUKcvZwOCD2SICZs=",
+        "rev": "e891a93b193fcaf2fc8012d890dc7f0befe86ec2",
+        "revCount": 1046,
+        "type": "tarball",
+        "url": "https://api.flakehub.com/f/pinned/cachix/git-hooks.nix/0.1.1046%2Brev-e891a93b193fcaf2fc8012d890dc7f0befe86ec2/0198d800-7915-7efe-a1eb-8c306d8fab48/source.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://flakehub.com/f/cachix/git-hooks.nix/0.1.941"
+      }
+    },
     "gitignore": {
       "inputs": {
         "nixpkgs": [
@@ -307,6 +333,39 @@
       "original": {
         "owner": "nix-community",
         "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "jj-spr": {
+      "inputs": {
+        "fenix": [
+          "fenix"
+        ],
+        "flake-parts": [
+          "flake-parts"
+        ],
+        "git-hooks": [
+          "nix",
+          "git-hooks-nix"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "treefmt-nix": [
+          "treefmt-nix"
+        ]
+      },
+      "locked": {
+        "lastModified": 1751049095,
+        "narHash": "sha256-I51IGIQ5J7xv5SU+BVafQQv0mocCgSwliElZuhlL0lY=",
+        "owner": "LucioFranco",
+        "repo": "jj-spr",
+        "rev": "8f2eb88a4fae08784cba4c0d72ff22eab348822f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "LucioFranco",
+        "repo": "jj-spr",
         "type": "github"
       }
     },
@@ -359,7 +418,7 @@
     "nix": {
       "inputs": {
         "flake-parts": [],
-        "git-hooks-nix": [],
+        "git-hooks-nix": "git-hooks-nix",
         "nixpkgs": [
           "nixpkgs"
         ],
@@ -538,6 +597,7 @@
         "flake-root": "flake-root",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
+        "jj-spr": "jj-spr",
         "maschine-hacks": "maschine-hacks",
         "naersk": "naersk",
         "nix": "nix",

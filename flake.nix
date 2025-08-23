@@ -27,6 +27,16 @@
     maschine-hacks.inputs.nixpkgs.follows = "nixpkgs";
     maschine-hacks.inputs.flake-parts.follows = "flake-parts";
 
+    # 3rd-party flakes
+    jj-spr.url = "github:LucioFranco/jj-spr";
+    jj-spr.inputs = {
+      nixpkgs.follows = "nixpkgs";
+      flake-parts.follows = "flake-parts";
+      fenix.follows = "fenix";
+      git-hooks.follows = "nix/git-hooks-nix";
+      treefmt-nix.follows = "treefmt-nix";
+    };
+
     # Emacs
     emacs.url = "github:nix-community/emacs-overlay";
     emacs.inputs.nixpkgs.follows = "nixpkgs";
@@ -86,7 +96,7 @@
       nixpkgs-regression.follows = "nixpkgs";
       nixpkgs-23-11.follows = "";
       flake-parts.follows = "";
-      git-hooks-nix.follows = "";
+      git-hooks-nix.inputs.flake-compat.follows = "flake-compat";
     };
   };
 
