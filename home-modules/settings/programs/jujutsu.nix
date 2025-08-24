@@ -88,20 +88,6 @@ in {
   };
 
   scopes = {
-    work = {
-      repositories = [
-        "~/src/github.com/subzerolabs"
-      ];
-
-      settings = {
-        user.email = user.email;
-
-        revset-aliases.work = "heads(::@ ~ description(exact:''))::";
-
-        aliases.wip = ["log" "-r" "work"];
-      };
-    };
-
     delta = {
       commands = ["diff" "show"];
 
