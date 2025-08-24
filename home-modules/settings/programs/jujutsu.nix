@@ -22,6 +22,7 @@ in {
       default-command = "log";
       merge-editor = "mergiraf";
       movement = "edit";
+      pager = ":builtin";
     };
 
     merge-tools.cursor = {
@@ -87,36 +88,6 @@ in {
   };
 
   scopes = {
-    work = {
-      repositories = [
-        "~/src/github.com/subzerolabs"
-      ];
-
-      settings = {
-        user.email = user.email;
-
-        revset-aliases.work = "heads(::@ ~ description(exact:''))::";
-
-        aliases.wip = ["log" "-r" "work"];
-      };
-    };
-
-    log = {
-      commands = ["log"];
-
-      settings = {
-        ui.pager = ":builtin";
-      };
-    };
-
-    status = {
-      commands = ["status"];
-
-      settings = {
-        ui.paginate = "never";
-      };
-    };
-
     delta = {
       commands = ["diff" "show"];
 
