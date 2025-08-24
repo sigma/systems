@@ -23,5 +23,15 @@
       in
         map workOrg workGithubOrgs;
     };
+
+    programs.jujutsu = {
+      scopes.firefly = {
+        repositories = map (org: "~/src/github.com/${org}") workGithubOrgs;
+
+        settings = {
+          user.email = email;
+        };
+      };
+    };
   };
 }

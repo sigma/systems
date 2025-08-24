@@ -80,7 +80,7 @@ with lib; {
     };
 
     programs.jujutsu = {
-      scopes.work = {
+      scopes.subzero = {
         repositories = map (org: "~/src/github.com/${org}") workGithubOrgs;
 
         settings = {
