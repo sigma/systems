@@ -22,6 +22,7 @@ in {
       default-command = "log";
       merge-editor = "mergiraf";
       movement = "edit";
+      pager = ":builtin";
     };
 
     merge-tools.cursor = {
@@ -98,22 +99,6 @@ in {
         revset-aliases.work = "heads(::@ ~ description(exact:''))::";
 
         aliases.wip = ["log" "-r" "work"];
-      };
-    };
-
-    log = {
-      commands = ["log"];
-
-      settings = {
-        ui.pager = ":builtin";
-      };
-    };
-
-    status = {
-      commands = ["status"];
-
-      settings = {
-        ui.paginate = "never";
       };
     };
 
