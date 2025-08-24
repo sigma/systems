@@ -78,6 +78,19 @@ with lib; {
       in
         map workOrg workGithubOrgs;
     };
+
+    programs.jujutsu = {
+      scopes.work = {
+        repositories = map (org: "~/src/github.com/${org}") workGithubOrgs;
+
+        settings = {
+          user.email = email;
+
+          revset-aliases.work = "heads(::@ ~ description(exact:''))::";
+          aliases.wip = ["log" "-r" "work"];
+        };
+      };
+    };
   };
 
   homebrew.brews = [
