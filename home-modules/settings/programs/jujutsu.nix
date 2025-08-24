@@ -17,9 +17,12 @@ in {
       email = "${profileEmail "perso"}";
     };
 
-    ui.default-command = "log";
-    ui.merge-editor = "mergiraf";
-    ui.movement = "edit";
+    ui = {
+      conflict-marker-style = "git";
+      default-command = "log";
+      merge-editor = "mergiraf";
+      movement = "edit";
+    };
 
     merge-tools.cursor = {
       program = "cursor";
@@ -43,13 +46,44 @@ in {
       patterns = ["glob:'**/*.rs'"];
     };
 
-    git.push-new-bookmarks = true;
-    git.private-commits = "description(glob:'wip:*') | description(glob:'private:*')";
+    git = {
+      executable-path = "${pkgs.git}/bin/git";
+      push-new-bookmarks = true;
+      private-commits = "description(glob:'wip:*') | description(glob:'private:*')";
+    };
 
-    signing.behavior = "own";
-    signing.backend = "ssh";
+    signing = {
+      behavior = "own";
+      backend = "ssh";
+    };
 
-    aliases.l = ["log" "-r" "(main..@):: | (main..@)-"];
+    aliases = {
+      l = ["log" "-r" "(trunk()..@):: | (trunk()..@)-"];
+    };
+
+    revsets = {
+      short-prefixes = "(trunk()..@)::";
+    };
+
+    template-aliases = {
+      format_short_id = "id.shortest(8)";
+    };
+
+    templates = {
+      config_list = "builtin_config_list_detailed";
+      draft_commit_description = ''
+        concat(
+          coalesce(description, default_commit_description, "\n"),
+          surround(
+            "\nJJ: This commit contains the following changes:\n", "",
+            indent("JJ:     ", diff.stat(72)),
+          ),
+          "\nJJ: ignore-rest\n",
+          diff.git(),
+        )
+      '';
+      git_push_bookmark = ''"${user.githubHandle}/push-" ++ change_id.short()'';
+    };
   };
 
   scopes = {
