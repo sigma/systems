@@ -21,7 +21,7 @@ in {
       conflict-marker-style = "git";
       default-command = "log";
       merge-editor = "mergiraf";
-      movement = "edit";
+      movement.edit = true;
       pager = ":builtin";
     };
 
@@ -60,6 +60,7 @@ in {
 
     aliases = {
       l = ["log" "-r" "(trunk()..@):: | (trunk()..@)-"];
+      rebase-all = ["rebase" "-s" "roots(present(@) | ancestors(immutable_heads().., 1))" "-d" "trunk()"];
     };
 
     revsets = {
@@ -68,11 +69,8 @@ in {
 
     template-aliases = {
       format_short_id = "id.shortest(8)";
-    };
 
-    templates = {
-      config_list = "builtin_config_list_detailed";
-      draft_commit_description = ''
+      commit_description_verbose = ''
         concat(
           coalesce(description, default_commit_description, "\n"),
           surround(
@@ -83,7 +81,56 @@ in {
           diff.git(),
         )
       '';
-      git_push_bookmark = ''"${user.githubHandle}/push-" ++ change_id.short()'';
+
+      user_auto_bookmark = ''"${user.githubHandle}/push-" ++ change_id.short()'';
+
+      "sigma_format_short_commit_header(commit)" = ''
+        separate(" ",
+          format_short_change_id_with_hidden_and_divergent_info(commit),
+          if(description,
+            label("description title", description.first_line()),
+            label(if(empty, "empty"), description_placeholder),
+          ),
+          if(empty, label("empty", "(empty)")),
+          format_short_commit_id(commit.commit_id()),
+          if(commit.conflict(), label("conflict", "conflict")),
+        )
+      '';
+
+      "sigma_format_short_commit_meta(commit)" = ''
+        separate(" ",
+          commit.bookmarks(),
+          commit.tags(),
+          format_short_signature(commit.author()),
+          format_timestamp(commit_timestamp(commit)),
+          commit.working_copies(),
+          if(commit.git_head(), label("git_head", "git_head()")),
+          if(config("ui.show-cryptographic-signatures").as_boolean(),
+            format_short_cryptographic_signature(commit.signature())),
+        )
+      '';
+
+      "sigma_log_compact" = ''
+        if(root,
+          format_root_commit(self),
+          label(if(current_working_copy, "working_copy"),
+            concat(
+              sigma_format_short_commit_header(self),
+              "\n  ",
+              sigma_format_short_commit_meta(self),
+              "\n",
+            ),
+          )
+        )
+      '';
+      "sigma_log_comfortable" = "sigma_log_compact ++ '\n'";
+    };
+
+    templates = {
+      config_list = "builtin_config_list_detailed";
+      draft_commit_description = "commit_description_verbose";
+      git_push_bookmark = "user_auto_bookmark";
+      log = "sigma_log_comfortable";
     };
   };
 
