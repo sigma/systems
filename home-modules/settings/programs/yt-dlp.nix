@@ -1,16 +1,17 @@
-{...}: {
+{...}: let
+  downloadRoot = "~/Music";
+in {
   enable = true;
 
   settings = {
     audio-quality = 0;
-    cookies-from-browser = "brave";
-    download-archive = "'~/Music/downloaded.txt'";
+    download-archive = "'${downloadRoot}/downloaded.txt'";
     embed-thumbnail = true;
     extract-audio = true;
     extractor-args = "'soundcloud:formats=http_mp3'";
     extractor-retries = 10;
     mtime = false;
-    output = "'~/Music/%(extractor_key)s/%(artist)s - %(title)s.%(ext)s'";
+    output = "'${downloadRoot}/%(extractor_key)s/%(artist)s - %(title)s.%(ext)s'";
   };
 
   extraConfig = ''
