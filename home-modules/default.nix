@@ -20,6 +20,7 @@
     ./settings
     ./shells
     ./tmuxp.nix
+    ./yt-dlp.nix
   ];
 
   # enable everything except vscode

@@ -15,6 +15,7 @@ in {
       "ableton-live-suite"
       "arturia-software-center"
       "loopback"
+      "musicbrainz-picard"
       "native-access"
       "x32-edit"
     ];
