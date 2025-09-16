@@ -9,7 +9,6 @@
   (import ./pkgsets.nix { inherit inputs config; })
 
   # community overlays
-  inputs.comma.overlays.default
   inputs.emacs.overlay
   inputs.fenix.overlays.default
   inputs.vscode-extensions.overlays.default

@@ -11,7 +11,7 @@
       "nil" = {
         "formatting" = {
           "command" = [
-            "${pkgs.nixfmt}/bin/nixfmt"
+            "${pkgs.nixfmt-rfc-style}/bin/nixfmt"
           ];
         };
       };

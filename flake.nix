@@ -8,7 +8,7 @@
     # Package sets
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixpkgs-lib.url = "github:NixOS/nixpkgs/nixos-unstable?dir=lib";
-    nixos-stable.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.05";
     darwin-stable.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
 
@@ -17,10 +17,10 @@
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs-lib";
 
     # Environment/system management
-    darwin.url = "github:lnl7/nix-darwin/master";
-    darwin.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    darwin.url = "github:lnl7/nix-darwin/nix-darwin-25.05";
+    darwin.inputs.nixpkgs.follows = "nixpkgs-stable";
+    home-manager.url = "github:nix-community/home-manager/release-25.05";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs-stable";
 
     # Personal flakes
     maschine-hacks.url = "github:sigma/maschine-hacks";
@@ -40,6 +40,7 @@
     # Emacs
     emacs.url = "github:nix-community/emacs-overlay";
     emacs.inputs.nixpkgs.follows = "nixpkgs";
+    emacs.inputs.nixpkgs-stable.follows = "nixpkgs-stable";
     chemacs2nix.url = "github:league/chemacs2nix";
     chemacs2nix.inputs.home-manager.follows = "home-manager";
     chemacs2nix.inputs.emacs-overlay.follows = "emacs";
@@ -65,11 +66,6 @@
     nix-filter.url = "github:numtide/nix-filter";
 
     # Shell utils
-    comma.url = "github:nix-community/comma";
-    comma.inputs.nixpkgs.follows = "nixpkgs";
-    comma.inputs.flake-compat.follows = "flake-compat";
-    comma.inputs.utils.follows = "flake-utils";
-    comma.inputs.naersk.follows = "naersk";
     devshell.url = "github:numtide/devshell";
     devshell.inputs.nixpkgs.follows = "nixpkgs";
     nix-index-database.url = "github:nix-community/nix-index-database";

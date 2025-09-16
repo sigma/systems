@@ -69,7 +69,7 @@ in
 
     fix.tools.nixfmt = {
       enabled = true;
-      command = [ "${pkgs.nixfmt}/bin/nixfmt" ];
+      command = [ "${pkgs.nixfmt-rfc-style}/bin/nixfmt" ];
       patterns = [ "glob:'**/*.nix'" ];
     };
 

@@ -131,7 +131,7 @@
       # Useful nix related tools
       cachix
       statix
-      nixfmt
+      nixfmt-rfc-style
       comma
       devenv
       fh

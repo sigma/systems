@@ -82,7 +82,7 @@
         treefmt.enable = true;
 
         treefmt.settings.formatters = [
-          pkgs.nixfmt
+          pkgs.nixfmt-rfc-style
           pkgs.mdformat
           pkgs.beautysh
         ];
