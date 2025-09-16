@@ -99,5 +99,6 @@ with lib; {
     "node"
     "rustup"
     "socat"
+    "wasm-pack"
   ];
 }
