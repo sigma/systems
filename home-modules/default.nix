@@ -129,7 +129,7 @@
       # Useful nix related tools
       cachix
       statix
-      alejandra
+      nixfmt
       comma
       devenv
       fh

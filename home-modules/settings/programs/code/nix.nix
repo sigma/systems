@@ -10,7 +10,7 @@
       "nil" = {
         "formatting" = {
           "command" = [
-            "${pkgs.alejandra}/bin/alejandra"
+            "${pkgs.nixfmt}/bin/nixfmt"
           ];
         };
       };

@@ -75,7 +75,7 @@
       treefmt.enable = true;
 
       treefmt.settings.formatters = [
-        pkgs.alejandra
+        pkgs.nixfmt
         pkgs.mdformat
         pkgs.beautysh
       ];
@@ -94,7 +94,7 @@
       inherit (config.flake-root) projectRootFile;
       package = pkgs.treefmt;
       # formatters
-      programs.alejandra.enable = true;
+      programs.nixfmt.enable = true;
       programs.mdformat.enable = true;
       programs.beautysh.enable = true;
     };
