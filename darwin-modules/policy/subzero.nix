@@ -57,6 +57,10 @@ with lib;
         terraform
         kubie
         kubectl
+
+        (jaeger.override {
+          inherit (pkgs.master) buildGoModule;
+        })
       ];
 
       programs.open-url = {
