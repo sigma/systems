@@ -2,12 +2,16 @@
   user,
   pkgs,
   ...
-}: let
-  profileEmail = name: let
-    prof = builtins.head (builtins.filter (prof: prof.name == name) user.profiles);
-  in
+}:
+let
+  profileEmail =
+    name:
+    let
+      prof = builtins.head (builtins.filter (prof: prof.name == name) user.profiles);
+    in
     builtins.head prof.emails;
-in {
+in
+{
   enable = true;
   ediff = false;
 
@@ -27,24 +31,46 @@ in {
 
     merge-tools.cursor = {
       program = "cursor";
-      merge-args = ["--wait" "--merge" "$left" "$right" "$base" "$output"];
+      merge-args = [
+        "--wait"
+        "--merge"
+        "$left"
+        "$right"
+        "$base"
+        "$output"
+      ];
       merge-tool-edits-conflict-markers = true;
       conflict-marker-style = "git";
-      diff-args = ["--diff" "$left" "$right" "--wait"];
+      diff-args = [
+        "--diff"
+        "$left"
+        "$right"
+        "--wait"
+      ];
       diff-invocation-mode = "file-by-file";
-      edit-args = [];
+      edit-args = [ ];
     };
 
     fix.tools.gofmt = {
       enabled = true;
-      command = ["gofmt"];
-      patterns = ["glob:'**/*.go'"];
+      command = [ "${pkgs.go}/bin/gofmt" ];
+      patterns = [ "glob:'**/*.go'" ];
     };
 
     fix.tools.rustfmt = {
       enabled = true;
-      command = ["rustfmt" "--emit" "stdout"];
-      patterns = ["glob:'**/*.rs'"];
+      command = [
+        "${pkgs.rustfmt}/bin/rustfmt"
+        "--emit"
+        "stdout"
+      ];
+      patterns = [ "glob:'**/*.rs'" ];
+    };
+
+    fix.tools.nixfmt = {
+      enabled = true;
+      command = [ "${pkgs.nixfmt}/bin/nixfmt" ];
+      patterns = [ "glob:'**/*.nix'" ];
     };
 
     git = {
@@ -59,8 +85,18 @@ in {
     };
 
     aliases = {
-      l = ["log" "-r" "(trunk()..@):: | (trunk()..@)-"];
-      rebase-all = ["rebase" "-s" "roots(present(@) | ancestors(immutable_heads().., 1))" "-d" "trunk()"];
+      l = [
+        "log"
+        "-r"
+        "(trunk()..@):: | (trunk()..@)-"
+      ];
+      rebase-all = [
+        "rebase"
+        "-s"
+        "roots(present(@) | ancestors(immutable_heads().., 1))"
+        "-d"
+        "trunk()"
+      ];
     };
 
     revsets = {
@@ -136,7 +172,10 @@ in {
 
   scopes = {
     delta = {
-      commands = ["diff" "show"];
+      commands = [
+        "diff"
+        "show"
+      ];
 
       settings = {
         ui.pager = "${pkgs.delta}/bin/delta";

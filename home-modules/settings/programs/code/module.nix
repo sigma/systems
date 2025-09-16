@@ -3,59 +3,63 @@
   lib,
   ...
 }:
-with lib; let
-  jsonFormat = pkgs.formats.json {};
-  keybindingType = types.listOf (types.submodule {
-    options = {
-      key = mkOption {
-        type = types.str;
-      };
+with lib;
+let
+  jsonFormat = pkgs.formats.json { };
+  keybindingType = types.listOf (
+    types.submodule {
+      options = {
+        key = mkOption {
+          type = types.str;
+        };
 
-      command = mkOption {
-        type = types.str;
-      };
+        command = mkOption {
+          type = types.str;
+        };
 
-      when = mkOption {
-        type = types.nullOr (types.str);
-        default = null;
-      };
+        when = mkOption {
+          type = types.nullOr (types.str);
+          default = null;
+        };
 
-      args = mkOption {
-        type = types.nullOr (jsonFormat.type);
-        default = null;
+        args = mkOption {
+          type = types.nullOr (jsonFormat.type);
+          default = null;
+        };
       };
-    };
-  });
-in {
+    }
+  );
+in
+{
   options = {
     userSettings = mkOption {
       type = jsonFormat.type;
-      default = {};
+      default = { };
     };
 
     userTasks = mkOption {
       type = jsonFormat.type;
-      default = {};
+      default = { };
     };
 
     keybindings = mkOption {
       type = keybindingType;
-      default = [];
+      default = [ ];
     };
 
     extensions = mkOption {
       type = types.listOf types.package;
-      default = [];
+      default = [ ];
     };
 
     languageSnippets = mkOption {
       type = jsonFormat.type;
-      default = {};
+      default = { };
     };
 
     globalSnippets = mkOption {
       type = jsonFormat.type;
-      default = {};
+      default = { };
     };
   };
 }

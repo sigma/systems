@@ -4,14 +4,14 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.programs.open-url;
 
-  launchBrowser = browser:
-    if hasSuffix ".app" "${browser}"
-    then "open -a '${browser}' --args"
-    else "${browser}";
-in {
+  launchBrowser =
+    browser: if hasSuffix ".app" "${browser}" then "open -a '${browser}' --args" else "${browser}";
+in
+{
   options.programs.open-url = {
     enable = mkEnableOption "open-url";
 
@@ -38,12 +38,15 @@ in {
         URL="$1"
         PROFILE_NAME=""
 
-        ${(builtins.concatStringsSep "\n" (mapAttrsToList (url: profile: ''
-            if [[ "$URL" =~ "${url}" ]]; then
-              PROFILE_NAME="${profile}"
-            fi
-          '')
-          cfg.urlProfiles))}
+        ${
+          (builtins.concatStringsSep "\n" (
+            mapAttrsToList (url: profile: ''
+              if [[ "$URL" =~ "${url}" ]]; then
+                PROFILE_NAME="${profile}"
+              fi
+            '') cfg.urlProfiles
+          ))
+        }
 
         if [[ -n "$PROFILE_NAME" ]]; then
           STATE_FILE="${cfg.localStatePath}"

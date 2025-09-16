@@ -2,7 +2,8 @@
   pkgs,
   extSet,
   ...
-}: {
+}:
+{
   userSettings = {
     "files.associations" = {
       "*.just" = "just";

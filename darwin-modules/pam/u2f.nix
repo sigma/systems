@@ -4,9 +4,11 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.security.pam.u2f;
-in {
+in
+{
   options.security.pam.u2f = {
     enable = mkEnableOption "U2F PAM module";
 
@@ -18,7 +20,7 @@ in {
 
     authorizations = mkOption {
       type = types.listOf types.str;
-      default = [];
+      default = [ ];
       description = "List of authorizations for the module.";
     };
 
@@ -38,7 +40,7 @@ in {
   config = mkIf cfg.enable {
     assertions = [
       {
-        assertion = cfg.authorizations != [];
+        assertion = cfg.authorizations != [ ];
         message = ''
           security.pam.u2f.authorizations must not be empty.
           Populate with the output of ${pkgs.pam_u2f}/bin/pamu2fcfg
@@ -46,30 +48,24 @@ in {
       }
     ];
 
-    environment.etc."u2f_mappings".text =
-      lib.concatStringsSep "\n" cfg.authorizations;
+    environment.etc."u2f_mappings".text = lib.concatStringsSep "\n" cfg.authorizations;
 
     security.pam.reattach.enable = true;
-    security.pam.sudo_local.entries = let
-      control =
-        if cfg.secondFactor
-        then "required"
-        else "sufficient";
-    in [
-      {
-        control = control;
-        module = "${cfg.package}/lib/security/pam_u2f.so";
-        arguments = [
-          "authfile=/etc/u2f_mappings"
-          "cue"
-          (
-            if cfg.verification
-            then "pinverification=1"
-            else ""
-          )
-        ];
-        comment = "security.pam.u2f";
-      }
-    ];
+    security.pam.sudo_local.entries =
+      let
+        control = if cfg.secondFactor then "required" else "sufficient";
+      in
+      [
+        {
+          control = control;
+          module = "${cfg.package}/lib/security/pam_u2f.so";
+          arguments = [
+            "authfile=/etc/u2f_mappings"
+            "cue"
+            (if cfg.verification then "pinverification=1" else "")
+          ];
+          comment = "security.pam.u2f";
+        }
+      ];
   };
 }

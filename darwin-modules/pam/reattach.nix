@@ -4,9 +4,11 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.security.pam.reattach;
-in {
+in
+{
   options.security.pam.reattach = {
     enable = mkEnableOption "reattach PAM module";
 

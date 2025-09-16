@@ -3,9 +3,11 @@
   lib,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.programs.onepassword;
-in {
+in
+{
   options = {
     programs.onepassword = {
       enable = mkEnableOption "1Password";
@@ -16,7 +18,9 @@ in {
     homebrew.casks = [
       {
         name = "1password";
-        args = {appdir = "/Applications";};
+        args = {
+          appdir = "/Applications";
+        };
       }
     ];
   };

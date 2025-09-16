@@ -100,45 +100,50 @@
     };
   };
 
-  outputs = inputs:
-    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+  outputs =
+    inputs:
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         ./modules
       ];
 
       systems = import inputs.systems;
 
-      perSystem = {
-        config,
-        system,
-        pkgs,
-        inputs',
-        ...
-      }: let
-        pkgs' =
-          import inputs.nixpkgs {
-            inherit system;
-          }
-          // (import ./pkg-config.nix {
-            inherit inputs;
-          });
-      in {
-        _module.args.pkgs = pkgs';
-
-        packages = let
-          default = inputs'.home-manager.packages.home-manager;
-          localPackages = import ./overlays/pkg/local {
-            pkgs = pkgs';
-            nix-filter = inputs.nix-filter.lib;
-          };
+      perSystem =
+        {
+          config,
+          system,
+          pkgs,
+          inputs',
+          ...
+        }:
+        let
+          pkgs' =
+            import inputs.nixpkgs {
+              inherit system;
+            }
+            // (import ./pkg-config.nix {
+              inherit inputs;
+            });
         in
-          {
-            inherit default;
-            home-manager = default;
-            darwin-rebuild = inputs'.darwin.packages.darwin-rebuild;
-            fh = inputs'.packages.default;
-          }
-          // localPackages;
-      };
+        {
+          _module.args.pkgs = pkgs';
+
+          packages =
+            let
+              default = inputs'.home-manager.packages.home-manager;
+              localPackages = import ./overlays/pkg/local {
+                pkgs = pkgs';
+                nix-filter = inputs.nix-filter.lib;
+              };
+            in
+            {
+              inherit default;
+              home-manager = default;
+              darwin-rebuild = inputs'.darwin.packages.darwin-rebuild;
+              fh = inputs'.packages.default;
+            }
+            // localPackages;
+        };
     };
 }

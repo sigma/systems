@@ -1,7 +1,9 @@
-{lib}:
+{ lib }:
 with lib;
-  rec {
-    profile = types.submodule ({...}: {
+rec {
+  profile = types.submodule (
+    { ... }:
+    {
       options = {
         name = mkOption {
           type = types.str;
@@ -13,9 +15,12 @@ with lib;
           description = "The emails of the profile";
         };
       };
-    });
+    }
+  );
 
-    user = types.submodule ({...}: {
+  user = types.submodule (
+    { ... }:
+    {
       options = {
         name = mkOption {
           type = types.str;
@@ -34,13 +39,16 @@ with lib;
 
         profiles = mkOption {
           type = types.listOf profile;
-          default = [];
+          default = [ ];
           description = "The profiles of the user";
         };
       };
-    });
+    }
+  );
 
-    host = types.submodule ({...}: {
+  host = types.submodule (
+    { ... }:
+    {
       options = {
         name = mkOption {
           type = types.nullOr types.str;
@@ -61,7 +69,7 @@ with lib;
 
         features = mkOption {
           type = types.listOf types.str;
-          default = [];
+          default = [ ];
           description = "The features of the host";
         };
 
@@ -85,10 +93,11 @@ with lib;
 
         remotes = mkOption {
           type = types.listOf host;
-          default = [];
+          default = [ ];
           description = "The remotes of the host";
         };
       };
-    });
-  }
-  // types
+    }
+  );
+}
+// types

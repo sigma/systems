@@ -2,9 +2,11 @@
   pkgs,
   user,
   ...
-}: let
+}:
+let
   ownColor = "red";
-in {
+in
+{
   enable = true;
   settings = {
     git = {
@@ -12,7 +14,10 @@ in {
         order = "topo-order";
         showGraph = "when-maximized";
       };
-      mainBranches = ["main" "master"];
+      mainBranches = [
+        "main"
+        "master"
+      ];
       paging = {
         colorArg = "always";
         pager = "${pkgs.delta}/bin/delta --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format='lazygit-edit://{path}:{line}'";

@@ -3,9 +3,11 @@
   lib,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.features.music;
-in {
+in
+{
   options.features.music = {
     enable = mkEnableOption "Music";
   };

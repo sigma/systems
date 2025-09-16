@@ -2,7 +2,8 @@
   config,
   user,
   ...
-}: {
+}:
+{
   enable = true;
 
   aliases = {
@@ -162,20 +163,25 @@
     }
     # id-related
     {
-      contents = let
-        profileEmail = name: let
-          prof = builtins.head (builtins.filter (prof: prof.name == name) user.profiles);
+      contents =
+        let
+          profileEmail =
+            name:
+            let
+              prof = builtins.head (builtins.filter (prof: prof.name == name) user.profiles);
+            in
+            builtins.head prof.emails;
         in
-          builtins.head prof.emails;
-      in {
-        user.name = "${user.name}";
-        # default to personal email. We'll override in work repos
-        user.email = "${profileEmail "perso"}";
+        {
+          user.name = "${user.name}";
+          # default to personal email. We'll override in work repos
+          user.email = "${profileEmail "perso"}";
 
-        github.user = "${user.githubHandle}";
-        # force-use ssh for my own github repos
-        url."ssh://git@github.com/${user.githubHandle}/".insteadOf = "https://github.com/${user.githubHandle}/";
-      };
+          github.user = "${user.githubHandle}";
+          # force-use ssh for my own github repos
+          url."ssh://git@github.com/${user.githubHandle}/".insteadOf =
+            "https://github.com/${user.githubHandle}/";
+        };
 
       contentSuffix = "id";
     }

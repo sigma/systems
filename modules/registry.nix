@@ -1,4 +1,5 @@
-{inputs, ...}: let
+{ inputs, ... }:
+let
   userRegistryModule = {
     nix.registry = {
       microvm.to = {
@@ -35,7 +36,8 @@
       fenix.flake = inputs.fenix;
     };
   };
-in {
+in
+{
   nebula.homeModules = [
     userRegistryModule
   ];

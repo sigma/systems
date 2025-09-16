@@ -2,10 +2,11 @@
   inputs,
   config,
   ...
-}: [
+}:
+[
   # Add stable and master package sets for convenience,
   # and x86 variants (for rosetta) for darwin on ARM.
-  (import ./pkgsets.nix {inherit inputs config;})
+  (import ./pkgsets.nix { inherit inputs config; })
 
   # community overlays
   inputs.comma.overlays.default
@@ -21,7 +22,7 @@
   inputs.maschine-hacks.overlays.default
   (final: prev: {
     jj-spr = inputs.jj-spr.packages.${final.stdenv.system}.default.overrideAttrs (oldAttrs: {
-      buildInputs = (oldAttrs.buildInputs or []) ++ [final.zlib];
+      buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ final.zlib ];
     });
   })
 

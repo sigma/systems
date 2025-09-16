@@ -5,17 +5,19 @@
   lib,
   machine,
   ...
-}: {
+}:
+{
   config = lib.mkIf machine.features.mac {
     home.activation = {
-      copyApplications = let
-        apps = pkgs.buildEnv {
-          name = "home-manager-applications";
-          paths = config.home.packages;
-          pathsToLink = "/Applications";
-        };
-      in
-        lib.hm.dag.entryAfter ["writeBoundary"] ''
+      copyApplications =
+        let
+          apps = pkgs.buildEnv {
+            name = "home-manager-applications";
+            paths = config.home.packages;
+            pathsToLink = "/Applications";
+          };
+        in
+        lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           baseDir="$HOME/Applications/Local"
           if [ -d "$baseDir" ]; then
             rm -rf "$baseDir"

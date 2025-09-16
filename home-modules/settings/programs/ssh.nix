@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   enable = true;
 
   compression = true;

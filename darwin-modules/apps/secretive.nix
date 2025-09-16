@@ -3,43 +3,49 @@
   user,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.programs.secretive;
 in
-  with lib; {
-    options.programs.secretive = {
-      enable = mkEnableOption "secretive";
+with lib;
+{
+  options.programs.secretive = {
+    enable = mkEnableOption "secretive";
 
-      globalAgentIntegration = mkOption {
-        type = types.bool;
-        default = true;
-        description = "Whether to integrate with the global agent.";
-      };
-
-      fishIntegration = mkOption {
-        type = types.bool;
-        default = true;
-        description = "Whether to integrate with the fish shell.";
-      };
-
-      zshIntegration = mkOption {
-        type = types.bool;
-        default = true;
-        description = "Whether to integrate with the zsh shell.";
-      };
+    globalAgentIntegration = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Whether to integrate with the global agent.";
     };
 
-    config = mkIf cfg.enable {
-      homebrew.casks = [
-        {
-          name = "secretive";
-          args = {appdir = "/Applications";};
-        }
-      ];
+    fishIntegration = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Whether to integrate with the fish shell.";
+    };
 
-      home-manager.users.${user.login} = let
+    zshIntegration = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Whether to integrate with the zsh shell.";
+    };
+  };
+
+  config = mkIf cfg.enable {
+    homebrew.casks = [
+      {
+        name = "secretive";
+        args = {
+          appdir = "/Applications";
+        };
+      }
+    ];
+
+    home-manager.users.${user.login} =
+      let
         secretiveSocket = "/Users/${user.login}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh";
-      in {
+      in
+      {
         programs.ssh = mkIf cfg.globalAgentIntegration {
           extraConfig = ''
             IdentityAgent ${secretiveSocket}
@@ -58,5 +64,5 @@ in
           '';
         };
       };
-    };
-  }
+  };
+}

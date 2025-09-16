@@ -2,7 +2,8 @@
   pkgs,
   extSet,
   ...
-}: {
+}:
+{
   userSettings = {
     "nix.enableLanguageServer" = true;
     "nix.serverPath" = "${pkgs.nil}/bin/nil";

@@ -1,1 +1,1 @@
-final: _: (import ./local {pkgs = final;})
+final: _: (import ./local { pkgs = final; })

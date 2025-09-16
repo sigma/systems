@@ -1,5 +1,6 @@
-{lib, ...}:
-with lib; {
+{ lib, ... }:
+with lib;
+{
   programs.aerospace.workspaces = mkBefore [
     {
       name = "P"; # Projects

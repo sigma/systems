@@ -1,4 +1,5 @@
-{extSet, ...}: {
+{ extSet, ... }:
+{
   userSettings = {
     "python.languageServer" = "Default";
   };

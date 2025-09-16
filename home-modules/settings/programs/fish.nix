@@ -3,20 +3,25 @@
   lib,
   config,
   ...
-}: let
-  normalizePlugin = plugin:
-    if builtins.typeOf plugin == "string"
-    then {
-      name = plugin;
-      inherit (pkgs.fishPlugins.${plugin}) src;
-    }
-    else plugin;
-in {
+}:
+let
+  normalizePlugin =
+    plugin:
+    if builtins.typeOf plugin == "string" then
+      {
+        name = plugin;
+        inherit (pkgs.fishPlugins.${plugin}) src;
+      }
+    else
+      plugin;
+in
+{
   enable = true;
 
   preferAbbrs = true;
 
-  plugins = builtins.map normalizePlugin ([
+  plugins = builtins.map normalizePlugin (
+    [
       "autopair"
       "plugin-git"
       {
@@ -31,7 +36,8 @@ in {
     ]
     ++ lib.optionals config.programs.fzf.enable [
       "fzf-fish"
-    ]);
+    ]
+  );
 
   useTide = true;
 

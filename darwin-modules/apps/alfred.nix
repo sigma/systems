@@ -3,9 +3,11 @@
   lib,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.programs.alfred;
-in {
+in
+{
   options.programs.alfred = {
     enable = mkEnableOption "alfred";
   };
@@ -19,14 +21,22 @@ in {
     system.defaults.CustomUserPreferences."com.apple.symbolichotkeys".AppleSymbolicHotKeys."64" = {
       enabled = false;
       value = {
-        parameters = [32 49 1048576];
+        parameters = [
+          32
+          49
+          1048576
+        ];
         type = "standard";
       };
     };
     system.defaults.CustomUserPreferences."com.apple.symbolichotkeys".AppleSymbolicHotKeys."65" = {
       enabled = false;
       value = {
-        parameters = [32 49 1572864];
+        parameters = [
+          32
+          49
+          1572864
+        ];
         type = "standard";
       };
     };

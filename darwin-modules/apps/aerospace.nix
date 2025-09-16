@@ -6,7 +6,8 @@
   user,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.programs.aerospace;
 
   monitorType = types.either types.str (types.listOf types.str);
@@ -54,7 +55,8 @@ with lib; let
       };
     };
   };
-in {
+in
+{
   options.programs.aerospace = {
     enable = mkEnableOption "Aerospace";
 
@@ -72,45 +74,43 @@ in {
 
     monitors = mkOption {
       type = types.attrsOf monitorType;
-      default = let
-        main = "main";
-        aux =
-          if machine.features.laptop
-          then "built-in"
-          else main;
-      in {
-        browser = main;
-        chat = aux;
-        editor = main;
-        music = main;
-        notes = aux;
-        terminal = aux;
-      };
+      default =
+        let
+          main = "main";
+          aux = if machine.features.laptop then "built-in" else main;
+        in
+        {
+          browser = main;
+          chat = aux;
+          editor = main;
+          music = main;
+          notes = aux;
+          terminal = aux;
+        };
       description = "Symbolic names for monitors to use";
     };
 
     workspaces = mkOption {
       type = types.listOf workspaceType;
-      default = [];
+      default = [ ];
       description = "List of workspaces defined for this configuration";
     };
 
     windowRules = mkOption {
       type = types.listOf windowRuleType;
-      default = [];
+      default = [ ];
       description = "List of window rules for automatic window management";
     };
   };
 
   config = mkIf cfg.enable {
     homebrew = {
-      taps =
-        [
-          "nikitabobko/tap"
-        ]
-        ++ optionals cfg.borders [
-          "FelixKratz/formulae"
-        ];
+      taps = [
+        "nikitabobko/tap"
+      ]
+      ++ optionals cfg.borders [
+        "FelixKratz/formulae"
+      ];
       brews = optionals cfg.borders [
         "borders"
       ];
@@ -121,7 +121,12 @@ in {
 
     home-manager.users.${user.login}.home.file.".aerospace.toml".text = import ./aerospace/config.nix {
       inherit lib pkgs;
-      inherit (cfg) autostart borders workspaces windowRules;
+      inherit (cfg)
+        autostart
+        borders
+        workspaces
+        windowRules
+        ;
       bordersBinary = "${config.homebrew.brewPrefix}/borders";
     };
   };

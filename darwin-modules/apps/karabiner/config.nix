@@ -3,23 +3,26 @@
   cfg,
   machine,
   ...
-}: let
-  helpers = import ./helpers.nix {inherit lib;};
+}:
+let
+  helpers = import ./helpers.nix { inherit lib; };
   internalKeyboardID = helpers.kbdToID cfg.internalKeyboard;
   forID = id: [
     {
       type = "device_if";
-      identifiers = [id];
+      identifiers = [ id ];
     }
   ];
-  remap = from: to:
+  remap =
+    from: to:
     helpers.remap {
       inherit from to;
     };
   virtual_hid_keyboard = {
     keyboard_type_v2 = "ansi";
   };
-in {
+in
+{
   inherit virtual_hid_keyboard;
   profiles = [
     {
@@ -45,98 +48,101 @@ in {
         ++ lib.optionals (cfg.pedal != null) [
           {
             identifiers = helpers.pointerToID cfg.pedal cfg.pedalComboDevice;
-            simple_modifications = let
-              dictation = [{consumer_key_code = "dictation";}];
-            in [
-              (remap cfg.pedalKeys.left dictation)
-              (remap cfg.pedalKeys.right "return_or_enter")
-              (remap cfg.pedalKeys.middle "left_command")
-            ];
+            simple_modifications =
+              let
+                dictation = [ { consumer_key_code = "dictation"; } ];
+              in
+              [
+                (remap cfg.pedalKeys.left dictation)
+                (remap cfg.pedalKeys.right "return_or_enter")
+                (remap cfg.pedalKeys.middle "left_command")
+              ];
             ignore = false;
           }
         ]
         ++ (map (kbd: {
-            identifiers = helpers.kbdToID kbd;
-            ignore = true;
-          })
-          cfg.ignoreKeyboards);
+          identifiers = helpers.kbdToID kbd;
+          ignore = true;
+        }) cfg.ignoreKeyboards);
 
-      complex_modifications = let
-        hyper = [
-          {
-            key_code = "left_option";
-            modifiers = [
-              "left_command"
-              "left_control"
-            ];
-          }
-        ];
-      in {
-        # on a laptop, make control a hyper key.
-        # Also setup some tap keys.
-        rules = lib.optionals (machine.features.laptop) [
-          {
-            description = "Make control a hyper key";
-            manipulators = [
-              {
-                from = {
-                  key_code = "left_control";
-                  modifiers = {
-                    optional = [
-                      "any"
-                    ];
+      complex_modifications =
+        let
+          hyper = [
+            {
+              key_code = "left_option";
+              modifiers = [
+                "left_command"
+                "left_control"
+              ];
+            }
+          ];
+        in
+        {
+          # on a laptop, make control a hyper key.
+          # Also setup some tap keys.
+          rules = lib.optionals (machine.features.laptop) [
+            {
+              description = "Make control a hyper key";
+              manipulators = [
+                {
+                  from = {
+                    key_code = "left_control";
+                    modifiers = {
+                      optional = [
+                        "any"
+                      ];
+                    };
                   };
-                };
-                to = hyper;
-                type = "basic";
-                conditions = forID internalKeyboardID;
-              }
-            ];
-          }
+                  to = hyper;
+                  type = "basic";
+                  conditions = forID internalKeyboardID;
+                }
+              ];
+            }
 
-          {
-            description = "Shift_L tap -> '(', Shift_R tap -> ')'";
-            manipulators = [
-              (helpers.tapManipulator {
-                from = "left_shift";
-                tap = helpers.keyDef {
-                  key_code = "9";
-                  modifiers = ["left_shift"];
-                };
-                hold = "left_shift";
-                conditions = forID internalKeyboardID;
-              })
-              (helpers.tapManipulator {
-                from = "right_shift";
-                tap = helpers.keyDef {
-                  key_code = "0";
-                  modifiers = ["right_shift"];
-                };
-                hold = "right_shift";
-                conditions = forID internalKeyboardID;
-              })
-            ];
-          }
+            {
+              description = "Shift_L tap -> '(', Shift_R tap -> ')'";
+              manipulators = [
+                (helpers.tapManipulator {
+                  from = "left_shift";
+                  tap = helpers.keyDef {
+                    key_code = "9";
+                    modifiers = [ "left_shift" ];
+                  };
+                  hold = "left_shift";
+                  conditions = forID internalKeyboardID;
+                })
+                (helpers.tapManipulator {
+                  from = "right_shift";
+                  tap = helpers.keyDef {
+                    key_code = "0";
+                    modifiers = [ "right_shift" ];
+                  };
+                  hold = "right_shift";
+                  conditions = forID internalKeyboardID;
+                })
+              ];
+            }
 
-          {
-            description = "Caps Lock / Enter tap for Enter, hold for Control";
-            manipulators = [
-              (helpers.tapManipulator {
-                from = "caps_lock";
-                tap = "return_or_enter";
-                hold = "left_control";
-                conditions = forID internalKeyboardID;
-              })
-              (helpers.tapManipulator {
-                from = "return_or_enter";
-                tap = "return_or_enter";
-                hold = "right_control";
-                conditions = forID internalKeyboardID;
-              })
-            ];
-          }
-        ];
-      };
+            {
+              description = "Caps Lock / Enter tap for Enter, hold for Control";
+              manipulators = [
+                (helpers.tapManipulator {
+                  from = "caps_lock";
+                  tap = "return_or_enter";
+                  hold = "left_control";
+                  conditions = forID internalKeyboardID;
+                })
+                (helpers.tapManipulator {
+                  from = "return_or_enter";
+                  tap = "return_or_enter";
+                  hold = "right_control";
+                  conditions = forID internalKeyboardID;
+                })
+              ];
+            }
+          ];
+        };
     }
   ];
 }

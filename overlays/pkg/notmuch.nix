@@ -1,10 +1,12 @@
 final: prev: {
   notmuch =
-    (prev.notmuch.overrideAttrs (newAttrs: oldAttrs: {
-      doCheck = false;
-    }))
-    .override {
-      withRuby = false;
-      withEmacs = false;
-    };
+    (prev.notmuch.overrideAttrs (
+      newAttrs: oldAttrs: {
+        doCheck = false;
+      }
+    )).override
+      {
+        withRuby = false;
+        withEmacs = false;
+      };
 }

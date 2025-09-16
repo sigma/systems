@@ -1,4 +1,5 @@
-{extSet, ...}: {
+{ extSet, ... }:
+{
   userSettings = {
     "git.autofetch" = true;
     "git.confirmSync" = false;

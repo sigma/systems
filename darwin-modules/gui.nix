@@ -1,4 +1,5 @@
-{user, ...}: {
+{ user, ... }:
+{
   system.defaults.dock = {
     autohide = true;
     orientation = "left";
@@ -7,24 +8,28 @@
     tilesize = 48;
     expose-group-apps = true;
 
-    persistent-apps = let
-      userApp = name: "/Users/${user.login}/Applications/Local/${name}.app";
-      systemApp = name: "/Applications/${name}.app";
-    in [
-      (systemApp "Google Chrome")
-      (userApp "WezTerm")
-      (systemApp "Cursor")
-      (userApp "Emacs")
-      (systemApp "Spotify")
-      (systemApp "Notion")
-    ];
+    persistent-apps =
+      let
+        userApp = name: "/Users/${user.login}/Applications/Local/${name}.app";
+        systemApp = name: "/Applications/${name}.app";
+      in
+      [
+        (systemApp "Google Chrome")
+        (userApp "WezTerm")
+        (systemApp "Cursor")
+        (userApp "Emacs")
+        (systemApp "Spotify")
+        (systemApp "Notion")
+      ];
 
-    persistent-others = let
-      userDir = name: "/Users/${user.login}/${name}";
-    in [
-      (userDir "Documents")
-      (userDir "Downloads")
-    ];
+    persistent-others =
+      let
+        userDir = name: "/Users/${user.login}/${name}";
+      in
+      [
+        (userDir "Documents")
+        (userDir "Downloads")
+      ];
   };
 
   system.defaults.finder = {

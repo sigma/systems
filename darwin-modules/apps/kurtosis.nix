@@ -4,9 +4,11 @@
   user,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.programs.kurtosis;
-in {
+in
+{
   options.programs.kurtosis = {
     enable = mkEnableOption "Kurtosis";
   };

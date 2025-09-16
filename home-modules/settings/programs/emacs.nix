@@ -1,6 +1,8 @@
-{config, ...}: let
+{ config, ... }:
+let
   doomDir = "${config.programs.emacs.chemacs.defaultUserParentDir}/doom";
-in {
+in
+{
   enable = true;
 
   doom.dir = doomDir;

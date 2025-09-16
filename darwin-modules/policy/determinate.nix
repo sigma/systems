@@ -3,7 +3,8 @@
   config,
   ...
 }:
-with lib; {
+with lib;
+{
   # disable nix management as we're using determinate nix.
   nix.enable = mkForce false;
 
@@ -20,6 +21,6 @@ with lib; {
   # nix.enable.
   environment.etc."nix/registry.json".text = builtins.toJSON {
     version = 2;
-    flakes = mapAttrsToList (n: v: {inherit (v) from to exact;}) config.nix.registry;
+    flakes = mapAttrsToList (n: v: { inherit (v) from to exact; }) config.nix.registry;
   };
 }

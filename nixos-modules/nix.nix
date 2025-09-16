@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   nix.configureBuildUsers = true;
 
   nix.extraOptions = ''

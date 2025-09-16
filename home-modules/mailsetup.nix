@@ -5,7 +5,8 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.programs.mailsetup;
 
   pkg = pkgs.stdenv.mkDerivation {
@@ -26,12 +27,15 @@ with lib; let
       FROM=$(${pkgs.procmail}/bin/formail -x From: -c < "$MAIL")
       PROFILE=""
 
-      ${(builtins.concatStringsSep "\n" (map (prof: ''
-          if [[ "$FROM" =~ "(${builtins.concatStringsSep "|" prof.emails})" ]]; then
-            PROFILE=${prof.name}
-          fi
-        '')
-        user.profiles))}
+      ${
+        (builtins.concatStringsSep "\n" (
+          map (prof: ''
+            if [[ "$FROM" =~ "(${builtins.concatStringsSep "|" prof.emails})" ]]; then
+              PROFILE=${prof.name}
+            fi
+          '') user.profiles
+        ))
+      }
 
       if [ -z "$PROFILE" ]; then
         echo "invalid From address: $FROM" >/dev/stderr
@@ -46,13 +50,16 @@ with lib; let
 
       SCRIPT_DIR=''${0:a:h}
 
-      ${(builtins.concatStringsSep "\n" (map (prof: ''
-          PROFILE_DIR=${config.accounts.email.maildirBasePath}/${prof.name}
-          if [ -d "$PROFILE_DIR" ]; then
-            cd "$PROFILE_DIR" && ${pkgs.lieer}/bin/gmi pull && "$SCRIPT_DIR/gmi-tag" && ${pkgs.lieer}/bin/gmi push
-            fi
-        '')
-        user.profiles))}
+      ${
+        (builtins.concatStringsSep "\n" (
+          map (prof: ''
+            PROFILE_DIR=${config.accounts.email.maildirBasePath}/${prof.name}
+            if [ -d "$PROFILE_DIR" ]; then
+              cd "$PROFILE_DIR" && ${pkgs.lieer}/bin/gmi pull && "$SCRIPT_DIR/gmi-tag" && ${pkgs.lieer}/bin/gmi push
+              fi
+          '') user.profiles
+        ))
+      }
       EOF
 
       cat >> $out/bin/gmi-tag << 'EOF'
@@ -65,7 +72,8 @@ with lib; let
       chmod a+x $out/bin/gmi-*
     '';
   };
-in {
+in
+{
   options.programs.mailsetup = {
     enable = mkEnableOption "mailsetup";
 
@@ -77,7 +85,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [pkg];
+    home.packages = [ pkg ];
 
     home.file.".config/afew/expire.py".text = ''
       from afew.filters.BaseFilter  import Filter
@@ -122,7 +130,7 @@ in {
     launchd.agents.gmi-sync = {
       enable = true;
       config = {
-        ProgramArguments = ["${pkg}/bin/gmi-sync"];
+        ProgramArguments = [ "${pkg}/bin/gmi-sync" ];
         KeepAlive = false;
         RunAtLoad = true;
         StartInterval = 60;

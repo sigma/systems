@@ -4,29 +4,31 @@
   pkgs,
   ...
 }:
-with lib; let
-  tomlFormat = pkgs.formats.toml {};
+with lib;
+let
+  tomlFormat = pkgs.formats.toml { };
 
   cfg = config.programs.jujutsu;
   scopeModule = types.submodule {
     options = {
       repositories = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
       };
 
       commands = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
       };
 
       settings = mkOption {
         type = types.attrs;
-        default = {};
+        default = { };
       };
     };
   };
-in {
+in
+{
   options.programs.jujutsu = {
     enableUI = mkOption {
       type = types.bool;
@@ -45,49 +47,53 @@ in {
 
     scopes = mkOption {
       type = types.attrsOf scopeModule;
-      default = {};
+      default = { };
     };
   };
 
   config = mkIf cfg.enable {
-    home.packages =
-      [
-        pkgs.jujutsu
-      ]
-      ++ lib.optionals cfg.enableUI [
-        pkgs.jjui
-      ]
-      ++ lib.optionals cfg.enableMergiraf [
-        pkgs.mergiraf
-      ]
-      ++ lib.optionals cfg.enableSpr [
-        pkgs.jj-spr
-      ];
+    home.packages = [
+      pkgs.jujutsu
+    ]
+    ++ lib.optionals cfg.enableUI [
+      pkgs.jjui
+    ]
+    ++ lib.optionals cfg.enableMergiraf [
+      pkgs.mergiraf
+    ]
+    ++ lib.optionals cfg.enableSpr [
+      pkgs.jj-spr
+    ];
 
     xdg.configFile = lib.mkMerge (
-      map
-      (
-        scopeName: let
+      map (
+        scopeName:
+        let
           scope = cfg.scopes.${scopeName};
           content =
             scope.settings
-            // lib.optionalAttrs (scope.repositories != []) {
+            // lib.optionalAttrs (scope.repositories != [ ]) {
               "--when".repositories = scope.repositories;
             }
-            // lib.optionalAttrs (scope.commands != []) {
+            // lib.optionalAttrs (scope.commands != [ ]) {
               "--when".commands = scope.commands;
             };
-        in {
+        in
+        {
           "jj/conf.d/${scopeName}.toml".source = tomlFormat.generate "${scopeName}.toml" content;
         }
-      )
-      (builtins.attrNames cfg.scopes)
+      ) (builtins.attrNames cfg.scopes)
     );
 
     programs.jujutsu.scopes = lib.optionalAttrs cfg.enableSpr {
       spr = {
         settings = {
-          aliases.spr = ["util" "exec" "--" "${pkgs.jj-spr}/bin/jj-spr"];
+          aliases.spr = [
+            "util"
+            "exec"
+            "--"
+            "${pkgs.jj-spr}/bin/jj-spr"
+          ];
         };
       };
     };

@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   enable = true;
   # This config is designed to work with --all
   extraConfig = ''

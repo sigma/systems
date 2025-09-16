@@ -17,7 +17,10 @@ stdenv.mkDerivation {
     ];
   };
 
-  buildInputs = [emacs coreutils];
+  buildInputs = [
+    emacs
+    coreutils
+  ];
   buildPhase =
     (lib.optionalString (user != null) ''
       cat <<EOF > +id.el

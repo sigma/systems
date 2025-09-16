@@ -2,7 +2,8 @@
   pkgs,
   extSet,
   ...
-}: {
+}:
+{
   userSettings = {
     "bazel.buildifierExecutable" = pkgs.writeShellScriptBin "buildifier" ''
       ${pkgs.bazel-buildtools}/bin/buildifier --warnings=-module-docstring,-function-docstring "$@"

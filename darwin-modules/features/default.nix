@@ -1,4 +1,5 @@
-{machine, ...}: {
+{ machine, ... }:
+{
   imports = [
     ./ipfs.nix
     ./k8s.nix

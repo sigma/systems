@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   enable = true;
   mise.enable = true;
   nix-direnv.enable = true;

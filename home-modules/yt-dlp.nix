@@ -3,36 +3,34 @@
   lib,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.programs.yt-dlp;
-  renderSetting = name: value:
-    if lib.isBool value
-    then
-      if value
-      then "--${name}"
-      else "--no-${name}"
-    else let
-      strValue = toString value;
-      isQuoted =
-        hasPrefix "\"" strValue
-        || hasPrefix "'" strValue
-        || hasSuffix "\"" strValue
-        || hasSuffix "'" strValue;
-      quotedValue =
-        if isQuoted
-        then strValue
-        else escapeShellArg strValue;
-    in "--${name} ${quotedValue}";
-  renderSettings = attrs:
-    concatLists (mapAttrsToList (
-        name: value:
-          if isList value
-          then map (renderSetting name) value
-          else [(renderSetting name value)]
-      )
-      attrs);
+  renderSetting =
+    name: value:
+    if lib.isBool value then
+      if value then "--${name}" else "--no-${name}"
+    else
+      let
+        strValue = toString value;
+        isQuoted =
+          hasPrefix "\"" strValue
+          || hasPrefix "'" strValue
+          || hasSuffix "\"" strValue
+          || hasSuffix "'" strValue;
+        quotedValue = if isQuoted then strValue else escapeShellArg strValue;
+      in
+      "--${name} ${quotedValue}";
+  renderSettings =
+    attrs:
+    concatLists (
+      mapAttrsToList (
+        name: value: if isList value then map (renderSetting name) value else [ (renderSetting name value) ]
+      ) attrs
+    );
 
-  valueType = with types;
+  valueType =
+    with types;
     oneOf [
       bool
       int
@@ -47,27 +45,27 @@ with lib; let
 
       settings = mkOption {
         type = types.attrsOf (types.either valueType (types.listOf valueType));
-        default = {};
+        default = { };
       };
     };
   };
-in {
+in
+{
   options.programs.yt-dlp = {
     homes = mkOption {
       type = types.listOf homeModule;
-      default = [];
+      default = [ ];
     };
   };
 
   config = mkIf cfg.enable {
-    home.file = builtins.listToAttrs (builtins.map (value: {
+    home.file = builtins.listToAttrs (
+      builtins.map (value: {
         name = "${value.root}/yt-dlp.conf";
         value = {
-          text =
-            concatStringsSep "\n" (remove "" (renderSettings value.settings))
-            + "\n";
+          text = concatStringsSep "\n" (remove "" (renderSettings value.settings)) + "\n";
         };
-      })
-      cfg.homes);
+      }) cfg.homes
+    );
   };
 }

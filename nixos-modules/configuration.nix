@@ -3,21 +3,19 @@
   user,
   pkgs,
   ...
-}: {
+}:
+{
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName =
-    if machine.alias != null
-    then machine.alias
-    else machine.name;
+  networking.hostName = if machine.alias != null then machine.alias else machine.name;
   networking.networkmanager.enable = true;
 
   time.timeZone = "Europe/Paris";
   users.users.${user.login} = {
     isNormalUser = true;
-    extraGroups = ["wheel"];
+    extraGroups = [ "wheel" ];
     shell = pkgs.fish;
   };
 

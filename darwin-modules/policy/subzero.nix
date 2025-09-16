@@ -5,7 +5,8 @@
   user,
   ...
 }:
-with lib; {
+with lib;
+{
   features.ipfs.enable = mkForce false;
 
   programs.onepassword.enable = mkForce true;
@@ -14,7 +15,7 @@ with lib; {
     # that's horrendous, but for whatever reason the M3 MBP isn't detected
     # properly by karabiner. That means I'll have to connect it only to
     # keyboards that are ignored (which fortunately is the case)
-    internalKeyboard = mkForce {};
+    internalKeyboard = mkForce { };
   };
 
   programs.aerospace.workspaces = mkBefore [
@@ -44,54 +45,62 @@ with lib; {
     }
   ];
 
-  home-manager.users.${user.login} = let
-    workGithubOrgs = [
-      "subzerolabs"
-    ];
-    email = builtins.head (builtins.filter (e: lib.hasSuffix "@subzero.xyz" e) user.allEmails);
-  in {
-    home.packages = with pkgs; [
-      terraform
-      kubie
-      kubectl
-    ];
+  home-manager.users.${user.login} =
+    let
+      workGithubOrgs = [
+        "subzerolabs"
+      ];
+      email = builtins.head (builtins.filter (e: lib.hasSuffix "@subzero.xyz" e) user.allEmails);
+    in
+    {
+      home.packages = with pkgs; [
+        terraform
+        kubie
+        kubectl
+      ];
 
-    programs.open-url = {
-      urlProfiles = builtins.listToAttrs (map (org: {
-          name = "https://github.com/${org}";
-          value = "Work";
-        })
-        workGithubOrgs);
-    };
+      programs.open-url = {
+        urlProfiles = builtins.listToAttrs (
+          map (org: {
+            name = "https://github.com/${org}";
+            value = "Work";
+          }) workGithubOrgs
+        );
+      };
 
-    programs.git = {
-      # make sure to use the right email for work repos.
-      includes = let
-        workOrg = org: {
-          condition = "hasconfig:remote.*.url:git@github.com:${org}/**";
-          contents = {
-            user.email = "${email}";
-            commit.gpgsign = true;
+      programs.git = {
+        # make sure to use the right email for work repos.
+        includes =
+          let
+            workOrg = org: {
+              condition = "hasconfig:remote.*.url:git@github.com:${org}/**";
+              contents = {
+                user.email = "${email}";
+                commit.gpgsign = true;
+              };
+              contentSuffix = org;
+            };
+          in
+          map workOrg workGithubOrgs;
+      };
+
+      programs.jujutsu = {
+        scopes.subzero = {
+          repositories = map (org: "~/src/github.com/${org}") workGithubOrgs;
+
+          settings = {
+            user.email = email;
+
+            revset-aliases.work = "heads(::@ ~ description(exact:''))::";
+            aliases.wip = [
+              "log"
+              "-r"
+              "work"
+            ];
           };
-          contentSuffix = org;
-        };
-      in
-        map workOrg workGithubOrgs;
-    };
-
-    programs.jujutsu = {
-      scopes.subzero = {
-        repositories = map (org: "~/src/github.com/${org}") workGithubOrgs;
-
-        settings = {
-          user.email = email;
-
-          revset-aliases.work = "heads(::@ ~ description(exact:''))::";
-          aliases.wip = ["log" "-r" "work"];
         };
       };
     };
-  };
 
   homebrew.brews = [
     "pkg-config"

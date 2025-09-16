@@ -4,9 +4,11 @@
   lib,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.programs.gcloud;
-in {
+in
+{
   options.programs.gcloud = {
     enable = mkEnableOption "Google Cloud SDK";
 
@@ -19,13 +21,17 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; let
-      pkg =
-        if cfg.enableGkeAuthPlugin
-        then cfg.package.withExtraComponents [google-cloud-sdk.components.gke-gcloud-auth-plugin]
-        else cfg.package;
-    in [
-      pkg
-    ];
+    home.packages =
+      with pkgs;
+      let
+        pkg =
+          if cfg.enableGkeAuthPlugin then
+            cfg.package.withExtraComponents [ google-cloud-sdk.components.gke-gcloud-auth-plugin ]
+          else
+            cfg.package;
+      in
+      [
+        pkg
+      ];
   };
 }

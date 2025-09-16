@@ -2,7 +2,8 @@
   machine,
   lib,
   ...
-}: {
+}:
+{
   imports =
     lib.optionals machine.features.subzero [
       ./subzero.nix

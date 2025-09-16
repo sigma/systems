@@ -1,4 +1,5 @@
-{inputs, ...}: rec {
+{ inputs, ... }:
+rec {
   config = {
     allowUnfree = true;
   };

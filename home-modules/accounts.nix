@@ -1,4 +1,5 @@
-{user, ...}: {
+{ user, ... }:
+{
   accounts.email.maildirBasePath = ".mail";
   accounts.email.accounts.${user.login} = {
     primary = true;

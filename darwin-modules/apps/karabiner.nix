@@ -5,9 +5,19 @@
   user,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.programs.karabiner;
-  cfgTxt = builtins.toJSON (import ./karabiner/config.nix {inherit lib cfg machine user;});
+  cfgTxt = builtins.toJSON (
+    import ./karabiner/config.nix {
+      inherit
+        lib
+        cfg
+        machine
+        user
+        ;
+    }
+  );
 
   kbdType = types.submodule {
     options = {
@@ -23,7 +33,8 @@ with lib; let
       };
     };
   };
-in {
+in
+{
   options.programs.karabiner = {
     enable = mkEnableOption "Karabiner";
 
@@ -46,9 +57,15 @@ in {
       type = types.attrsOf (types.either types.str (types.attrsOf types.str));
       description = "The keys the pedal natively emits";
       default = {
-        "left" = {pointing_button = "button1";};
-        "right" = {pointing_button = "button2";};
-        "middle" = {pointing_button = "button3";};
+        "left" = {
+          pointing_button = "button1";
+        };
+        "right" = {
+          pointing_button = "button2";
+        };
+        "middle" = {
+          pointing_button = "button3";
+        };
       };
     };
 
@@ -61,7 +78,7 @@ in {
     ignoreKeyboards = mkOption {
       type = types.listOf kbdType;
       description = "The keyboards to ignore";
-      default = [];
+      default = [ ];
     };
   };
 
@@ -75,7 +92,11 @@ in {
     system.defaults.CustomUserPreferences."com.apple.symbolichotkeys".AppleSymbolicHotKeys."175" = {
       enabled = true;
       value = {
-        parameters = [65535 106 8388608];
+        parameters = [
+          65535
+          106
+          8388608
+        ];
         type = "standard";
       };
     };

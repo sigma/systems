@@ -1,6 +1,8 @@
-{pkgs, ...}: let
+{ pkgs, ... }:
+let
   defaultCommand = "${pkgs.fd}/bin/fd --type f --color=always";
-in {
+in
+{
   enable = true;
 
   tmux.enableShellIntegration = true;
@@ -23,7 +25,7 @@ in {
   ];
 
   changeDirWidgetCommand = "${pkgs.fd}/bin/fd --type d --hidden --follow --exclude .git .";
-  changeDirWidgetOptions = ["--preview '${pkgs.tree}/bin/tree -C {} | head -200'"];
+  changeDirWidgetOptions = [ "--preview '${pkgs.tree}/bin/tree -C {} | head -200'" ];
 
   historyWidgetOptions = [
     "--sort"

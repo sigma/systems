@@ -4,14 +4,16 @@
   pkgs,
   ...
 }:
-with lib; let
-  vrsPkg = pkgs.runCommandLocal "version" {} ''
+with lib;
+let
+  vrsPkg = pkgs.runCommandLocal "version" { } ''
     mkdir -p $out
     /usr/bin/sw_vers --productVersion > $out/version
   '';
   vrs = builtins.readFile "${vrsPkg}/version";
   cfg = config.versions.darwin;
-in {
+in
+{
   options = {
     versions.darwin = {
       reference = mkOption {
@@ -23,13 +25,15 @@ in {
       lib = mkOption {
         type = types.raw;
         description = "Library functions for version comparison";
-        default = let
-          compareTo = builtins.compareVersions cfg.reference;
-        in {
-          versionAtLeast = version: compareTo version >= 0;
-          versionAtMost = version: compareTo version <= 0;
-          versionEqual = version: compareTo version == 0;
-        };
+        default =
+          let
+            compareTo = builtins.compareVersions cfg.reference;
+          in
+          {
+            versionAtLeast = version: compareTo version >= 0;
+            versionAtMost = version: compareTo version <= 0;
+            versionEqual = version: compareTo version == 0;
+          };
       };
     };
   };

@@ -5,9 +5,11 @@
   user,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.features.k8s;
-in {
+in
+{
   options.features.k8s = {
     enable = mkEnableOption "k8s";
 
@@ -41,7 +43,8 @@ in {
       ];
 
       home = {
-        packages = with pkgs;
+        packages =
+          with pkgs;
           [
             jaq
             mimir

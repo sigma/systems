@@ -2,7 +2,8 @@
   pkgs,
   extSet,
   ...
-}: {
+}:
+{
   userSettings = {
     "diffEditor.ignoreTrimWhitespace" = false;
 
@@ -45,7 +46,8 @@
 
     "terminal.external.osxExec" = "${pkgs.wezterm}/bin/wezterm";
     "terminal.integrated.cursorBlinking" = true;
-    "terminal.integrated.fontFamily" = "Fira Code, SauceCodePro Nerd Font Mono, Menlo, Monaco, 'Courier New', 'monospace'";
+    "terminal.integrated.fontFamily" =
+      "Fira Code, SauceCodePro Nerd Font Mono, Menlo, Monaco, 'Courier New', 'monospace'";
     "terminal.integrated.fontSize" = 13;
     "terminal.integrated.fontWeight" = "600";
     "terminal.integrated.inheritEnv" = false;

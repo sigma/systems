@@ -1,7 +1,9 @@
-{user, ...}: let
+{ user, ... }:
+let
   login = user.login;
   homeDir = "/Users/${login}";
-in {
+in
+{
   nix.settings.trusted-users = [
     login
   ];

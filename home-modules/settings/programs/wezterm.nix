@@ -3,7 +3,8 @@
   pkgs,
   config,
   ...
-}: {
+}:
+{
   enable = true;
   extraConfig = ''
     package.path = package.path .. ";${pkgs.wezterm-config}/?.lua;${pkgs.wezterm-config}/?/init.lua"

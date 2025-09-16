@@ -1,4 +1,5 @@
-{inputs, ...}: {
+{ inputs, ... }:
+{
   imports = [
     # shell support
     ./shell.nix
@@ -26,5 +27,5 @@
     ../darwin-modules
   ];
 
-  nebula.nixpkgsConfig = import ../pkg-config.nix {inherit inputs;};
+  nebula.nixpkgsConfig = import ../pkg-config.nix { inherit inputs; };
 }

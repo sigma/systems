@@ -5,17 +5,25 @@
   machine,
   user,
   ...
-}: let
-  makeProfile = modules:
+}:
+let
+  makeProfile =
+    modules:
     (lib.evalModules {
-      modules = [./code/module.nix] ++ modules;
+      modules = [ ./code/module.nix ] ++ modules;
       specialArgs = {
-        inherit config pkgs lib machine user;
+        inherit
+          config
+          pkgs
+          lib
+          machine
+          user
+          ;
         extSet = pkgs.forVSCodeVersion pkgs.vscode.version;
       };
-    })
-    .config;
-in {
+    }).config;
+in
+{
   enable = true;
   mutableExtensionsDir = true;
 

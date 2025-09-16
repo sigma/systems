@@ -1,4 +1,5 @@
-final: prev: let
+final: prev:
+let
   icon = final.fetchurl {
     url = "https://github.com/d12frosted/homebrew-emacs-plus/raw/master/icons/modern-black-dragon.icns";
     hash = "sha256-rUOBImaeVtsR19ZusGuZnm/A8IY1GCIWZn+E7/cASEY=";
@@ -24,7 +25,8 @@ final: prev: let
   iconPhase = ''
     ${final.coreutils}/bin/cp -f ${icon} nextstep/Cocoa/Emacs.base/Contents/Resources/Emacs.icns
   '';
-in {
+in
+{
   emacs = prev.emacs30;
 
   emacs-git = prev.emacs-git.overrideAttrs (oldAttrs: {

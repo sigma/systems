@@ -1,6 +1,7 @@
-{...}: {
+{ ... }:
+{
   enable = true;
   new = {
-    tags = ["new"];
+    tags = [ "new" ];
   };
 }

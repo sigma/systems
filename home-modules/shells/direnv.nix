@@ -3,9 +3,11 @@
   lib,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.programs.direnv;
-in {
+in
+{
   config = mkIf cfg.enable {
     home.sessionVariables = {
       DIRENV_LOG_FORMAT = "";

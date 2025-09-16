@@ -5,40 +5,42 @@
   stateVersion,
   helpers,
   ...
-}: let
-  userFor = machine:
-    helpers.expandUser (cfg.userSelector machine);
+}:
+let
+  userFor = machine: helpers.expandUser (cfg.userSelector machine);
 
-  homeManagerConfig = {
-    user,
-    machine,
-  }: {
-    nixpkgs = cfg.nixpkgsConfig;
-    home-manager = {
-      useGlobalPkgs = true;
-      useUserPackages = true;
-      users.${user.login} = inputs.nixpkgs.lib.mkMerge (
-        cfg.homeModules
-        ++ machine.homeModules
-      );
-      extraSpecialArgs = {
-        inherit user machine stateVersion;
+  homeManagerConfig =
+    {
+      user,
+      machine,
+    }:
+    {
+      nixpkgs = cfg.nixpkgsConfig;
+      home-manager = {
+        useGlobalPkgs = true;
+        useUserPackages = true;
+        users.${user.login} = inputs.nixpkgs.lib.mkMerge (cfg.homeModules ++ machine.homeModules);
+        extraSpecialArgs = {
+          inherit user machine stateVersion;
+        };
       };
     };
-  };
 
   nixModule = {
     nix.settings.substituters = cfg.nixConfig.trusted-substituters;
     nix.settings.trusted-public-keys = cfg.nixConfig.trusted-public-keys;
   };
-in {
-  mac = machine: let
-    user = userFor machine;
-    specialArgs = {
-      inherit user machine stateVersion;
-      inherit (machine) system;
-    };
-  in
+in
+{
+  mac =
+    machine:
+    let
+      user = userFor machine;
+      specialArgs = {
+        inherit user machine stateVersion;
+        inherit (machine) system;
+      };
+    in
     inputs.darwin.lib.darwinSystem {
       inherit (machine) system;
       inherit specialArgs;
@@ -48,17 +50,19 @@ in {
         ++ [
           # `home-manager` module
           inputs.home-manager.darwinModules.home-manager
-          (homeManagerConfig {inherit user machine;})
+          (homeManagerConfig { inherit user machine; })
           nixModule
         ];
     };
 
-  linux = machine: let
-    user = userFor machine;
-    specialArgs = {
-      inherit user machine stateVersion;
-    };
-  in
+  linux =
+    machine:
+    let
+      user = userFor machine;
+      specialArgs = {
+        inherit user machine stateVersion;
+      };
+    in
     inputs.home-manager.lib.homeManagerConfiguration {
       pkgs = inputs.nixpkgs.legacyPackages.${machine.system} // cfg.nixpkgsConfig;
       modules =
@@ -77,12 +81,14 @@ in {
       extraSpecialArgs = specialArgs;
     };
 
-  nixos = machine: let
-    user = userFor machine;
-    specialArgs = {
-      inherit user machine stateVersion;
-    };
-  in
+  nixos =
+    machine:
+    let
+      user = userFor machine;
+      specialArgs = {
+        inherit user machine stateVersion;
+      };
+    in
     inputs.nixpkgs.lib.nixosSystem {
       inherit (machine) system;
       inherit specialArgs;
@@ -92,7 +98,7 @@ in {
         ++ [
           # 'home-manager' module
           inputs.home-manager.nixosModules.home-manager
-          (homeManagerConfig {inherit user machine;})
+          (homeManagerConfig { inherit user machine; })
           nixModule
         ];
     };

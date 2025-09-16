@@ -4,9 +4,11 @@
   user,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.programs.brave;
-in {
+in
+{
   options.programs.brave = {
     enable = mkEnableOption "brave";
   };
@@ -15,7 +17,9 @@ in {
     homebrew.casks = [
       {
         name = "brave-browser";
-        args = {appdir = "/Applications";};
+        args = {
+          appdir = "/Applications";
+        };
       }
     ];
 

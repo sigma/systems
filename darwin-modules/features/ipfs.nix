@@ -5,9 +5,11 @@
   user,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.features.ipfs;
-in {
+in
+{
   options.features.ipfs = {
     enable = mkEnableOption "ipfs";
   };

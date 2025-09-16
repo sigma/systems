@@ -4,9 +4,11 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.programs.cloudshell;
-in {
+in
+{
   options.programs.cloudshell = {
     enable = mkEnableOption "cloudshell utils";
   };

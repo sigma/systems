@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   userSettings = {
     "cursor.cpp.disabledLanguages" = [
       "plaintext"

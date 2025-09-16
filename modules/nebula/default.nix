@@ -4,38 +4,52 @@
   lib,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.nebula;
-  types = import ./types.nix {inherit lib;};
-  helpers = import ./helpers.nix {inherit lib cfg;};
+  types = import ./types.nix { inherit lib; };
+  helpers = import ./helpers.nix { inherit lib cfg; };
   configurations = import ./configurations.nix {
-    inherit inputs lib cfg helpers;
+    inherit
+      inputs
+      lib
+      cfg
+      helpers
+      ;
     stateVersion = "25.05";
   };
-  defaultFeatures = ["managed" "linux" "mac" "nixos" "interactive" "laptop"];
+  defaultFeatures = [
+    "managed"
+    "linux"
+    "mac"
+    "nixos"
+    "interactive"
+    "laptop"
+  ];
   nixConfigTypes = types.submodule {
     options = {
       trusted-substituters = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
       };
       trusted-public-keys = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
       };
     };
   };
-in {
+in
+{
   options = {
     nebula = {
       users = mkOption {
         type = types.lazyAttrsOf types.user;
-        default = {};
+        default = { };
       };
 
       hosts = mkOption {
         type = types.lazyAttrsOf types.host;
-        default = {};
+        default = { };
       };
 
       features = mkOption {
@@ -45,27 +59,27 @@ in {
 
       nixpkgsConfig = mkOption {
         type = types.attrs;
-        default = {};
+        default = { };
       };
 
       darwinModules = mkOption {
         type = types.listOf types.raw;
-        default = [];
+        default = [ ];
       };
 
       homeModules = mkOption {
         type = types.listOf types.raw;
-        default = [];
+        default = [ ];
       };
 
       linuxModules = mkOption {
         type = types.listOf types.raw;
-        default = [];
+        default = [ ];
       };
 
       nixosModules = mkOption {
         type = types.listOf types.raw;
-        default = [];
+        default = [ ];
       };
 
       userSelector = mkOption {
@@ -75,25 +89,33 @@ in {
 
       nixConfig = mkOption {
         type = nixConfigTypes;
-        default = {};
+        default = { };
       };
     };
   };
 
-  config = let
-    hosts = config.nebula.hosts;
-    allMachines = builtins.mapAttrs (name: host: helpers.hostMachine host) hosts;
-    machines = lib.filterAttrs (name: machine: machine.features.managed) allMachines;
-  in {
-    # make sure the predefined features are always included
-    nebula.features = defaultFeatures;
+  config =
+    let
+      hosts = config.nebula.hosts;
+      allMachines = builtins.mapAttrs (name: host: helpers.hostMachine host) hosts;
+      machines = lib.filterAttrs (name: machine: machine.features.managed) allMachines;
+    in
+    {
+      # make sure the predefined features are always included
+      nebula.features = defaultFeatures;
 
-    flake = let
-      gen = feature: builtins.mapAttrs (name: machine: configurations.${feature} machine) (lib.filterAttrs (name: machine: machine.features.${feature}) machines);
-    in {
-      darwinConfigurations = gen "mac";
-      homeConfigurations = gen "linux";
-      nixosConfigurations = gen "nixos";
+      flake =
+        let
+          gen =
+            feature:
+            builtins.mapAttrs (name: machine: configurations.${feature} machine) (
+              lib.filterAttrs (name: machine: machine.features.${feature}) machines
+            );
+        in
+        {
+          darwinConfigurations = gen "mac";
+          homeConfigurations = gen "linux";
+          nixosConfigurations = gen "nixos";
+        };
     };
-  };
 }

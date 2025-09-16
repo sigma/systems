@@ -4,9 +4,11 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.programs.zile;
-in {
+in
+{
   options.programs.zile = {
     enable = mkEnableOption "Zile";
     package = mkOption {
@@ -28,11 +30,13 @@ in {
       text = "${cfg.configFile}";
     };
 
-    home.sessionVariables = let
-      editor = "${cfg.package}/bin/zile";
-    in {
-      EDITOR = editor;
-      VISUAL = editor;
-    };
+    home.sessionVariables =
+      let
+        editor = "${cfg.package}/bin/zile";
+      in
+      {
+        EDITOR = editor;
+        VISUAL = editor;
+      };
   };
 }

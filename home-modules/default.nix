@@ -4,7 +4,8 @@
   machine,
   stateVersion,
   ...
-}: {
+}:
+{
   home.stateVersion = stateVersion;
 
   imports = [
@@ -51,7 +52,8 @@
     thefuck.package = pkgs.stable.thefuck;
   };
 
-  home.packages = with pkgs;
+  home.packages =
+    with pkgs;
     [
       # Some basics
       bash

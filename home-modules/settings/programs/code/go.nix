@@ -2,7 +2,8 @@
   pkgs,
   extSet,
   ...
-}: {
+}:
+{
   userSettings = {
     "go.alternateTools" = {
       "go" = "${pkgs.go}/bin/go";

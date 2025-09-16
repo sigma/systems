@@ -1,4 +1,5 @@
-{extSet, ...}: {
+{ extSet, ... }:
+{
   extensions = with extSet.vscode-marketplace; [
     kahole.magit
     tuttieee.emacs-mcx
