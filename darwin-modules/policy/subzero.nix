@@ -107,9 +107,10 @@ with lib;
     };
 
   homebrew.brews = [
-    "pkg-config"
-    "openssl"
+    "llvm"
     "node"
+    "openssl"
+    "pkg-config"
     "rustup"
     "socat"
     "wasm-pack"
