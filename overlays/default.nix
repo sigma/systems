@@ -19,14 +19,10 @@
 
   # my overlays
   inputs.maschine-hacks.overlays.default
+
+  # for packages from inputs that don't come with an overlay
   (final: prev: {
-    jj-spr = inputs.jj-spr.packages.${final.stdenv.system}.default.overrideAttrs (oldAttrs: {
-      buildInputs = with final; [
-        openssl
-        pkg-config
-        zlib
-      ];
-    });
+    jj-spr = inputs.jj-spr.packages.${final.stdenv.system}.default;
   })
 
   # packages hacks

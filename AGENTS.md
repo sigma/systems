@@ -534,13 +534,14 @@ buildGoModule rec {
   inputs.emacs.overlay
   inputs.fenix.overlays.default
 
-  # Package customizations
-  (import ./pkg)
-
-  # Local packages
+  # For packages from inputs that don't come with an overlay
   (final: prev: {
-    custom-tool = prev.callPackage ./pkg/local/custom-tool.nix { };
+    jj-spr = inputs.jj-spr.packages.${final.stdenv.system}.default;
+    custom-tool = inputs.custom-tool.packages.${final.stdenv.system}.default;
   })
+
+  # Package customizations and overrides
+  (import ./pkg)
 ]
 ```
 
@@ -604,19 +605,33 @@ final: prev: {
 }
 ```
 
-**For flake input overrides**, add directly to `overlays/default.nix`:
+**For flake input packages**, use the two-step approach:
+
+1. **First, add the base package in `overlays/default.nix`:**
 ```nix
-# In overlays/default.nix
+# In the "packages from inputs" section
 (final: prev: {
-  flake-package = inputs.some-flake.packages.${final.stdenv.system}.default.overrideAttrs (oldAttrs: {
-    # Flake input overrides go here since they need access to inputs
-  });
+  flake-package = inputs.some-flake.packages.${final.stdenv.system}.default;
 })
 ```
 
+2. **Then, add overrides in `overlays/pkg/flake-package.nix`:**
+```nix
+# overlays/pkg/flake-package.nix
+final: prev: {
+  flake-package = prev.flake-package.overrideAttrs (oldAttrs: {
+    # Package customizations here
+    buildInputs = with final; [
+      # additional dependencies
+    ];
+  });
+}
+```
+
 **When to use each approach:**
-- Use separate `overlays/pkg/*.nix` files for **nixpkgs package modifications**
-- Use inline overlays in `overlays/default.nix` for **flake input package overrides** that need access to `inputs`
+- Use separate `overlays/pkg/*.nix` files for **all package modifications and overrides**
+- Use the "packages from inputs" section in `overlays/default.nix` **only** for bringing flake packages into scope
+- This separation keeps the concerns clean: `default.nix` handles package availability, `pkg/` handles customizations
 
 ### Package Version Management
 
