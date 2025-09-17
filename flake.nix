@@ -84,7 +84,6 @@
     fh.url = "https://flakehub.com/f/DeterminateSystems/fh/*";
     fh.inputs.nixpkgs.follows = "nixpkgs";
     fh.inputs.fenix.follows = "fenix";
-    fh.inputs.naersk.follows = "naersk";
 
     nix.url = "https://flakehub.com/f/DeterminateSystems/nix-src/*";
     nix.inputs = {

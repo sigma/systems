@@ -21,7 +21,11 @@
   inputs.maschine-hacks.overlays.default
   (final: prev: {
     jj-spr = inputs.jj-spr.packages.${final.stdenv.system}.default.overrideAttrs (oldAttrs: {
-      buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ final.zlib ];
+      buildInputs = with final; [
+        openssl
+        pkg-config
+        zlib
+      ];
     });
   })
 

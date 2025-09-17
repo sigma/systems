@@ -593,7 +593,8 @@ home.packages = with pkgs; [
 ```
 
 #### 3. For Package Overrides
-Add to `overlays/pkg/` as separate files:
+
+**For nixpkgs package overrides**, create separate files in `overlays/pkg/`:
 ```nix
 # overlays/pkg/package-fixes.nix
 final: prev: {
@@ -602,6 +603,20 @@ final: prev: {
   });
 }
 ```
+
+**For flake input overrides**, add directly to `overlays/default.nix`:
+```nix
+# In overlays/default.nix
+(final: prev: {
+  flake-package = inputs.some-flake.packages.${final.stdenv.system}.default.overrideAttrs (oldAttrs: {
+    # Flake input overrides go here since they need access to inputs
+  });
+})
+```
+
+**When to use each approach:**
+- Use separate `overlays/pkg/*.nix` files for **nixpkgs package modifications**
+- Use inline overlays in `overlays/default.nix` for **flake input package overrides** that need access to `inputs`
 
 ### Package Version Management
 
