@@ -96,6 +96,11 @@
       tealdeer
       tree
 
+      # writing tools
+      hugo
+      mdbook
+      mdbook-mermaid
+
       # git
       git-review
       pre-commit
