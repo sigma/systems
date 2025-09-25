@@ -22,4 +22,8 @@ with lib;
     # desktop titan
     "${user.login}:7fZp73vnETk6Nen9OqNu49XEnQvlpqIIYYeNJDM4p/w1DprKpyqw8kvRCalbqMNwfLaElmbhHYKN4nKvMvoTPg==,yxC16UIBA7Ajkr/2uVVGx5DUCPLJOEYXHi8bs0KrTlFSL4SH+eF9rChm6V13jcldqSfL/d66REtrbRYqg5/0xQ==,es256,+presence"
   ];
+
+  homebrew.brews = [
+    "openssh" # for FIDO2 support
+  ];
 }
