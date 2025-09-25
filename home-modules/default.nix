@@ -49,7 +49,6 @@
     gitui.enable = true;
 
     thefuck.enable = true;
-    thefuck.package = pkgs.stable.thefuck;
   };
 
   home.packages =
