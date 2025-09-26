@@ -58,7 +58,7 @@ with lib;
         kubie
         kubectl
 
-        (jaeger.override {
+        (local.jaeger.override {
           inherit (pkgs.master) buildGoModule;
         })
       ];

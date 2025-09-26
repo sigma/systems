@@ -8,7 +8,7 @@
 with lib;
 let
   cfg = config.programs.emacs;
-  emacsConfig = pkgs.emacs-config.override {
+  emacsConfig = pkgs.local.emacs-config.override {
     inherit user;
     emacs = cfg.package;
   };
@@ -63,7 +63,7 @@ in
         ))
         editorconfig-core-c
         sqlite
-        # texlive.combined.scheme-full
+        tex
         pandoc
       ];
 

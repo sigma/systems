@@ -103,7 +103,7 @@
       # git
       git-review
       pre-commit
-      prs
+      local.prs
       tig
 
       # languages
@@ -141,7 +141,7 @@
       fh
 
       # keyboard QMK tools
-      mdloader
+      local.mdloader
 
       # for voice generation
       ffmpeg
