@@ -1,6 +1,9 @@
 { inputs, ... }:
 {
   imports = [
+    # flake packages
+    ./flake-packages.nix
+
     # shell support
     ./shell.nix
 
