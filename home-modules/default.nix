@@ -42,7 +42,9 @@
     cloudshell.enable = true;
     fd.enable = true;
     jq.enable = true;
+
     ripgrep.enable = true;
+    ripgrep.arguments = [ "--hyperlink-format=kitty" ];
 
     gh.enable = true;
     gh.settings.pager = "${pkgs.delta}/bin/delta";

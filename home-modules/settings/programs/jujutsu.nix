@@ -178,7 +178,7 @@ in
       ];
 
       settings = {
-        ui.pager = "${pkgs.delta}/bin/delta";
+        ui.pager = "${pkgs.delta}/bin/delta --hyperlinks";
         ui.diff-formatter = ":git";
       };
     };

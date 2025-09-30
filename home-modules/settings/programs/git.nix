@@ -26,6 +26,7 @@
   delta.enable = true;
   delta.options = {
     navigate = true;
+    hyperlinks = true;
 
     interactive = {
       "keep-plus-minus-markers" = false;
