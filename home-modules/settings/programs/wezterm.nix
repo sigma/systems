@@ -13,7 +13,8 @@ in
     local wezterm = require('wezterm')
     package.path = package.path .. ";${weztermConfig}/?.lua;${weztermConfig}/?/init.lua"
 
-    local config = dofile("${weztermConfig}/wezterm.lua")${lib.optionalString config.catppuccin.wezterm.enable ":apply(dofile(catppuccin_plugin))"}
+    local config = dofile("${weztermConfig}/wezterm.lua")
+      ${lib.optionalString config.catppuccin.wezterm.enable ":apply(dofile(catppuccin_plugin))"}
 
     -- This is the main event handler for opening links
     wezterm.on('open-uri', function(window, pane, uri) 

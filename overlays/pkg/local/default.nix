@@ -1,17 +1,11 @@
 {
   pkgs,
-  nix-filter ? pkgs.nix-filter,
 }:
-let
-  params = {
-    inherit nix-filter;
-  };
-in
 {
   local = {
     # packages for my configs
-    emacs-config = pkgs.callPackage ./emacs-config.nix params;
-    wezterm-config = pkgs.callPackage ./wezterm-config.nix params;
+    emacs-config = pkgs.callPackage ./emacs-config.nix { };
+    wezterm-config = pkgs.callPackage ./wezterm-config.nix { };
 
     jaeger = pkgs.callPackage ./jaeger.nix { };
     mdloader = pkgs.callPackage ./mdloader.nix { };

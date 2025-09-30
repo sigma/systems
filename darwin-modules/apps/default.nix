@@ -31,9 +31,6 @@
     "obsidian"
     "slack"
     "soundsource"
-    "spotify"
-    "visual-studio-code"
-    "warp"
     "whatsapp"
     "yubico-yubikey-manager"
   ];

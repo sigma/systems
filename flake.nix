@@ -63,7 +63,6 @@
     flake-utils.url = "github:numtide/flake-utils";
     flake-utils.inputs.systems.follows = "systems";
     flake-root.url = "github:srid/flake-root";
-    nix-filter.url = "github:numtide/nix-filter";
 
     # Shell utils
     devshell.url = "github:numtide/devshell";

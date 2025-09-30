@@ -1,18 +1,16 @@
 {
+  lib,
   stdenv,
   coreutils,
   findutils,
-  nix-filter,
   fetchFromGitHub,
 }:
 stdenv.mkDerivation {
   pname = "wezterm-config";
   version = "dev";
-  src = nix-filter {
-    root = ./.;
-    include = [
-      (nix-filter.inDirectory ./wezterm-config)
-    ];
+  src = lib.fileset.toSource {
+    root = ./wezterm-config;
+    fileset = ./wezterm-config;
   };
 
   tabline = fetchFromGitHub {
@@ -39,7 +37,7 @@ stdenv.mkDerivation {
   dontUnpack = true;
 
   buildPhase = ''
-    ${coreutils}/bin/cp -R $src/wezterm-config/* .
+    ${coreutils}/bin/cp -R $src/* .
 
     # plugins
     ${coreutils}/bin/cp -R $tabline/plugin/tabline .

@@ -15,7 +15,6 @@
 
   # utils overlay
   inputs.devshell.overlays.default
-  inputs.nix-filter.overlays.default
 
   # my overlays
   inputs.maschine-hacks.overlays.default

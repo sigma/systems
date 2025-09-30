@@ -1,20 +1,17 @@
 {
+  lib,
   stdenv,
-  nix-filter,
   coreutils,
   findutils,
   emacs,
-  lib,
   user ? null,
 }:
 stdenv.mkDerivation {
   pname = "emacs-config";
   version = "dev";
-  src = nix-filter {
+  src = lib.fileset.toSource {
     root = ./emacs-config;
-    include = [
-      "emacs.org"
-    ];
+    fileset = ./emacs-config/emacs.org;
   };
 
   buildInputs = [
