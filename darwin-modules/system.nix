@@ -6,6 +6,7 @@
 }:
 {
   programs.fish.enable = true;
+  programs.zsh.enable = false;
   programs.fish.useBabelfish = true;
 
   environment = with pkgs; {

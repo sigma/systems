@@ -20,13 +20,13 @@ with lib;
 
     fishIntegration = mkOption {
       type = types.bool;
-      default = true;
+      default = config.programs.fish.enable;
       description = "Whether to integrate with the fish shell.";
     };
 
     zshIntegration = mkOption {
       type = types.bool;
-      default = true;
+      default = config.programs.zsh.enable;
       description = "Whether to integrate with the zsh shell.";
     };
   };

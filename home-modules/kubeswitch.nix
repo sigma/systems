@@ -46,15 +46,15 @@ in
         '';
 
     programs = {
-      bash.initExtra = ''
+      bash.initExtra = mkIf config.programs.bash.enable ''
         source <("${cfg.package}/bin/switcher init bash")
       '';
 
-      fish.interactiveShellInit = ''
+      fish.interactiveShellInit = mkIf config.programs.fish.enable ''
         ${cfg.package}/bin/switcher init fish | source
       '';
 
-      zsh.initExtra = ''
+      zsh.initExtra = mkIf config.programs.zsh.enable ''
         source <("${cfg.package}/bin/switcher init zsh")
       '';
     };

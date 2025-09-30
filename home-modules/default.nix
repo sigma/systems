@@ -10,6 +10,7 @@
 
   imports = [
     ./accounts.nix
+    ./catppuccin.nix
     ./cloud-shell.nix
     ./darwin-apps.nix
     ./editors
