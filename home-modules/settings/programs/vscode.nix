@@ -1,9 +1,6 @@
-{
-  config,
+args@{
   pkgs,
   lib,
-  machine,
-  user,
   ...
 }:
 let
@@ -11,14 +8,7 @@ let
     modules:
     (lib.evalModules {
       modules = [ ./code/module.nix ] ++ modules;
-      specialArgs = {
-        inherit
-          config
-          pkgs
-          lib
-          machine
-          user
-          ;
+      specialArgs = args // {
         extSet = pkgs.forVSCodeVersion pkgs.vscode.version;
       };
     }).config;
