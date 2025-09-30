@@ -12,6 +12,7 @@
     ./accounts.nix
     ./catppuccin.nix
     ./cloud-shell.nix
+    ./cursor.nix
     ./darwin-apps.nix
     ./editors
     ./gcloud.nix

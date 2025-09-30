@@ -1,6 +1,8 @@
 {
   pkgs,
   user,
+  config,
+  lib,
   ...
 }:
 let
@@ -35,12 +37,17 @@ in
       };
       nerdFontsVersion = "3";
     };
-    os = {
-      edit = "cursor --reuse-window -- {{filename}}";
-      editAtLine = "cursor --reuse-window --goto -- {{filename}}:{{line}}";
-      editAtLineAndWait = "cursor --reuse-window --goto --wait -- {{filename}}:{{line}}";
-      editInTerminal = false;
-      openDirInEditor = "cursor -- {{dir}}";
-    };
+    os = lib.optionalAttrs config.programs.cursor.enable (
+      let
+        editCommand = "${config.programs.cursor.package}/bin/cursor";
+      in
+      {
+        edit = "${editCommand} --reuse-window -- {{filename}}";
+        editAtLine = "${editCommand} --reuse-window --goto -- {{filename}}:{{line}}";
+        editAtLineAndWait = "${editCommand} --reuse-window --goto --wait -- {{filename}}:{{line}}";
+        editInTerminal = false;
+        openDirInEditor = "${editCommand} -- {{dir}}";
+      }
+    );
   };
 }

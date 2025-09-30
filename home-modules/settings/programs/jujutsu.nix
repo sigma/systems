@@ -1,6 +1,8 @@
 {
   user,
   pkgs,
+  config,
+  lib,
   ...
 }:
 let
@@ -29,8 +31,8 @@ in
       pager = ":builtin";
     };
 
-    merge-tools.cursor = {
-      program = "cursor";
+    merge-tools.cursor = lib.optionalAttrs config.programs.cursor.enable {
+      program = "${config.programs.cursor.package}/bin/cursor";
       merge-args = [
         "--wait"
         "--merge"

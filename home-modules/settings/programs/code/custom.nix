@@ -68,6 +68,7 @@
       "editorLineNumber.foreground" = "#545454";
       "editorLineNumber.activeForeground" = "#ababab";
     };
+    "workbench.colorTheme" = "Subliminal Next";
 
     "vsicons.dontShowNewVersionMessage" = true;
 
