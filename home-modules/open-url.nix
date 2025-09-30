@@ -9,7 +9,7 @@ let
   cfg = config.programs.open-url;
 
   launchBrowser =
-    browser: if hasSuffix ".app" "${browser}" then "open -a '${browser}' --args" else "${browser}";
+    browser: if hasSuffix ".app" "${browser}" then "open -n -a '${browser}' --args" else "${browser}";
 in
 {
   options.programs.open-url = {
@@ -38,6 +38,7 @@ in
         URL="$1"
         PROFILE_NAME=""
 
+        shopt -s nocasematch
         ${
           (builtins.concatStringsSep "\n" (
             mapAttrsToList (url: profile: ''
@@ -47,6 +48,7 @@ in
             '') cfg.urlProfiles
           ))
         }
+        shopt -u nocasematch
 
         if [[ -n "$PROFILE_NAME" ]]; then
           STATE_FILE="${cfg.localStatePath}"
@@ -56,9 +58,9 @@ in
 
 
         if [[ -n "$PROFILE" ]]; then
-          ${launchBrowser cfg.browser} --profile-directory "$PROFILE" "$URL"
+          ${launchBrowser cfg.browser} --profile-directory="$PROFILE" "$URL"
         else
-          ${launchBrowser cfg.browser} "$URL"
+          ${launchBrowser cfg.browser} --profile-directory="Default" "$URL"
         fi
       '')
     ];
