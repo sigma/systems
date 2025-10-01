@@ -130,7 +130,7 @@ buildGoModule rec {
     description = "Jaeger - a Distributed Tracing System";
     homepage = "https://www.jaegertracing.io/";
     license = licenses.asl20;
-    maintainers = [ ];
+    maintainers = [ sigma ];
     platforms = platforms.unix;
   };
 }

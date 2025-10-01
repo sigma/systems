@@ -24,7 +24,7 @@ in
         src = null;
         buildCommand = ''
           mkdir -p $out/bin
-          ln -sf /opt/homebrew/bin/cursor $out/bin/cursor
+          ln -sf ${config.homebrew.brewPrefix}/cursor $out/bin/cursor
         '';
 
         meta = with lib; {

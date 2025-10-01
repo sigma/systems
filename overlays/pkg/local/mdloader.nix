@@ -35,6 +35,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/Massdrop/mdloader";
     license = licenses.gpl3;
     platforms = platforms.unix;
-    maintainers = [ ];
+    maintainers = [ sigma ];
   };
 }
