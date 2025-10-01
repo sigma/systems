@@ -15,6 +15,7 @@ with lib;
     environment.etc."nix/nix.custom.conf".text = ''
       # determinate-only options
       lazy-trees = true
+      eval-cores = 0 # Evaluate across all cores
 
       ${config.nix.extraOptions}
     '';
