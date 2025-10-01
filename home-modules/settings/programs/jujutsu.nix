@@ -1,5 +1,6 @@
 {
   user,
+  machine,
   pkgs,
   config,
   lib,
@@ -81,7 +82,8 @@ in
       private-commits = "description(glob:'wip:*') | description(glob:'private:*')";
     };
 
-    signing = {
+    signing = lib.optionalAttrs (machine.signingKey != null) {
+      key = machine.signingKey;
       behavior = "own";
       backend = "ssh";
     };

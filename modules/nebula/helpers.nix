@@ -41,7 +41,7 @@ in
         ));
     in
     {
-      inherit (host) name system alias;
+      inherit (host) name system alias u2fKeys signingKey;
       features = (mapFeatures cfg.features false) // (mapFeatures host.features true);
       nixosModules = [ ];
       darwinModules = [ ];

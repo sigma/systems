@@ -91,6 +91,18 @@ rec {
           description = "The ssh options of the host";
         };
 
+        u2fKeys = mkOption {
+          type = types.listOf types.str;
+          default = [ ];
+          description = "The U2F authorization keys for PAM authentication";
+        };
+
+        signingKey = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = "The SSH signing key for git commits";
+        };
+
         remotes = mkOption {
           type = types.listOf host;
           default = [ ];
