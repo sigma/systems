@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, lib, ... }:
 let
   userRegistryModule = {
     nix.registry = {
@@ -16,7 +16,7 @@ let
   };
 
   systemRegistryModule = {
-    nix.registry = {
+    nix.registry = lib.mkForce {
       # systems
       systems.flake = inputs.systems;
       nixpkgs.flake = inputs.nixpkgs;
