@@ -31,4 +31,4 @@ jobs:
             --no-link \
             --print-build-logs \
             --show-trace \
-            .#nixosConfigurations.${{ matrix.configuration }}.system
+            .#nixosConfigurations.${{ matrix.configuration }}.config.system.build.toplevel

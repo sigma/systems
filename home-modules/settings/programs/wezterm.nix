@@ -6,6 +6,11 @@
 }:
 let
   weztermConfig = pkgs.local.wezterm-config;
+  editor =
+    if config.programs.cursor.enable then
+      config.programs.cursor.package
+    else
+      config.programs.vscode.package;
 in
 {
   enable = true;
@@ -28,7 +33,7 @@ in
          window:perform_action(
            wezterm.action.SpawnCommandInNewTab {
              -- The command to run. 'code' should be in your system's PATH.
-             args = { '${config.programs.cursor.package}/bin/cursor', url.file_path },
+             args = { '${editor}/bin/cursor', url.file_path },
            },
            pane
          )
