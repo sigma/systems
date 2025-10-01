@@ -7,6 +7,7 @@
 with lib;
 let
   cfg = config.programs.brave;
+  homeDir = config.users.users.${user.login}.home;
 in
 {
   options.programs.brave = {
@@ -27,7 +28,7 @@ in
       open-url = {
         enable = true;
         browser = "/Applications/Brave Browser.app";
-        localStatePath = "/Users/${user.login}/Library/Application Support/BraveSoftware/Brave-Browser/Local State";
+        localStatePath = "${homeDir}/Library/Application Support/BraveSoftware/Brave-Browser/Local State";
       };
 
       yt-dlp = {

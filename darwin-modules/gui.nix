@@ -1,4 +1,7 @@
-{ user, ... }:
+{ user, config, ... }:
+let
+  homeDir = config.users.users.${user.login}.home;
+in
 {
   system.defaults.dock = {
     autohide = true;
@@ -10,7 +13,7 @@
 
     persistent-apps =
       let
-        userApp = name: "/Users/${user.login}/Applications/Local/${name}.app";
+        userApp = name: "${homeDir}/Applications/Local/${name}.app";
         systemApp = name: "/Applications/${name}.app";
       in
       [
@@ -24,7 +27,7 @@
 
     persistent-others =
       let
-        userDir = name: "/Users/${user.login}/${name}";
+        userDir = name: "${homeDir}/${name}";
       in
       [
         (userDir "Documents")

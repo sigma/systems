@@ -6,6 +6,7 @@
 }:
 let
   cfg = config.programs.secretive;
+  homeDir = config.users.users.${user.login}.home;
 in
 with lib;
 {
@@ -43,7 +44,7 @@ with lib;
 
     home-manager.users.${user.login} =
       let
-        secretiveSocket = "/Users/${user.login}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh";
+        secretiveSocket = "${homeDir}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh";
       in
       {
         programs.ssh = mkIf cfg.globalAgentIntegration {
