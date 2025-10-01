@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  user,
   ...
 }:
 with lib;
@@ -25,7 +24,7 @@ in
       "orbstack"
     ];
 
-    home-manager.users.${user.login} = {
+    user = {
       programs.k9s.enable = true;
       programs.kubeswitch = {
         enable = true;

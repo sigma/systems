@@ -15,7 +15,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home-manager.users.${user.login}.programs.cursor = {
+    user.programs.cursor = {
       enable = true;
       # create a symlink to the actual Cursor application
       package = pkgs.stdenv.mkDerivation {

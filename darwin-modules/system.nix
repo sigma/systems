@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  user,
   ...
 }:
 {
@@ -27,7 +26,7 @@
     onActivation.cleanup = "zap";
   };
 
-  home-manager.users.${user.login}.programs.fish.interactiveShellInit = ''
+  user.programs.fish.interactiveShellInit = ''
     fish_add_path ${config.homebrew.brewPrefix}
   '';
 

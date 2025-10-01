@@ -42,7 +42,7 @@ with lib;
       }
     ];
 
-    home-manager.users.${user.login} =
+    user =
       let
         secretiveSocket = "${homeDir}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh";
       in

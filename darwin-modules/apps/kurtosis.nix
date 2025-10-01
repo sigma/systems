@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  user,
   ...
 }:
 with lib;
@@ -23,7 +22,7 @@ in
       ];
     };
 
-    home-manager.users.${user.login} = {
+    user = {
       programs.fish.interactiveShellInit = ''
         # kurtosis completion
         kurtosis completion fish | source

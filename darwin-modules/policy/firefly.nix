@@ -7,7 +7,7 @@
 with lib;
 {
   config = mkIf machine.features.firefly {
-    home-manager.users.${user.login} =
+    user =
       let
         workGithubOrgs = [
           "firefly-engineering"

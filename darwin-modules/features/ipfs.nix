@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  user,
   ...
 }:
 with lib;
@@ -21,7 +20,7 @@ in
       package = pkgs.ipfs;
     };
 
-    home-manager.users.${user.login} = {
+    user = {
       home.packages = with pkgs; [
         ipfs
       ];

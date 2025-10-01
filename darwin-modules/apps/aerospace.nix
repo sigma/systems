@@ -3,7 +3,6 @@
   lib,
   pkgs,
   machine,
-  user,
   ...
 }:
 with lib;
@@ -119,7 +118,7 @@ in
       ];
     };
 
-    home-manager.users.${user.login}.home.file.".aerospace.toml".text = import ./aerospace/config.nix {
+    user.home.file.".aerospace.toml".text = import ./aerospace/config.nix {
       inherit lib pkgs;
       inherit (cfg)
         autostart

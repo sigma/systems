@@ -17,6 +17,12 @@ let
     }
     // lib.optionalAttrs (r.sshOpts != null) r.sshOpts;
   };
+
+  # helper module to provide a shortcut for home-manager config.
+  bridgeModule =
+    args@{ user, ... }:
+    ((lib.mkAliasOptionModule [ "user" ] [ "home-manager" "users" "${user.login}" ]) args);
+
 in
 {
   expandUser =
@@ -41,10 +47,16 @@ in
         ));
     in
     {
-      inherit (host) name system alias u2fKeys signingKey;
+      inherit (host)
+        name
+        system
+        alias
+        u2fKeys
+        signingKey
+        ;
       features = (mapFeatures cfg.features false) // (mapFeatures host.features true);
-      nixosModules = [ ];
-      darwinModules = [ ];
+      nixosModules = [ bridgeModule ];
+      darwinModules = [ bridgeModule ];
       homeModules = [
         {
           programs.ssh.matchBlocks = builtins.listToAttrs (builtins.map sshHost host.remotes);

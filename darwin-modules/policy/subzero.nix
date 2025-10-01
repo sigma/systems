@@ -46,7 +46,7 @@ with lib;
       }
     ];
 
-    home-manager.users.${user.login} =
+    user =
       let
         workGithubOrgs = [
           "subzerolabs"

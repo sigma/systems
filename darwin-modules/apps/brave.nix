@@ -25,7 +25,7 @@ in
       }
     ];
 
-    home-manager.users.${user.login}.programs = {
+    user.programs = {
       open-url = {
         enable = true;
         # per cask appdir above

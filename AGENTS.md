@@ -45,7 +45,7 @@ in
 
   config = mkIf cfg.enable {
     # Feature configuration
-    home-manager.users.${user.login} = {
+    user = {
       # User-space configuration
     };
   };
@@ -113,9 +113,9 @@ nebula.hosts = {
 
 ### 4. Home Manager Integration
 
-**Pattern: Always use `home-manager.users.${user.login}`**
+**Pattern: Always use `user`**
 ```nix
-home-manager.users.${user.login} = {
+user = {
   # User configuration here
   programs.some-program = {
     enable = true;
@@ -304,7 +304,7 @@ in
 ```nix
 # GOOD: Feature-conditional configuration
 config = mkIf machine.features.work {
-  home-manager.users.${user.login} = {
+  user = {
     programs.git.extraConfig = {
       user.email = "work@company.com";
     };
@@ -313,7 +313,7 @@ config = mkIf machine.features.work {
 
 # AVOID: Unconditional configuration
 config = {
-  home-manager.users.${user.login}.programs.git.extraConfig = {
+  user.programs.git.extraConfig = {
     user.email = "work@company.com";  # Applied to ALL machines
   };
 };
@@ -359,7 +359,7 @@ config = lib.mkIf machine.features.special-setup {
 **AVOID: Unconditional configuration**
 ```nix
 # BAD - Applied to ALL machines
-home-manager.users.${user.login} = {
+user = {
   programs.work-tool.enable = true;
 };
 ```
@@ -367,7 +367,7 @@ home-manager.users.${user.login} = {
 **PREFER: Feature-gated configuration**
 ```nix
 # GOOD
-home-manager.users.${user.login} = lib.mkIf machine.features.work {
+user = lib.mkIf machine.features.work {
   programs.work-tool.enable = true;
 };
 ```

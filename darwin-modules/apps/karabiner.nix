@@ -2,7 +2,6 @@
   config,
   lib,
   machine,
-  user,
   ...
 }:
 with lib;
@@ -14,7 +13,6 @@ let
         lib
         cfg
         machine
-        user
         ;
     }
   );
@@ -86,7 +84,7 @@ in
     homebrew.casks = [
       "karabiner-elements"
     ];
-    home-manager.users.${user.login}.home.file.".config/karabiner/karabiner.json".text = cfgTxt;
+    user.home.file.".config/karabiner/karabiner.json".text = cfgTxt;
 
     # Hack for karabiner: register F16 as the "do not disturb" shortcut.
     system.defaults.CustomUserPreferences."com.apple.symbolichotkeys".AppleSymbolicHotKeys."175" = {
