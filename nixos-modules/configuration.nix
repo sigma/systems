@@ -9,7 +9,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = if machine.alias != null then machine.alias else machine.name;
+  networking.hostName = machine.alias or machine.name;
   networking.networkmanager.enable = true;
 
   time.timeZone = "Europe/Paris";

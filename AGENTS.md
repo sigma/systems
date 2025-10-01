@@ -75,6 +75,23 @@ imports =
   ];
 ```
 
+**Note on Homebrew packages in policies:**
+Policy modules may include `homebrew.brews` or `homebrew.casks` when packages are:
+- Not available in nixpkgs
+- Require specific homebrew-based integration
+- Need to interact with other homebrew-managed tools
+
+This is standard practice in nix-darwin configurations. Document the rationale:
+```nix
+# Homebrew packages for policy compliance
+# These packages are installed via Homebrew rather than nixpkgs because:
+# - [specific reason for each package group]
+homebrew.brews = [
+  "tool1"
+  "tool2"
+];
+```
+
 ### 3. Adding New Hosts
 
 **Pattern: Add to `modules/hosts.nix`**
@@ -191,12 +208,18 @@ Settings can be conditionally enabled based on machine features:
 
 #### Adding New Settings
 
+**Important: Settings files export configuration FOR the program named by the file.**
+
+The file `settings/programs/bat.nix` contains the configuration for the `bat` program.
+Setting `enable = true` in that file means "enable bat", not "enable this settings file".
+
 **1. For top-level programs:**
 Create `settings/programs/program-name.nix`:
 ```nix
 { pkgs, machine, ... }:
 {
-  enable = machine.features.some-condition;
+  # This enables the program itself (programs.program-name.enable = true)
+  enable = true;  # or machine.features.some-condition for conditional enabling
 
   # Program-specific configuration
   settings = {
@@ -221,9 +244,11 @@ Create subdirectory: `settings/programs/parent-program/feature.nix`
 Use feature conditionals within settings files:
 ```nix
 {
-  enable = true;
+  # Enable conditionally based on platform
+  enable = machine.features.mac;
 
-  # Platform-specific configuration
+  # Or enable always with platform-specific configuration
+  enable = true;
   extraConfig = lib.optionalString machine.features.mac ''
     # macOS-specific config
   '';

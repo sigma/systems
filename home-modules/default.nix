@@ -66,14 +66,12 @@
       broot
       btop
       chafa
-      coreutils
       d2
       glow
       gum
       gnutar
       hexyl
       htop
-      jsonnet
       less
       mise
       pinfo

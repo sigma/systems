@@ -1,41 +1,45 @@
 {
   lib,
   user,
+  machine,
   ...
 }:
+with lib;
 {
-  home-manager.users.${user.login} =
-    let
-      workGithubOrgs = [
-        "firefly-engineering"
-      ];
-      email = builtins.head (builtins.filter (e: lib.hasSuffix "@firefly.engineering" e) user.allEmails);
-    in
-    {
-      programs.git = {
-        # make sure to use the right email for work repos.
-        includes =
-          let
-            workOrg = org: {
-              condition = "hasconfig:remote.*.url:git@github.com:${org}/**";
-              contents = {
-                user.email = "${email}";
-                commit.gpgsign = true;
+  config = mkIf machine.features.firefly {
+    home-manager.users.${user.login} =
+      let
+        workGithubOrgs = [
+          "firefly-engineering"
+        ];
+        email = builtins.head (builtins.filter (e: lib.hasSuffix "@firefly.engineering" e) user.allEmails);
+      in
+      {
+        programs.git = {
+          # make sure to use the right email for work repos.
+          includes =
+            let
+              workOrg = org: {
+                condition = "hasconfig:remote.*.url:git@github.com:${org}/**";
+                contents = {
+                  user.email = "${email}";
+                  commit.gpgsign = true;
+                };
+                contentSuffix = org;
               };
-              contentSuffix = org;
+            in
+            map workOrg workGithubOrgs;
+        };
+
+        programs.jujutsu = {
+          scopes.firefly = {
+            repositories = map (org: "~/src/github.com/${org}") workGithubOrgs;
+
+            settings = {
+              user.email = email;
             };
-          in
-          map workOrg workGithubOrgs;
-      };
-
-      programs.jujutsu = {
-        scopes.firefly = {
-          repositories = map (org: "~/src/github.com/${org}") workGithubOrgs;
-
-          settings = {
-            user.email = email;
           };
         };
       };
-    };
+  };
 }

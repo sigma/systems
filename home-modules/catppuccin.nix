@@ -4,7 +4,8 @@
 }:
 with lib;
 {
-  # temporary hack to tolerate the vivid settings until home-manager supports it
+  # temporary hack to tolerate the vivid settings until home-manager supports it.
+  # TODO:emove as soon as possible.
   options.programs.vivid = {
     enable = mkEnableOption "vivid";
     activeTheme = mkOption {

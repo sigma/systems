@@ -7,112 +7,120 @@
 }:
 with lib;
 {
-  features.ipfs.enable = mkForce false;
+  config = mkIf machine.features.subzero {
+    features.ipfs.enable = mkForce false;
 
-  programs.onepassword.enable = mkForce true;
+    programs.onepassword.enable = mkForce true;
 
-  programs.karabiner = mkIf machine.features.laptop {
-    # that's horrendous, but for whatever reason the M3 MBP isn't detected
-    # properly by karabiner. That means I'll have to connect it only to
-    # keyboards that are ignored (which fortunately is the case)
-    internalKeyboard = mkForce { };
-  };
+    programs.karabiner = mkIf machine.features.laptop {
+      # that's horrendous, but for whatever reason the M3 MBP isn't detected
+      # properly by karabiner. That means I'll have to connect it only to
+      # keyboards that are ignored (which fortunately is the case)
+      internalKeyboard = mkForce { };
+    };
 
-  programs.aerospace.workspaces = mkBefore [
-    {
-      name = "W"; # Work
-      display = "main";
-    }
-  ];
-  programs.aerospace.windowRules = mkBefore [
-    # this is for meet.google.com PIP mode
-    {
-      appId = "com.google.Chrome";
-      windowTitleRegexSubstring = "^about:blank.*\\(SubZero\\)$";
-      layout = "floating";
-    }
-    {
-      appId = "com.google.Chrome";
-      layout = "tiling";
-      windowTitleRegexSubstring = ".*\\(SubZero\\)$";
-      workspace = "W";
-    }
-    {
-      appId = "com.brave.Browser";
-      layout = "tiling";
-      windowTitleRegexSubstring = ".*- Work$";
-      workspace = "W";
-    }
-  ];
+    programs.aerospace.workspaces = mkBefore [
+      {
+        name = "W"; # Work
+        display = "main";
+      }
+    ];
+    programs.aerospace.windowRules = mkBefore [
+      # this is for meet.google.com PIP mode
+      {
+        appId = "com.google.Chrome";
+        windowTitleRegexSubstring = "^about:blank.*\\(SubZero\\)$";
+        layout = "floating";
+      }
+      {
+        appId = "com.google.Chrome";
+        layout = "tiling";
+        windowTitleRegexSubstring = ".*\\(SubZero\\)$";
+        workspace = "W";
+      }
+      {
+        appId = "com.brave.Browser";
+        layout = "tiling";
+        windowTitleRegexSubstring = ".*- Work$";
+        workspace = "W";
+      }
+    ];
 
-  home-manager.users.${user.login} =
-    let
-      workGithubOrgs = [
-        "subzerolabs"
-      ];
-      email = builtins.head (builtins.filter (e: lib.hasSuffix "@subzero.xyz" e) user.allEmails);
-    in
-    {
-      home.packages = with pkgs; [
-        terraform
-        kubie
-        kubectl
+    home-manager.users.${user.login} =
+      let
+        workGithubOrgs = [
+          "subzerolabs"
+        ];
+        email = builtins.head (builtins.filter (e: lib.hasSuffix "@subzero.xyz" e) user.allEmails);
+      in
+      {
+        home.packages = with pkgs; [
+          terraform
+          kubie
+          kubectl
 
-        (local.jaeger.override {
-          inherit (pkgs.master) buildGoModule;
-        })
-      ];
+          (local.jaeger.override {
+            inherit (pkgs.master) buildGoModule;
+          })
+        ];
 
-      programs.open-url = {
-        urlProfiles = builtins.listToAttrs (
-          map (org: {
-            name = "https://github.com/${org}";
-            value = "Work";
-          }) workGithubOrgs
-        );
-      };
+        programs.open-url = {
+          urlProfiles = builtins.listToAttrs (
+            map (org: {
+              name = "https://github.com/${org}";
+              value = "Work";
+            }) workGithubOrgs
+          );
+        };
 
-      programs.git = {
-        # make sure to use the right email for work repos.
-        includes =
-          let
-            workOrg = org: {
-              condition = "hasconfig:remote.*.url:git@github.com:${org}/**";
-              contents = {
-                user.email = "${email}";
-                commit.gpgsign = true;
+        programs.git = {
+          # make sure to use the right email for work repos.
+          includes =
+            let
+              workOrg = org: {
+                condition = "hasconfig:remote.*.url:git@github.com:${org}/**";
+                contents = {
+                  user.email = "${email}";
+                  commit.gpgsign = true;
+                };
+                contentSuffix = org;
               };
-              contentSuffix = org;
+            in
+            map workOrg workGithubOrgs;
+        };
+
+        programs.jujutsu = {
+          scopes.subzero = {
+            repositories = map (org: "~/src/github.com/${org}") workGithubOrgs;
+
+            settings = {
+              user.email = email;
+
+              revset-aliases.work = "heads(::@ ~ description(exact:''))::";
+              aliases.wip = [
+                "log"
+                "-r"
+                "work"
+              ];
             };
-          in
-          map workOrg workGithubOrgs;
-      };
-
-      programs.jujutsu = {
-        scopes.subzero = {
-          repositories = map (org: "~/src/github.com/${org}") workGithubOrgs;
-
-          settings = {
-            user.email = email;
-
-            revset-aliases.work = "heads(::@ ~ description(exact:''))::";
-            aliases.wip = [
-              "log"
-              "-r"
-              "work"
-            ];
           };
         };
       };
-    };
 
-  homebrew.brews = [
-    "llvm"
-    "node"
-    "openssl"
-    "pkg-config"
-    "rustup"
-    "socat"
-    "wasm-pack"
-  ];
+    # Homebrew packages for policy compliance
+    # These packages are installed via Homebrew rather than nixpkgs because:
+    # - They may not be available in nixpkgs
+    # - They may require specific homebrew-based integration
+    # - They may need to interact with other homebrew-managed tools
+    # This is a standard practice in nix-darwin configurations
+    homebrew.brews = [
+      "llvm"
+      "node"
+      "openssl"
+      "pkg-config"
+      "rustup"
+      "socat"
+      "wasm-pack"
+    ];
+  };
 }

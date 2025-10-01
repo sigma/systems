@@ -8,6 +8,7 @@ with lib;
 let
   cfg = config.programs.brave;
   homeDir = config.users.users.${user.login}.home;
+  appDir = "/Applications";
 in
 {
   options.programs.brave = {
@@ -19,7 +20,7 @@ in
       {
         name = "brave-browser";
         args = {
-          appdir = "/Applications";
+          appdir = appDir;
         };
       }
     ];
@@ -27,7 +28,9 @@ in
     home-manager.users.${user.login}.programs = {
       open-url = {
         enable = true;
-        browser = "/Applications/Brave Browser.app";
+        # per cask appdir above
+        browser = "${appDir}/Brave Browser.app";
+        # standard location for the user local state
         localStatePath = "${homeDir}/Library/Application Support/BraveSoftware/Brave-Browser/Local State";
       };
 

@@ -1,4 +1,28 @@
 # This module applies only starting with Sonoma (14.5)
+#
+# PAM (Pluggable Authentication Modules) Configuration for sudo_local
+#
+# macOS 14.5+ introduced /etc/pam.d/sudo_local as a way to customize sudo authentication
+# without modifying the system-managed /etc/pam.d/sudo file.
+#
+# This module provides a declarative interface for managing PAM entries in sudo_local.
+# Each entry represents a PAM module invocation with the standard PAM configuration format:
+#   type    control    module    arguments    # comment
+#
+# Example usage:
+#   security.pam.sudo_local.entries = [
+#     {
+#       type = "auth";
+#       control = "sufficient";
+#       module = "pam_tid.so";  # Touch ID authentication
+#       comment = "Enable Touch ID for sudo";
+#     }
+#   ];
+#
+# The module handles:
+# - Version checking (requires macOS 14.5+)
+# - Proper PAM entry formatting (tab-separated fields)
+# - Automatic comment generation for nix-darwin tracking
 {
   config,
   lib,
