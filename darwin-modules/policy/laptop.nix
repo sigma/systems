@@ -66,7 +66,8 @@
       # I always use karabiner on my laptops
       enable = mkForce true;
 
-      # My docking stations for laptops.
+      # My docking stations for laptops are connected to QMK keybaords,
+      # so I don't need Karabiner to handle them.
       ignoreKeyboards = [
         # home
         q1Max
