@@ -15,5 +15,12 @@ with lib;
         workspace = "P";
       }
     ];
+
+    homebrew.casks = [
+      "linear-linear"
+      "notion"
+      "notion-calendar"
+      "slack"
+    ];
   };
 }

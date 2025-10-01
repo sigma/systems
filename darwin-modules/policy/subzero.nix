@@ -107,12 +107,7 @@ with lib;
         };
       };
 
-    # Homebrew packages for policy compliance
-    # These packages are installed via Homebrew rather than nixpkgs because:
-    # - They may not be available in nixpkgs
-    # - They may require specific homebrew-based integration
-    # - They may need to interact with other homebrew-managed tools
-    # This is a standard practice in nix-darwin configurations
+    # Homebrew packages for subzero work
     homebrew.brews = [
       "llvm"
       "node"
@@ -121,6 +116,7 @@ with lib;
       "rustup"
       "socat"
       "wasm-pack"
+
     ];
   };
 }
