@@ -1,11 +1,14 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
 {
+  # zsh is enabled by default in nix-darwin
+  programs.zsh.enable = lib.mkForce false;
+
   programs.fish.enable = true;
-  programs.zsh.enable = false;
   programs.fish.useBabelfish = true;
 
   environment = with pkgs; {
@@ -16,6 +19,7 @@
     ];
 
     shells = [
+      # I don't normally use bash, but when I do I want it to be recent !
       bash
       fish
     ];

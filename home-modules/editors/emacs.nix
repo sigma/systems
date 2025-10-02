@@ -42,8 +42,6 @@ in
             hyperref
             capt-of
             ;
-          #(setq org-latex-compiler "lualatex")
-          #(setq org-preview-latex-default-process 'dvisvgm)
         };
       in
       [
