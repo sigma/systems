@@ -1,6 +1,6 @@
-{ ... }:
+{ config, ... }:
 {
-  enable = true;
+  enable = config.programs.mailsetup.enable;
   new = {
     tags = [ "new" ];
   };
