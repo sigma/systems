@@ -19,7 +19,7 @@ in
       # create a symlink to the actual Cursor application
       package = pkgs.stdenv.mkDerivation {
         pname = "cursor";
-        version = "1.74.0";
+        version = "1.99.3";
         src = null;
         buildCommand = ''
           mkdir -p $out/bin
