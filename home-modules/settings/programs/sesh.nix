@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
   enable = true;
+  enableAlias = false; # alias definition is broken in nushell
   enableTmuxpWorkspaces = true;
 
   sessions = [

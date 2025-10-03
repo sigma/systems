@@ -5,9 +5,6 @@
     text = ''
       $env.config = {
         show_banner: false,
-        filesize: {
-          metric: true
-        }
         table: {
           mode: rounded
         }
