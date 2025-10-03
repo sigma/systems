@@ -73,7 +73,6 @@
       hexyl
       htop
       less
-      mise
       pinfo
       procs
       rm-improved
