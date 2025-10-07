@@ -44,6 +44,7 @@ M.apply_to_config = function(options, _opts)
    }
 
    options.macos_window_background_blur = 10
+   options.quick_select_remove_styling = true
 end
 
 return M

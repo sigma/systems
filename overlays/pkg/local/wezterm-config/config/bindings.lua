@@ -1,6 +1,5 @@
 local wezterm = require('wezterm')
 local platform = require('utils.platform')()
-local workspace_switcher = require('smart_workspace_switcher')
 
 local act = wezterm.action
 
@@ -18,25 +17,12 @@ end
 
 -- stylua: ignore
 local keys = {
-   -- misc/useful --
-   { key = 'F1', mods = 'NONE', action = act.ActivateCopyMode },
-   { key = 'F2', mods = 'NONE', action = act.ActivateCommandPalette },
-   { key = 'F3', mods = 'NONE', action = act.ShowLauncher },
-   { key = 'F4', mods = 'NONE', action = act.ShowLauncherArgs({ flags = 'FUZZY|TABS' }) },
-   {
-      key = 'F5',
-      mods = 'NONE',
-      action = act.ShowLauncherArgs({ flags = 'FUZZY|WORKSPACES' }),
-   },
-   { key = 'F11', mods = 'NONE',    action = act.ToggleFullScreen },
-   { key = 'F12', mods = 'NONE',    action = act.ShowDebugOverlay },
-
    { key = 'f',   mods = mod.SUPER, action = act.Search({ CaseInSensitiveString = '' }) },
    {
       key = 'u',
       mods = mod.SUPER,
-      action = wezterm.action.QuickSelectArgs({
-         label = 'open url',
+      action = act.QuickSelectArgs({
+         label = 'open url',  
          patterns = {
             '\\((https?://\\S+)\\)',
             '\\[(https?://\\S+)\\]',
@@ -51,39 +37,16 @@ local keys = {
          end),
       }),
    },
-
-   -- copy/paste --
-   { key = 'c',          mods = mod.STD,     action = act.CopyTo('Clipboard') },
-   { key = 'v',          mods = mod.STD,     action = act.PasteFrom('Clipboard') },
-
-   -- tabs --
-   -- tabs: spawn+close
-   { key = 't',          mods = mod.SUPER,     action = act.SpawnTab('CurrentPaneDomain') },
-   { key = 'w',          mods = mod.SUPER_REV, action = act.CloseCurrentTab({ confirm = false }) },
-
-   -- tabs: navigation
-   { key = '[',          mods = mod.SUPER,     action = act.ActivateTabRelative(-1) },
-   { key = ']',          mods = mod.SUPER,     action = act.ActivateTabRelative(1) },
-   { key = '[',          mods = mod.SUPER_REV, action = act.MoveTabRelative(-1) },
-   { key = ']',          mods = mod.SUPER_REV, action = act.MoveTabRelative(1) },
-
-   -- window --
-   -- spawn windows
-   { key = 'n',          mods = mod.SUPER,     action = act.SpawnWindow },
-
-   -- panes --
-   -- panes: split panes
    {
-      key = [[\]],
+      key = ';',
       mods = mod.SUPER,
-      action = act.SplitVertical({ domain = 'CurrentPaneDomain' }),
+      action = act.QuickSelectArgs({
+         action = wezterm.action_callback(function(window, pane)
+            local text = window:get_selection_text_for_pane(pane)
+            pane:send_paste(text)
+         end),
+      })
    },
-   {
-      key = [[\]],
-      mods = mod.SUPER_REV,
-      action = act.SplitHorizontal({ domain = 'CurrentPaneDomain' }),
-   },
-
    -- panes: zoom+close pane
    { key = 'Enter', mods = mod.SUPER,     action = act.TogglePaneZoomState },
    { key = 'w',     mods = mod.SUPER,     action = act.CloseCurrentPane({ confirm = false }) },
@@ -98,10 +61,6 @@ local keys = {
       mods = mod.SUPER_REV,
       action = act.PaneSelect({ alphabet = '1234567890', mode = 'SwapWithActiveKeepFocus' }),
    },
-
-   -- quit
-   { key = 'q', mods = mod.STD, action = act.QuitApplication },
-   
 
    -- key-tables --
    -- resizes fonts
@@ -123,19 +82,7 @@ local keys = {
          one_shot = false,
          timemout_miliseconds = 1000,
       }),
-   },
-
-   -- workspace switcher
-   {
-      key = "s",
-      mods = mod.SUPER,
-      action = workspace_switcher.switch_workspace({ extra_args = " | rg 'src/github.com/[^/]*/[^/]*$'" }),
-    },
-    {
-      key = "S",
-      mods = mod.SUPER_REV,
-      action = workspace_switcher.switch_to_prev_workspace(),
-    }
+   }
 }
 
 -- stylua: ignore
@@ -158,21 +105,12 @@ local key_tables = {
    },
 }
 
-local mouse_bindings = {
-   -- Cmd-click will open the link under the mouse cursor
-   {
-      event = { Up = { streak = 1, button = 'Left' } },
-      mods = mod.SUPER,
-      action = act.OpenLinkAtMouseCursor,
-   },
-}
+local M = {}
 
-return {
-   default_workspace = "default",
+M.apply_to_config = function(options, _opts)
+   options.send_composed_key_when_right_alt_is_pressed = true
+   options.keys = keys
+   options.key_tables = key_tables
+end
 
-   disable_default_key_bindings = true,
-   send_composed_key_when_right_alt_is_pressed = true,
-   keys = keys,
-   key_tables = key_tables,
-   mouse_bindings = mouse_bindings,
-}
+return M
