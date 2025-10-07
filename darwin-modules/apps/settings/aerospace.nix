@@ -145,12 +145,6 @@ in
           layout = "tiling";
           workspace = "C";
         }
-        # Music
-        {
-          appId = "com.spotify.client";
-          layout = "tiling";
-          workspace = "M";
-        }
         # Misc
         {
           appId = "com.apple.systempreferences";

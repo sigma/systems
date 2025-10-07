@@ -21,7 +21,6 @@ in
         (userApp "WezTerm")
         (systemApp "Cursor")
         (userApp "Emacs")
-        (systemApp "Spotify")
         (systemApp "Notion")
       ];
 
