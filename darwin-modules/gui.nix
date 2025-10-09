@@ -18,10 +18,13 @@ in
       in
       [
         (systemApp "Google Chrome")
+        (systemApp "Brave Browser")
         (userApp "WezTerm")
         (systemApp "Cursor")
         (userApp "Emacs")
         (systemApp "Notion")
+        (systemApp "Slack")
+        (systemApp "Linear")
       ];
 
     persistent-others =
