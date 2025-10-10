@@ -1,6 +1,9 @@
 { user, config, ... }:
 let
   homeDir = config.users.users.${user.login}.home;
+  userDir = name: "${homeDir}/${name}";
+  userApp = name: "${homeDir}/Applications/Local/${name}.app";
+  systemApp = name: "/Applications/${name}.app";
 in
 {
   system.defaults.dock = {
@@ -11,30 +14,21 @@ in
     tilesize = 48;
     expose-group-apps = true;
 
-    persistent-apps =
-      let
-        userApp = name: "${homeDir}/Applications/Local/${name}.app";
-        systemApp = name: "/Applications/${name}.app";
-      in
-      [
-        (systemApp "Google Chrome")
-        (systemApp "Brave Browser")
-        (userApp "WezTerm")
-        (systemApp "Cursor")
-        (userApp "Emacs")
-        (systemApp "Notion")
-        (systemApp "Slack")
-        (systemApp "Linear")
-      ];
+    persistent-apps = [
+      (systemApp "Google Chrome")
+      (systemApp "Brave Browser")
+      (userApp "WezTerm")
+      (systemApp "Cursor")
+      (userApp "Emacs")
+      (systemApp "Notion")
+      (systemApp "Slack")
+      (systemApp "Linear")
+    ];
 
-    persistent-others =
-      let
-        userDir = name: "${homeDir}/${name}";
-      in
-      [
-        (userDir "Documents")
-        (userDir "Downloads")
-      ];
+    persistent-others = [
+      (userDir "Documents")
+      (userDir "Downloads")
+    ];
   };
 
   system.defaults.finder = {
