@@ -1,4 +1,4 @@
-{ extSet, ... }:
+{ extSet, marketplace, ... }:
 {
   userSettings = {
     "git.autofetch" = true;
@@ -22,11 +22,11 @@
       github.copilot
       github.remotehub
       github.vscode-github-actions
-      # github.vscode-pull-request-github
+      github.vscode-pull-request-github
 
       vsls-contrib.gistfs
     ])
-    ++ (with extSet.vscode-marketplace-release; [
+    ++ (with marketplace; [
       github.copilot-chat
     ]);
 }

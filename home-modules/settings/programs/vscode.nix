@@ -9,6 +9,7 @@ let
     (lib.evalModules {
       modules = [ ./code/module.nix ] ++ modules;
       specialArgs = args // {
+        marketplace = pkgs.vscode-marketplace;
         extSet = pkgs.forVSCodeVersion pkgs.vscode.version;
       };
     }).config;
