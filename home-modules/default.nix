@@ -127,6 +127,7 @@
       comma
       devenv
       fh
+      master.nix-inspect
 
       # keyboard QMK tools
       local.mdloader
