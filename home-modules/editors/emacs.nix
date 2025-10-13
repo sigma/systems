@@ -28,42 +28,29 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages =
-      with pkgs;
-      let
-        tex = texlive.combine {
-          inherit (texlive)
-            scheme-basic
-            dvisvgm
-            dvipng # for preview and export as html
-            wrapfig
-            amsmath
-            ulem
-            hyperref
-            capt-of
-            ;
-        };
-      in
-      [
-        binutils
+    # needed for Doom.
+    programs.ripgrep.enable = mkForce true;
 
-        # Doom dependencies
-        (ripgrep.override { withPCRE2 = true; })
-        gnutls
+    programs.texlive.enable = mkForce true;
 
-        # Module dependencies
-        (aspellWithDicts (
-          ds: with ds; [
-            en
-            en-computers
-            en-science
-          ]
-        ))
-        editorconfig-core-c
-        sqlite
-        tex
-        pandoc
-      ];
+    home.packages = with pkgs; [
+      binutils
+
+      # Doom dependencies
+      gnutls
+
+      # Module dependencies
+      (aspellWithDicts (
+        ds: with ds; [
+          en
+          en-computers
+          en-science
+        ]
+      ))
+      editorconfig-core-c
+      sqlite
+      pandoc
+    ];
 
     home.activation = {
       doomActivationAction = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
