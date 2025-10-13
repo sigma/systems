@@ -12,26 +12,31 @@ in
   options.programs.gcloud = {
     enable = mkEnableOption "Google Cloud SDK";
 
-    package = mkOption {
-      type = types.package;
-      default = pkgs.google-cloud-sdk;
+    basePackage = mkPackageOption pkgs "google-cloud-sdk" {
+      nullable = true;
     };
 
-    enableGkeAuthPlugin = mkEnableOption "GKE auth plugin";
+    package = mkOption {
+      type = types.package;
+      readOnly = true;
+      description = "Resulting customized Google Cloud SDK package.";
+    };
+
+    extraComponents = mkOption {
+      default = components: [ ];
+      description = "Extra components to install.";
+      example = components: [ components.gke-gcloud-auth-plugin ];
+      type = types.functionTo (types.listOf types.package);
+    };
   };
 
   config = mkIf cfg.enable {
-    home.packages =
-      with pkgs;
-      let
-        pkg =
-          if cfg.enableGkeAuthPlugin then
-            cfg.package.withExtraComponents [ google-cloud-sdk.components.gke-gcloud-auth-plugin ]
-          else
-            cfg.package;
-      in
-      [
-        pkg
-      ];
+    programs.gcloud.package = cfg.basePackage.withExtraComponents (
+      cfg.extraComponents cfg.basePackage.components
+    );
+
+    home.packages = [
+      cfg.package
+    ];
   };
 }
