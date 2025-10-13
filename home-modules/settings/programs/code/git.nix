@@ -1,4 +1,10 @@
-{ extSet, marketplace, ... }:
+{
+  extSet,
+  marketplace,
+  config,
+  lib,
+  ...
+}:
 {
   userSettings = {
     "git.autofetch" = true;
@@ -17,15 +23,21 @@
   };
 
   extensions =
-    (with extSet.vscode-marketplace; [
-      github.codespaces
-      github.copilot
-      github.remotehub
-      github.vscode-github-actions
-      github.vscode-pull-request-github
+    (
+      with extSet.vscode-marketplace;
+      [
+        github.codespaces
+        github.copilot
+        github.remotehub
+        github.vscode-github-actions
+        github.vscode-pull-request-github
 
-      vsls-contrib.gistfs
-    ])
+        vsls-contrib.gistfs
+      ]
+      ++ lib.optionals config.programs.jujutsu.enable [
+        visualjj.visualjj
+      ]
+    )
     ++ (with marketplace; [
       github.copilot-chat
     ]);
