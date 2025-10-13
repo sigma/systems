@@ -88,9 +88,6 @@ in
     }
     // lib.optionalAttrs config.programs.ripgrep.enable {
       "grep" = "rg -uuu";
-    }
-    // lib.optionalAttrs config.programs.thefuck.enable {
-      "f" = "fuck";
     };
 
   functions = {

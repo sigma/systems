@@ -491,7 +491,7 @@ home.packages = with pkgs; [
   git
 
   # Stable version for reliability
-  stable.thefuck
+  stable.pam-reattack
 
   # Latest features
   master.buck2

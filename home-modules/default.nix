@@ -35,8 +35,6 @@
 
     gh-dash.enable = true;
     gitui.enable = true;
-
-    thefuck.enable = true;
   };
 
   home.packages =
