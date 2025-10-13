@@ -33,6 +33,15 @@ in
 
     programs.texlive.enable = mkForce true;
 
+    programs.aspell.enable = mkForce true;
+    programs.aspell.extraDicts = mkForce (
+      ds: with ds; [
+        en
+        en-computers
+        en-science
+      ]
+    );
+
     home.packages = with pkgs; [
       binutils
 
@@ -40,13 +49,6 @@ in
       gnutls
 
       # Module dependencies
-      (aspellWithDicts (
-        ds: with ds; [
-          en
-          en-computers
-          en-science
-        ]
-      ))
       editorconfig-core-c
       sqlite
       pandoc

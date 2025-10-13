@@ -10,6 +10,7 @@
 
   imports = [
     ./accounts.nix
+    ./aspell.nix
     ./catppuccin.nix
     ./cloud-shell.nix
     ./cursor.nix
