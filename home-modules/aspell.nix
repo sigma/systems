@@ -22,8 +22,10 @@ in
       default =
         ds: with ds; [
           en
+          en-computers
+          en-science
         ];
-      defaultText = "ds: with ds; [ en ]";
+      defaultText = "ds: with ds; [ en en-computers en-science ]";
       description = "Extra dictionaries to install.";
       type = types.functionTo (types.listOf types.package);
     };
