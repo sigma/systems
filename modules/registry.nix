@@ -46,6 +46,12 @@ in
   ];
 
   nebula.nixosModules = [
+    (
+      { machine, lib, ... }:
+      {
+        imports = lib.optionals machine.features.determinate [ inputs.determinate.nixosModules.default ];
+      }
+    )
     systemRegistryModule
   ];
 
