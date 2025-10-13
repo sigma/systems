@@ -1,4 +1,5 @@
 {
+  inputs,
   cfg,
   lib,
   ...
@@ -45,6 +46,7 @@ in
             value = val;
           }) features
         ));
+      features = (mapFeatures cfg.features false) // (mapFeatures host.features true);
     in
     {
       inherit (host)
@@ -54,8 +56,13 @@ in
         u2fKeys
         signingKey
         ;
-      features = (mapFeatures cfg.features false) // (mapFeatures host.features true);
-      nixosModules = [ bridgeModule ];
+      inherit features;
+      nixosModules = [
+        bridgeModule
+      ]
+      ++ lib.optionals host.features.determinate [
+        inputs.determinate.nixosModules.default
+      ];
       darwinModules = [ bridgeModule ];
       homeModules = [
         {

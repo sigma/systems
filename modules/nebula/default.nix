@@ -8,7 +8,7 @@ with lib;
 let
   cfg = config.nebula;
   types = import ./types.nix { inherit lib; };
-  helpers = import ./helpers.nix { inherit lib cfg; };
+  helpers = import ./helpers.nix { inherit inputs lib cfg; };
   configurations = import ./configurations.nix {
     inherit
       inputs
