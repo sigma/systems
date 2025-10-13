@@ -27,17 +27,6 @@
     maschine-hacks.inputs.nixpkgs.follows = "nixpkgs";
     maschine-hacks.inputs.flake-parts.follows = "flake-parts";
 
-    # 3rd-party flakes
-    jj-spr.url = "github:LucioFranco/jj-spr";
-    jj-spr.inputs = {
-      nixpkgs.follows = "nixpkgs";
-      flake-parts.follows = "flake-parts";
-      fenix.follows = "fenix";
-      git-hooks.inputs.flake-compat.follows = "flake-compat";
-      git-hooks.inputs.gitignore.follows = "pre-commit-hooks-nix/gitignore";
-      treefmt-nix.follows = "treefmt-nix";
-    };
-
     # Emacs
     emacs.url = "github:nix-community/emacs-overlay";
     emacs.inputs.nixpkgs.follows = "nixpkgs";

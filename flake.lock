@@ -254,34 +254,6 @@
         "type": "github"
       }
     },
-    "git-hooks": {
-      "inputs": {
-        "flake-compat": [
-          "flake-compat"
-        ],
-        "gitignore": [
-          "pre-commit-hooks-nix",
-          "gitignore"
-        ],
-        "nixpkgs": [
-          "jj-spr",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1759523803,
-        "narHash": "sha256-PTod9NG+i3XbbnBKMl/e5uHDBYpwIWivQ3gOWSEuIEM=",
-        "owner": "cachix",
-        "repo": "git-hooks.nix",
-        "rev": "cfc9f7bb163ad8542029d303e599c0f7eee09835",
-        "type": "github"
-      },
-      "original": {
-        "owner": "cachix",
-        "repo": "git-hooks.nix",
-        "type": "github"
-      }
-    },
     "gitignore": {
       "inputs": {
         "nixpkgs": [
@@ -321,36 +293,6 @@
         "owner": "nix-community",
         "ref": "release-25.05",
         "repo": "home-manager",
-        "type": "github"
-      }
-    },
-    "jj-spr": {
-      "inputs": {
-        "fenix": [
-          "fenix"
-        ],
-        "flake-parts": [
-          "flake-parts"
-        ],
-        "git-hooks": "git-hooks",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "treefmt-nix": [
-          "treefmt-nix"
-        ]
-      },
-      "locked": {
-        "lastModified": 1760199547,
-        "narHash": "sha256-sSrgsmJDuIuEaq5sUPP8wj1aXE3jbS2b0RWEOi1C0zI=",
-        "owner": "LucioFranco",
-        "repo": "jj-spr",
-        "rev": "8e8997797fedb5f428c50214a080d1c24b888dc7",
-        "type": "github"
-      },
-      "original": {
-        "owner": "LucioFranco",
-        "repo": "jj-spr",
         "type": "github"
       }
     },
@@ -550,7 +492,6 @@
         "flake-root": "flake-root",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
-        "jj-spr": "jj-spr",
         "maschine-hacks": "maschine-hacks",
         "naersk": "naersk",
         "nix": "nix",

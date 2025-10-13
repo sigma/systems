@@ -561,7 +561,6 @@ buildGoModule rec {
 
   # For packages from inputs that don't come with an overlay
   (final: prev: {
-    jj-spr = inputs.jj-spr.packages.${final.stdenv.system}.default;
     custom-tool = inputs.custom-tool.packages.${final.stdenv.system}.default;
   })
 
