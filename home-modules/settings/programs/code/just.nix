@@ -1,9 +1,11 @@
 {
+  config,
   pkgs,
   extSet,
+  lib,
   ...
 }:
-{
+lib.mkIf config.programs.just.enabled {
   userSettings = {
     "files.associations" = {
       "*.just" = "just";

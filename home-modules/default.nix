@@ -18,6 +18,7 @@
     ./editors
     ./gcloud.nix
     ./jujutsu.nix
+    ./just.nix
     ./kubeswitch.nix
     ./mailsetup.nix
     ./open-url.nix
@@ -51,7 +52,6 @@
       circleci-cli
       gnumake
       goreleaser
-      just
       ninja
       master.buck2
       bump2version
