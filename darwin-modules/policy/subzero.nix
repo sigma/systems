@@ -55,10 +55,6 @@ with lib;
       in
       {
         home.packages = with pkgs; [
-          terraform
-          kubie
-          kubectl
-
           (local.jaeger.override {
             inherit (pkgs.master) buildGoModule;
           })
