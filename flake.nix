@@ -33,7 +33,8 @@
       nixpkgs.follows = "nixpkgs";
       flake-parts.follows = "flake-parts";
       fenix.follows = "fenix";
-      git-hooks.follows = "nix/git-hooks-nix";
+      git-hooks.inputs.flake-compat.follows = "flake-compat";
+      git-hooks.inputs.gitignore.follows = "pre-commit-hooks-nix/gitignore";
       treefmt-nix.follows = "treefmt-nix";
     };
 
@@ -90,7 +91,7 @@
       nixpkgs-regression.follows = "nixpkgs";
       nixpkgs-23-11.follows = "";
       flake-parts.follows = "";
-      git-hooks-nix.inputs.flake-compat.follows = "flake-compat";
+      git-hooks-nix.follows = "";
     };
   };
 
