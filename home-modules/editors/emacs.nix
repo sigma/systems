@@ -32,8 +32,8 @@ in
     programs.ripgrep.enable = mkForce true;
 
     programs.texlive.enable = mkForce true;
-
     programs.aspell.enable = mkForce true;
+    programs.pandoc.enable = mkForce true;
 
     home.packages = with pkgs; [
       binutils
@@ -44,7 +44,6 @@ in
       # Module dependencies
       editorconfig-core-c
       sqlite
-      pandoc
     ];
 
     home.activation = {
