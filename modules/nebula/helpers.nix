@@ -59,9 +59,6 @@ in
       inherit features;
       nixosModules = [
         bridgeModule
-      ]
-      ++ lib.optionals host.features.determinate [
-        inputs.determinate.nixosModules.default
       ];
       darwinModules = [ bridgeModule ];
       homeModules = [
