@@ -19,6 +19,8 @@ with lib;
       internalKeyboard = mkForce { };
     };
 
+    programs.kurtosis.enable = mkForce true;
+
     programs.aerospace.workspaces = mkBefore [
       {
         name = "W"; # Work
