@@ -14,6 +14,7 @@
     ./catppuccin.nix
     ./cloud-shell.nix
     ./cursor.nix
+    ./dosbox.nix
     ./darwin-apps.nix
     ./editors
     ./gcloud.nix
@@ -135,9 +136,5 @@
     ]
     ++ lib.optionals machine.features.music [
       maschine-hacks
-    ]
-    ++ lib.optionals (!machine.features.work) [
-      # windows helpers
-      innoextract
     ];
 }

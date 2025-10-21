@@ -10,5 +10,6 @@
     jaeger = pkgs.callPackage ./jaeger.nix { };
     mdloader = pkgs.callPackage ./mdloader.nix { };
     prs = pkgs.callPackage ./prs.nix { };
+    mt32-roms = pkgs.callPackage ./mt32-roms.nix { };
   };
 }
