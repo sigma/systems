@@ -12,10 +12,7 @@ let
   mt32piFiles = builtins.readDir "${cfg.mt32Roms}";
 
   configPath =
-    if pkgs.stdenv.isDarwin then
-      lib.const "Library/Preferences/DOSBox/mt32-roms"
-    else
-      lib.const ".config/dosbox/mt32-roms";
+    if pkgs.stdenv.isDarwin then "Library/Preferences/DOSBox/mt32-roms" else ".config/dosbox/mt32-roms";
 in
 {
   options.programs.dosbox = {
