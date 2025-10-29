@@ -18,7 +18,7 @@
 
     # Environment/system management
     darwin.url = "github:lnl7/nix-darwin/nix-darwin-25.05";
-    darwin.inputs.nixpkgs.follows = "nixpkgs-stable";
+    darwin.inputs.nixpkgs.follows = "darwin-stable";
     home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs-stable";
 
@@ -46,7 +46,6 @@
     # VS Code
     vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
     vscode-extensions.inputs.nixpkgs.follows = "nixpkgs";
-    vscode-extensions.inputs.flake-utils.follows = "flake-utils";
 
     # Utils
     flake-compat.url = "github:edolstra/flake-compat";
@@ -66,7 +65,7 @@
     pre-commit-hooks-nix.inputs.flake-compat.follows = "flake-compat";
 
     # Theme
-    catppuccin.url = "github:catppuccin/nix";
+    catppuccin.url = "github:catppuccin/nix/release-25.05";
     catppuccin.inputs.nixpkgs.follows = "nixpkgs";
 
     # Flakehub
