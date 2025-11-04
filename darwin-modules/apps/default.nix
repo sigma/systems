@@ -16,13 +16,13 @@
   homebrew.global.brewfile = true;
 
   homebrew.brews = [
+    "container"
     "jj"
     "libusb"
   ];
 
   homebrew.casks = [
     "calibre"
-    "container"
     "elgato-stream-deck"
     "google-chrome"
     "jordanbaird-ice"
