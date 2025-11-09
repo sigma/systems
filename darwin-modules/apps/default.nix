@@ -26,8 +26,10 @@
     "elgato-stream-deck"
     "google-chrome"
     "jordanbaird-ice"
+    "localsend"
     "obsidian"
     "soundsource"
+    "transnomino"
     "whatsapp"
     "yubico-yubikey-manager"
   ];
