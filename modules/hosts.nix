@@ -27,6 +27,7 @@
           csp
         ];
         features = [
+          "determinate"
           "managed"
           "mac"
           "music"
