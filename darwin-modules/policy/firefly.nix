@@ -80,6 +80,7 @@ with lib;
     ];
 
     homebrew.casks = [
+      "claude-code"
       "linear-linear"
       "notion"
       "notion-calendar"
