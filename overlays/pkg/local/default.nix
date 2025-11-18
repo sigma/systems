@@ -9,6 +9,7 @@
 
     jaeger = pkgs.callPackage ./jaeger.nix { };
     mdloader = pkgs.callPackage ./mdloader.nix { };
+    myrient-downloader = pkgs.callPackage ./myrient-downloader.nix { };
     prs = pkgs.callPackage ./prs.nix { };
     mt32-roms = pkgs.callPackage ./mt32-roms.nix { };
   };
