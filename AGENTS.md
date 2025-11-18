@@ -597,25 +597,156 @@ home.packages = with pkgs; [
 ```
 
 #### 2. For Custom Packages
-Create `overlays/pkg/local/package-name.nix`:
+
+**Step 1: Create the package definition**
+
+Create `overlays/pkg/local/package-name.nix` following nixpkgs patterns:
+
 ```nix
 {
-  stdenv,
-  fetchurl,
+  stdenv,          # Or buildGoModule, buildNpmPackage, etc.
+  fetchFromGitHub, # Or fetchurl, fetchgit, etc.
   lib,
   ...
 }:
 stdenv.mkDerivation rec {
-  # Follow nixpkgs patterns
+  pname = "package-name";
+  version = "1.0.0";
+
+  src = fetchFromGitHub {
+    owner = "owner";
+    repo = "repo";
+    rev = "v${version}";
+    hash = lib.fakeHash;  # Use lib.fakeHash initially
+  };
+
+  meta = with lib; {
+    description = "Package description";
+    homepage = "https://example.com";
+    license = licenses.mit;
+    maintainers = [ ];
+    platforms = platforms.unix;
+  };
 }
 ```
 
-Then use in configurations:
+**Step 2: Register the package in the local overlay**
+
+Add to `overlays/pkg/local/default.nix` in the `local` attribute set:
+
+```nix
+{
+  pkgs,
+}:
+{
+  local = {
+    # ... existing packages ...
+    package-name = pkgs.callPackage ./package-name.nix { };
+  };
+}
+```
+
+**Step 3: Track the file with git**
+
+**IMPORTANT**: Nix flakes only see git-tracked files. Before building, add the new file:
+
+```bash
+git add overlays/pkg/local/package-name.nix
+```
+
+**Step 4: Discover the correct hash**
+
+Build to get the actual hash from the error message:
+
+```bash
+nix build .#package-name --no-link 2>&1 | grep "got:"
+```
+
+Update the `hash` field with the value from the error, then rebuild.
+
+**Step 5: Test the package**
+
+```bash
+# Test building the package directly
+nix build .#package-name --no-link
+
+# Or test in a home configuration
+nix build .#homeConfigurations.hostname.activationPackage --no-link
+```
+
+**Step 6: Use in configurations**
+
 ```nix
 home.packages = with pkgs; [
-  package-name  # Auto-available via overlay
+  local.package-name  # Available via local overlay
 ];
 ```
+
+**Special case: npm/Node.js packages (buildNpmPackage)**
+
+For Electron or Node.js apps, use `buildNpmPackage` and set `ELECTRON_SKIP_BINARY_DOWNLOAD`:
+
+```nix
+{
+  buildNpmPackage,
+  fetchFromGitHub,
+  electron,
+  makeWrapper,
+  lib,
+  ...
+}:
+buildNpmPackage rec {
+  pname = "my-electron-app";
+  version = "1.0.0";
+
+  src = fetchFromGitHub {
+    owner = "owner";
+    repo = "repo";
+    rev = "v${version}";
+    hash = lib.fakeHash;  # Replace after first build
+  };
+
+  npmDepsHash = lib.fakeHash;  # Replace after first build
+
+  # Skip Electron binary download - use nixpkgs electron instead
+  ELECTRON_SKIP_BINARY_DOWNLOAD = "1";
+
+  nativeBuildInputs = [ makeWrapper ];
+
+  buildPhase = ''
+    runHook preBuild
+    # Add any npm build commands here
+    npm run build
+    runHook postBuild
+  '';
+
+  installPhase = ''
+    runHook preInstall
+    mkdir -p $out/lib/my-electron-app $out/bin
+
+    # Copy application files
+    cp -r src node_modules package.json $out/lib/my-electron-app/
+
+    # Create wrapper that uses nixpkgs electron
+    makeWrapper ${electron}/bin/electron $out/bin/my-electron-app \
+      --add-flags $out/lib/my-electron-app/src/main.js
+
+    runHook postInstall
+  '';
+
+  meta = with lib; {
+    description = "Electron app description";
+    homepage = "https://example.com";
+    license = licenses.mit;
+    mainProgram = "my-electron-app";
+  };
+}
+```
+
+Build twice to get both hashes:
+1. First build fails with source hash → update `hash`
+2. Second build fails with npm deps hash → update `npmDepsHash`
+3. Third build should succeed
 
 #### 3. For Package Overrides
 
