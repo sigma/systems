@@ -127,6 +127,9 @@
       # keyboard QMK tools
       local.mdloader
 
+      # download tools
+      local.myrient-downloader
+
       # for voice generation
       ffmpeg
     ]
