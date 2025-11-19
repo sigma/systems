@@ -19,6 +19,7 @@ in
       "loopback"
       "musicbrainz-picard"
       "native-access"
+      "teensy"
       "x32-edit"
     ];
   };
