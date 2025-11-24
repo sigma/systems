@@ -16,5 +16,9 @@ with lib;
         enable = mkForce true;
       };
     };
+
+    homebrew.casks = [
+      "balenaetcher"
+    ];
   };
 }

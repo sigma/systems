@@ -32,6 +32,7 @@
           "mac"
           "music"
           "firefly"
+          "gaming"
         ];
         u2fKeys = portableU2fKeys ++ [
           # desktop titan
