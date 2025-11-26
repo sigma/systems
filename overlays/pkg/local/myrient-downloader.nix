@@ -8,16 +8,16 @@
 
 buildNpmPackage rec {
   pname = "myrient-downloader";
-  version = "3.1.3";
+  version = "3.2.0";
 
   src = fetchFromGitHub {
     owner = "bradrevans";
     repo = "myrient-downloader";
     rev = "v${version}";
-    hash = "sha256-ovbdxv49Z8LLhYIR+P4Stsva4NzOaLY7m7k9nE2AXlE=";
+    hash = "sha256-eRzfOtTP7+U/yx4ziVr30vzxO4DueCEMOu9M6GnmofQ=";
   };
 
-  npmDepsHash = "sha256-yqw2mYAd2DN/DFriMEGgmKtqeKEac8KyZYOPIKnwnyo=";
+  npmDepsHash = "sha256-dYJ2hWdo8so/9aoLRCC/YFMbFT1C8L9VGMC2xwl/qpk=";
 
   nativeBuildInputs = [ makeWrapper ];
 
