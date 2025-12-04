@@ -3,7 +3,7 @@
   virtualisation.docker.enable = true;
   virtualisation.docker.listenOptions = [
     "/run/docker.sock"
-    "192.168.77.131:2376"
+    "localhost:2376"
   ];
 
   virtualisation.docker.rootless = {
