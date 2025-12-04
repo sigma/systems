@@ -108,6 +108,12 @@ rec {
           default = [ ];
           description = "The remotes of the host";
         };
+
+        enableSwap = mkOption {
+          type = types.bool;
+          default = true;
+          description = "Whether to enable swap on the host";
+        };
       };
     }
   );

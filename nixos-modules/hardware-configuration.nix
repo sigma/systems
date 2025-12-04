@@ -29,7 +29,7 @@
     ];
   };
 
-  swapDevices = [
+  swapDevices = lib.optionals machine.enableSwap [
     { device = "/dev/disk/by-label/swap"; }
   ];
 

@@ -68,6 +68,23 @@
         signingKey = "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCH9S6aF3W4/pKY+s/FpZAl8zIXXxI7LHE4fVd+foYdXtQI2mhiIyBX4jtbYkhACOSha5i2TPYKpBqy3NtI/utc=";
       };
 
+      shirka = {
+        name = "shirka.local";
+        system = "x86_64-linux";
+        remotes = [
+          pdev
+          csp
+          devbox
+        ];
+        features = [
+          "managed"
+          "nixos"
+          "work"
+          "firefly"
+        ];
+        enableSwap = false;
+      };
+
       devbox = {
         name = "192.168.77.131";
         alias = "devbox";
