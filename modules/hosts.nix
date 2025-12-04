@@ -79,6 +79,7 @@
         features = [
           "managed"
           "nixos"
+          "interactive"
           "work"
           "firefly"
         ];
