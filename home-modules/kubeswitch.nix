@@ -10,13 +10,6 @@ let
 in
 {
   options.programs.kubeswitch = {
-    enable = mkEnableOption "kubeswitch";
-
-    package = mkOption {
-      type = types.package;
-      default = pkgs.kubeswitch;
-    };
-
     shellAlias = mkOption {
       type = types.nullOr types.str;
       default = null;
@@ -25,10 +18,6 @@ in
 
   config = mkIf cfg.enable {
     home = {
-      packages = [
-        cfg.package
-      ];
-
       shellAliases = lib.mkIf (cfg.shellAlias != null) {
         ${cfg.shellAlias} = "kubeswitch";
       };

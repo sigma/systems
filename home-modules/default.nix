@@ -35,7 +35,7 @@
     jq.enable = true;
 
     gh-dash.enable = true;
-    gitui.enable = true;
+    # gitui.enable = true;
   };
 
   home.packages =
@@ -136,7 +136,7 @@
     ]
     ++ lib.optionals machine.features.mac [
       m-cli # useful macOS CLI commands
-      afsctool
+      # afsctool
     ]
     ++ lib.optionals machine.features.music [
       maschine-hacks

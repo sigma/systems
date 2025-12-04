@@ -8,8 +8,8 @@
     # Package sets
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixpkgs-lib.url = "github:NixOS/nixpkgs/nixos-unstable?dir=lib";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.05";
-    darwin-stable.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.11";
+    darwin-stable.url = "github:NixOS/nixpkgs/nixpkgs-25.11-darwin";
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
 
     # flake-parts
@@ -17,9 +17,9 @@
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs-lib";
 
     # Environment/system management
-    darwin.url = "github:lnl7/nix-darwin/nix-darwin-25.05";
+    darwin.url = "github:lnl7/nix-darwin/nix-darwin-25.11";
     darwin.inputs.nixpkgs.follows = "darwin-stable";
-    home-manager.url = "github:nix-community/home-manager/release-25.05";
+    home-manager.url = "github:nix-community/home-manager/release-25.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs-stable";
 
     # Personal flakes
@@ -65,7 +65,7 @@
     pre-commit-hooks-nix.inputs.flake-compat.follows = "flake-compat";
 
     # Theme
-    catppuccin.url = "github:catppuccin/nix/release-25.05";
+    catppuccin.url = "github:catppuccin/nix";
     catppuccin.inputs.nixpkgs.follows = "nixpkgs";
 
     # Flakehub

@@ -6,7 +6,7 @@
 {
   enable = true;
 
-  aliases = {
+  settings.alias = {
     ldiff = "difftool -t latex";
     ci = "commit";
     co = "checkout";
@@ -21,16 +21,6 @@
     new = "!sh -c 'git log $1@{1}..$1@{0} \"$@\"'";
     whois = "!sh -c 'git log -i -1 --pretty=\"format:%an <%ae>\n\" --author=\"$1\"' -";
     whatis = "show -s --pretty='tformat:%h (%s, %ad)' --date=short";
-  };
-
-  delta.enable = true;
-  delta.options = {
-    navigate = true;
-    hyperlinks = true;
-
-    interactive = {
-      "keep-plus-minus-markers" = false;
-    };
   };
 
   lfs.enable = true;

@@ -17,12 +17,12 @@ in
     services.ipfs = {
       enable = true;
       enableGarbageCollection = true;
-      package = pkgs.ipfs;
+      package = pkgs.kubo;
     };
 
     user = {
       home.packages = with pkgs; [
-        ipfs
+        kubo
       ];
     };
   };

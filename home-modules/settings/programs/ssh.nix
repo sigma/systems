@@ -1,13 +1,16 @@
 { ... }:
 {
   enable = true;
+  enableDefaultConfig = false;
 
-  compression = true;
+  matchBlocks."*" = {
+    compression = true;
 
-  controlMaster = "auto";
-  controlPath = "~/.ssh/ctrl-%C";
-  controlPersist = "yes";
+    controlMaster = "auto";
+    controlPath = "~/.ssh/ctrl-%C";
+    controlPersist = "yes";
 
-  serverAliveInterval = 30;
-  serverAliveCountMax = 3;
+    serverAliveInterval = 30;
+    serverAliveCountMax = 3;
+  };
 }

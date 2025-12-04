@@ -29,6 +29,6 @@ in
     ./code/k8s.nix
     ./code/nix.nix
     ./code/python.nix
-    ./code/bazel.nix
+    # ./code/bazel.nix
   ];
 }
