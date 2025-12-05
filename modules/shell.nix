@@ -70,7 +70,7 @@
         else
           ''
             if test -d /etc/nixos; then
-              $NIX_BIN ${nixFlags} run ".#nixos-rebuild" -- switch --flake ".#`hostname -s`"
+              sudo $NIX_BIN ${nixFlags} run ".#nixos-rebuild" -- switch --flake ".#`hostname -s`"
             else
               $NIX_BIN ${nixFlags} run ".#home-manager" --  switch --flake ".#`hostname -s`"
             fi

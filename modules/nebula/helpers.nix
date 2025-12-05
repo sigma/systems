@@ -54,6 +54,7 @@ in
         alias
         u2fKeys
         signingKey
+        enableSwap
         ;
       inherit features;
       nixosModules = [

@@ -70,6 +70,7 @@
 
       shirka = {
         name = "shirka.local";
+        alias = "shirka";
         system = "x86_64-linux";
         remotes = [
           pdev

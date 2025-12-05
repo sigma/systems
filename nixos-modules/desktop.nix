@@ -1,4 +1,5 @@
 {
+  user,
   machine,
   pkgs,
   lib,
@@ -22,22 +23,26 @@ mkIf machine.features.interactive {
 
     windowManager.i3 = {
       enable = true;
-      package = pkgs.i3-gaps;
       extraPackages = with pkgs; [
         dmenu
         i3status
         i3blocks
       ];
     };
+
+    displayManager = {
+      lightdm = {
+        enable = true;
+        greeters.mini = {
+          enable = true;
+          user = user.login;
+        };
+      };
+    };
   };
 
-  services.displayManager = {
+  services.DisplayManager = {
     defaultSession = "xfce+i3";
-
-    lightdm = {
-      enable = true;
-      greeters.mini.enable = true;
-    };
   };
 
   security.pam.services = {
@@ -46,7 +51,6 @@ mkIf machine.features.interactive {
 
   user.xsession.windowManager.i3 = {
     enable = true;
-    package = pkgs.i3-gaps;
     config = {
       modifier = "Mod4";
       gaps = {

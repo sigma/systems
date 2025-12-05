@@ -1,18 +1,30 @@
 {
+  config,
   lib,
   machine,
+  modulesPath,
   ...
 }:
 {
-  imports = [ ];
+  imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
+  ];
 
-  boot.initrd.availableKernelModules = [
+  boot.initrd.availableKernelModules = [ 
+    "ahci"
+    "ehci_pci"
     "xhci_pci"
+
     "nvme"
+
+    "usbhid"
+    "usb_storage"
+
+    "sd_mod"
     "sr_mod"
   ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ ];
+  boot.kernelModules = lib.optionals (!machine.features.fusion) [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" = {
@@ -41,4 +53,7 @@
   # networking.interfaces.ens160.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault machine.system;
+
+  hardware.enableAllFirmware = true;
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
