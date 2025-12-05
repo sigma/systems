@@ -78,7 +78,6 @@ in
 
     git = {
       executable-path = "${pkgs.git}/bin/git";
-      push-new-bookmarks = true;
       private-commits = "description(glob:'wip:*') | description(glob:'private:*')";
     };
 
@@ -184,6 +183,17 @@ in
       settings = {
         ui.pager = "${pkgs.delta}/bin/delta --hyperlinks";
         ui.diff-formatter = ":git";
+      };
+    };
+
+    personal = {
+      repositories = [
+        "~/src/github.com/${user.githubHandle}"
+      ];
+      settings = {
+        remotes.origin = {
+          auto-track-bookmarks = "glob:*";
+        };
       };
     };
   };

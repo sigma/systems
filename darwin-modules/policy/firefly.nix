@@ -38,6 +38,10 @@ with lib;
 
             settings = {
               user.email = email;
+
+              remotes.origin = {
+                auto-track-bookmarks = "glob:*";
+              };
             };
           };
         };

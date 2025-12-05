@@ -100,6 +100,10 @@ with lib;
                 "-r"
                 "work"
               ];
+
+              remotes.origin = {
+                auto-track-bookmarks = "glob:${user.githubHandle}/*";
+              };
             };
           };
         };
