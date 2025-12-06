@@ -22,11 +22,13 @@
   ];
 
   nebula.nixosModules = [
+    ../common-system-modules
     ../nixos-modules
     inputs.catppuccin.nixosModules.catppuccin
   ];
 
   nebula.darwinModules = [
+    ../common-system-modules
     ../darwin-modules
   ];
 

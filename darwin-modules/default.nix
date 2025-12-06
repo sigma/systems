@@ -3,7 +3,6 @@
   imports = [
     ./apps
     ./features
-    ./fonts.nix
     ./gui.nix
     ./interface
     ./mac-user.nix
