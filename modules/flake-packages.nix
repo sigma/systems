@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, lib, ... }:
 {
   perSystem =
     {
@@ -18,9 +18,11 @@
     in
     {
       packages = {
-        inherit (inputs'.darwin.packages) darwin-rebuild;
         inherit (inputs'.nixpkgs-stable.legacyPackages) nixos-rebuild;
         inherit (inputs'.home-manager.packages) home-manager;
+      }
+      // lib.optionalAttrs pkgs'.stdenv.isDarwin {
+        inherit (inputs'.darwin.packages) darwin-rebuild;
       }
       // pkgs'.local;
     };
