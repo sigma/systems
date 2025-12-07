@@ -124,6 +124,7 @@
       devenv
       fh
       master.nix-inspect
+      home-manager
 
       # keyboard QMK tools
       local.mdloader
