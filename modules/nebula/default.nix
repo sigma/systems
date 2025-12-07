@@ -114,7 +114,7 @@ in
         in
         {
           darwinConfigurations = gen "mac";
-          homeConfigurations = gen "linux";
+          homeConfigurations = (gen "linux") // (gen "mac") // (gen "nixos");
           nixosConfigurations = gen "nixos";
         };
     };
