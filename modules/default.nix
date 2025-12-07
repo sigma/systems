@@ -19,6 +19,7 @@
     inputs.chemacs2nix.homeModule
     inputs.nix-index-database.homeModules.nix-index
     inputs.catppuccin.homeModules.catppuccin
+    inputs.noctalia.homeModules.default
   ];
 
   nebula.nixosModules = [

@@ -21,8 +21,10 @@
 
   # for packages from inputs that don't come with an overlay
   (final: prev: {
-
+    # pkg = inputs.FOO.packages.${final.stdenv.system}.default;
   })
+
+  inputs.noctalia.overlays.default
 
   # packages hacks
   (import ./pkg)

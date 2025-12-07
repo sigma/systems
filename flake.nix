@@ -81,6 +81,10 @@
       flake-parts.follows = "";
       git-hooks-nix.follows = "";
     };
+
+    # Niri
+    noctalia.url = "github:noctalia-dev/noctalia-shell";
+    noctalia.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =

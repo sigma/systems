@@ -1,4 +1,5 @@
 {
+  inputs,
   user,
   machine,
   pkgs,
@@ -7,56 +8,59 @@
 }:
 with lib;
 mkIf machine.features.interactive {
-  environment.pathsToLink = [ "/libexec" ];
+  environment.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+    ELECTRON_OZONE_PLATFORM_HINT = "auto";
+  };
 
-  services.xserver = {
-    enable = true;
+  environment.systemPackages = with pkgs; [
+    alacritty
+    fuzzel
+    noctalia-shell
+    swaylock
+    waybar
 
-    desktopManager = {
-      xterm.enable = false;
-      xfce = {
-        enable = true;
-        noDesktop = true;
-        enableXfwm = false;
-      };
-    };
+    # chromium doesn't seem super happy about wayland right now
+    (stdenv.mkDerivation {
+      pname = "chromium-gpu-fixed";
+      version = chromium.version;
 
-    windowManager.i3 = {
-      enable = true;
-      extraPackages = with pkgs; [
-        dmenu
-        i3status
-        i3blocks
+      buildInputs = [
+        chromium
+        makeWrapper
       ];
+
+      unpackPhase = "true";
+      installPhase = ''
+        mkdir -p $out/bin
+        makeWrapper ${chromium}/bin/chromium $out/bin/chromium --add-flags "--disable-gpu-compositing"
+      '';
+    })
+  ];
+
+  programs.niri.enable = true;
+  programs.xwayland.enable = true;
+
+  services.displayManager = {
+    sddm = {
+      enable = true;
+      wayland.enable = true;
     };
-
-    displayManager = {
-      lightdm = {
-        enable = true;
-        greeters.mini = {
-          enable = true;
-          user = user.login;
-        };
-      };
-    };
   };
 
-  services.DisplayManager = {
-    defaultSession = "xfce+i3";
-  };
-
-  security.pam.services = {
-    i3lock-color.enable = true;
-  };
-
-  user.xsession.windowManager.i3 = {
+  user.programs.noctalia-shell = {
     enable = true;
-    config = {
-      modifier = "Mod4";
-      gaps = {
-        inner = 10;
-        outer = 5;
-      };
-    };
+  };
+
+  user.home.pointerCursor = {
+    enable = true;
+    package = pkgs.catppuccin-cursors.frappePeach;
+    name = "catppuccin-frappe-peach-cursors";
+    size = 24;
+
+    hyprcursor.enable = true;
+    gtk.enable = true;
+    x11.enable = true;
+
   };
 }

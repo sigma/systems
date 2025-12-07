@@ -1,4 +1,5 @@
 local gpu_adapters = require('utils.gpu_adapter')
+local platform = require('utils.platform')()
 
 local M = {}
 
@@ -32,7 +33,12 @@ M.apply_to_config = function(options, _opts)
    }
    options.window_background_opacity = 1
    options.window_close_confirmation = 'NeverPrompt'
-   options.window_decorations = "RESIZE"
+
+   -- on linux, we handle decorations directly from the window manager, so leave them as default
+   if platform.is_mac then
+      options.window_decorations = "RESIZE"
+   end
+
    options.window_frame = {
       active_titlebar_bg = '#090909',
       -- font = fonts.font,
