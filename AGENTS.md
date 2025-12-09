@@ -113,7 +113,10 @@ nebula.hosts = {
 
 ### 4. Home Manager Integration
 
-**Pattern: Always use `user`**
+**Pattern: Always use `user` alias in darwin/nixos modules**
+
+The `user` alias maps to `home-manager.users.${user.login}`, providing a consistent interface:
+
 ```nix
 user = {
   # User configuration here
@@ -127,6 +130,25 @@ user = {
   ];
 };
 ```
+
+**Important**: Configuration set via `user.*` in darwin or nixos modules is automatically available in standalone home-manager configurations. The system evaluates the full darwin/nixos config and extracts the home-manager portion, ensuring both deployment methods produce identical results.
+
+#### Standalone vs System Home-Manager
+
+There are two ways to deploy home-manager changes:
+
+1. **Full system rebuild**: `darwin-rebuild switch` or `nixos-rebuild switch`
+   - Use when system-level changes are needed
+   - Rebuilds everything including home-manager
+
+2. **Standalone home-manager**: `home-manager switch --flake .#hostname-user`
+   - Use for faster iteration on user-space changes
+   - Produces identical configuration to full system rebuild
+   - Does not require sudo on darwin
+
+**Devshell commands:**
+- `home-install` - Build and activate home-manager only
+- `home-test` - Build home-manager without activating
 
 ### 5. Settings Module System
 
@@ -409,7 +431,7 @@ Before committing changes:
 ```bash
 # Test specific configuration build
 nix build .#darwinConfigurations.hostname.system
-nix build .#homeConfigurations.hostname.activationPackage
+nix build .#homeConfigurations.hostname-user.activationPackage
 nix build .#nixosConfigurations.hostname.system
 
 # Test all configurations
@@ -422,7 +444,16 @@ nix flake check
 darwin-rebuild check --flake .#hostname
 
 # Home Manager only
-home-manager switch --flake .#hostname --dry-run
+home-manager switch --flake .#hostname-user --dry-run
+```
+
+### Verifying Config Parity
+To verify that standalone home-manager produces identical config to full system:
+```bash
+# Compare a specific config file between darwin and standalone home-manager
+nix eval --raw '.#darwinConfigurations.hostname.config.home-manager.users.username.home.file.".config-file".text' > /tmp/darwin.txt
+nix eval --raw '.#homeConfigurations.hostname-username.config.home.file.".config-file".text' > /tmp/home.txt
+diff /tmp/darwin.txt /tmp/home.txt
 ```
 
 ## Development Workflow
@@ -560,14 +591,17 @@ buildGoModule rec {
   inputs.fenix.overlays.default
 
   # For packages from inputs that don't come with an overlay
+  # example: pkg = inputs.FOO.packages.${final.stdenv.system}.default;
   (final: prev: {
-    custom-tool = inputs.custom-tool.packages.${final.stdenv.system}.default;
+    home-manager = inputs.home-manager.packages.${final.stdenv.system}.home-manager;
   })
 
   # Package customizations and overrides
   (import ./pkg)
 ]
 ```
+
+**Flake input package pattern**: When a tool is also a flake input (like `home-manager`), override the nixpkgs version with the flake input version to ensure consistency. This prevents version mismatches between the module system and the CLI tool.
 
 **Auto-discovery pattern** (`overlays/pkg/default.nix`):
 - Automatically imports all `.nix` files in the directory
