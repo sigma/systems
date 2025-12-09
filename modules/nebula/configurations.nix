@@ -54,9 +54,13 @@ let
       keyFile = secretsCfg.ageKeyFile;
     };
     secrets = lib.mapAttrs (name: secret:
+      let
+        # Expand "@user" to the actual user login
+        expandOwner = o: if o == "@user" then user.login else o;
+      in
       { inherit (secret) mode; }
       // lib.optionalAttrs (secret.sopsFile != null) { inherit (secret) sopsFile; }
-      // lib.optionalAttrs (!isHome && secret.owner != null) { inherit (secret) owner; }
+      // lib.optionalAttrs (!isHome && secret.owner != null) { owner = expandOwner secret.owner; }
       // lib.optionalAttrs (!isHome && secret.group != null) { inherit (secret) group; }
     ) secretsCfg.secrets;
   };

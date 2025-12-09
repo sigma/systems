@@ -6,6 +6,9 @@
   ...
 }:
 with lib;
+let
+  claude-glm = pkgs.callPackage ../../overlays/pkg/local/claude-glm.nix { };
+in
 {
   config = mkIf machine.features.firefly {
     user =
@@ -66,6 +69,7 @@ with lib;
         home.packages = with pkgs; [
           terraform
           kubie
+          claude-glm
         ];
       };
 

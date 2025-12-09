@@ -21,6 +21,7 @@
 
     secrets = {
       github-key-uploader-pat = { };
+      glm-api-key = { owner = "@user"; };
     };
   };
 }
