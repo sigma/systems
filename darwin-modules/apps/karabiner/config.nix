@@ -125,11 +125,11 @@ in
             }
 
             {
-              description = "Caps Lock / Enter tap for Enter, hold for Control";
+              description = "Caps Lock tap for Escape/Enter, hold for Control";
               manipulators = [
                 (helpers.tapManipulator {
                   from = "caps_lock";
-                  tap = "return_or_enter";
+                  tap = "escape";
                   hold = "left_control";
                   conditions = forID internalKeyboardID;
                 })
