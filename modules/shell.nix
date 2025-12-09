@@ -75,6 +75,15 @@
               $NIX_BIN ${nixFlags} run ".#home-manager" --  switch --flake ".#`hostname -s`"
             fi
           '';
+
+      # Home-manager only activation (for darwin/nixos, activates just the home-manager part)
+      homeBuild = ''
+        $NIX_BIN ${nixFlags} build ".#homeConfigurations.`hostname -s`.activationPackage"
+      '';
+
+      homeActivate = ''
+        $NIX_BIN ${nixFlags} run ".#home-manager" -- switch --flake ".#`hostname -s`"
+      '';
     in
     {
       pre-commit.settings.hooks = {
@@ -121,6 +130,7 @@
           {
             name = "system-bootstrap";
             category = "system";
+            help = "Initial system setup (run once on new machines)";
             command = ''
               ${findNix}
               ${systemBootstrap}
@@ -129,6 +139,7 @@
           {
             name = "system-install";
             category = "system";
+            help = "Build and activate full system configuration";
             command = ''
               ${findNix}
               ${systemSetup}
@@ -140,9 +151,29 @@
           {
             name = "system-test";
             category = "system";
+            help = "Build system configuration (without activating)";
             command = ''
               ${findNix}
               ${systemBuild}
+            '';
+          }
+          {
+            name = "home-install";
+            category = "home";
+            help = "Activate home-manager configuration (without full system rebuild)";
+            command = ''
+              ${findNix}
+              ${homeBuild}
+              ${homeActivate}
+            '';
+          }
+          {
+            name = "home-test";
+            category = "home";
+            help = "Build home-manager configuration (without activating)";
+            command = ''
+              ${findNix}
+              ${homeBuild}
             '';
           }
         ];
