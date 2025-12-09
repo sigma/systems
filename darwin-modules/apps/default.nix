@@ -4,6 +4,7 @@
     ./aerospace.nix
     ./alfred.nix
     ./brave.nix
+    ./claude-code.nix
     ./cursor.nix
     ./karabiner.nix
     ./kurtosis.nix

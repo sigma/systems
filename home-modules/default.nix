@@ -12,6 +12,7 @@
     ./accounts.nix
     ./aspell.nix
     ./catppuccin.nix
+    ./claude-glm.nix
     ./cloud-shell.nix
     ./cursor.nix
     ./dosbox.nix

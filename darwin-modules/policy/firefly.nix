@@ -6,9 +6,6 @@
   ...
 }:
 with lib;
-let
-  claude-glm = pkgs.callPackage ../../overlays/pkg/local/claude-glm.nix { };
-in
 {
   config = mkIf machine.features.firefly {
     user =
@@ -66,10 +63,11 @@ in
             ];
         };
 
+        programs.claude-glm.enable = true;
+
         home.packages = with pkgs; [
           terraform
           kubie
-          claude-glm
         ];
       };
 
@@ -87,8 +85,10 @@ in
       }
     ];
 
+    # Enable darwin-level claude-code module (installs via homebrew, provides wrapper)
+    programs.claude-code.enable = true;
+
     homebrew.casks = [
-      "claude-code"
       "linear-linear"
       "notion"
       "notion-calendar"
