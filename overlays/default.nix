@@ -20,8 +20,9 @@
   inputs.maschine-hacks.overlays.default
 
   # for packages from inputs that don't come with an overlay
+  # example: pkg = inputs.FOO.packages.${final.stdenv.system}.default;
   (final: prev: {
-    # pkg = inputs.FOO.packages.${final.stdenv.system}.default;
+    home-manager = inputs.home-manager.packages.${final.stdenv.system}.home-manager;
   })
 
   inputs.noctalia.overlays.default
