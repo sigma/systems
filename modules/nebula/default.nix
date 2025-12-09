@@ -106,16 +106,20 @@ in
 
       flake =
         let
+          # Generate configurations for machines with a specific feature
           gen =
-            feature:
-            builtins.mapAttrs (name: machine: configurations.${feature} machine) (
+            feature: builder:
+            builtins.mapAttrs (name: machine: builder machine) (
               lib.filterAttrs (name: machine: machine.features.${feature}) machines
             );
         in
         {
-          darwinConfigurations = gen "mac";
-          homeConfigurations = (gen "linux") // (gen "mac") // (gen "nixos");
-          nixosConfigurations = gen "nixos";
+          darwinConfigurations = gen "mac" configurations.mac;
+          homeConfigurations =
+            (gen "linux" configurations.linux)
+            // (gen "mac" configurations.macHome)
+            // (gen "nixos" configurations.nixosHome);
+          nixosConfigurations = gen "nixos" configurations.nixos;
         };
     };
 }
