@@ -112,13 +112,33 @@ in
             builtins.mapAttrs (name: machine: builder machine) (
               lib.filterAttrs (name: machine: machine.features.${feature}) machines
             );
+
+          # Generate home configurations with $machine-$user naming
+          # Also provides $machine alias when there's a single user
+          genHome =
+            feature: builder:
+            let
+              filteredMachines = lib.filterAttrs (name: machine: machine.features.${feature}) machines;
+              # Generate $machine-$user entries
+              perUserConfigs = lib.concatMapAttrs (name: machine:
+                let
+                  user = helpers.expandUser (cfg.userSelector machine);
+                in
+                {
+                  "${name}-${user.login}" = builder machine;
+                }
+              ) filteredMachines;
+              # Generate $machine aliases (pointing to same config)
+              machineAliases = builtins.mapAttrs (name: machine: builder machine) filteredMachines;
+            in
+            perUserConfigs // machineAliases;
         in
         {
           darwinConfigurations = gen "mac" configurations.mac;
           homeConfigurations =
-            (gen "linux" configurations.linux)
-            // (gen "mac" configurations.macHome)
-            // (gen "nixos" configurations.nixosHome);
+            (genHome "linux" configurations.linux)
+            // (genHome "mac" configurations.macHome)
+            // (genHome "nixos" configurations.nixosHome);
           nixosConfigurations = gen "nixos" configurations.nixos;
         };
     };

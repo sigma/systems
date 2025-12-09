@@ -78,11 +78,11 @@
 
       # Home-manager only activation (for darwin/nixos, activates just the home-manager part)
       homeBuild = ''
-        $NIX_BIN ${nixFlags} build ".#homeConfigurations.`hostname -s`.activationPackage"
+        $NIX_BIN ${nixFlags} build ".#homeConfigurations.`hostname -s`-$USER.activationPackage"
       '';
 
       homeActivate = ''
-        $NIX_BIN ${nixFlags} run ".#home-manager" -- switch --flake ".#`hostname -s`"
+        $NIX_BIN ${nixFlags} run ".#home-manager" -- switch --flake ".#`hostname -s`-$USER"
       '';
     in
     {
