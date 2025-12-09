@@ -1,4 +1,7 @@
-{ inputs, ... }:
+{ inputs, config, ... }:
+let
+  secretsCfg = config.nebula.secrets;
+in
 {
   imports = [
     inputs.devshell.flakeModule
@@ -84,6 +87,17 @@
       homeActivate = ''
         $NIX_BIN ${nixFlags} run ".#home-manager" -- switch --flake ".#`hostname -s`-$USER"
       '';
+
+      # SOPS configuration file generated from Nix
+      sopsConfigFile = pkgs.writeText "sops.yaml" (
+        if secretsCfg.enable then secretsCfg._sopsConfigText else "# Secrets not enabled"
+      );
+
+      # Secrets directory location
+      secretsDir =
+        if isDarwin then "/run/secrets"
+        else if builtins.pathExists "/etc/nixos" then "/run/secrets"
+        else "$HOME/.config/sops-nix/secrets";
     in
     {
       pre-commit.settings.hooks = {
@@ -124,6 +138,10 @@
 
         packages = with pkgs; [
           nil # for VSCode integration.
+          age # for secrets encryption
+          age-plugin-yubikey # for YubiKey-based age encryption
+          sops # for secrets management
+          ssh-to-age # for converting SSH keys to age
         ];
 
         commands = [
@@ -174,6 +192,102 @@
             command = ''
               ${findNix}
               ${homeBuild}
+            '';
+          }
+          {
+            name = "sops-config";
+            category = "secrets";
+            help = "Show SOPS configuration (generated from Nix)";
+            command = ''
+              echo "# Generated SOPS configuration"
+              echo "# To update .sops.yaml: sops-config > .sops.yaml"
+              echo ""
+              cat ${sopsConfigFile}
+            '';
+          }
+          {
+            name = "sops-edit";
+            category = "secrets";
+            help = "Edit encrypted secrets file (creates if missing)";
+            command = ''
+              FILE="''${1:-secrets/secrets.yaml}"
+              if [[ ! -f "$FILE" ]]; then
+                echo "Creating new secrets file: $FILE"
+                mkdir -p "$(dirname "$FILE")"
+              fi
+              # Use SSH key for age decryption if no age key file is set
+              if [[ -z "''${SOPS_AGE_KEY_FILE:-}" && -z "''${SOPS_AGE_KEY:-}" ]]; then
+                SSH_KEY="''${SOPS_AGE_SSH_PRIVATE_KEY:-$HOME/.ssh/id_ed25519}"
+                if [[ -f "$SSH_KEY" ]]; then
+                  export SOPS_AGE_KEY=$(${pkgs.ssh-to-age}/bin/ssh-to-age -private-key -i "$SSH_KEY")
+                fi
+              fi
+              ${pkgs.sops}/bin/sops --config ${sopsConfigFile} "$FILE"
+            '';
+          }
+          {
+            name = "sops-key";
+            category = "secrets";
+            help = "Show age public key (-t ssh|yubikey, default: ssh)";
+            command = ''
+              TYPE="ssh"
+              while getopts "t:" opt; do
+                case $opt in
+                  t) TYPE="$OPTARG" ;;
+                  *) echo "Usage: sops-key [-t ssh|yubikey] [path/to/ssh/key]"; exit 1 ;;
+                esac
+              done
+              shift $((OPTIND-1))
+
+              case "$TYPE" in
+                ssh)
+                  SSH_KEY="''${1:-$HOME/.ssh/id_ed25519}"
+                  if [[ ! -f "$SSH_KEY" ]]; then
+                    echo "SSH key not found: $SSH_KEY"
+                    echo "Usage: sops-key [-t ssh] [path/to/ssh/key]"
+                    exit 1
+                  fi
+                  echo "# Age public key for: $SSH_KEY"
+                  ${pkgs.ssh-to-age}/bin/ssh-to-age -i "$SSH_KEY.pub" 2>/dev/null || \
+                  ${pkgs.ssh-to-age}/bin/ssh-to-age < "$SSH_KEY.pub"
+                  ;;
+                yubikey)
+                  echo "# Age public key from YubiKey"
+                  ${pkgs.age-plugin-yubikey}/bin/age-plugin-yubikey --identity
+                  ;;
+                *)
+                  echo "Unknown key type: $TYPE"
+                  echo "Usage: sops-key [-t ssh|yubikey]"
+                  exit 1
+                  ;;
+              esac
+            '';
+          }
+          {
+            name = "bootstrap-github";
+            category = "secrets";
+            help = "Upload machine SSH key to GitHub using decrypted PAT (requires sudo)";
+            command = ''
+              PAT_FILE="${secretsDir}/github-key-uploader-pat"
+              if [[ ! -f "$PAT_FILE" ]]; then
+                echo "GitHub PAT not found at: $PAT_FILE"
+                echo "Run system-install or home-install first to decrypt secrets"
+                exit 1
+              fi
+
+              SSH_KEY="''${1:-$HOME/.ssh/id_ed25519.pub}"
+              if [[ ! -f "$SSH_KEY" ]]; then
+                echo "SSH public key not found: $SSH_KEY"
+                exit 1
+              fi
+
+              echo "Authenticating with GitHub..."
+              ${pkgs.gh}/bin/gh auth login --with-token < "$PAT_FILE"
+
+              echo "Uploading SSH key: $SSH_KEY"
+              ${pkgs.gh}/bin/gh ssh-key add "$SSH_KEY" --title "$(hostname -s)-$(date +%Y%m%d)"
+
+              echo "Done! You can now use: gh auth setup-git"
             '';
           }
         ];

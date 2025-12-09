@@ -842,13 +842,97 @@ src = fetchFromGitHub {
 };
 ```
 
+## Secrets Management
+
+The repository uses sops-nix for secrets management. Secrets are encrypted with age and stored in the `secrets/` directory.
+
+### Configuration
+
+Secrets are configured in `modules/secrets.nix`:
+
+```nix
+nebula.secrets = {
+  enable = true;
+
+  # Age keys that can decrypt secrets (admin keys)
+  ageKeys = [
+    {
+      name = "admin-ssh";
+      type = "ssh";
+      publicKey = "age1...";  # Get with: ssh-to-age < ~/.ssh/id_ed25519.pub
+    }
+  ];
+
+  # SSH key paths for decryption at activation time
+  sshKeyPaths = [ "~/.ssh/id_ed25519" ];
+
+  # Declare secrets to decrypt
+  secrets = {
+    github-pat = { };
+    api-key = { mode = "0440"; };
+  };
+};
+```
+
+### Devshell Commands
+
+- `sops-config` - Show generated SOPS configuration
+- `sops-edit [file]` - Edit encrypted secrets file
+- `sops-key [ssh-key]` - Show age public key for an SSH key
+- `bootstrap-github` - Upload machine SSH key to GitHub using decrypted PAT
+
+### Adding a New Secret
+
+1. Add the secret declaration to `nebula.secrets.secrets`:
+   ```nix
+   secrets = {
+     new-secret = { };
+   };
+   ```
+
+2. Edit the encrypted secrets file:
+   ```bash
+   sops-edit secrets/secrets.yaml
+   ```
+
+3. Add the secret value in the editor (YAML format):
+   ```yaml
+   new-secret: "secret-value-here"
+   ```
+
+4. Reference the secret in configurations:
+   ```nix
+   # In darwin/nixos modules - path is /run/secrets/new-secret
+   config.sops.secrets.new-secret.path
+
+   # In home-manager - path is ~/.config/sops-nix/secrets/new-secret
+   config.sops.secrets.new-secret.path
+   ```
+
+### Adding a New Age Key
+
+When adding a new admin key (e.g., for a new maintainer):
+
+1. Get the age public key:
+   ```bash
+   sops-key ~/.ssh/id_ed25519
+   ```
+
+2. Add to `nebula.secrets.ageKeys` in `modules/secrets.nix`
+
+3. Re-encrypt secrets with the new key:
+   ```bash
+   sops-config > .sops.yaml
+   sops updatekeys secrets/secrets.yaml
+   ```
+
 ## Security Considerations
 
 ### Secrets and Keys
 - Never hardcode secrets in configurations
+- Use sops-nix for secret management - secrets are encrypted at rest
 - Use SSH keys and certificates from secure sources
 - Be cautious with Git email configurations (they're logged)
-- Consider using external secret management for sensitive data
 
 ### Package Sources
 - Prefer packages from nixpkgs over custom builds

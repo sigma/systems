@@ -201,3 +201,41 @@ The devshell provides convenience commands:
 - `home-test` - Build home-manager without activating
 
 The architecture provides a scalable, maintainable approach to managing multiple systems while maintaining consistency and enabling platform-specific optimizations where needed.
+
+## Secrets Management
+
+The system uses sops-nix for secrets management, with age encryption.
+
+### Architecture
+
+- **Age keys defined in Nix** (`modules/secrets.nix`): Single source of truth for encryption keys
+- **SOPS config generated from Nix**: `.sops.yaml` derived from age key definitions
+- **Secrets stored encrypted** in `secrets/` directory
+- **Decrypted at activation time**: Secrets available in `/run/secrets/` (system) or `~/.config/sops-nix/secrets/` (home-manager)
+
+### Key Configuration
+
+```nix
+nebula.secrets = {
+  enable = true;
+  ageKeys = [
+    {
+      name = "admin-ssh";
+      type = "ssh";
+      publicKey = "age1...";  # From: ssh-to-age < ~/.ssh/id_ed25519.pub
+    }
+  ];
+  sshKeyPaths = [ "~/.ssh/id_ed25519" ];  # For decryption
+  secrets = {
+    github-pat = { };  # Declared secrets
+  };
+};
+```
+
+### Bootstrap Flow
+
+1. Add SSH key to new machine
+2. Enter devshell: `nix develop`
+3. Activate system/home: `system-install` or `home-install`
+4. Secrets decrypted and available
+5. Run `bootstrap-github` to upload machine SSH key to GitHub

@@ -68,6 +68,10 @@
     catppuccin.url = "github:catppuccin/nix";
     catppuccin.inputs.nixpkgs.follows = "nixpkgs";
 
+    # Secrets
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
     # Flakehub
     fh.url = "https://flakehub.com/f/DeterminateSystems/fh/*";
     fh.inputs.nixpkgs.follows = "nixpkgs";

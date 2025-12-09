@@ -8,6 +8,7 @@
 }:
 let
   userFor = machine: helpers.expandUser (cfg.userSelector machine);
+  secretsCfg = cfg.secrets;
 
   homeManagerConfig =
     {
@@ -30,6 +31,51 @@ let
     nix.settings.substituters = cfg.nixConfig.trusted-substituters;
     nix.settings.trusted-public-keys = cfg.nixConfig.trusted-public-keys;
   };
+
+  # Check if sops should be active (enabled AND has a secrets file)
+  sopsActive = secretsCfg.enable && secretsCfg.defaultSopsFile != null;
+
+  # Common sops configuration builder
+  sopsConfigFor = { isHome ? false, user ? null, isDarwin ? false }: {
+    defaultSopsFile = secretsCfg.defaultSopsFile;
+    age = {
+      sshKeyPaths =
+        let
+          homeDir =
+            if isDarwin then "/Users/${user.login}"
+            else "/home/${user.login}";
+          expandPath = p:
+            if lib.hasPrefix "/" p then p
+            else if lib.hasPrefix "~" p then builtins.replaceStrings ["~"] [homeDir] p
+            else "${homeDir}/${p}";
+        in
+        map expandPath secretsCfg.sshKeyPaths;
+    } // lib.optionalAttrs (secretsCfg.ageKeyFile != null) {
+      keyFile = secretsCfg.ageKeyFile;
+    };
+    secrets = lib.mapAttrs (name: secret:
+      { inherit (secret) mode; }
+      // lib.optionalAttrs (secret.sopsFile != null) { inherit (secret) sopsFile; }
+      // lib.optionalAttrs (!isHome && secret.owner != null) { inherit (secret) owner; }
+      // lib.optionalAttrs (!isHome && secret.group != null) { inherit (secret) group; }
+    ) secretsCfg.secrets;
+  };
+
+  # sops-nix modules - only include when secrets are enabled AND secrets file exists
+  sopsDarwinModules = user: lib.optionals sopsActive [
+    inputs.sops-nix.darwinModules.sops
+    { sops = sopsConfigFor { isDarwin = true; inherit user; }; }
+  ];
+
+  sopsNixosModules = user: lib.optionals sopsActive [
+    inputs.sops-nix.nixosModules.sops
+    { sops = sopsConfigFor { inherit user; }; }
+  ];
+
+  sopsHomeModules = user: lib.optionals sopsActive [
+    inputs.sops-nix.homeManagerModules.sops
+    { sops = sopsConfigFor { isHome = true; inherit user; }; }
+  ];
 
   # Build standalone home-manager config for darwin machines.
   #
@@ -121,7 +167,8 @@ in
           inputs.home-manager.darwinModules.home-manager
           (homeManagerConfig { inherit user machine; })
           nixModule
-        ];
+        ]
+        ++ (sopsDarwinModules user);
     };
 
   inherit macHome;
@@ -148,7 +195,8 @@ in
               inherit stateVersion;
             };
           })
-        ];
+        ]
+        ++ (sopsHomeModules user);
       extraSpecialArgs = specialArgs;
     };
 
@@ -171,7 +219,8 @@ in
           inputs.home-manager.nixosModules.home-manager
           (homeManagerConfig { inherit user machine; })
           nixModule
-        ];
+        ]
+        ++ (sopsNixosModules user);
     };
 
   inherit nixosHome;

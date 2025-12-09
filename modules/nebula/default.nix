@@ -40,6 +40,8 @@ let
   };
 in
 {
+  imports = [ ./secrets.nix ];
+
   options = {
     nebula = {
       users = mkOption {
@@ -96,15 +98,15 @@ in
 
   config =
     let
-      hosts = config.nebula.hosts;
-      allMachines = builtins.mapAttrs (name: host: helpers.hostMachine host) hosts;
-      machines = lib.filterAttrs (name: machine: machine.features.managed) allMachines;
-    in
-    {
-      # make sure the predefined features are always included
-      nebula.features = defaultFeatures;
+        hosts = config.nebula.hosts;
+        allMachines = builtins.mapAttrs (name: host: helpers.hostMachine host) hosts;
+        machines = lib.filterAttrs (name: machine: machine.features.managed) allMachines;
+      in
+      {
+        # make sure the predefined features are always included
+        nebula.features = defaultFeatures;
 
-      flake =
+        flake =
         let
           # Generate configurations for machines with a specific feature
           gen =

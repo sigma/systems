@@ -7,6 +7,9 @@
     # shell support
     ./shell.nix
 
+    # secrets management
+    ./secrets.nix
+
     # configurations generation with nebula
     ./nebula
     ./users.nix
