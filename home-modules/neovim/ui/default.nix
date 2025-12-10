@@ -8,5 +8,6 @@
     ./which-key.nix
     ./indent-blankline.nix
     ./notify.nix
+    ./dashboard.nix
   ];
 }

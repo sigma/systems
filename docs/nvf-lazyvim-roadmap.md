@@ -125,10 +125,10 @@ vim.globals = {
 - [x] Show git status, diagnostics
 - [x] Follow current file, hijack netrw
 
-### 2.4 Dashboard
-- [ ] Enable dashboard (alpha-nvim or dashboard-nvim)
-- [ ] Recent files
-- [ ] Quick actions (new file, find file, config, quit)
+### 2.4 Dashboard ✅
+- [x] Enable alpha-nvim with dashboard theme
+- [x] Recent files
+- [x] Quick actions (new file, find file, config, quit)
 - [ ] Custom header (optional)
 
 ### 2.5 Notifications ✅
