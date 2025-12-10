@@ -370,8 +370,8 @@ Note: Basic LSP, treesitter, and formatting are configured in `lsp/languages.nix
 ### 6.4 TypeScript/JavaScript
 - [x] typescript-language-server ✅
 - [x] Format on save ✅
-- [ ] prettier formatting (currently using LSP format)
-- [ ] eslint integration
+- [x] prettier formatting (via prettierd) ✅
+- [x] eslint integration (via extraDiagnostics) ✅
 - [ ] Package.json helper
 
 ### 6.5 Python

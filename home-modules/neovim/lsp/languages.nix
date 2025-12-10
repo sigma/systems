@@ -55,7 +55,13 @@ in
           enable = true;
           lsp.enable = true;
           treesitter.enable = true;
-          format.enable = true;
+          # Use prettier for formatting
+          format = {
+            enable = true;
+            type = "prettierd";
+          };
+          # Enable ESLint for extra diagnostics
+          extraDiagnostics.enable = true;
         };
 
         # Python
