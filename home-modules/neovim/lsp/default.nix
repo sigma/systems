@@ -10,5 +10,6 @@
     ./fidget.nix
     ./formatting.nix
     ./lspkind.nix
+    ./signature.nix
   ];
 }
