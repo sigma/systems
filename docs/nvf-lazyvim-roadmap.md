@@ -266,13 +266,15 @@ vim.globals = {
   - Python: black, isort
 - [ ] Linting integration (nvim-lint or null-ls)
 
-### 4.6 Diagnostics UI
-- [ ] Enable trouble.nvim
-- [ ] Keymaps:
+### 4.6 Diagnostics UI (Trouble.nvim) ✅
+- [x] Enable trouble.nvim
+- [x] Keymaps:
   - `<leader>xx` - Document diagnostics
   - `<leader>xX` - Workspace diagnostics
   - `<leader>xL` - Location list
   - `<leader>xQ` - Quickfix list
+  - `<leader>xr` - LSP references
+  - `<leader>cs` - Symbols
 
 ### 4.7 LSP Enhancements
 - [ ] lsp_signature.nvim - Function signature help

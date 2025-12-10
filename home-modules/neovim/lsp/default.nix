@@ -5,5 +5,6 @@
     ./languages.nix
     ./completion.nix
     ./keymaps.nix
+    ./trouble.nix
   ];
 }
