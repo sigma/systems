@@ -329,7 +329,7 @@ vim.globals = {
 ### 5.7 Other Editing Features
 - [ ] mini.bufremove - Better buffer deletion
 - [ ] persistence.nvim - Session management
-- [ ] vim-illuminate - Highlight word under cursor
+- [x] vim-illuminate - Highlight word under cursor ✅
 - [ ] nvim-spectre - Search and replace
 
 ---

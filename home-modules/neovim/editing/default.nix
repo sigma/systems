@@ -5,5 +5,6 @@
     ./comments.nix
     ./surround.nix
     ./gitsigns.nix
+    ./illuminate.nix
   ];
 }
