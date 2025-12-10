@@ -8,5 +8,6 @@
     ./illuminate.nix
     ./bufremove.nix
     ./textobjects.nix
+    ./persistence.nix
   ];
 }
