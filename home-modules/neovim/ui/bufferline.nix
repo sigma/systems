@@ -19,8 +19,8 @@ in
         options = {
           mode = "buffers";
 
-          # Slant style separators for visual distinction
-          separator_style = "slant";
+          # Thin separators work better with transparent backgrounds
+          separator_style = "thin";
 
           # Show diagnostics from LSP
           diagnostics = "nvim_lsp";

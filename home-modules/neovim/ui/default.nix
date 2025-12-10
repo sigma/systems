@@ -5,5 +5,7 @@
     ./lualine.nix
     ./bufferline.nix
     ./neo-tree.nix
+    ./which-key.nix
+    ./indent-blankline.nix
   ];
 }

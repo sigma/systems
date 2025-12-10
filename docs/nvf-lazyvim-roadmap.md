@@ -136,22 +136,24 @@ vim.globals = {
 - [ ] Integrate with LSP progress
 - [ ] Catppuccin theming
 
-### 2.6 Indent Guides
-- [ ] Enable indent-blankline.nvim
-- [ ] Show current context
-- [ ] Subtle colors matching theme
+### 2.6 Indent Guides ✅
+- [x] Enable indent-blankline.nvim
+- [x] Show current scope (treesitter-based)
+- [x] Exclude special filetypes (neo-tree, help, etc.)
 
-### 2.7 Which-key
-- [ ] Enable which-key.nvim
-- [ ] Configure group labels:
-  - `<leader>b` = "buffer"
-  - `<leader>c` = "code"
-  - `<leader>f` = "file/find"
-  - `<leader>g` = "git"
-  - `<leader>s` = "search"
-  - `<leader>u` = "ui"
-  - `<leader>w` = "windows"
-  - `<leader>x` = "diagnostics/quickfix"
+### 2.7 Which-key ✅
+- [x] Enable which-key.nvim
+- [x] Modern preset style
+- [x] Configure group labels:
+  - `<leader>b` = "+buffer"
+  - `<leader>c` = "+code"
+  - `<leader>f` = "+file/find"
+  - `<leader>g` = "+git"
+  - `<leader>s` = "+search"
+  - `<leader>u` = "+ui"
+  - `<leader>w` = "+windows"
+  - `<leader>x` = "+diagnostics"
+  - `<leader><tab>` = "+tabs"
 
 ### 2.8 Additional Visual Enhancements
 - [ ] nvim-web-devicons
