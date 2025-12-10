@@ -20,7 +20,6 @@
     "container"
     "jj"
     "libusb"
-    "neovim"
   ];
 
   homebrew.casks = [

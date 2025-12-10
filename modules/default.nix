@@ -23,6 +23,7 @@
     inputs.nix-index-database.homeModules.nix-index
     inputs.catppuccin.homeModules.catppuccin
     inputs.noctalia.homeModules.default
+    inputs.nvf.homeManagerModules.default
   ];
 
   nebula.nixosModules = [

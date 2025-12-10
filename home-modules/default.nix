@@ -23,6 +23,7 @@
     ./just.nix
     ./kubeswitch.nix
     ./mailsetup.nix
+    ./neovim
     ./open-url.nix
     ./settings
     ./shells
@@ -37,6 +38,8 @@
 
     gh-dash.enable = true;
     # gitui.enable = true;
+
+    neovim-ide.enable = true;
   };
 
   home.packages =
