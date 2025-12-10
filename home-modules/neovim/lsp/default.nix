@@ -11,5 +11,6 @@
     ./formatting.nix
     ./lspkind.nix
     ./signature.nix
+    ./dap.nix
   ];
 }

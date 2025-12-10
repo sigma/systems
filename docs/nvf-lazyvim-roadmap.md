@@ -359,13 +359,13 @@ Note: Basic LSP, treesitter, and formatting are configured in `lsp/languages.nix
 - [x] Format on save ✅
 - [ ] gofumpt formatting (currently using gopls format)
 - [ ] Go-specific keymaps (test, run, etc.)
-- [ ] nvim-dap-go for debugging
+- [x] nvim-dap-go for debugging (delve) ✅
 
 ### 6.3 Rust
 - [x] rust-analyzer ✅
 - [x] rustfmt (via rust-analyzer) ✅
 - [ ] crates.nvim - Cargo.toml helper (not available in nvf)
-- [ ] nvim-dap for debugging
+- [x] nvim-dap for debugging ✅
 
 ### 6.4 TypeScript/JavaScript
 - [x] typescript-language-server ✅
@@ -378,7 +378,7 @@ Note: Basic LSP, treesitter, and formatting are configured in `lsp/languages.nix
 - [x] basedpyright LSP ✅
 - [x] black formatting ✅
 - [ ] isort integration
-- [ ] nvim-dap-python for debugging
+- [x] nvim-dap-python for debugging ✅
 - [ ] venv-selector.nvim
 
 ### 6.6 Markdown
