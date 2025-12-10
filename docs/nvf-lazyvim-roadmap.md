@@ -255,16 +255,16 @@ vim.globals = {
 - [x] Auto-snippets and history enabled
 - [ ] `<Tab>` / `<S-Tab>` - Jump placeholders (handled by completion)
 
-### 4.5 Formatting & Linting
-- [ ] Enable format-on-save
-- [ ] Configure formatters per language:
-  - Nix: nixfmt-rfc-style
-  - Lua: stylua
-  - TypeScript/JavaScript: prettier
-  - Go: gofmt, goimports
-  - Rust: rustfmt
-  - Python: black, isort
-- [ ] Linting integration (nvim-lint or null-ls)
+### 4.5 Formatting & Linting ✅
+- [x] Enable format-on-save (via LSP)
+- [x] Toggle format-on-save with `<leader>uf`
+- [x] Configure formatters per language:
+  - Nix: nixfmt
+  - Go: gopls format
+  - Rust: rustfmt (via rust-analyzer)
+  - Python: black
+  - TypeScript/JavaScript: LSP format
+- [ ] Linting integration (future: nvim-lint)
 
 ### 4.6 Diagnostics UI (Trouble.nvim) ✅
 - [x] Enable trouble.nvim

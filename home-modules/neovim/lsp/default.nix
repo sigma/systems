@@ -7,5 +7,6 @@
     ./keymaps.nix
     ./trouble.nix
     ./snippets.nix
+    ./fidget.nix
   ];
 }
