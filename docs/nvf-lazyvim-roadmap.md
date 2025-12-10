@@ -253,7 +253,8 @@ vim.globals = {
 - [x] Enable LuaSnip
 - [x] Load friendly-snippets (VS Code compatible)
 - [x] Auto-snippets and history enabled
-- [ ] `<Tab>` / `<S-Tab>` - Jump placeholders (handled by completion)
+- [x] `<Tab>` / `<S-Tab>` - Jump placeholders ✅
+- [x] `<C-l>` - Select next choice in choice nodes ✅
 
 ### 4.5 Formatting & Linting ✅
 - [x] Enable format-on-save (via LSP)
