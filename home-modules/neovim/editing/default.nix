@@ -6,5 +6,6 @@
     ./surround.nix
     ./gitsigns.nix
     ./illuminate.nix
+    ./bufremove.nix
   ];
 }

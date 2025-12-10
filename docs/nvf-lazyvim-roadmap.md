@@ -327,7 +327,7 @@ vim.globals = {
 - [ ] diffview.nvim (optional)
 
 ### 5.7 Other Editing Features
-- [ ] mini.bufremove - Better buffer deletion
+- [x] mini.bufremove - Better buffer deletion ✅
 - [ ] persistence.nvim - Session management
 - [x] vim-illuminate - Highlight word under cursor ✅
 - [ ] nvim-spectre - Search and replace
