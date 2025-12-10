@@ -6,5 +6,6 @@
     ./completion.nix
     ./keymaps.nix
     ./trouble.nix
+    ./snippets.nix
   ];
 }

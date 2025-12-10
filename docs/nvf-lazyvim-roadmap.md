@@ -249,11 +249,11 @@ vim.globals = {
   - `<Tab>` / `<S-Tab>` - Navigate items
   - `<C-b>` / `<C-f>` - Scroll docs
 
-### 4.4 Snippets
-- [ ] Enable LuaSnip
-- [ ] Load friendly-snippets
-- [ ] `<Tab>` - Jump to next placeholder
-- [ ] `<S-Tab>` - Jump to previous placeholder
+### 4.4 Snippets ✅
+- [x] Enable LuaSnip
+- [x] Load friendly-snippets (VS Code compatible)
+- [x] Auto-snippets and history enabled
+- [ ] `<Tab>` / `<S-Tab>` - Jump placeholders (handled by completion)
 
 ### 4.5 Formatting & Linting
 - [ ] Enable format-on-save
