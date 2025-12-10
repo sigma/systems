@@ -70,10 +70,10 @@ vim.globals = {
 };
 ```
 
-### 1.3 Theme Configuration
+### 1.3 Theme Configuration ✅
 - [x] Enable catppuccin theme with frappe variant
-- [ ] Configure transparent background (optional)
-- [ ] Ensure consistent colors in all UI elements
+- [x] Transparent background ✅
+- [x] Consistent colors across UI elements ✅
 
 ### 1.4 Basic Keymaps (LazyVim conventions)
 | Key | Mode | Action | Description |
@@ -129,7 +129,6 @@ vim.globals = {
 - [x] Enable alpha-nvim with dashboard theme
 - [x] Recent files
 - [x] Quick actions (new file, find file, config, quit)
-- [ ] Custom header (optional)
 
 ### 2.5 Notifications ✅
 - [x] Enable nvim-notify
@@ -380,14 +379,13 @@ Note: Basic LSP, treesitter, and formatting are configured in `lsp/languages.nix
 - [x] nvim-dap-python for debugging ✅
 - [ ] venv-selector.nvim
 
-### 6.6 Markdown
+### 6.6 Markdown ✅
 - [x] marksman LSP ✅
 - [x] Markdown preview ✅
   - `<leader>mp` - Start browser preview
   - `<leader>ms` - Stop browser preview
   - `<leader>mt` - Toggle browser preview
   - `<leader>mg` - Glow terminal preview
-- [ ] Concealing for cleaner editing
 
 ---
 
