@@ -278,7 +278,7 @@ vim.globals = {
 
 ### 4.7 LSP Enhancements
 - [ ] lsp_signature.nvim - Function signature help
-- [ ] lspkind.nvim - VSCode-like pictograms in completion
+- [x] lspkind.nvim - VSCode-like pictograms in completion ✅
 - [ ] nvim-navic - Breadcrumbs/winbar
 - [x] fidget.nvim - LSP progress indicator ✅
 

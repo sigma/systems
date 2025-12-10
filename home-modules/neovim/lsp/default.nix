@@ -9,5 +9,6 @@
     ./snippets.nix
     ./fidget.nix
     ./formatting.nix
+    ./lspkind.nix
   ];
 }
