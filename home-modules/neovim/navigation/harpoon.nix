@@ -1,0 +1,28 @@
+# Harpoon configuration
+# Quick file marks for fast navigation
+{
+  config,
+  lib,
+  ...
+}:
+with lib;
+let
+  cfg = config.programs.neovim-ide;
+in
+{
+  config = mkIf cfg.enable {
+    programs.nvf.settings.vim.navigation.harpoon = {
+      enable = true;
+
+      # LazyVim-style keymaps
+      mappings = {
+        markFile = "<leader>a";
+        listMarks = "<leader>h";
+        file1 = "<leader>1";
+        file2 = "<leader>2";
+        file3 = "<leader>3";
+        file4 = "<leader>4";
+      };
+    };
+  };
+}

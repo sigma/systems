@@ -181,25 +181,26 @@ vim.globals = {
   - `<leader>sd` - Diagnostics
   - Git: `<leader>gf/gc/gb/gs`
 
-### 3.2 Flash.nvim (or leap.nvim)
-- [ ] Enable quick jump motions
-- [ ] `s` - Flash jump
-- [ ] `S` - Flash treesitter
-- [ ] Integration with `/` search
+### 3.2 Flash.nvim ✅
+- [x] Enable quick jump motions
+- [x] `s` - Flash jump
+- [x] `S` - Flash treesitter
+- [x] `r` - Remote flash
+- [x] `<C-s>` - Toggle flash search
 
-### 3.3 File Marks (Harpoon or Marko)
-- [ ] Evaluate both options:
-  - **Harpoon**: Mature, well-documented, ThePrimeagen approved
-  - **Marko**: Newer alternative, evaluate UX
-- [ ] Keymaps:
+### 3.3 File Marks (Harpoon) ✅
+- [x] Enable harpoon
+- [x] Keymaps:
   - `<leader>a` - Add file to marks
   - `<leader>h` - Toggle quick menu
   - `<leader>1-4` - Jump to marked files
 
-### 3.4 Todo Comments
-- [ ] Enable todo-comments.nvim
-- [ ] Highlight TODO, FIXME, HACK, NOTE, etc.
-- [ ] `<leader>st` - Search todos
+### 3.4 Todo Comments ✅
+- [x] Enable todo-comments.nvim
+- [x] Highlight TODO, FIXME, HACK, NOTE, etc.
+- [x] `<leader>st` - Search todos (Telescope)
+- [x] `<leader>xt` - Search todos (Trouble)
+- [x] `<leader>xT` - Todos in quickfix
 
 ---
 
