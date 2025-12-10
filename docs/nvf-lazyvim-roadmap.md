@@ -164,18 +164,22 @@ vim.globals = {
 
 ## Phase 3: Navigation & Search
 
-### 3.1 Telescope
-- [ ] Enable telescope.nvim
-- [ ] Extensions: fzf-native, file-browser
-- [ ] Keymaps:
+### 3.1 Telescope ✅
+- [x] Enable telescope.nvim
+- [x] Keymaps:
   - `<leader>ff` - Find files
   - `<leader>fg` - Live grep
   - `<leader>fb` - Buffers
   - `<leader>fh` - Help tags
-  - `<leader>fr` - Recent files
-  - `<leader>fc` - Find in config
-  - `<leader>ss` - Search symbols
-  - `<leader>/` - Search in current buffer
+  - `<leader>fr` - Resume last search
+  - `<leader><space>` - Find files (alt)
+  - `<leader>/` - Grep in project
+  - `<leader>,` - Switch buffer
+  - `<leader>:` - Command history
+  - `<leader>ss` - Document symbols
+  - `<leader>sS` - Workspace symbols
+  - `<leader>sd` - Diagnostics
+  - Git: `<leader>gf/gc/gb/gs`
 
 ### 3.2 Flash.nvim (or leap.nvim)
 - [ ] Enable quick jump motions
@@ -279,14 +283,10 @@ vim.globals = {
 
 ## Phase 5: Editing Enhancements
 
-### 5.1 Treesitter
-- [ ] Enable treesitter
-- [ ] Install grammars for all target languages
-- [ ] Features:
-  - Syntax highlighting
-  - Incremental selection (`<C-Space>` to start, repeat to expand)
-  - Text objects (function, class, parameter, etc.)
-  - Indentation
+### 5.1 Treesitter ✅
+- [x] Enable treesitter (enabled in Phase 1)
+- [x] Grammars installed via language modules
+- [x] Features: syntax highlighting, indentation
 
 ### 5.2 Text Objects & Motions
 - [ ] mini.ai or nvim-treesitter-textobjects
@@ -294,36 +294,33 @@ vim.globals = {
   - `af/if` - Function
   - `ac/ic` - Class
   - `aa/ia` - Parameter/argument
-  - `a=/i=` - Assignment
-  - `a:/i:` - Property
 
-### 5.3 Autopairs
-- [ ] Enable nvim-autopairs or mini.pairs
-- [ ] Auto-close brackets, quotes
-- [ ] Skip if next char is closing pair
+### 5.3 Autopairs ✅
+- [x] Enable nvim-autopairs
+- [x] Auto-close brackets, quotes
 
-### 5.4 Comments
-- [ ] Enable Comment.nvim or mini.comment
-- [ ] `gc` - Toggle line comment (operator)
-- [ ] `gcc` - Toggle current line
-- [ ] `gbc` - Toggle block comment
+### 5.4 Comments ✅
+- [x] Enable comment-nvim
+- [x] `gc` - Toggle comment (operator)
+- [x] `gcc` - Toggle current line
 
-### 5.5 Surround
-- [ ] Enable nvim-surround or mini.surround
-- [ ] `ys{motion}{char}` - Add surround
-- [ ] `ds{char}` - Delete surround
-- [ ] `cs{old}{new}` - Change surround
+### 5.5 Surround ✅
+- [x] Enable nvim-surround
+- [x] Classic keybindings (ys/ds/cs)
+- [x] `ys{motion}{char}` - Add surround
+- [x] `ds{char}` - Delete surround
+- [x] `cs{old}{new}` - Change surround
 
-### 5.6 Git Integration
-- [ ] gitsigns.nvim:
+### 5.6 Git Integration ✅
+- [x] gitsigns.nvim:
   - Git signs in signcolumn
-  - `]c` / `[c` - Next/prev hunk
+  - `]h` / `[h` - Next/prev hunk
   - `<leader>ghs` - Stage hunk
   - `<leader>ghr` - Reset hunk
   - `<leader>ghp` - Preview hunk
   - `<leader>ghb` - Blame line
-- [ ] lazygit integration:
-  - `<leader>gg` - Open lazygit
+  - `<leader>gtb` - Toggle blame
+- [ ] lazygit integration (optional)
 - [ ] diffview.nvim (optional)
 
 ### 5.7 Other Editing Features
