@@ -346,38 +346,42 @@ vim.globals = {
 ## Phase 6: Language-Specific Extras
 
 These can be enabled on-demand, similar to LazyVim extras.
+Note: Basic LSP, treesitter, and formatting are configured in `lsp/languages.nix`.
 
-### 6.1 Nix
-- [ ] nil or nixd LSP
-- [ ] nixfmt-rfc-style formatting
-- [ ] Treesitter grammar
+### 6.1 Nix ✅
+- [x] nil LSP ✅
+- [x] nixfmt formatting ✅
+- [x] Treesitter grammar ✅
 
 ### 6.2 Go
-- [ ] gopls with all features
-- [ ] gofumpt formatting
+- [x] gopls LSP ✅
+- [x] Format on save ✅
+- [ ] gofumpt formatting (currently using gopls format)
 - [ ] Go-specific keymaps (test, run, etc.)
 - [ ] nvim-dap-go for debugging
 
 ### 6.3 Rust
-- [ ] rust-analyzer
-- [ ] rustfmt
-- [ ] crates.nvim - Cargo.toml helper
+- [x] rust-analyzer ✅
+- [x] rustfmt (via rust-analyzer) ✅
+- [ ] crates.nvim - Cargo.toml helper (not available in nvf)
 - [ ] nvim-dap for debugging
 
 ### 6.4 TypeScript/JavaScript
-- [ ] typescript-language-server
-- [ ] prettier formatting
+- [x] typescript-language-server ✅
+- [x] Format on save ✅
+- [ ] prettier formatting (currently using LSP format)
 - [ ] eslint integration
 - [ ] Package.json helper
 
 ### 6.5 Python
-- [ ] pyright or basedpyright
-- [ ] black + isort formatting
+- [x] basedpyright LSP ✅
+- [x] black formatting ✅
+- [ ] isort integration
 - [ ] nvim-dap-python for debugging
 - [ ] venv-selector.nvim
 
 ### 6.6 Markdown
-- [ ] marksman LSP
+- [x] marksman LSP ✅
 - [x] Markdown preview ✅
   - `<leader>mp` - Start browser preview
   - `<leader>ms` - Stop browser preview
