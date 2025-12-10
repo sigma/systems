@@ -39,7 +39,11 @@ in
           enable = true;
           lsp.enable = true;
           treesitter.enable = true;
-          format.enable = true;
+          # Use gofumpt for stricter formatting
+          format = {
+            enable = true;
+            type = "gofumpt";
+          };
         };
 
         # Rust

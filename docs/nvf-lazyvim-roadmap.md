@@ -357,7 +357,7 @@ Note: Basic LSP, treesitter, and formatting are configured in `lsp/languages.nix
 ### 6.2 Go
 - [x] gopls LSP ✅
 - [x] Format on save ✅
-- [ ] gofumpt formatting (currently using gopls format)
+- [x] gofumpt formatting ✅
 - [ ] Go-specific keymaps (test, run, etc.)
 - [x] nvim-dap-go for debugging (delve) ✅
 
