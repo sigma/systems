@@ -5,6 +5,7 @@
     ./comments.nix
     ./surround.nix
     ./gitsigns.nix
+    ./diffview.nix
     ./illuminate.nix
     ./bufremove.nix
     ./textobjects.nix

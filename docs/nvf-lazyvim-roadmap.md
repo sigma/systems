@@ -324,8 +324,12 @@ vim.globals = {
   - `<leader>ghp` - Preview hunk
   - `<leader>ghb` - Blame line
   - `<leader>gtb` - Toggle blame
-- [ ] lazygit integration (optional)
-- [ ] diffview.nvim (optional)
+- [ ] lazygit integration (not available in nvf)
+- [x] diffview.nvim ✅
+  - `<leader>gd` - Open Diffview
+  - `<leader>gD` - Close Diffview
+  - `<leader>gH` - File history (all)
+  - `<leader>gh` - Current file history
 
 ### 5.7 Other Editing Features
 - [x] mini.bufremove - Better buffer deletion ✅
@@ -335,7 +339,7 @@ vim.globals = {
   - `<leader>ql` - Restore last session
   - `<leader>qd` - Don't save current session
 - [x] vim-illuminate - Highlight word under cursor ✅
-- [ ] nvim-spectre - Search and replace
+- [ ] nvim-spectre - Search and replace (not available in nvf)
 
 ---
 
