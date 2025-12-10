@@ -47,8 +47,8 @@ in
           show_buffer_icons = true;
           show_tab_indicators = true;
 
-          # Always show bufferline
-          always_show_bufferline = true;
+          # Only show bufferline when there are multiple buffers
+          always_show_bufferline = false;
         };
       };
 

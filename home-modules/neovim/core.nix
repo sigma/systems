@@ -82,6 +82,9 @@ in
         # Don't show mode (shown in statusline)
         showmode = false;
 
+        # Don't show partial commands in bottom right
+        showcmd = false;
+
         # Command line height
         cmdheight = 1;
 

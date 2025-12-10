@@ -173,6 +173,7 @@ in
           mode = [ "n" "x" ];
           action = "v:count == 0 ? 'gj' : 'j'";
           expr = true;
+          silent = true;
           desc = "Move down";
         }
         {
@@ -180,6 +181,7 @@ in
           mode = [ "n" "x" ];
           action = "v:count == 0 ? 'gk' : 'k'";
           expr = true;
+          silent = true;
           desc = "Move up";
         }
 
