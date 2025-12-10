@@ -12,5 +12,6 @@
     ./lspkind.nix
     ./signature.nix
     ./dap.nix
+    ./lint.nix
   ];
 }

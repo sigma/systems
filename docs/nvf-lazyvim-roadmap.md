@@ -264,7 +264,10 @@ vim.globals = {
   - Rust: rustfmt (via rust-analyzer)
   - Python: black
   - TypeScript/JavaScript: LSP format
-- [ ] Linting integration (future: nvim-lint)
+- [x] Linting integration (nvim-lint via extraPlugins) ✅
+  - Auto-lint on save/read/insert leave
+  - `<leader>cl` - Manual lint
+  - Configured for: JS/TS (eslint_d), Python (ruff), Go (golangcilint), Shell (shellcheck), Markdown, YAML, Nix (statix)
 
 ### 4.6 Diagnostics UI (Trouble.nvim) ✅
 - [x] Enable trouble.nvim
@@ -341,7 +344,7 @@ vim.globals = {
   - `<leader>ql` - Restore last session
   - `<leader>qd` - Don't save current session
 - [x] vim-illuminate - Highlight word under cursor ✅
-- [ ] nvim-spectre - Search and replace (not available in nvf)
+- ~~nvim-spectre - Search and replace~~ (not available in nvf, skipped)
 
 ---
 
@@ -359,13 +362,13 @@ Note: Basic LSP, treesitter, and formatting are configured in `lsp/languages.nix
 - [x] gopls LSP ✅
 - [x] Format on save ✅
 - [x] gofumpt formatting ✅
-- [ ] Go-specific keymaps (test, run, etc.)
+- ~~Go-specific keymaps (test, run, etc.)~~ (skipped)
 - [x] nvim-dap-go for debugging (delve) ✅
 
 ### 6.3 Rust
 - [x] rust-analyzer ✅
 - [x] rustfmt (via rust-analyzer) ✅
-- [ ] crates.nvim - Cargo.toml helper (not available in nvf)
+- ~~crates.nvim - Cargo.toml helper~~ (not available in nvf, skipped)
 - [x] nvim-dap for debugging ✅
 
 ### 6.4 TypeScript/JavaScript
@@ -373,13 +376,13 @@ Note: Basic LSP, treesitter, and formatting are configured in `lsp/languages.nix
 - [x] Format on save ✅
 - [x] prettier formatting (via prettierd) ✅
 - [x] eslint integration (via extraDiagnostics) ✅
-- [ ] Package.json helper
+- ~~Package.json helper~~ (skipped)
 
 ### 6.5 Python
 - [x] basedpyright LSP ✅
 - [x] black + isort formatting ✅
 - [x] nvim-dap-python for debugging ✅
-- [ ] venv-selector.nvim
+- ~~venv-selector.nvim~~ (skipped)
 
 ### 6.6 Markdown ✅
 - [x] marksman LSP ✅
