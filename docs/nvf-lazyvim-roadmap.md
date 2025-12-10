@@ -291,11 +291,12 @@ vim.globals = {
 - [x] Grammars installed via language modules
 - [x] Features: syntax highlighting, indentation
 
-### 5.2 Text Objects & Motions
-- [ ] mini.ai or nvim-treesitter-textobjects
-- [ ] Additional text objects:
+### 5.2 Text Objects & Motions ✅
+- [x] mini.ai with treesitter support
+- [x] Additional text objects:
   - `af/if` - Function
   - `ac/ic` - Class
+  - `ao/io` - Block/conditional/loop
   - `aa/ia` - Parameter/argument
 
 ### 5.3 Autopairs ✅

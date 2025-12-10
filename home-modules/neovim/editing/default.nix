@@ -7,5 +7,6 @@
     ./gitsigns.nix
     ./illuminate.nix
     ./bufremove.nix
+    ./textobjects.nix
   ];
 }
