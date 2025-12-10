@@ -8,5 +8,6 @@
     ./trouble.nix
     ./snippets.nix
     ./fidget.nix
+    ./formatting.nix
   ];
 }

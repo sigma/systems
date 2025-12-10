@@ -11,9 +11,10 @@ let
 in
 {
   config = mkIf cfg.enable {
-    programs.nvf.settings.vim = {
-      # Suppress lspconfig deprecation warning (nvf issue, not ours)
-      luaConfigPre = ''
+    # Use the modular luaConfig options
+    programs.neovim-ide = {
+      luaConfigPre."00-suppress-warnings" = ''
+        -- Suppress lspconfig deprecation warning (nvf issue, not ours)
         local original_notify = vim.notify
         vim.notify = function(msg, level, opts)
           if type(msg) == "string" and msg:match("lspconfig.*deprecated") then
@@ -30,11 +31,9 @@ in
           end
           return original_deprecate(name, alternative, version, plugin, backtrace)
         end
-
       '';
 
-      # LSP and UI floating window borders
-      luaConfigPost = ''
+      luaConfigPost."00-borders" = ''
         -- Global border style for all floating windows
         local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
         function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
@@ -50,41 +49,10 @@ in
             source = true,
           },
         })
-
-        -- Format on save
-        vim.g.format_on_save = true
-        local format_group = vim.api.nvim_create_augroup("FormatOnSave", { clear = true })
-
-        vim.api.nvim_create_autocmd("BufWritePre", {
-          group = format_group,
-          callback = function(args)
-            if not vim.g.format_on_save then
-              return
-            end
-            local clients = vim.lsp.get_clients({ bufnr = args.buf })
-            for _, client in ipairs(clients) do
-              if client.supports_method("textDocument/formatting") then
-                vim.lsp.buf.format({
-                  bufnr = args.buf,
-                  async = false,
-                  timeout_ms = 3000,
-                })
-                return
-              end
-            end
-          end,
-        })
-
-        -- Toggle format-on-save with <leader>uf
-        vim.keymap.set("n", "<leader>uf", function()
-          vim.g.format_on_save = not vim.g.format_on_save
-          if vim.g.format_on_save then
-            vim.notify("Format on save enabled", vim.log.levels.INFO)
-          else
-            vim.notify("Format on save disabled", vim.log.levels.INFO)
-          end
-        end, { desc = "Toggle format on save" })
       '';
+    };
+
+    programs.nvf.settings.vim = {
 
       # Global variables
       globals = {
