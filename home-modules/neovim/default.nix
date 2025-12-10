@@ -25,6 +25,7 @@ in
     ./lsp
     ./navigation
     ./editing
+    ./utility
   ];
 
   options.programs.neovim-ide = {

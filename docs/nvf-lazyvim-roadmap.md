@@ -134,7 +134,7 @@ vim.globals = {
 ### 2.5 Notifications ✅
 - [x] Enable nvim-notify
 - [x] Catppuccin-compatible styling
-- [ ] Integrate with LSP progress (via fidget.nvim)
+- [x] LSP progress handled by fidget.nvim (see 4.7) ✅
 
 ### 2.6 Indent Guides ✅
 - [x] Enable indent-blankline.nvim
@@ -378,7 +378,10 @@ These can be enabled on-demand, similar to LazyVim extras.
 
 ### 6.6 Markdown
 - [ ] marksman LSP
-- [ ] Markdown preview
+- [x] Markdown preview ✅
+  - `<leader>mp` - Start preview
+  - `<leader>ms` - Stop preview
+  - `<leader>mt` - Toggle preview
 - [ ] Concealing for cleaner editing
 
 ---
