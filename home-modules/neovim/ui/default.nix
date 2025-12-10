@@ -4,6 +4,7 @@
   imports = [
     ./devicons.nix
     ./lualine.nix
+    ./breadcrumbs.nix
     ./bufferline.nix
     ./neo-tree.nix
     ./which-key.nix

@@ -276,10 +276,10 @@ vim.globals = {
   - `<leader>xr` - LSP references
   - `<leader>cs` - Symbols
 
-### 4.7 LSP Enhancements
+### 4.7 LSP Enhancements ✅
 - [x] lsp_signature.nvim - Function signature help ✅
 - [x] lspkind.nvim - VSCode-like pictograms in completion ✅
-- [ ] nvim-navic - Breadcrumbs/winbar
+- [x] nvim-navic - Breadcrumbs/winbar ✅
 - [x] fidget.nvim - LSP progress indicator ✅
 
 ---
