@@ -324,7 +324,9 @@ vim.globals = {
   - `<leader>ghp` - Preview hunk
   - `<leader>ghb` - Blame line
   - `<leader>gtb` - Toggle blame
-- [ ] lazygit integration (not available in nvf)
+- [x] lazygit integration (via extraPlugins) ✅
+  - `<leader>gg` - Open LazyGit
+  - `<leader>gG` - LazyGit current file
 - [x] diffview.nvim ✅
   - `<leader>gd` - Open Diffview
   - `<leader>gD` - Close Diffview

@@ -6,6 +6,7 @@
     ./surround.nix
     ./gitsigns.nix
     ./diffview.nix
+    ./lazygit.nix
     ./illuminate.nix
     ./bufremove.nix
     ./textobjects.nix

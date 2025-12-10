@@ -14,17 +14,19 @@ in
     git = {
       log = {
         order = "topo-order";
-        showGraph = "when-maximized";
+        showGraph = "when-maximised";
       };
       mainBranches = [
         "main"
         "master"
       ];
-      paging = {
-        colorArg = "always";
-        pager = "${pkgs.delta}/bin/delta --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format='lazygit-edit://{path}:{line}'";
-        useConfig = false;
-      };
+      pagers = [
+        {
+          colorArg = "always";
+          pager = "${pkgs.delta}/bin/delta --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format='lazygit-edit://{path}:{line}'";
+          useConfig = false;
+        }
+      ];
       parseEmoji = true;
       skipHookPrefix = "WIP";
     };
