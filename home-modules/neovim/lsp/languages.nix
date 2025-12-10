@@ -73,8 +73,11 @@ in
           enable = true;
           lsp.enable = true;
           treesitter.enable = true;
-          format.enable = true;
-          format.type = "black";
+          # Use black + isort for formatting
+          format = {
+            enable = true;
+            type = "black-and-isort";
+          };
         };
 
         # Bash/Shell

@@ -376,8 +376,7 @@ Note: Basic LSP, treesitter, and formatting are configured in `lsp/languages.nix
 
 ### 6.5 Python
 - [x] basedpyright LSP ✅
-- [x] black formatting ✅
-- [ ] isort integration
+- [x] black + isort formatting ✅
 - [x] nvim-dap-python for debugging ✅
 - [ ] venv-selector.nvim
 
