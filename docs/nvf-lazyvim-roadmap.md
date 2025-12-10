@@ -131,10 +131,10 @@ vim.globals = {
 - [ ] Quick actions (new file, find file, config, quit)
 - [ ] Custom header (optional)
 
-### 2.5 Notifications
-- [ ] Enable nvim-notify
-- [ ] Integrate with LSP progress
-- [ ] Catppuccin theming
+### 2.5 Notifications ✅
+- [x] Enable nvim-notify
+- [x] Catppuccin-compatible styling
+- [ ] Integrate with LSP progress (via fidget.nvim)
 
 ### 2.6 Indent Guides ✅
 - [x] Enable indent-blankline.nvim

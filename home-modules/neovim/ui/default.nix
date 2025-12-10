@@ -7,5 +7,6 @@
     ./neo-tree.nix
     ./which-key.nix
     ./indent-blankline.nix
+    ./notify.nix
   ];
 }
