@@ -379,9 +379,10 @@ These can be enabled on-demand, similar to LazyVim extras.
 ### 6.6 Markdown
 - [ ] marksman LSP
 - [x] Markdown preview ✅
-  - `<leader>mp` - Start preview
-  - `<leader>ms` - Stop preview
-  - `<leader>mt` - Toggle preview
+  - `<leader>mp` - Start browser preview
+  - `<leader>ms` - Stop browser preview
+  - `<leader>mt` - Toggle browser preview
+  - `<leader>mg` - Glow terminal preview
 - [ ] Concealing for cleaner editing
 
 ---

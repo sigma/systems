@@ -3,5 +3,6 @@
 {
   imports = [
     ./markdown-preview.nix
+    ./glow.nix
   ];
 }
