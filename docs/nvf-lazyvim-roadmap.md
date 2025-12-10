@@ -201,21 +201,22 @@ vim.globals = {
 
 ## Phase 4: LSP & Completion
 
-### 4.1 LSP Configuration
-- [ ] Enable LSP support globally
-- [ ] Configure languages:
-  - **Nix**: nil or nixd
+### 4.1 LSP Configuration ✅
+- [x] Enable LSP support globally
+- [x] Configure languages:
+  - **Nix**: nil + nixfmt formatting
   - **Lua**: lua-language-server
   - **TypeScript/JavaScript**: typescript-language-server
-  - **Go**: gopls
-  - **Rust**: rust-analyzer
-  - **Python**: pyright or basedpyright
-  - **JSON**: jsonls with schemastore
+  - **Go**: gopls + formatting
+  - **Rust**: rust-analyzer + formatting
+  - **Python**: basedpyright + black formatting
   - **YAML**: yamlls
   - **Markdown**: marksman
   - **Bash**: bashls
+  - **HTML/CSS**: treesitter
+  - **SQL**: treesitter + sqls
 
-### 4.2 LSP Keymaps (LazyVim conventions)
+### 4.2 LSP Keymaps (LazyVim conventions) ✅
 | Key | Action |
 |-----|--------|
 | `gd` | Go to definition |
@@ -233,15 +234,10 @@ vim.globals = {
 | `]e` / `[e` | Next/prev error |
 | `]w` / `[w` | Next/prev warning |
 
-### 4.3 Completion (blink-cmp or nvim-cmp)
-- [ ] Enable completion engine
-- [ ] Sources:
-  - LSP
-  - Buffer
-  - Path
-  - Snippets
-  - Copilot (optional)
-- [ ] Keymaps:
+### 4.3 Completion (nvim-cmp) ✅
+- [x] Enable nvim-cmp completion engine
+- [x] Sources: LSP, buffer, path, treesitter
+- [x] Keymaps:
   - `<C-Space>` - Trigger completion
   - `<CR>` - Confirm
   - `<C-e>` - Abort

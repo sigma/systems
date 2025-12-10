@@ -18,6 +18,7 @@ in
     ./theme.nix
     ./keymaps.nix
     ./ui
+    ./lsp
   ];
 
   options.programs.neovim-ide = {
