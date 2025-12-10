@@ -157,7 +157,7 @@ vim.globals = {
 
 ### 2.8 Additional Visual Enhancements
 - [ ] nvim-web-devicons
-- [ ] dressing.nvim (better vim.ui)
+- [x] dressing.nvim (better vim.ui) ✅
 - [ ] noice.nvim (optional - cmdline, messages, popupmenu UI)
 
 ---

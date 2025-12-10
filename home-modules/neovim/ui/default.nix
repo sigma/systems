@@ -9,5 +9,6 @@
     ./indent-blankline.nix
     ./notify.nix
     ./dashboard.nix
+    ./dressing.nix
   ];
 }
