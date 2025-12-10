@@ -156,7 +156,7 @@ vim.globals = {
   - `<leader><tab>` = "+tabs"
 
 ### 2.8 Additional Visual Enhancements
-- [ ] nvim-web-devicons
+- [x] nvim-web-devicons ✅
 - [x] dressing.nvim (better vim.ui) ✅
 - [ ] noice.nvim (optional - cmdline, messages, popupmenu UI)
 

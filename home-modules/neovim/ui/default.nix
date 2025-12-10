@@ -2,6 +2,7 @@
 # Imports all UI-related configurations
 {
   imports = [
+    ./devicons.nix
     ./lualine.nix
     ./bufferline.nix
     ./neo-tree.nix
