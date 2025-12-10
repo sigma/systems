@@ -9,6 +9,7 @@
     ./which-key.nix
     ./indent-blankline.nix
     ./notify.nix
+    ./noice.nix
     ./dashboard.nix
     ./dressing.nix
   ];
