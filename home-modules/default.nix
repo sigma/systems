@@ -23,7 +23,6 @@
     ./just.nix
     ./kubeswitch.nix
     ./mailsetup.nix
-    ./neovim
     ./open-url.nix
     ./settings
     ./shells
