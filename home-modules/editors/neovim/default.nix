@@ -5,7 +5,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 with lib;
@@ -13,8 +12,7 @@ let
   cfg = config.programs.neovim-ide;
 
   # Concatenate all Lua config snippets in order
-  concatLuaSnippets = snippets:
-    concatStringsSep "\n\n" (filter (s: s != "") (attrValues snippets));
+  concatLuaSnippets = snippets: concatStringsSep "\n\n" (filter (s: s != "") (attrValues snippets));
 in
 {
   imports = [
