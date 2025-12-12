@@ -8,15 +8,18 @@
 with lib;
 let
   cfg = config.programs.neovim-ide;
+  catppuccinCfg = config.catppuccin;
 in
 {
   config = mkIf cfg.enable {
     programs.nvf.settings.vim = {
       theme = {
         enable = true;
-        name = "catppuccin";
-        style = "frappe";
         transparent = true;
+      }
+      // optionalAttrs catppuccinCfg.enable {
+        name = "catppuccin";
+        style = catppuccinCfg.flavor;
       };
     };
   };
