@@ -12,5 +12,6 @@
     ./noice.nix
     ./dashboard.nix
     ./dressing.nix
+    ./wezterm.nix
   ];
 }

@@ -15,6 +15,55 @@ elseif platform.is_win or platform.is_linux then
    mod.SUPER_REV = 'ALT|CTRL'
 end
 
+-- Smart splits integration: detect if pane is running vim/neovim
+local function is_vim(pane)
+   local process_info = pane:get_foreground_process_info()
+   local process_name = process_info and process_info.name
+
+   if process_name then
+      return process_name:find('n?vim') ~= nil
+   end
+
+   -- Fallback: check pane title
+   local title = pane:get_title()
+   return title:find('n?vim') ~= nil
+end
+
+-- Conditionally send keys to vim or activate pane direction
+-- We use Alt+Ctrl+Shift+hjkl as a unique sequence that Neovim can recognize
+local direction_to_key = {
+   Left = 'h',
+   Right = 'l',
+   Up = 'k',
+   Down = 'j',
+}
+
+local function smart_split_nav(direction)
+   return wezterm.action_callback(function(window, pane)
+      if is_vim(pane) then
+         -- Send Alt+Ctrl+Shift+hjkl to vim (mapped to smart-splits)
+         local key = direction_to_key[direction]
+         window:perform_action(act.SendKey({ key = key, mods = 'ALT|CTRL|SHIFT' }), pane)
+      else
+         -- Not in vim, use WezTerm pane navigation
+         window:perform_action(act.ActivatePaneDirection(direction), pane)
+      end
+   end)
+end
+
+-- Conditionally resize in vim or WezTerm
+local function smart_split_resize(direction)
+   return wezterm.action_callback(function(window, pane)
+      if is_vim(pane) then
+         -- Send Alt+Ctrl+Shift+Arrow to vim
+         local arrow = direction .. 'Arrow'
+         window:perform_action(act.SendKey({ key = arrow, mods = 'ALT|CTRL|SHIFT' }), pane)
+      else
+         window:perform_action(act.AdjustPaneSize({ direction, 3 }), pane)
+      end
+   end)
+end
+
 -- stylua: ignore
 local keys = {
    { key = 'f',   mods = mod.SUPER, action = act.Search({ CaseInSensitiveString = '' }) },
@@ -22,7 +71,7 @@ local keys = {
       key = 'u',
       mods = mod.SUPER,
       action = act.QuickSelectArgs({
-         label = 'open url',  
+         label = 'open url',
          patterns = {
             '\\((https?://\\S+)\\)',
             '\\[(https?://\\S+)\\]',
@@ -51,11 +100,18 @@ local keys = {
    { key = 'Enter', mods = mod.SUPER,     action = act.TogglePaneZoomState },
    { key = 'w',     mods = mod.SUPER,     action = act.CloseCurrentPane({ confirm = false }) },
 
-   -- panes: navigation
-   { key = 'UpArrow',     mods = mod.SUPER, action = act.ActivatePaneDirection('Up') },
-   { key = 'DownArrow',   mods = mod.SUPER, action = act.ActivatePaneDirection('Down') },
-   { key = 'LeftArrow',   mods = mod.SUPER, action = act.ActivatePaneDirection('Left') },
-   { key = 'RightArrow',  mods = mod.SUPER, action = act.ActivatePaneDirection('Right') },
+   -- panes: smart navigation (integrates with neovim smart-splits)
+   { key = 'UpArrow',     mods = mod.SUPER, action = smart_split_nav('Up') },
+   { key = 'DownArrow',   mods = mod.SUPER, action = smart_split_nav('Down') },
+   { key = 'LeftArrow',   mods = mod.SUPER, action = smart_split_nav('Left') },
+   { key = 'RightArrow',  mods = mod.SUPER, action = smart_split_nav('Right') },
+
+   -- panes: smart resize (integrates with neovim smart-splits)
+   { key = 'UpArrow',     mods = mod.SUPER_REV, action = smart_split_resize('Up') },
+   { key = 'DownArrow',   mods = mod.SUPER_REV, action = smart_split_resize('Down') },
+   { key = 'LeftArrow',   mods = mod.SUPER_REV, action = smart_split_resize('Left') },
+   { key = 'RightArrow',  mods = mod.SUPER_REV, action = smart_split_resize('Right') },
+
    {
       key = 'p',
       mods = mod.SUPER_REV,

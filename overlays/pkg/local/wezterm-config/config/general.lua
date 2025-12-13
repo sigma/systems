@@ -6,6 +6,9 @@ M.apply_to_config = function(options, _opts)
    options.exit_behavior_messaging = 'Verbose'
    options.status_update_interval = 1000
 
+   -- Enable CSI u key encoding for proper modifier key handling in Neovim
+   options.enable_csi_u_key_encoding = true
+
    options.scrollback_lines = 5000
 
    options.hyperlink_rules = {
