@@ -115,7 +115,9 @@ in
           })
         end
 
-        require('telescope.pickers').new({}, {
+        require('telescope.pickers').new({
+          selection_caret = "> ",
+        }, {
           prompt_title = 'Tabs',
           finder = require('telescope.finders').new_table({
             results = tabs,

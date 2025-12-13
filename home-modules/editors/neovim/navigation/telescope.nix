@@ -33,11 +33,12 @@ in
       };
 
       # LazyVim-style keymaps
+      # Note: buffers mapping is handled in projects.nix for project-scoped filtering
       mappings = {
         # Find
         findFiles = "<leader>ff";
         liveGrep = "<leader>fg";
-        buffers = "<leader>fb";
+        # buffers handled in projects.nix
         helpTags = "<leader>fh";
         resume = "<leader>fr";
         # Git
@@ -66,12 +67,7 @@ in
         action = "<cmd>Telescope live_grep<cr>";
         desc = "Grep in project";
       }
-      {
-        key = "<leader>,";
-        mode = [ "n" ];
-        action = "<cmd>Telescope buffers show_all_buffers=true<cr>";
-        desc = "Switch buffer";
-      }
+      # <leader>, and <leader>fb handled in projects.nix for project-scoped filtering
       {
         key = "<leader>:";
         mode = [ "n" ];

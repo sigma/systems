@@ -121,6 +121,13 @@ in
         return vim.fn.fnamemodify(path, ':t')
       end
 
+      -- Helper: Extract org from path (e.g., ~/src/github.com/ORG/project -> ORG)
+      local function get_project_org(path)
+        -- Match patterns like /src/github.com/ORG/project or /src/gitlab.com/ORG/project
+        local org = path:match('/src/[^/]+/([^/]+)/[^/]+$')
+        return org or 'other'
+      end
+
       -- Helper: Open project in current context
       local function open_project(project_path)
         -- Change to project directory (tab-scoped due to project.nvim config)
@@ -150,45 +157,213 @@ in
         open_project(project_path)
       end
 
-      -- Telescope picker for projects (current tab)
-      vim.keymap.set('n', '<leader>fp', function()
-        require('telescope').extensions.projects.projects({
-          attach_mappings = function(prompt_bufnr, map)
-            local actions = require('telescope.actions')
-            local action_state = require('telescope.actions.state')
+      -- Helper: Build grouped and sorted project list
+      local function get_grouped_projects()
+        local History = require('project.utils.history')
+        local projects = History.get_recent_projects() or {}
 
+        -- Group projects by org
+        local by_org = {}
+        for _, path in ipairs(projects) do
+          local org = get_project_org(path)
+          if not by_org[org] then
+            by_org[org] = {}
+          end
+          table.insert(by_org[org], path)
+        end
+
+        -- Sort orgs by number of projects (descending)
+        local org_list = {}
+        for org, paths in pairs(by_org) do
+          table.insert(org_list, { org = org, paths = paths, count = #paths })
+        end
+        table.sort(org_list, function(a, b)
+          return a.count > b.count
+        end)
+
+        -- Build flat list with org headers
+        local results = {}
+        for _, org_data in ipairs(org_list) do
+          -- Sort projects within org alphabetically
+          table.sort(org_data.paths)
+          local first_in_org = true
+          for _, path in ipairs(org_data.paths) do
+            table.insert(results, {
+              path = path,
+              org = org_data.org,
+              show_org = first_in_org,
+              name = get_project_name(path),
+              display = org_data.org .. '/' .. get_project_name(path),
+            })
+            first_in_org = false
+          end
+        end
+
+        return results
+      end
+
+      -- Custom Telescope picker for projects grouped by org
+      local function projects_picker(opts)
+        opts = opts or {}
+        local on_select = opts.on_select or open_project
+
+        local pickers = require('telescope.pickers')
+        local finders = require('telescope.finders')
+        local conf = require('telescope.config').values
+        local actions = require('telescope.actions')
+        local action_state = require('telescope.actions.state')
+        local entry_display = require('telescope.pickers.entry_display')
+
+        local results = get_grouped_projects()
+
+        local org_width = 20
+
+        -- Find index of current project to pre-select it
+        -- Match if cwd is the project root or a subdirectory of it
+        local cwd = vim.fn.getcwd()
+        local default_selection = 1
+        local best_match_len = 0
+        for i, entry in ipairs(results) do
+          -- Check if cwd starts with this project path
+          if cwd:find(entry.path, 1, true) == 1 then
+            -- Prefer longer matches (more specific project)
+            if #entry.path > best_match_len then
+              best_match_len = #entry.path
+              default_selection = i
+            end
+          end
+        end
+
+        pickers.new({
+          selection_caret = "> ",
+        }, {
+          prompt_title = 'Projects',
+          default_selection_index = default_selection,
+          finder = finders.new_table({
+            results = results,
+            entry_maker = function(entry)
+              local org_display = entry.show_org and entry.org or ""
+              local padding = string.rep(" ", org_width - #org_display)
+
+              return {
+                value = entry.path,
+                ordinal = entry.display,
+                org = entry.org,
+                show_org = entry.show_org,
+                name = entry.name,
+                org_display = org_display,
+                padding = padding,
+                display = function(e)
+                  local text = e.org_display .. e.padding .. e.name
+                  if e.show_org then
+                    return text, { { { 0, #e.org }, "Type" } }
+                  else
+                    return text
+                  end
+                end,
+              }
+            end,
+          }),
+          sorter = conf.generic_sorter({}),
+          attach_mappings = function(prompt_bufnr, map)
             actions.select_default:replace(function()
               actions.close(prompt_bufnr)
               local selection = action_state.get_selected_entry()
               if selection then
-                open_project(selection.value)
+                on_select(selection.value)
               end
             end)
-
             return true
           end,
-        })
+        }):find()
+      end
+
+      -- Telescope picker for projects (current tab)
+      vim.keymap.set('n', '<leader>fp', function()
+        projects_picker({ on_select = open_project })
       end, { desc = 'Find projects' })
 
       -- Telescope picker for projects (new tab)
       vim.keymap.set('n', '<leader>fP', function()
-        require('telescope').extensions.projects.projects({
-          attach_mappings = function(prompt_bufnr, map)
-            local actions = require('telescope.actions')
-            local action_state = require('telescope.actions.state')
+        projects_picker({ on_select = open_project_in_new_tab })
+      end, { desc = 'Find projects (new tab)' })
 
+      -- Project-scoped buffer picker
+      local function project_buffers_picker()
+        local pickers = require('telescope.pickers')
+        local finders = require('telescope.finders')
+        local conf = require('telescope.config').values
+        local actions = require('telescope.actions')
+        local action_state = require('telescope.actions.state')
+
+        local cwd = vim.fn.getcwd()
+        local buffers = {}
+
+        for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+          if vim.api.nvim_buf_is_loaded(bufnr) then
+            local bufname = vim.api.nvim_buf_get_name(bufnr)
+            -- Filter to buffers within current project
+            if bufname ~= "" and bufname:find(cwd, 1, true) == 1 then
+              local relative_path = bufname:sub(#cwd + 2) -- +2 for trailing slash
+              local modified = vim.api.nvim_buf_get_option(bufnr, 'modified')
+              table.insert(buffers, {
+                bufnr = bufnr,
+                name = relative_path,
+                modified = modified,
+              })
+            end
+          end
+        end
+
+        -- Sort by most recently used
+        table.sort(buffers, function(a, b)
+          return vim.fn.getbufinfo(a.bufnr)[1].lastused > vim.fn.getbufinfo(b.bufnr)[1].lastused
+        end)
+
+        pickers.new({
+          selection_caret = "> ",
+        }, {
+          prompt_title = 'Buffers (' .. get_project_name(cwd) .. ')',
+          finder = finders.new_table({
+            results = buffers,
+            entry_maker = function(entry)
+              local display = entry.name
+              if entry.modified then
+                display = display .. " [+]"
+              end
+              return {
+                value = entry.bufnr,
+                display = display,
+                ordinal = entry.name,
+              }
+            end,
+          }),
+          sorter = conf.generic_sorter({}),
+          attach_mappings = function(prompt_bufnr, map)
             actions.select_default:replace(function()
               actions.close(prompt_bufnr)
               local selection = action_state.get_selected_entry()
               if selection then
-                open_project_in_new_tab(selection.value)
+                vim.api.nvim_set_current_buf(selection.value)
               end
             end)
-
+            -- Delete buffer with <C-d>
+            map('i', '<C-d>', function()
+              local selection = action_state.get_selected_entry()
+              if selection then
+                vim.api.nvim_buf_delete(selection.value, { force = false })
+                -- Refresh picker
+                actions.close(prompt_bufnr)
+                project_buffers_picker()
+              end
+            end)
             return true
           end,
-        })
-      end, { desc = 'Find projects (new tab)' })
+        }):find()
+      end
+
+      vim.keymap.set('n', '<leader>,', project_buffers_picker, { desc = 'Switch buffer (project)' })
+      vim.keymap.set('n', '<leader>fb', project_buffers_picker, { desc = 'Find buffers (project)' })
 
       -- Command to manually add current directory as a project
       vim.api.nvim_create_user_command('ProjectAdd', function()
@@ -199,21 +374,54 @@ in
         vim.notify('Added project: ' .. cwd, vim.log.levels.INFO)
       end, { desc = 'Add current directory as a project' })
 
+      -- Helper: Find project root for a given path
+      local function find_project_root(path)
+        local History = require('project.utils.history')
+        local projects = History.get_recent_projects() or {}
+        local best_match = nil
+        local best_match_len = 0
+        for _, project_path in ipairs(projects) do
+          if path:find(project_path, 1, true) == 1 then
+            if #project_path > best_match_len then
+              best_match = project_path
+              best_match_len = #project_path
+            end
+          end
+        end
+        return best_match
+      end
+
+      -- Helper: Auto-name current tab based on project
+      local function auto_name_tab()
+        local tab_name = vim.fn.gettabvar(vim.fn.tabpagenr(), 'tab_name', "")
+        -- Only auto-name if tab doesn't already have a custom name
+        if tab_name == "" then
+          local cwd = vim.fn.getcwd()
+          local project_root = find_project_root(cwd)
+          if project_root then
+            vim.fn.settabvar(vim.fn.tabpagenr(), 'tab_name', get_project_name(project_root))
+          else
+            -- Fallback to cwd basename
+            vim.fn.settabvar(vim.fn.tabpagenr(), 'tab_name', get_project_name(cwd))
+          end
+        end
+      end
+
       -- Auto-name tab when entering a project directory
       vim.api.nvim_create_autocmd('DirChanged', {
         group = vim.api.nvim_create_augroup('ProjectTabName', { clear = true }),
         callback = function(args)
           -- Only for tab-local directory changes
           if args.match == 'tabpage' then
-            local tab_name = vim.fn.gettabvar(vim.fn.tabpagenr(), 'tab_name', "")
-            -- Only auto-name if tab doesn't already have a custom name
-            if tab_name == "" then
-              local project_name = get_project_name(vim.fn.getcwd())
-              vim.fn.settabvar(vim.fn.tabpagenr(), 'tab_name', project_name)
-            end
+            auto_name_tab()
           end
         end,
       })
+
+      -- Auto-name first tab on startup (after projects are discovered)
+      vim.defer_fn(function()
+        auto_name_tab()
+      end, 200)
     '';
   };
 }
