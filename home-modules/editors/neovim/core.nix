@@ -153,6 +153,9 @@ in
         # Spelling
         spell = false;
         spelllang = "en_us";
+
+        # Disable tabline (we use lualine for tab info)
+        showtabline = 0;
       };
     };
   };

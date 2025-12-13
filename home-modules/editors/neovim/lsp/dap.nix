@@ -8,6 +8,7 @@
 with lib;
 let
   cfg = config.programs.neovim-ide;
+  icons = import ../icons.nix;
 in
 {
   config = mkIf cfg.enable {
@@ -39,6 +40,16 @@ in
         toggleDapUI = "<leader>du";
       };
     };
+
+    # Configure DAP signs with icons
+    programs.neovim-ide.luaConfigPost."50-dap-signs" = ''
+      -- DAP breakpoint signs
+      vim.fn.sign_define("DapBreakpoint", { text = "${icons.dap.breakpoint}", texthl = "DapBreakpoint" })
+      vim.fn.sign_define("DapBreakpointCondition", { text = "${icons.dap.breakpointCondition}", texthl = "DapBreakpointCondition" })
+      vim.fn.sign_define("DapBreakpointRejected", { text = "${icons.dap.breakpointRejected}", texthl = "DapBreakpointRejected" })
+      vim.fn.sign_define("DapLogPoint", { text = "${icons.dap.logPoint}", texthl = "DapLogPoint" })
+      vim.fn.sign_define("DapStopped", { text = "${icons.dap.Stopped}", texthl = "DapStopped", linehl = "DapStoppedLine" })
+    '';
 
     # Enable DAP for languages
     programs.nvf.settings.vim.languages = {
