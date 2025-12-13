@@ -23,22 +23,9 @@ in
       };
     };
 
-    # Setup claudecode.nvim
+    # Setup claudecode.nvim (Lua module)
     programs.neovim-ide.luaConfigPost."70-claudecode" = ''
-      require('claudecode').setup({
-        -- Terminal settings
-        terminal = {
-          split_side = "right",
-          split_width_percentage = 0.35,
-          provider = "snacks",
-        },
-
-        -- Diff settings
-        diff_opts = {
-          auto_close_on_accept = true,
-          vertical_split = true,
-        },
-      })
+      require('user.claudecode').setup()
     '';
 
     # Claude Code keymaps under <leader>a prefix
@@ -108,18 +95,5 @@ in
         desc = "Deny diff";
       }
     ];
-
-    # Filetype-specific keymap for tree add (neo-tree, etc.)
-    programs.neovim-ide.luaConfigPost."71-claudecode-keymaps" = ''
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = { "neo-tree", "NvimTree", "oil", "minifiles", "netrw" },
-        callback = function()
-          vim.keymap.set("n", "<leader>as", "<cmd>ClaudeCodeTreeAdd<cr>", {
-            buffer = true,
-            desc = "Add file to Claude",
-          })
-        end,
-      })
-    '';
   };
 }

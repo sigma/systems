@@ -19,15 +19,9 @@ in
       };
     };
 
-    # Configure lazygit.nvim via globals and add keymaps
+    # Configure lazygit.nvim (Lua module)
     programs.neovim-ide.luaConfigPost."55-lazygit" = ''
-      -- Lazygit configuration (via globals)
-      vim.g.lazygit_floating_window_use_plenary = 0
-      vim.g.lazygit_floating_window_border_chars = {'╭','─', '╮', '│', '╯','─', '╰', '│'}
-
-      -- Lazygit keymaps (LazyVim-style)
-      vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "LazyGit" })
-      vim.keymap.set("n", "<leader>gG", "<cmd>LazyGitCurrentFile<cr>", { desc = "LazyGit Current File" })
+      require('user.lazygit').setup()
     '';
   };
 }

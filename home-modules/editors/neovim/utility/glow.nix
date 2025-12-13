@@ -18,11 +18,10 @@ in
       mappings.openPreview = "<leader>mg";
     };
 
-    # Configure glow with rounded borders (nvf doesn't expose setupOpts)
+    # Configure glow (Lua module)
     programs.neovim-ide.luaConfigPost."20-glow-setup" = ''
-      require('glow').setup({
+      require('user.glow').setup({
         glow_path = "${pkgs.glow}/bin/glow",
-        border = "rounded",
       })
     '';
   };

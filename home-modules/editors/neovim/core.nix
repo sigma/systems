@@ -13,42 +13,14 @@ in
   config = mkIf cfg.enable {
     # Use the modular luaConfig options
     programs.neovim-ide = {
+      # Suppress warnings (Lua module - runs early)
       luaConfigPre."00-suppress-warnings" = ''
-        -- Suppress lspconfig deprecation warning (nvf issue, not ours)
-        local original_notify = vim.notify
-        vim.notify = function(msg, level, opts)
-          if type(msg) == "string" and msg:match("lspconfig.*deprecated") then
-            return
-          end
-          return original_notify(msg, level, opts)
-        end
-
-        -- Also suppress vim.deprecate for this specific message
-        local original_deprecate = vim.deprecate
-        vim.deprecate = function(name, alternative, version, plugin, backtrace)
-          if name and name:match("lspconfig") then
-            return
-          end
-          return original_deprecate(name, alternative, version, plugin, backtrace)
-        end
+        require('user.core').suppress_warnings()
       '';
 
+      # Borders and diagnostics (Lua module)
       luaConfigPost."00-borders" = ''
-        -- Global border style for all floating windows
-        local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
-        function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
-          opts = opts or {}
-          opts.border = opts.border or "rounded"
-          return orig_util_open_floating_preview(contents, syntax, opts, ...)
-        end
-
-        -- Diagnostic floating windows
-        vim.diagnostic.config({
-          float = {
-            border = "rounded",
-            source = true,
-          },
-        })
+        require('user.core').setup()
       '';
     };
 

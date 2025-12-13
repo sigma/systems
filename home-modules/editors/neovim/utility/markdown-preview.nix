@@ -23,12 +23,9 @@ in
       filetypes = [ "markdown" ];
     };
 
-    # Add keymaps for markdown preview
+    # Markdown preview keymaps (Lua module)
     programs.neovim-ide.luaConfigPost."60-markdown-preview-keymaps" = ''
-      -- Markdown preview keymaps
-      vim.keymap.set("n", "<leader>mp", "<cmd>MarkdownPreview<cr>", { desc = "Markdown Preview" })
-      vim.keymap.set("n", "<leader>ms", "<cmd>MarkdownPreviewStop<cr>", { desc = "Markdown Preview Stop" })
-      vim.keymap.set("n", "<leader>mt", "<cmd>MarkdownPreviewToggle<cr>", { desc = "Markdown Preview Toggle" })
+      require('user.markdown').setup()
     '';
   };
 }

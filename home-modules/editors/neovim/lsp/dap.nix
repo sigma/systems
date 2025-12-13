@@ -41,14 +41,17 @@ in
       };
     };
 
-    # Configure DAP signs with icons
+    # Configure DAP signs (Lua module)
     programs.neovim-ide.luaConfigPost."50-dap-signs" = ''
-      -- DAP breakpoint signs
-      vim.fn.sign_define("DapBreakpoint", { text = "${icons.dap.breakpoint}", texthl = "DapBreakpoint" })
-      vim.fn.sign_define("DapBreakpointCondition", { text = "${icons.dap.breakpointCondition}", texthl = "DapBreakpointCondition" })
-      vim.fn.sign_define("DapBreakpointRejected", { text = "${icons.dap.breakpointRejected}", texthl = "DapBreakpointRejected" })
-      vim.fn.sign_define("DapLogPoint", { text = "${icons.dap.logPoint}", texthl = "DapLogPoint" })
-      vim.fn.sign_define("DapStopped", { text = "${icons.dap.Stopped}", texthl = "DapStopped", linehl = "DapStoppedLine" })
+      require('user.dap').setup({
+        icons = {
+          breakpoint = "${icons.dap.breakpoint}",
+          breakpointCondition = "${icons.dap.breakpointCondition}",
+          breakpointRejected = "${icons.dap.breakpointRejected}",
+          logPoint = "${icons.dap.logPoint}",
+          stopped = "${icons.dap.Stopped}",
+        },
+      })
     '';
 
     # Enable DAP for languages

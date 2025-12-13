@@ -13,6 +13,9 @@ let
 
   # Concatenate all Lua config snippets in order
   concatLuaSnippets = snippets: concatStringsSep "\n\n" (filter (s: s != "") (attrValues snippets));
+
+  # Path to lua modules
+  luaPath = ./lua;
 in
 {
   imports = [
@@ -83,8 +86,11 @@ in
         viAlias = true;
         vimAlias = true;
 
-        # Concatenate all luaConfigPre snippets
-        luaConfigPre = concatLuaSnippets cfg.luaConfigPre;
+        # Add user lua modules from nix store to package path
+        luaConfigPre = ''
+          -- Add user modules from nix store to package path
+          package.path = "${luaPath}/?.lua;${luaPath}/?/init.lua;" .. package.path
+        '' + "\n\n" + concatLuaSnippets cfg.luaConfigPre;
 
         # Concatenate all luaConfigPost snippets
         luaConfigPost = concatLuaSnippets cfg.luaConfigPost;
