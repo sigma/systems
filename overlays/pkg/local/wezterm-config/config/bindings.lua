@@ -18,21 +18,26 @@ end
 -- Smart splits integration: detect if pane is running vim/neovim or emacs
 local function get_editor_type(pane)
    local process_info = pane:get_foreground_process_info()
-   local process_name = process_info and process_info.name
+   local process_name = process_info and process_info.name or ''
 
-   if process_name then
-      if process_name:find('n?vim') then
-         return 'vim'
-      elseif process_name:find('[Ee]macs') then
-         return 'emacs'
-      end
+   -- Check process name for editors (exact match on executable name)
+   if process_name:find('^n?vim$') or process_name:find('^n?vim%.') then
+      return 'vim'
+   elseif process_name:find('^[Ee]macs') then
+      return 'emacs'
    end
 
-   -- Fallback: check pane title
-   local title = pane:get_title()
-   if title:find('n?vim') then
+   -- Exclude known non-editors that might have "vim" in their output/title
+   local title = pane:get_title() or ''
+   if title:find('claude') or process_name:find('node') or process_name:find('claude') then
+      return nil
+   end
+
+   -- Fallback: check pane title for editor patterns
+   -- Use stricter patterns to avoid false positives
+   if title:match('^n?vim%s') or title:match('%s+n?vim%s') or title:match('^n?vim$') then
       return 'vim'
-   elseif title:find('[Ee]macs') then
+   elseif title:match('^[Ee]macs') or title:match('%s+[Ee]macs') then
       return 'emacs'
    end
 
