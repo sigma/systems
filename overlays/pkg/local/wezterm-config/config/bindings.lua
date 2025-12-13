@@ -68,7 +68,8 @@ end
 -- Conditionally resize in editor or WezTerm
 local function smart_split_resize(direction)
    return wezterm.action_callback(function(window, pane)
-      if is_editor(pane) then
+      local editor = get_editor_type(pane)
+      if editor then
          -- Send Alt+Ctrl+Shift+Arrow to editor
          local arrow = direction .. 'Arrow'
          window:perform_action(act.SendKey({ key = arrow, mods = 'ALT|CTRL|SHIFT' }), pane)
