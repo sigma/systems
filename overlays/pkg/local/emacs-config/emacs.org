@@ -1336,33 +1336,42 @@ to disable uniquify when using persp-mode"
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
 (use-package! windmove
   :config
-  ;; WezTerm integration: WezTerm sends C-c <arrow> when Cmd+Arrow is pressed.
-  ;; These functions handle navigation with edge detection - if at a window
-  ;; edge, delegate to WezTerm pane navigation via `wezterm cli`.
+  ;; Smart window/pane navigation with edge detection.
+  ;; If at window edge, delegate to terminal multiplexer (WezTerm or tmux).
 
   (defun my/in-wezterm-p ()
     "Return non-nil if running inside WezTerm."
     (string= (getenv "TERM_PROGRAM") "WezTerm"))
 
-  (defun my/wezterm-move (direction)
-    "Move to window in DIRECTION, or WezTerm pane if at edge.
+  (defun my/in-tmux-p ()
+    "Return non-nil if running inside tmux."
+    (getenv "TMUX"))
+
+  (defun my/pane-move (direction)
+    "Move to window in DIRECTION, or multiplexer pane if at edge.
 DIRECTION is a string: left, right, up, down."
     (condition-case nil
         (windmove-do-window-select (intern direction))
       (error
-       (when (my/in-wezterm-p)
+       (cond
+        ((my/in-wezterm-p)
          (call-process "wezterm" nil nil nil
-                       "cli" "activate-pane-direction" direction)))))
+                       "cli" "activate-pane-direction" direction))
+        ((my/in-tmux-p)
+         (let ((tmux-dir (pcase direction
+                           ("left" "-L") ("right" "-R")
+                           ("up" "-U") ("down" "-D"))))
+           (call-process "tmux" nil nil nil "select-pane" tmux-dir)))))))
 
-  (defun my/wezterm-move-left () (interactive) (my/wezterm-move "left"))
-  (defun my/wezterm-move-right () (interactive) (my/wezterm-move "right"))
-  (defun my/wezterm-move-up () (interactive) (my/wezterm-move "up"))
-  (defun my/wezterm-move-down () (interactive) (my/wezterm-move "down"))
+  (defun my/pane-move-left () (interactive) (my/pane-move "left"))
+  (defun my/pane-move-right () (interactive) (my/pane-move "right"))
+  (defun my/pane-move-up () (interactive) (my/pane-move "up"))
+  (defun my/pane-move-down () (interactive) (my/pane-move "down"))
 
-  (map! "C-c <left>"  #'my/wezterm-move-left
-        "C-c <right>" #'my/wezterm-move-right
-        "C-c <up>"    #'my/wezterm-move-up
-        "C-c <down>"  #'my/wezterm-move-down))
+  (map! "C-c <left>"  #'my/pane-move-left
+        "C-c <right>" #'my/pane-move-right
+        "C-c <up>"    #'my/pane-move-up
+        "C-c <down>"  #'my/pane-move-down))
 #+end_src
 *** Notmuch
 :PROPERTIES:
