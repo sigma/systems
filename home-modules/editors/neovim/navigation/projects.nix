@@ -302,8 +302,11 @@ in
         for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
           if vim.api.nvim_buf_is_loaded(bufnr) then
             local bufname = vim.api.nvim_buf_get_name(bufnr)
-            -- Filter to buffers within current project
-            if bufname ~= "" and bufname:find(cwd, 1, true) == 1 then
+            local buftype = vim.api.nvim_buf_get_option(bufnr, 'buftype')
+            local filetype = vim.api.nvim_buf_get_option(bufnr, 'filetype')
+            -- Filter to buffers within current project, exclude special buffers
+            local is_special = buftype ~= "" or filetype == "neo-tree" or filetype == "NvimTree"
+            if bufname ~= "" and not is_special and bufname:find(cwd, 1, true) == 1 then
               local relative_path = bufname:sub(#cwd + 2) -- +2 for trailing slash
               local modified = vim.api.nvim_buf_get_option(bufnr, 'modified')
               table.insert(buffers, {
