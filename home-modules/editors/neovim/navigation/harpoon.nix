@@ -16,7 +16,7 @@ in
 
       # LazyVim-style keymaps
       mappings = {
-        markFile = "<leader>a";
+        markFile = "<leader>H";
         listMarks = "<leader>h";
         file1 = "<leader>1";
         file2 = "<leader>2";

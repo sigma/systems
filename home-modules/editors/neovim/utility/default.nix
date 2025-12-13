@@ -4,5 +4,6 @@
   imports = [
     ./markdown-preview.nix
     ./glow.nix
+    ./claudecode.nix
   ];
 }
