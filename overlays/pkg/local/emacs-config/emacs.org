@@ -1336,10 +1336,33 @@ to disable uniquify when using persp-mode"
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
 (use-package! windmove
   :config
-  (map! "C-c <left>"  #'windmove-left
-        "C-c <right>" #'windmove-right
-        "C-c <up>"    #'windmove-up
-        "C-c <down>"  #'windmove-down))
+  ;; WezTerm integration: WezTerm sends C-c <arrow> when Cmd+Arrow is pressed.
+  ;; These functions handle navigation with edge detection - if at a window
+  ;; edge, delegate to WezTerm pane navigation via `wezterm cli`.
+
+  (defun my/in-wezterm-p ()
+    "Return non-nil if running inside WezTerm."
+    (string= (getenv "TERM_PROGRAM") "WezTerm"))
+
+  (defun my/wezterm-move (direction)
+    "Move to window in DIRECTION, or WezTerm pane if at edge.
+DIRECTION is a string: left, right, up, down."
+    (condition-case nil
+        (windmove-do-window-select (intern direction))
+      (error
+       (when (my/in-wezterm-p)
+         (call-process "wezterm" nil nil nil
+                       "cli" "activate-pane-direction" direction)))))
+
+  (defun my/wezterm-move-left () (interactive) (my/wezterm-move "left"))
+  (defun my/wezterm-move-right () (interactive) (my/wezterm-move "right"))
+  (defun my/wezterm-move-up () (interactive) (my/wezterm-move "up"))
+  (defun my/wezterm-move-down () (interactive) (my/wezterm-move "down"))
+
+  (map! "C-c <left>"  #'my/wezterm-move-left
+        "C-c <right>" #'my/wezterm-move-right
+        "C-c <up>"    #'my/wezterm-move-up
+        "C-c <down>"  #'my/wezterm-move-down))
 #+end_src
 *** Notmuch
 :PROPERTIES:

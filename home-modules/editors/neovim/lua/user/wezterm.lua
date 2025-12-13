@@ -16,7 +16,7 @@ function M.setup(opts)
     ignored_filetypes = { 'neo-tree' },
   })
 
-  -- Navigation keymaps (Alt+Ctrl+Shift+hjkl sent by WezTerm)
+  -- Navigation keymaps (Alt+Ctrl+Shift+hjkl sent by WezTerm via CSI u encoding)
   vim.keymap.set('n', '<M-C-S-h>', require('smart-splits').move_cursor_left, { desc = 'Move to left split/pane' })
   vim.keymap.set('n', '<M-C-S-l>', require('smart-splits').move_cursor_right, { desc = 'Move to right split/pane' })
   vim.keymap.set('n', '<M-C-S-k>', require('smart-splits').move_cursor_up, { desc = 'Move to upper split/pane' })

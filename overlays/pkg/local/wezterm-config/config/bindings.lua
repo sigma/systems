@@ -15,22 +15,31 @@ elseif platform.is_win or platform.is_linux then
    mod.SUPER_REV = 'ALT|CTRL'
 end
 
--- Smart splits integration: detect if pane is running vim/neovim
-local function is_vim(pane)
+-- Smart splits integration: detect if pane is running vim/neovim or emacs
+local function get_editor_type(pane)
    local process_info = pane:get_foreground_process_info()
    local process_name = process_info and process_info.name
 
    if process_name then
-      return process_name:find('n?vim') ~= nil
+      if process_name:find('n?vim') then
+         return 'vim'
+      elseif process_name:find('[Ee]macs') then
+         return 'emacs'
+      end
    end
 
    -- Fallback: check pane title
    local title = pane:get_title()
-   return title:find('n?vim') ~= nil
+   if title:find('n?vim') then
+      return 'vim'
+   elseif title:find('[Ee]macs') then
+      return 'emacs'
+   end
+
+   return nil
 end
 
--- Conditionally send keys to vim or activate pane direction
--- We use Alt+Ctrl+Shift+hjkl as a unique sequence that Neovim can recognize
+-- Direction to hjkl for vim (used with SendKey)
 local direction_to_key = {
    Left = 'h',
    Right = 'l',
@@ -40,22 +49,27 @@ local direction_to_key = {
 
 local function smart_split_nav(direction)
    return wezterm.action_callback(function(window, pane)
-      if is_vim(pane) then
-         -- Send Alt+Ctrl+Shift+hjkl to vim (mapped to smart-splits)
+      local editor = get_editor_type(pane)
+      if editor == 'vim' then
+         -- Send Alt+Ctrl+Shift+hjkl to Neovim (works with CSI u encoding)
          local key = direction_to_key[direction]
          window:perform_action(act.SendKey({ key = key, mods = 'ALT|CTRL|SHIFT' }), pane)
+      elseif editor == 'emacs' then
+         -- Send C-c <arrow> which is already mapped to windmove in Emacs
+         window:perform_action(act.SendKey({ key = 'c', mods = 'CTRL' }), pane)
+         window:perform_action(act.SendKey({ key = direction .. 'Arrow' }), pane)
       else
-         -- Not in vim, use WezTerm pane navigation
+         -- Not in editor, use WezTerm pane navigation
          window:perform_action(act.ActivatePaneDirection(direction), pane)
       end
    end)
 end
 
--- Conditionally resize in vim or WezTerm
+-- Conditionally resize in editor or WezTerm
 local function smart_split_resize(direction)
    return wezterm.action_callback(function(window, pane)
-      if is_vim(pane) then
-         -- Send Alt+Ctrl+Shift+Arrow to vim
+      if is_editor(pane) then
+         -- Send Alt+Ctrl+Shift+Arrow to editor
          local arrow = direction .. 'Arrow'
          window:perform_action(act.SendKey({ key = arrow, mods = 'ALT|CTRL|SHIFT' }), pane)
       else
