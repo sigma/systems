@@ -5,5 +5,6 @@
     ./flash.nix
     ./harpoon.nix
     ./todo-comments.nix
+    ./projects.nix
   ];
 }
