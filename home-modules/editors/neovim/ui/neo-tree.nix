@@ -30,6 +30,13 @@ in
             enabled = true;
           };
           use_libuv_file_watcher = true;
+          # Show all files by default (don't hide dotfiles, gitignored, etc.)
+          filtered_items = {
+            visible = true;
+            hide_dotfiles = false;
+            hide_gitignored = false;
+            hide_hidden = false;
+          };
         };
 
         # Window settings
