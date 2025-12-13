@@ -1,5 +1,5 @@
 -- WezTerm integration
--- Smart splits, image protocol, and terminal enhancements
+-- Smart splits, image protocol, inactive window dimming, and terminal enhancements
 
 local M = {}
 
@@ -9,6 +9,57 @@ function M.setup(opts)
   -- Undercurl support for WezTerm
   vim.cmd([[let &t_Cs = "\e[4:3m"]])
   vim.cmd([[let &t_Ce = "\e[4:0m"]])
+
+  -- Dim inactive windows to match WezTerm's inactive_pane_hsb
+  -- WezTerm uses: saturation = 0.9, brightness = 0.65
+  -- Since we use transparent backgrounds, we need to set an actual bg color
+  -- on inactive windows to simulate the dimming effect.
+  -- When Neovim loses focus entirely, we remove the dim so WezTerm's
+  -- pane dimming doesn't stack on top of ours.
+  local function setup_inactive_window_dimming()
+    local dim_bg = '#161621'
+    local augroup = vim.api.nvim_create_augroup('InactiveWindowDim', { clear = true })
+
+    local function apply_dim()
+      vim.api.nvim_set_hl(0, 'NormalNC', { bg = dim_bg })
+      vim.api.nvim_set_hl(0, 'NeoTreeNormalNC', { bg = dim_bg })
+      vim.api.nvim_set_hl(0, 'EndOfBufferNC', { bg = dim_bg, fg = dim_bg })
+    end
+
+    local function clear_dim()
+      vim.api.nvim_set_hl(0, 'NormalNC', {})
+      vim.api.nvim_set_hl(0, 'NeoTreeNormalNC', {})
+      vim.api.nvim_set_hl(0, 'EndOfBufferNC', {})
+    end
+
+    -- Apply dimming initially (assume focused)
+    apply_dim()
+
+    -- Toggle dimming based on Neovim focus
+    vim.api.nvim_create_autocmd('FocusGained', {
+      group = augroup,
+      callback = apply_dim,
+    })
+
+    vim.api.nvim_create_autocmd('FocusLost', {
+      group = augroup,
+      callback = clear_dim,
+    })
+
+    -- Re-apply after colorscheme changes (only if focused)
+    vim.api.nvim_create_autocmd('ColorScheme', {
+      group = augroup,
+      callback = function()
+        -- Check if we're focused by looking at current highlight
+        local nc = vim.api.nvim_get_hl(0, { name = 'NormalNC' })
+        if nc.bg then
+          apply_dim()
+        end
+      end,
+    })
+  end
+
+  setup_inactive_window_dimming()
 
   -- Smart splits setup
   require('smart-splits').setup({
