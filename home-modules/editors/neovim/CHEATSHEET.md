@@ -24,6 +24,37 @@ This configuration is built with [nvf](https://github.com/NotAShelf/nvf) and aim
 
 ---
 
+## WezTerm Integration (Smart Splits)
+
+Seamless navigation between Neovim splits and WezTerm panes using `Cmd+Arrow` keys in WezTerm.
+
+| Mode | Key (WezTerm) | Action |
+|------|---------------|--------|
+| `n` | `Cmd+Left` | Move to left split/pane |
+| `n` | `Cmd+Right` | Move to right split/pane |
+| `n` | `Cmd+Up` | Move to upper split/pane |
+| `n` | `Cmd+Down` | Move to lower split/pane |
+
+### Resize Splits
+
+| Mode | Key | Action |
+|------|-----|--------|
+| `n` | `<M-C-S-Left>` | Resize split left |
+| `n` | `<M-C-S-Right>` | Resize split right |
+| `n` | `<M-C-S-Up>` | Resize split up |
+| `n` | `<M-C-S-Down>` | Resize split down |
+
+### Swap Buffers
+
+| Mode | Key | Action |
+|------|-----|--------|
+| `n` | `<leader>wh` | Swap buffer left |
+| `n` | `<leader>wj` | Swap buffer down |
+| `n` | `<leader>wk` | Swap buffer up |
+| `n` | `<leader>wl` | Swap buffer right |
+
+---
+
 ## Window Navigation
 
 | Mode | Key | Action |
@@ -57,14 +88,19 @@ This configuration is built with [nvf](https://github.com/NotAShelf/nvf) and aim
 
 ## Tab Management
 
+Tabs are used as workspaces, typically one per project. Tabs auto-name based on the current project.
+
 | Mode | Key | Action |
 |------|-----|--------|
-| `n` | `<leader><tab><tab>` | New tab |
+| `n` | `<leader><tab>n` | New tab |
+| `n` | `<leader><tab>c` | Close tab |
 | `n` | `<leader><tab>]` | Next tab |
 | `n` | `<leader><tab>[` | Previous tab |
 | `n` | `<leader><tab>l` | Last tab |
 | `n` | `<leader><tab>f` | First tab |
-| `n` | `<leader><tab>d` | Close tab |
+| `n` | `<leader><tab>r` | Rename tab |
+| `n` | `<leader><tab>1-9` | Go to tab 1-9 |
+| `n` | `<leader>ft` | Find tabs (Telescope) |
 
 ---
 
@@ -77,17 +113,30 @@ This configuration is built with [nvf](https://github.com/NotAShelf/nvf) and aim
 
 ---
 
+## Projects
+
+Projects are auto-discovered from `~/src/{github.com,gitlab.com,bitbucket.org}/**/` directories.
+
+| Mode | Key | Action |
+|------|-----|--------|
+| `n` | `<leader>fp` | Find projects (switch in current tab) |
+| `n` | `<leader>fP` | Find projects (open in new tab) |
+| `n` | `<leader>,` | Switch buffer (project-scoped) |
+| `n` | `<leader>fb` | Find buffers (project-scoped) |
+
+In the project buffer picker, `<C-d>` deletes the selected buffer.
+
+---
+
 ## Fuzzy Finding (Telescope)
 
 | Mode | Key | Action |
 |------|-----|--------|
 | `n` | `<leader><space>` | Find files |
 | `n` | `<leader>/` | Live grep (search in project) |
-| `n` | `<leader>,` | Switch buffer |
 | `n` | `<leader>:` | Command history |
 | `n` | `<leader>ff` | Find files |
 | `n` | `<leader>fg` | Live grep |
-| `n` | `<leader>fb` | List buffers |
 | `n` | `<leader>fh` | Help tags |
 | `n` | `<leader>fr` | Resume last search |
 
@@ -109,12 +158,32 @@ This configuration is built with [nvf](https://github.com/NotAShelf/nvf) and aim
 
 | Mode | Key | Action |
 |------|-----|--------|
-| `n` | `<leader>a` | Add file to harpoon list |
+| `n` | `<leader>H` | Add file to harpoon list |
 | `n` | `<leader>h` | Show harpoon list |
 | `n` | `<leader>1` | Jump to harpoon file 1 |
 | `n` | `<leader>2` | Jump to harpoon file 2 |
 | `n` | `<leader>3` | Jump to harpoon file 3 |
 | `n` | `<leader>4` | Jump to harpoon file 4 |
+
+---
+
+## AI Assistant (Claude Code)
+
+Integration with Claude Code CLI for AI-assisted development.
+
+| Mode | Key | Action |
+|------|-----|--------|
+| `n` | `<leader>ac` | Toggle Claude terminal |
+| `n` | `<leader>af` | Focus Claude terminal |
+| `n` | `<leader>ar` | Resume Claude session |
+| `n` | `<leader>aC` | Continue Claude session |
+| `n` | `<leader>am` | Select Claude model |
+| `n` | `<leader>ab` | Add current buffer to context |
+| `v` | `<leader>as` | Send selection to Claude |
+| `n` | `<leader>aa` | Accept diff |
+| `n` | `<leader>ad` | Deny diff |
+
+In file explorer (Neo-tree), `<leader>as` adds the selected file to Claude context.
 
 ---
 
@@ -219,6 +288,7 @@ Uses `nvim-surround`:
 | `n` | `<leader>cr` | Rename symbol |
 | `n`, `v` | `<leader>cf` | Format buffer/selection |
 | `n` | `<leader>cd` | Line diagnostics |
+| `n` | `<leader>cl` | Lint current file |
 
 ### Diagnostics Navigation
 
@@ -388,6 +458,7 @@ Press these prefixes in normal mode and wait to see available commands:
 
 | Prefix | Group |
 |--------|-------|
+| `<leader>a` | AI (Claude Code) |
 | `<leader>b` | Buffer |
 | `<leader>c` | Code/LSP |
 | `<leader>d` | Debug |
@@ -396,6 +467,7 @@ Press these prefixes in normal mode and wait to see available commands:
 | `<leader>m` | Markdown |
 | `<leader>s` | Search |
 | `<leader>u` | UI toggles |
+| `<leader>w` | Window/Swap |
 | `<leader>x` | Diagnostics |
 | `<leader><tab>` | Tabs |
 
@@ -406,10 +478,13 @@ Press these prefixes in normal mode and wait to see available commands:
 | Plugin | Purpose |
 |--------|---------|
 | neo-tree | File explorer |
-| bufferline | Buffer tabs |
 | telescope | Fuzzy finder |
 | flash.nvim | Smart jump motions |
 | harpoon | Quick file marks |
+| project.nvim | Project management |
+| smart-splits.nvim | WezTerm pane integration |
+| image.nvim | Image preview (WezTerm) |
+| claudecode.nvim | Claude AI integration |
 | todo-comments | TODO/FIXME highlighting |
 | nvim-cmp | Autocompletion |
 | LuaSnip | Snippets |
@@ -428,3 +503,4 @@ Press these prefixes in normal mode and wait to see available commands:
 | noice.nvim | Enhanced UI |
 | indent-blankline | Indentation guides |
 | nvim-notify | Notifications |
+| nvim-navic | Breadcrumbs/winbar |
