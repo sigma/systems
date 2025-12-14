@@ -90,6 +90,9 @@ in
         viAlias = true;
         vimAlias = true;
 
+        # Enable lazy loading for plugins
+        lazy.enable = true;
+
         # Add user lua modules to runtime path using nvf's pure runtime approach
         # See: https://nvf.notashelf.dev/tips.html#sec-pure-nvf-runtime
         # The path must contain a lua/ subdirectory - Neovim looks for modules in <rtp>/lua/

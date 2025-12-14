@@ -12,19 +12,28 @@ let
 in
 {
   config = mkIf cfg.enable {
-    # Add plugins
-    programs.nvf.settings.vim.extraPlugins = {
-      smart-splits-nvim = {
+    # WezTerm integration plugins - lazy loaded
+    programs.nvf.settings.vim.lazy.plugins = {
+      "smart-splits.nvim" = {
         package = pkgs.vimPlugins.smart-splits-nvim;
+        event = [ "UIEnter" ];
+        after = ''
+          require('user.wezterm').setup()
+        '';
       };
-      image-nvim = {
+      "image.nvim" = {
         package = pkgs.vimPlugins.image-nvim;
+        ft = [ "markdown" "neorg" "html" ];
+        after = ''
+          require('image').setup({
+            backend = "kitty",
+            integrations = {
+              markdown = { enabled = true },
+              neorg = { enabled = true },
+            },
+          })
+        '';
       };
     };
-
-    # WezTerm integration (Lua module)
-    programs.neovim-ide.luaConfigPost."10-wezterm-integration" = ''
-      require('user.wezterm').setup()
-    '';
   };
 }

@@ -12,18 +12,19 @@ let
 in
 {
   config = mkIf cfg.enable {
-    programs.nvf.settings.vim.extraPlugins = {
-      mini-bufremove = {
+    # mini.bufremove - lazy load after UI is ready
+    programs.nvf.settings.vim.lazy.plugins = {
+      "mini.bufremove" = {
         package = pkgs.vimPlugins.mini-nvim;
-        setup = ''
+        event = [ "BufReadPost" "BufNewFile" ];
+        # Custom load function since package is mini.nvim but we only want mini.bufremove
+        load = "vim.cmd('packadd ' .. name)";
+        after = ''
           require('mini.bufremove').setup({
-            -- Whether to set vim.cmd.bdelete/bwipeout to use mini.bufremove
             set_vim_settings = true,
-            -- Preserve window layout when deleting a buffer
             silent = false,
           })
 
-          -- LazyVim-style keymaps for buffer deletion
           vim.keymap.set('n', '<leader>bd', function()
             require('mini.bufremove').delete(0, false)
           end, { desc = 'Delete buffer' })

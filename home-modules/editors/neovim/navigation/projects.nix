@@ -12,32 +12,27 @@ let
 in
 {
   config = mkIf cfg.enable {
-    # Add project.nvim plugin
-    programs.nvf.settings.vim.extraPlugins = {
-      project-nvim = {
+    # project.nvim - lazy load after UI is ready
+    programs.nvf.settings.vim.lazy.plugins = {
+      "project.nvim" = {
         package = pkgs.vimPlugins.project-nvim;
+        event = [ "UIEnter" ];
+        after = ''
+          require('project').setup({
+            use_lsp = true,
+            patterns = {
+              ".git", "_darcs", ".hg", ".bzr", ".svn",
+              "Makefile", "package.json", "flake.nix",
+              "Cargo.toml", "go.mod", "pyproject.toml", "setup.py",
+            },
+            manual_mode = false,
+            silent_chdir = false,
+            scope_chdir = "tab",
+          })
+          require('telescope').load_extension('projects')
+          require('user.projects').setup()
+        '';
       };
     };
-
-    # Setup project.nvim
-    programs.neovim-ide.luaConfigPost."50-project-setup" = ''
-      require('project').setup({
-        use_lsp = true,
-        patterns = {
-          ".git", "_darcs", ".hg", ".bzr", ".svn",
-          "Makefile", "package.json", "flake.nix",
-          "Cargo.toml", "go.mod", "pyproject.toml", "setup.py",
-        },
-        manual_mode = false,
-        silent_chdir = false,
-        scope_chdir = "tab",
-      })
-      require('telescope').load_extension('projects')
-    '';
-
-    # Project management (Lua module)
-    programs.neovim-ide.luaConfigPost."55-projects" = ''
-      require('user.projects').setup()
-    '';
   };
 }

@@ -23,26 +23,25 @@ let
 in
 {
   config = mkIf cfg.enable {
-    # Add nvim-lint plugin
-    programs.nvf.settings.vim.extraPlugins = {
-      nvim-lint = {
+    # nvim-lint - lazy load on file read/write
+    programs.nvf.settings.vim.lazy.plugins = {
+      "nvim-lint" = {
         package = pkgs.vimPlugins.nvim-lint;
+        event = [ "BufReadPost" "BufWritePost" ];
+        after = ''
+          require('user.lint').setup({
+            linters = {
+              eslint_d = "${linters.eslint_d}",
+              ruff = "${linters.ruff}",
+              golangci_lint = "${linters.golangci-lint}",
+              shellcheck = "${linters.shellcheck}",
+              markdownlint = "${linters.markdownlint}",
+              yamllint = "${linters.yamllint}",
+              statix = "${linters.statix}",
+            },
+          })
+        '';
       };
     };
-
-    # Configure nvim-lint (Lua module)
-    programs.neovim-ide.luaConfigPost."45-nvim-lint" = ''
-      require('user.lint').setup({
-        linters = {
-          eslint_d = "${linters.eslint_d}",
-          ruff = "${linters.ruff}",
-          golangci_lint = "${linters.golangci-lint}",
-          shellcheck = "${linters.shellcheck}",
-          markdownlint = "${linters.markdownlint}",
-          yamllint = "${linters.yamllint}",
-          statix = "${linters.statix}",
-        },
-      })
-    '';
   };
 }

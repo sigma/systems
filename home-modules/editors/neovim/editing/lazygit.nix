@@ -12,16 +12,15 @@ let
 in
 {
   config = mkIf cfg.enable {
-    # Add lazygit.nvim plugin (no setup function, uses vim globals)
-    programs.nvf.settings.vim.extraPlugins = {
-      lazygit-nvim = {
+    # lazygit.nvim - lazy load on command
+    programs.nvf.settings.vim.lazy.plugins = {
+      "lazygit.nvim" = {
         package = pkgs.vimPlugins.lazygit-nvim;
+        cmd = [ "LazyGit" "LazyGitConfig" "LazyGitCurrentFile" "LazyGitFilter" "LazyGitFilterCurrentFile" ];
+        after = ''
+          require('user.lazygit').setup()
+        '';
       };
     };
-
-    # Configure lazygit.nvim (Lua module)
-    programs.neovim-ide.luaConfigPost."55-lazygit" = ''
-      require('user.lazygit').setup()
-    '';
   };
 }

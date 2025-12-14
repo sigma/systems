@@ -12,20 +12,18 @@ let
 in
 {
   config = mkIf cfg.enable {
-    programs.nvf.settings.vim.extraPlugins = {
-      persistence-nvim = {
+    # persistence.nvim - lazy load on file read (to capture session)
+    programs.nvf.settings.vim.lazy.plugins = {
+      "persistence.nvim" = {
         package = pkgs.vimPlugins.persistence-nvim;
-        setup = ''
+        event = [ "BufReadPre" ];
+        after = ''
           require('persistence').setup({
-            -- Directory where session files are saved
             dir = vim.fn.expand(vim.fn.stdpath("state") .. "/sessions/"),
-            -- Minimum number of file buffers to save
             need = 1,
-            -- Branch specific sessions
             branch = true,
           })
 
-          -- LazyVim-style keymaps
           vim.keymap.set("n", "<leader>qs", function()
             require("persistence").load()
           end, { desc = "Restore session" })

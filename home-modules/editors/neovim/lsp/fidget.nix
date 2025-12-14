@@ -12,23 +12,19 @@ let
 in
 {
   config = mkIf cfg.enable {
-    programs.nvf.settings.vim.extraPlugins = {
-      fidget-nvim = {
+    # fidget.nvim - lazy load on LSP attach
+    programs.nvf.settings.vim.lazy.plugins = {
+      "fidget.nvim" = {
         package = pkgs.vimPlugins.fidget-nvim;
-        setup = ''
+        event = [ "LspAttach" ];
+        after = ''
           require('fidget').setup({
-            -- Notification options
             notification = {
-              -- How long notifications stay visible
               poll_rate = 10,
               filter = vim.log.levels.INFO,
               override_vim_notify = false,
-              window = {
-                winblend = 0,
-                border = "none",
-              },
+              window = { winblend = 0, border = "none" },
             },
-            -- Progress display options
             progress = {
               poll_rate = 0,
               suppress_on_insert = true,

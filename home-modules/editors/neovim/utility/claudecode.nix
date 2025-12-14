@@ -12,21 +12,29 @@ let
 in
 {
   config = mkIf cfg.enable {
-    # Add claudecode.nvim plugin and dependencies
-    programs.nvf.settings.vim.extraPlugins = {
-      snacks-nvim = {
+    # claudecode.nvim - lazy load on command
+    programs.nvf.settings.vim.lazy.plugins = {
+      "snacks.nvim" = {
         package = pkgs.vimPlugins.snacks-nvim;
+        lazy = true; # Loaded as dependency
       };
-      claudecode-nvim = {
+      "claudecode.nvim" = {
         package = pkgs.vimPlugins.claudecode-nvim;
-        after = [ "snacks-nvim" ];
+        cmd = [
+          "ClaudeCode"
+          "ClaudeCodeAdd"
+          "ClaudeCodeSend"
+          "ClaudeCodeFocus"
+          "ClaudeCodeDiffAccept"
+          "ClaudeCodeDiffDeny"
+          "ClaudeCodeSelectModel"
+        ];
+        after = ''
+          require('snacks')
+          require('user.claudecode').setup()
+        '';
       };
     };
-
-    # Setup claudecode.nvim (Lua module)
-    programs.neovim-ide.luaConfigPost."70-claudecode" = ''
-      require('user.claudecode').setup()
-    '';
 
     # Claude Code keymaps under <leader>a prefix
     programs.nvf.settings.vim.keymaps = [

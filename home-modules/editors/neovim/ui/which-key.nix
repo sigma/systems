@@ -21,6 +21,12 @@ in
         # Show warnings about mapping issues
         notify = true;
 
+        # Disable icons to avoid mini.icons/devicons compatibility issues
+        icons = {
+          mappings = false;
+          rules = false;
+        };
+
         # Custom label replacements
         replace = {
           "<space>" = "SPC";

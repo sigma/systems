@@ -12,51 +12,41 @@ let
 in
 {
   config = mkIf cfg.enable {
-    programs.nvf.settings.vim.extraPlugins = {
-      mini-ai = {
+    # mini.ai - lazy load after UI is ready (text objects)
+    programs.nvf.settings.vim.lazy.plugins = {
+      "mini.ai" = {
         package = pkgs.vimPlugins.mini-nvim;
-        setup = ''
+        event = [ "BufReadPost" "BufNewFile" ];
+        # Custom load function since package is mini.nvim but we only want mini.ai
+        load = "vim.cmd('packadd ' .. name)";
+        after = ''
           require('mini.ai').setup({
-            -- Number of lines within which textobject is searched
             n_lines = 500,
-
-            -- Custom textobjects
             custom_textobjects = {
-              -- Function (treesitter-based)
               f = require('mini.ai').gen_spec.treesitter({
                 a = '@function.outer',
                 i = '@function.inner',
               }),
-              -- Class (treesitter-based)
               c = require('mini.ai').gen_spec.treesitter({
                 a = '@class.outer',
                 i = '@class.inner',
               }),
-              -- Block (treesitter-based)
               o = require('mini.ai').gen_spec.treesitter({
                 a = { '@block.outer', '@conditional.outer', '@loop.outer' },
                 i = { '@block.inner', '@conditional.inner', '@loop.inner' },
               }),
-              -- Argument/parameter
               a = require('mini.ai').gen_spec.treesitter({
                 a = '@parameter.outer',
                 i = '@parameter.inner',
               }),
             },
-
-            -- Module mappings
             mappings = {
-              -- Main textobject prefixes
               around = 'a',
               inside = 'i',
-
-              -- Next/previous textobject
               around_next = 'an',
               inside_next = 'in',
               around_last = 'al',
               inside_last = 'il',
-
-              -- Move cursor to corresponding edge
               goto_left = 'g[',
               goto_right = 'g]',
             },
