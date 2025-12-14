@@ -14,8 +14,12 @@ let
   # Concatenate all Lua config snippets in order
   concatLuaSnippets = snippets: concatStringsSep "\n\n" (filter (s: s != "") (attrValues snippets));
 
-  # Path to lua modules
-  luaPath = ./lua;
+  # Create a filtered source containing only the lua directory
+  # See: https://www.tweag.io/blog/2023-11-28-file-sets/
+  luaRuntime = fileset.toSource {
+    root = ./.;
+    fileset = ./lua;
+  };
 in
 {
   imports = [
@@ -86,11 +90,13 @@ in
         viAlias = true;
         vimAlias = true;
 
-        # Add user lua modules from nix store to package path
-        luaConfigPre = ''
-          -- Add user modules from nix store to package path
-          package.path = "${luaPath}/?.lua;${luaPath}/?/init.lua;" .. package.path
-        '' + "\n\n" + concatLuaSnippets cfg.luaConfigPre;
+        # Add user lua modules to runtime path using nvf's pure runtime approach
+        # See: https://nvf.notashelf.dev/tips.html#sec-pure-nvf-runtime
+        # The path must contain a lua/ subdirectory - Neovim looks for modules in <rtp>/lua/
+        additionalRuntimePaths = [ "${luaRuntime}" ];
+
+        # Pre-plugin Lua configuration
+        luaConfigPre = concatLuaSnippets cfg.luaConfigPre;
 
         # Concatenate all luaConfigPost snippets
         luaConfigPost = concatLuaSnippets cfg.luaConfigPost;
