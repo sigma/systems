@@ -9,10 +9,12 @@ if platform.is_mac then
    mod.STD = 'SUPER'
    mod.SUPER = 'SUPER'
    mod.SUPER_REV = 'SUPER|SHIFT'
+   mod.SUPER_CTRL = 'SUPER|CTRL'
 elseif platform.is_win or platform.is_linux then
    mod.STD = 'CTRL'
    mod.SUPER = 'ALT' -- to not conflict with Windows key shortcuts
    mod.SUPER_REV = 'ALT|CTRL'
+   mod.SUPER_CTRL = 'ALT|SHIFT'
 end
 
 -- Smart splits integration: detect if pane is running vim/neovim or emacs
@@ -84,6 +86,25 @@ local function smart_split_resize(direction)
    end)
 end
 
+-- Conditionally swap buffer/pane in editor or WezTerm
+local function smart_split_swap(direction)
+   return wezterm.action_callback(function(window, pane)
+      local editor = get_editor_type(pane)
+      if editor == 'vim' then
+         -- Send Ctrl+Shift+Arrow to Neovim for buffer swap
+         local arrow = direction .. 'Arrow'
+         window:perform_action(act.SendKey({ key = arrow, mods = 'CTRL|SHIFT' }), pane)
+      else
+         -- Use directional pane swap (requires patched wezterm with PR #6821)
+         local tab = window:active_tab()
+         local target_pane = tab:get_pane_direction(direction)
+         if target_pane then
+            tab:swap_active_with_id(target_pane:pane_id(), true)
+         end
+      end
+   end)
+end
+
 -- stylua: ignore
 local keys = {
    { key = 'f',   mods = mod.SUPER, action = act.Search({ CaseInSensitiveString = '' }) },
@@ -131,6 +152,12 @@ local keys = {
    { key = 'DownArrow',   mods = mod.SUPER_REV, action = smart_split_resize('Down') },
    { key = 'LeftArrow',   mods = mod.SUPER_REV, action = smart_split_resize('Left') },
    { key = 'RightArrow',  mods = mod.SUPER_REV, action = smart_split_resize('Right') },
+
+   -- panes: smart swap (integrates with neovim smart-splits)
+   { key = 'UpArrow',     mods = mod.SUPER_CTRL, action = smart_split_swap('Up') },
+   { key = 'DownArrow',   mods = mod.SUPER_CTRL, action = smart_split_swap('Down') },
+   { key = 'LeftArrow',   mods = mod.SUPER_CTRL, action = smart_split_swap('Left') },
+   { key = 'RightArrow',  mods = mod.SUPER_CTRL, action = smart_split_swap('Right') },
 
    {
       key = 'p',
@@ -187,6 +214,19 @@ M.apply_to_config = function(options, _opts)
    options.send_composed_key_when_right_alt_is_pressed = true
    options.keys = keys
    options.key_tables = key_tables
+
+   -- Handle swap requests from Neovim at edge via user var
+   wezterm.on('user-var-changed', function(window, pane, name, value)
+      if name == 'swap_pane_direction' and value ~= '' then
+         local tab = window:active_tab()
+         local target_pane = tab:get_pane_direction(value)
+         if target_pane then
+            tab:swap_active_with_id(target_pane:pane_id(), true)
+         end
+         -- Clear the var so it can be triggered again
+         pane:set_user_var('swap_pane_direction', '')
+      end
+   end)
 end
 
 return M

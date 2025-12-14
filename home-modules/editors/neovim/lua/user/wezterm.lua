@@ -67,11 +67,45 @@ function M.setup(opts)
     ignored_filetypes = { 'neo-tree' },
   })
 
+  -- Helper: check if there's a window in the given direction
+  local function has_win_in_direction(dir)
+    local cur = vim.fn.winnr()
+    local target = vim.fn.winnr(dir)
+    return cur ~= target
+  end
+
+  -- Helper: signal WezTerm to swap panes via user var (OSC 1337)
+  local function wezterm_swap_pane(direction)
+    local b64 = vim.base64.encode(direction)
+    io.write(string.format('\027]1337;SetUserVar=swap_pane_direction=%s\007', b64))
+  end
+
+  -- Direction mappings for vim wincmd
+  local dir_to_wincmd = { Left = 'h', Right = 'l', Up = 'k', Down = 'j' }
+
+  -- Edge-aware swap: swap in Neovim if possible, otherwise signal WezTerm
+  local function smart_swap(direction, swap_fn)
+    return function()
+      if has_win_in_direction(dir_to_wincmd[direction]) then
+        -- Try Neovim swap, silently ignore failures (e.g., dashboard buffer)
+        pcall(swap_fn)
+      else
+        wezterm_swap_pane(direction)
+      end
+    end
+  end
+
   -- Navigation keymaps (Alt+Ctrl+Shift+hjkl sent by WezTerm via CSI u encoding)
   vim.keymap.set('n', '<M-C-S-h>', require('smart-splits').move_cursor_left, { desc = 'Move to left split/pane' })
   vim.keymap.set('n', '<M-C-S-l>', require('smart-splits').move_cursor_right, { desc = 'Move to right split/pane' })
   vim.keymap.set('n', '<M-C-S-k>', require('smart-splits').move_cursor_up, { desc = 'Move to upper split/pane' })
   vim.keymap.set('n', '<M-C-S-j>', require('smart-splits').move_cursor_down, { desc = 'Move to lower split/pane' })
+
+  -- Terminal mode navigation (exit terminal mode first, then move)
+  vim.keymap.set('t', '<M-C-S-h>', '<C-\\><C-n><cmd>lua require("smart-splits").move_cursor_left()<cr>', { desc = 'Move to left split/pane' })
+  vim.keymap.set('t', '<M-C-S-l>', '<C-\\><C-n><cmd>lua require("smart-splits").move_cursor_right()<cr>', { desc = 'Move to right split/pane' })
+  vim.keymap.set('t', '<M-C-S-k>', '<C-\\><C-n><cmd>lua require("smart-splits").move_cursor_up()<cr>', { desc = 'Move to upper split/pane' })
+  vim.keymap.set('t', '<M-C-S-j>', '<C-\\><C-n><cmd>lua require("smart-splits").move_cursor_down()<cr>', { desc = 'Move to lower split/pane' })
 
   -- Resize keymaps
   vim.keymap.set('n', '<M-C-S-Left>', require('smart-splits').resize_left, { desc = 'Resize split left' })
@@ -79,11 +113,19 @@ function M.setup(opts)
   vim.keymap.set('n', '<M-C-S-Up>', require('smart-splits').resize_up, { desc = 'Resize split up' })
   vim.keymap.set('n', '<M-C-S-Down>', require('smart-splits').resize_down, { desc = 'Resize split down' })
 
-  -- Swap buffer keymaps
-  vim.keymap.set('n', '<leader>wh', require('smart-splits').swap_buf_left, { desc = 'Swap buffer left' })
-  vim.keymap.set('n', '<leader>wj', require('smart-splits').swap_buf_down, { desc = 'Swap buffer down' })
-  vim.keymap.set('n', '<leader>wk', require('smart-splits').swap_buf_up, { desc = 'Swap buffer up' })
-  vim.keymap.set('n', '<leader>wl', require('smart-splits').swap_buf_right, { desc = 'Swap buffer right' })
+  -- Swap buffer keymaps (Ctrl+Shift+Arrow sent by WezTerm for Cmd+Ctrl+Arrow)
+  -- Edge-aware: swaps within Neovim or signals WezTerm at edges
+  local ss = require('smart-splits')
+  vim.keymap.set('n', '<C-S-Left>', smart_swap('Left', ss.swap_buf_left), { desc = 'Swap buffer left' })
+  vim.keymap.set('n', '<C-S-Right>', smart_swap('Right', ss.swap_buf_right), { desc = 'Swap buffer right' })
+  vim.keymap.set('n', '<C-S-Up>', smart_swap('Up', ss.swap_buf_up), { desc = 'Swap buffer up' })
+  vim.keymap.set('n', '<C-S-Down>', smart_swap('Down', ss.swap_buf_down), { desc = 'Swap buffer down' })
+
+  -- Swap buffer keymaps (leader-based alternative)
+  vim.keymap.set('n', '<leader>wh', ss.swap_buf_left, { desc = 'Swap buffer left' })
+  vim.keymap.set('n', '<leader>wj', ss.swap_buf_down, { desc = 'Swap buffer down' })
+  vim.keymap.set('n', '<leader>wk', ss.swap_buf_up, { desc = 'Swap buffer up' })
+  vim.keymap.set('n', '<leader>wl', ss.swap_buf_right, { desc = 'Swap buffer right' })
 
   -- Image.nvim setup for WezTerm image protocol
   require('image').setup({
