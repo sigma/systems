@@ -15,6 +15,7 @@ function M.setup(opts)
     diff_opts = {
       auto_close_on_accept = true,
       vertical_split = true,
+      open_in_current_tab = true,
     },
   })
 
@@ -26,6 +27,18 @@ function M.setup(opts)
         buffer = true,
         desc = "Add file to Claude",
       })
+    end,
+  })
+
+  -- Auto-enter terminal mode when focusing the Claude terminal
+  vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
+    pattern = "term://*",
+    callback = function()
+      -- Only auto-enter insert mode for Claude terminal buffers
+      local bufname = vim.api.nvim_buf_get_name(0)
+      if bufname:match("claude") then
+        vim.cmd("startinsert")
+      end
     end,
   })
 end
