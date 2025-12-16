@@ -38,7 +38,12 @@ let
           export SOPS_AGE_KEY
         fi
       fi
-      sops --config ${sopsConfigFile} "$FILE"
+
+      # Run the editor
+      sops --config ${sopsConfigFile} "$FILE" || true
+
+      # Always update keys (idempotent - re-encrypts for any new keys in config)
+      sops --config ${sopsConfigFile} updatekeys -y "$FILE"
     '';
   };
 

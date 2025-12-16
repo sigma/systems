@@ -13,6 +13,11 @@
         type = "ssh";
         publicKey = "age10zp04uauqx9nvan9jvvpyw82szm87mzugrsjar4p9h704vzml9ksg2me04";
       }
+      {
+        name = "yann-devbox-ssh";
+        type = "ssh";
+        publicKey = "age1ae6hr009lp657dhjlcufrfx6cu7vy3h0alxmns3uj5pr3xq4zydsp3kht6";
+      }
     ];
 
     sshKeyPaths = [ "~/.ssh/id_ed25519" ];

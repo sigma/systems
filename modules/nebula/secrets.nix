@@ -27,18 +27,23 @@ let
   };
 
   # Generate .sops.yaml content from defined keys
-  sopsConfigText = ''
-    # Generated from Nix - do not edit manually
-    # Regenerate with: sops-config (in devshell)
-    keys:
-    ${concatMapStringsSep "\n" (key: "  - &${key.name} ${key.publicKey}") cfg.ageKeys}
+  sopsConfigText =
+    let
+      keyAnchors = concatMapStringsSep "\n" (key: "  - &${key.name} ${key.publicKey}") cfg.ageKeys;
+      keyRefs = concatMapStringsSep "\n" (key: "          - *${key.name}") cfg.ageKeys;
+    in
+    ''
+      # Generated from Nix - do not edit manually
+      # Regenerate with: sops-config (in devshell)
+      keys:
+      ${keyAnchors}
 
-    creation_rules:
-      - path_regex: secrets/.*\.(yaml|json)$
-        key_groups:
-          - age:
-            ${concatMapStringsSep "\n            " (key: "- *${key.name}") cfg.ageKeys}
-  '';
+      creation_rules:
+        - path_regex: secrets/.*\.(yaml|json)$
+          key_groups:
+            - age:
+      ${keyRefs}
+    '';
 in
 {
   options.nebula.secrets = {
