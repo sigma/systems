@@ -3,7 +3,8 @@
   cachix,
   gh,
   # Config parameters - must be provided by caller
-  secretsDir ? "/run/secrets",
+  # Empty string means "auto-detect at runtime"
+  secretsDir ? "",
 }:
 writeShellApplication {
   name = "bootstrap-cachix";
@@ -13,6 +14,17 @@ writeShellApplication {
   ];
   meta.description = "Configure cachix authentication using decrypted token matching GitHub handle";
   text = ''
+    # Determine secrets directory at runtime
+    if [[ -n "${secretsDir}" ]]; then
+      SECRETS_DIR="${secretsDir}"
+    elif [[ -d /etc/nixos ]] || [[ "$(uname)" == "Darwin" ]]; then
+      # NixOS or Darwin: system-level sops
+      SECRETS_DIR="/run/secrets"
+    else
+      # Standalone home-manager on Linux
+      SECRETS_DIR="$HOME/.config/sops-nix/secrets"
+    fi
+
     # Get GitHub handle (use argument if provided, otherwise detect via gh)
     if [[ $# -ge 1 ]]; then
       GITHUB_HANDLE="$1"
@@ -23,7 +35,7 @@ writeShellApplication {
 
     echo "GitHub handle: $GITHUB_HANDLE"
 
-    TOKEN_FILE="${secretsDir}/cachix/$GITHUB_HANDLE"
+    TOKEN_FILE="$SECRETS_DIR/cachix/$GITHUB_HANDLE"
     if [[ ! -f "$TOKEN_FILE" ]]; then
       echo "No cachix token found for handle '$GITHUB_HANDLE' at: $TOKEN_FILE"
       echo "Run system-install or home-install first to decrypt secrets"

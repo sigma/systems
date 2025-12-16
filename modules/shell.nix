@@ -93,25 +93,14 @@ in
         if secretsCfg.enable then secretsCfg._sopsConfigText else "# Secrets not enabled"
       );
 
-      # Secrets directory location
-      secretsDir =
-        if isDarwin then "/run/secrets"
-        else if builtins.pathExists "/etc/nixos" then "/run/secrets"
-        else "$HOME/.config/sops-nix/secrets";
-
       # SOPS tools package
       sopsTools = pkgs.callPackage ../overlays/pkg/local/sops-tools.nix {
         inherit sopsConfigFile;
       };
 
-      # Bootstrap tools packages
-      bootstrapGithub = pkgs.callPackage ../overlays/pkg/local/bootstrap-github.nix {
-        inherit secretsDir;
-      };
-
-      bootstrapCachix = pkgs.callPackage ../overlays/pkg/local/bootstrap-cachix.nix {
-        inherit secretsDir;
-      };
+      # Bootstrap tools packages (auto-detect secrets directory at runtime)
+      bootstrapGithub = pkgs.callPackage ../overlays/pkg/local/bootstrap-github.nix { };
+      bootstrapCachix = pkgs.callPackage ../overlays/pkg/local/bootstrap-cachix.nix { };
     in
     {
       pre-commit.settings.hooks = {
