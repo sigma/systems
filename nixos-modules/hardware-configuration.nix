@@ -10,7 +10,7 @@
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-  boot.initrd.availableKernelModules = [ 
+  boot.initrd.availableKernelModules = [
     "ahci"
     "ehci_pci"
     "xhci_pci"
@@ -54,6 +54,8 @@
 
   nixpkgs.hostPlatform = lib.mkDefault machine.system;
 
-  hardware.enableAllFirmware = true;
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware = lib.optionalAttrs (!machine.features.fusion) {
+    enableAllFirmware = true;
+    cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  };
 }
