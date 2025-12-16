@@ -19,9 +19,19 @@
 
     defaultSopsFile = ../secrets/secrets.yaml;
 
-    secrets = {
-      github-key-uploader-pat = { };
-      glm-api-key = { owner = "@user"; };
-    };
+    secrets =
+      let
+        systemSecret = { };
+        userSecret = {
+          owner = "@user";
+        };
+      in
+      {
+        github-key-uploader-pat = systemSecret;
+        glm-api-key = userSecret;
+
+        # Cachix auth tokens
+        "cachix/sigma" = userSecret;
+      };
   };
 }

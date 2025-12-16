@@ -158,6 +158,7 @@ in
       specialArgs = {
         inherit user machine stateVersion;
         inherit (machine) system;
+        nixConfig = cfg.nixConfig;
       };
     in
     inputs.darwin.lib.darwinSystem {
@@ -210,6 +211,7 @@ in
       user = userFor machine;
       specialArgs = {
         inherit user machine stateVersion;
+        nixConfig = cfg.nixConfig;
       };
     in
     inputs.nixpkgs.lib.nixosSystem {

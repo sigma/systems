@@ -13,10 +13,6 @@ with lib;
     # determinate nix config. Only nix.custom.conf can be used to override
     # options.
     environment.etc."nix/nix.custom.conf".text = ''
-      # determinate-only options
-      lazy-trees = true
-      eval-cores = 0 # Evaluate across all cores
-
       ${lib.optionalString machine.features.mac ''
         # Determinate Nix Linux Builder
         extra-experimental-features = external-builders

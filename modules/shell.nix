@@ -104,8 +104,12 @@ in
         inherit sopsConfigFile;
       };
 
-      # Bootstrap tools package
+      # Bootstrap tools packages
       bootstrapGithub = pkgs.callPackage ../overlays/pkg/local/bootstrap-github.nix {
+        inherit secretsDir;
+      };
+
+      bootstrapCachix = pkgs.callPackage ../overlays/pkg/local/bootstrap-cachix.nix {
         inherit secretsDir;
       };
     in
@@ -227,6 +231,12 @@ in
             category = "bootstrap";
             help = "Upload machine SSH key to GitHub using decrypted PAT (requires sudo)";
             command = ''exec ${bootstrapGithub}/bin/bootstrap-github "$@"'';
+          }
+          {
+            name = "bootstrap-cachix";
+            category = "bootstrap";
+            help = "Configure cachix authentication using decrypted tokens";
+            command = ''exec ${bootstrapCachix}/bin/bootstrap-cachix "$@"'';
           }
         ];
       };
