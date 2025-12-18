@@ -227,6 +227,30 @@ in
             help = "Configure cachix authentication using decrypted tokens";
             command = ''exec ${bootstrapCachix}/bin/bootstrap-cachix "$@"'';
           }
+          {
+            name = "vm-generate";
+            category = "vm";
+            help = "Generate a VMware image for a NixOS host (usage: vm-generate <hostname> [output-dir])";
+            command = ''
+              ${findNix}
+              if [ -z "$1" ]; then
+                echo "Usage: vm-generate <hostname> [output-dir]"
+                echo "Example: vm-generate spectre-devbox ./vm-images"
+                exit 1
+              fi
+              HOST="$1"
+              OUTPUT_DIR="''${2:-.}"
+              OUTPUT_PATH="$OUTPUT_DIR/$HOST-vmware"
+
+              echo "Generating VMware image for $HOST..."
+              $NIX_BIN ${nixFlags} run .#nixos-generate -- \
+                --flake ".#$HOST" \
+                --format vmware \
+                -o "$OUTPUT_PATH"
+
+              echo "Image generated at: $OUTPUT_PATH"
+            '';
+          }
         ];
       };
     };

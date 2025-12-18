@@ -20,6 +20,7 @@
       packages = {
         inherit (inputs'.nixpkgs-stable.legacyPackages) nixos-rebuild;
         inherit (inputs'.home-manager.packages) home-manager;
+        nixos-generate = inputs'.nixos-generators.packages.nixos-generate;
       }
       // lib.optionalAttrs pkgs'.stdenv.isDarwin {
         inherit (inputs'.darwin.packages) darwin-rebuild;

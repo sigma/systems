@@ -76,6 +76,10 @@
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
+    # VM image generation
+    nixos-generators.url = "github:nix-community/nixos-generators";
+    nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
+
     # Flakehub
     fh.url = "https://flakehub.com/f/DeterminateSystems/fh/*";
     fh.inputs.nixpkgs.follows = "nixpkgs";
