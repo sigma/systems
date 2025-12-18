@@ -46,7 +46,7 @@
         remotes = [
           pdev
           csp
-          devbox
+          ash-devbox
         ];
         features = [
           "managed"
@@ -75,7 +75,6 @@
         remotes = [
           pdev
           csp
-          devbox
         ];
         features = [
           "managed"
@@ -87,9 +86,9 @@
         enableSwap = false;
       };
 
-      devbox = {
-        name = "192.168.77.131";
-        alias = "devbox";
+      ash-devbox = {
+        name = "192.168.1.82";
+        alias = "ash-devbox";
         system = "aarch64-linux";
         features = [
           "managed"
