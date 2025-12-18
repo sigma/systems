@@ -18,6 +18,11 @@
         type = "ssh";
         publicKey = "age1ae6hr009lp657dhjlcufrfx6cu7vy3h0alxmns3uj5pr3xq4zydsp3kht6";
       }
+      {
+        name = "yann-spectre-ssh";
+        type = "ssh";
+        publicKey = "age1r02uvfeluscppkrh2me46egs99zcaal5swdlmhcyh0eqj0m2d4ssx97vuz";
+      }
     ];
 
     sshKeyPaths = [ "~/.ssh/id_ed25519" ];
