@@ -123,7 +123,7 @@ in
 
       user_auto_bookmark = ''"${user.githubHandle}/push-" ++ change_id.short()'';
 
-      "sigma_format_short_commit_header(commit)" = ''
+      "user_format_short_commit_header(commit)" = ''
         separate(" ",
           format_short_change_id_with_hidden_and_divergent_info(commit),
           if(description,
@@ -136,7 +136,7 @@ in
         )
       '';
 
-      "sigma_format_short_commit_meta(commit)" = ''
+      "user_format_short_commit_meta(commit)" = ''
         separate(" ",
           commit.bookmarks(),
           commit.tags(),
@@ -149,27 +149,27 @@ in
         )
       '';
 
-      "sigma_log_compact" = ''
+      "user_log_compact" = ''
         if(root,
           format_root_commit(self),
           label(if(current_working_copy, "working_copy"),
             concat(
-              sigma_format_short_commit_header(self),
+              user_format_short_commit_header(self),
               "\n  ",
-              sigma_format_short_commit_meta(self),
+              user_format_short_commit_meta(self),
               "\n",
             ),
           )
         )
       '';
-      "sigma_log_comfortable" = "sigma_log_compact ++ '\n'";
+      "user_log_comfortable" = "user_log_compact ++ '\n'";
     };
 
     templates = {
       config_list = "builtin_config_list_detailed";
       draft_commit_description = "commit_description_verbose";
       git_push_bookmark = "user_auto_bookmark";
-      log = "sigma_log_comfortable";
+      log = "user_log_comfortable";
     };
   };
 
