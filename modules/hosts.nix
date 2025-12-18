@@ -25,6 +25,7 @@
         remotes = [
           pdev
           csp
+          spectre-devbox
         ];
         features = [
           "determinate"
@@ -96,6 +97,24 @@
           "nixos"
           "work"
           "subzero"
+        ];
+        sshOpts = {
+          forwardAgent = true;
+          extraOptions = {
+            AddKeysToAgent = "yes";
+          };
+        };
+      };
+
+      spectre-devbox = {
+        name = "spectre-devbox.local";  # Update after VM creation
+        alias = "spectre-devbox";
+        system = "aarch64-linux";
+        features = [
+          "managed"
+          "fusion"
+          "nixos"
+          "work"
         ];
         sshOpts = {
           forwardAgent = true;
