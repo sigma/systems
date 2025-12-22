@@ -23,6 +23,11 @@
         type = "ssh";
         publicKey = "age1r02uvfeluscppkrh2me46egs99zcaal5swdlmhcyh0eqj0m2d4ssx97vuz";
       }
+      {
+        name = "yann-shirka-ssh";
+        type = "ssh";
+        publicKey = "age1jm3mx2eqxacwq4hlw4euw05u37a4w89tp2yj2nk8xc3ukv3x93fslslta9";
+      }
     ];
 
     sshKeyPaths = [ "~/.ssh/id_ed25519" ];
