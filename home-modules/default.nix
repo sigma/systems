@@ -24,6 +24,7 @@
     ./kubeswitch.nix
     ./mailsetup.nix
     ./open-url.nix
+    ./policy
     ./settings
     ./shells
     ./tmuxp.nix
