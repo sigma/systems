@@ -36,6 +36,9 @@ mkIf machine.features.interactive {
         makeWrapper ${chromium}/bin/chromium $out/bin/chromium --add-flags "--disable-gpu-compositing"
       '';
     })
+
+    # sound control
+    pavucontrol
   ];
 
   programs.niri.enable = true;
