@@ -19,6 +19,9 @@
       allow-import-from-derivation = true
       warn-dirty = false
 
+      download-attempts = 10
+      connect-timeout = 10
+
       extra-experimental-features = nix-command flakes
 
       substituters = ${substituters}
