@@ -18,6 +18,24 @@ let
     // lib.optionalAttrs (r.sshOpts != null) r.sshOpts;
   };
 
+  # Find a remote by alias suffix (e.g., "devbox" matches "spectre-devbox")
+  findRemoteByAliasSuffix =
+    remotes: suffix:
+    lib.findFirst (r: r.alias != null && lib.hasSuffix suffix r.alias) null remotes;
+
+  # Create an alias matchBlock that points to an existing remote
+  mkRemoteAlias =
+    remotes: aliasName: suffix:
+    let
+      remote = findRemoteByAliasSuffix remotes suffix;
+      remoteName = if remote.alias != null then remote.alias else remote.name;
+    in
+    lib.optionalAttrs (remote != null) {
+      ${aliasName} = {
+        hostname = remoteName;
+      };
+    };
+
   # helper module to provide a shortcut for home-manager config.
   bridgeModule =
     args@{ user, ... }:
@@ -56,6 +74,7 @@ in
         signingKey
         enableSwap
         bootLabel
+        remotes
         ;
       inherit features;
       nixosModules = [
@@ -64,7 +83,9 @@ in
       darwinModules = [ bridgeModule ];
       homeModules = [
         {
-          programs.ssh.matchBlocks = builtins.listToAttrs (builtins.map sshHost host.remotes);
+          programs.ssh.matchBlocks =
+            builtins.listToAttrs (builtins.map sshHost host.remotes)
+            // mkRemoteAlias host.remotes "devbox" "-devbox";
         }
       ];
     };

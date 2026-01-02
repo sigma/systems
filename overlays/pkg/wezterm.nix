@@ -15,4 +15,7 @@ final: prev: {
       })
     ];
   });
+
+  # Expose original unpatched headless for cache hits on NixOS
+  wezterm-headless = prev.wezterm.headless;
 }
