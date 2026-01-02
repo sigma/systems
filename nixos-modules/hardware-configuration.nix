@@ -32,8 +32,8 @@
     fsType = "ext4";
   };
 
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-label/boot";
+  fileSystems."/boot" = lib.mkForce {
+    device = "/dev/disk/by-label/${machine.bootLabel}";
     fsType = "vfat";
     options = [
       "fmask=0077"

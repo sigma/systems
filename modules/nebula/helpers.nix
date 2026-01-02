@@ -55,6 +55,7 @@ in
         u2fKeys
         signingKey
         enableSwap
+        bootLabel
         ;
       inherit features;
       nixosModules = [

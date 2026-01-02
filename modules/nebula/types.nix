@@ -114,6 +114,12 @@ rec {
           default = true;
           description = "Whether to enable swap on the host";
         };
+
+        bootLabel = mkOption {
+          type = types.str;
+          default = "ESP";
+          description = "The label of the boot partition";
+        };
       };
     }
   );

@@ -85,6 +85,7 @@
           "firefly"
         ];
         enableSwap = false;
+        bootLabel = "boot";
       };
 
       ash-devbox = {
@@ -104,6 +105,7 @@
             AddKeysToAgent = "yes";
           };
         };
+        bootLabel = "boot";
       };
 
       spectre-devbox = {
