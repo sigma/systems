@@ -1,9 +1,13 @@
 args@{
   pkgs,
   lib,
+  machine,
   ...
 }:
 let
+  # Only install on machines with a GUI
+  interactive = machine.features.mac || machine.features.interactive;
+
   makeProfile =
     modules:
     (lib.evalModules {
@@ -15,7 +19,7 @@ let
     }).config;
 in
 {
-  enable = true;
+  enable = interactive;
   mutableExtensionsDir = true;
 
   profiles.default = makeProfile [
