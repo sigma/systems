@@ -133,9 +133,6 @@
       # keyboard QMK tools
       local.mdloader
 
-      # download tools
-      local.myrient-downloader
-
       # for voice generation
       ffmpeg
     ]
@@ -145,5 +142,8 @@
     ]
     ++ lib.optionals machine.features.music [
       maschine-hacks
+    ]
+    ++ lib.optionals machine.features.gaming [
+      local.myrient-downloader
     ];
 }
