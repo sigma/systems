@@ -127,6 +127,10 @@ let
     machine:
     let
       user = userFor machine;
+      # Module to apply nixpkgs config (overlays, allowUnfree, etc.)
+      nixpkgsConfigModule = {
+        nixpkgs = cfg.nixpkgsConfig;
+      };
       # Build the full NixOS system to get the complete home-manager config
       nixosSystem = inputs.nixpkgs.lib.nixosSystem {
         inherit (machine) system;
@@ -137,6 +141,7 @@ let
           cfg.nixosModules
           ++ machine.nixosModules
           ++ [
+            nixpkgsConfigModule
             inputs.home-manager.nixosModules.home-manager
             (homeManagerConfig { inherit user machine; })
             nixModule
@@ -213,6 +218,10 @@ in
         inherit user machine stateVersion;
         nixConfig = cfg.nixConfig;
       };
+      # Module to apply nixpkgs config (overlays, allowUnfree, etc.)
+      nixpkgsConfigModule = {
+        nixpkgs = cfg.nixpkgsConfig;
+      };
     in
     inputs.nixpkgs.lib.nixosSystem {
       inherit (machine) system;
@@ -221,6 +230,8 @@ in
         cfg.nixosModules
         ++ machine.nixosModules
         ++ [
+          # nixpkgs configuration (overlays, allowUnfree)
+          nixpkgsConfigModule
           # 'home-manager' module
           inputs.home-manager.nixosModules.home-manager
           (homeManagerConfig { inherit user machine; })

@@ -243,9 +243,9 @@ in
               OUTPUT_PATH="$OUTPUT_DIR/$HOST-vmware"
 
               echo "Generating VMware image for $HOST..."
-              $NIX_BIN ${nixFlags} run .#nixos-generate -- \
-                --flake ".#$HOST" \
-                --format vmware \
+              # Build directly from nixosConfigurations to use our patched pkgs
+              $NIX_BIN ${nixFlags} build \
+                ".#nixosConfigurations.$HOST.config.system.build.vmwareImage" \
                 -o "$OUTPUT_PATH"
 
               echo "Image generated at: $OUTPUT_PATH"

@@ -8,5 +8,6 @@
     ./nix.nix
     ./nixos-user.nix
     ./vmware-fusion.nix
+    ./vmware-image.nix
   ];
 }

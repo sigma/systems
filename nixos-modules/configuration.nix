@@ -2,9 +2,17 @@
   machine,
   user,
   pkgs,
+  lib,
   ...
 }:
 {
+  # Disable documentation on fusion VMs to reduce image size
+  documentation.enable = lib.mkDefault (!machine.features.fusion);
+  documentation.man.enable = lib.mkDefault (!machine.features.fusion);
+  documentation.doc.enable = lib.mkDefault (!machine.features.fusion);
+  documentation.info.enable = lib.mkDefault (!machine.features.fusion);
+  documentation.nixos.enable = lib.mkDefault (!machine.features.fusion);
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
