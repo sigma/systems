@@ -125,6 +125,7 @@
           };
         };
         bootLabel = "boot";
+        enableSwap = false;
       };
 
       pdev = {
