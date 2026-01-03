@@ -23,6 +23,11 @@
         type = "ssh";
         publicKey = "age1r02uvfeluscppkrh2me46egs99zcaal5swdlmhcyh0eqj0m2d4ssx97vuz";
       }
+     {
+        name = "yann-spectre-devbox-ssh";
+        type = "ssh";
+        publicKey = "age1a4zrf52jlfrnwkywwsxwmsl5cvj43qp0qp0d66zymx86pr5jgdmqh0sxge";
+      }
       {
         name = "yann-shirka-ssh";
         type = "ssh";

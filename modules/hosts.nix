@@ -109,7 +109,7 @@
       };
 
       spectre-devbox = {
-        name = "spectre-devbox.local";  # Update after VM creation
+        name = "192.168.1.73";
         alias = "spectre-devbox";
         system = "aarch64-linux";
         features = [
@@ -124,6 +124,7 @@
             AddKeysToAgent = "yes";
           };
         };
+        bootLabel = "boot";
       };
 
       pdev = {
