@@ -2,6 +2,7 @@
   lib,
   machine,
   config,
+  user,
   ...
 }:
 with lib;
@@ -16,6 +17,9 @@ in
     # determinate nix config. Only nix.custom.conf can be used to override
     # options.
     environment.etc."nix/nix.custom.conf".text = ''
+      # Allow user to override restricted settings
+      trusted-users = root ${user.login}
+
       ${lib.optionalString machine.features.mac ''
         # Determinate Nix Linux Builder
         extra-experimental-features = external-builders
