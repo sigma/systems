@@ -7,6 +7,7 @@
     ./hardware-configuration.nix
     ./nix.nix
     ./nixos-user.nix
+    ./tailscale.nix
     ./vmware-fusion.nix
     ./vmware-image.nix
   ];
