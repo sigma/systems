@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   machine,
@@ -6,8 +7,14 @@
   nixConfig,
   ...
 }:
+let
+  isBuilder = machine.builder != null && machine.builder.enable or false;
+in
 {
   nix.enable = !machine.features.determinate;
+
+  # Add user to trusted-users if this machine is a builder
+  nix.settings.trusted-users = lib.mkIf isBuilder [ user.login ];
 
   nix.extraOptions =
     let
@@ -27,7 +34,16 @@
     ''
     + lib.optionalString (pkgs.stdenv.hostPlatform.system == "aarch64-darwin") ''
       extra-platforms = x86_64-darwin aarch64-darwin
+    ''
+    # Store signing for non-determinate darwin builders
+    + lib.optionalString (isBuilder && !machine.features.determinate) ''
+      secret-key-files = ${config.sops.secrets."store-keys/${machine.hostKey}".path}
     '';
+
+  # Configure store signing secret if this machine is a builder
+  sops.secrets."store-keys/${machine.hostKey}" = lib.mkIf isBuilder {
+    mode = "0400";
+  };
 
   programs.nix-index.enable = true;
 

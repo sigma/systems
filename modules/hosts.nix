@@ -39,6 +39,15 @@
           # desktop titan
           "7fZp73vnETk6Nen9OqNu49XEnQvlpqIIYYeNJDM4p/w1DprKpyqw8kvRCalbqMNwfLaElmbhHYKN4nKvMvoTPg==,yxC16UIBA7Ajkr/2uVVGx5DUCPLJOEYXHi8bs0KrTlFSL4SH+eF9rChm6V13jcldqSfL/d66REtrbRYqg5/0xQ==,es256,+presence"
         ];
+        builder = {
+          enable = true;
+          maxJobs = 8;
+          speedFactor = 10;
+          sshUser = "yann";
+          supportedFeatures = [ "big-parallel" ];
+          sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICOFQODLDegQzo1pEDrnzP6GJwmSudZ270EeXzsSr2d3 spectre-builder";
+          storePublicKey = "spectre-builder:jBwyDL6nsUSwyNgy6iNYCZD0pDiXfqD0xvy3Avxib20=";
+        };
       };
 
       ash = {
@@ -67,6 +76,15 @@
           "mEJg6bvtXfOO8r3USlUbN6xaW87kBR7xAlVTfeFxdQSAh06vNXqOLgbjQu4XHbM1qdmEQNlfhrErxfR6Jv5M8A==,iiS2fAX/OMD79/nSPRtG/OPVn326dvU/qV2EkxAfVvasuE2I98odrFgGA3IRJyBF8ucC+sEMt/uVekIs01uqhA==,es256,+presence"
         ];
         signingKey = "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCH9S6aF3W4/pKY+s/FpZAl8zIXXxI7LHE4fVd+foYdXtQI2mhiIyBX4jtbYkhACOSha5i2TPYKpBqy3NtI/utc=";
+        builder = {
+          enable = true;
+          maxJobs = 8;
+          speedFactor = 10;
+          sshUser = "yann";
+          supportedFeatures = [ "big-parallel" ];
+          sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJXjN5tmhFNXn0VC06tPgWLRYOEMqrNnS38fjHe+ClOc ash-builder";
+          storePublicKey = "ash-builder:dzF0FVd4nvgsJE5NUybyngj9UXyF8FS+zjdsPPpPatM=";
+        };
       };
 
       shirka = {
@@ -86,6 +104,15 @@
         ];
         enableSwap = false;
         bootLabel = "boot";
+        builder = {
+          enable = true;
+          maxJobs = 4;
+          speedFactor = 10;
+          sshUser = "nixbuilder";
+          supportedFeatures = [ "nixos-test" "big-parallel" "kvm" ];
+          sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA6RaKDYN9eLKKmk2M7y+m5HBQ3WI0h8Y/FgNR9i9P7v shirka-builder";
+          storePublicKey = "shirka-builder:ljFu1tbLM+lH2DNlKfGRZJyrdrWNnTlbKC82qQFJB8g=";
+        };
       };
 
       ash-devbox = {
@@ -106,6 +133,15 @@
           };
         };
         bootLabel = "boot";
+        builder = {
+          enable = true;
+          maxJobs = 4;
+          speedFactor = 10;
+          sshUser = "nixbuilder";
+          supportedFeatures = [ "nixos-test" "big-parallel" ];
+          sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBu5UCinocrjwfRvjBhrjB7pQJFqdCNDpd6IC0NMkiq7 ash-devbox-builder";
+          storePublicKey = "ash-devbox-builder:I0IgbNp3CBOF/4shE3EePUpcvokEQguuTyTbYfo3Bjc=";
+        };
       };
 
       spectre-devbox = {
@@ -126,6 +162,15 @@
         };
         bootLabel = "boot";
         enableSwap = false;
+        builder = {
+          enable = true;
+          maxJobs = 4;
+          speedFactor = 10;
+          sshUser = "nixbuilder";
+          supportedFeatures = [ "nixos-test" "big-parallel" ];
+          sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBUh7zw1mlXTTeT9S3EMTrMEdQ1LMUYgDEqhaurbfaYP spectre-devbox-builder";
+          storePublicKey = "spectre-devbox-builder:AcPGiyR/CKrwZ+/f7IvbDqKARmyNRf10XqgmtWrGNMQ=";
+        };
       };
 
       pdev = {

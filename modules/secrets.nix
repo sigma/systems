@@ -52,6 +52,20 @@
 
         # Cachix auth tokens
         "cachix/sigma" = userSecret;
+
+        # Builder SSH private keys (for connecting TO each builder)
+        "builder-keys/ash" = systemSecret;
+        "builder-keys/spectre" = systemSecret;
+        "builder-keys/shirka" = systemSecret;
+        "builder-keys/ash-devbox" = systemSecret;
+        "builder-keys/spectre-devbox" = systemSecret;
+
+        # Store signing private keys (for each machine to sign its store)
+        "store-keys/ash" = systemSecret;
+        "store-keys/spectre" = systemSecret;
+        "store-keys/shirka" = systemSecret;
+        "store-keys/ash-devbox" = systemSecret;
+        "store-keys/spectre-devbox" = systemSecret;
       };
   };
 }

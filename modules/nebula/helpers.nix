@@ -53,7 +53,7 @@ in
     };
 
   hostMachine =
-    host:
+    hostKey: host:
     let
       mapFeatures =
         features: val:
@@ -66,6 +66,7 @@ in
       features = (mapFeatures cfg.features false) // (mapFeatures host.features true);
     in
     {
+      inherit hostKey;  # The original key from hosts.nix (e.g., "ash", "spectre")
       inherit (host)
         name
         system
@@ -75,6 +76,7 @@ in
         enableSwap
         bootLabel
         remotes
+        builder
         ;
       inherit features;
       nixosModules = [

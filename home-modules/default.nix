@@ -11,6 +11,7 @@
   imports = [
     ./accounts.nix
     ./aspell.nix
+    ./builder-access.nix
     ./catppuccin.nix
     ./claude-glm.nix
     ./cloud-shell.nix

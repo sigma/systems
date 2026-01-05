@@ -5,6 +5,9 @@
   ...
 }:
 with lib;
+let
+  isBuilder = machine.builder != null && machine.builder.enable or false;
+in
 {
   config = mkIf machine.features.determinate {
     # disable nix management as we're using determinate nix.
@@ -20,6 +23,11 @@ with lib;
       ''}
 
       ${config.nix.extraOptions}
+
+      ${lib.optionalString isBuilder ''
+        # Store signing for this builder
+        secret-key-files = ${config.sops.secrets."store-keys/${machine.hostKey}".path}
+      ''}
     '';
 
     # restore ability to populate registry, which is normally guarded by
