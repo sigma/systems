@@ -21,6 +21,7 @@
     rec {
       spectre = {
         name = "spectre.local";
+        alias = "spectre";
         system = "aarch64-darwin";
         remotes = [
           pdev
@@ -52,6 +53,7 @@
 
       ash = {
         name = "ash.local";
+        alias = "ash";
         system = "aarch64-darwin";
         remotes = [
           pdev
