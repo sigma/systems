@@ -16,7 +16,8 @@ let
       machine,
     }:
     {
-      nixpkgs = cfg.nixpkgsConfig;
+      # nixpkgs config is set via nixpkgsConfigModule - don't duplicate here
+      # as lists (like overlays) get concatenated, causing duplicate patches
       home-manager = {
         useGlobalPkgs = true;
         useUserPackages = true;
@@ -30,6 +31,12 @@ let
   nixModule = {
     nix.settings.substituters = cfg.nixConfig.trusted-substituters;
     nix.settings.trusted-public-keys = cfg.nixConfig.trusted-public-keys;
+  };
+
+  # Module to apply nixpkgs config (overlays, allowUnfree, etc.)
+  # Defined once to avoid duplication across darwin/nixos/home configs
+  nixpkgsConfigModule = {
+    nixpkgs = cfg.nixpkgsConfig;
   };
 
   # Check if sops should be active (enabled AND has a secrets file)
@@ -105,6 +112,7 @@ let
           cfg.darwinModules
           ++ machine.darwinModules
           ++ [
+            nixpkgsConfigModule
             inputs.home-manager.darwinModules.home-manager
             (homeManagerConfig { inherit user machine; })
             nixModule
@@ -127,10 +135,6 @@ let
     machine:
     let
       user = userFor machine;
-      # Module to apply nixpkgs config (overlays, allowUnfree, etc.)
-      nixpkgsConfigModule = {
-        nixpkgs = cfg.nixpkgsConfig;
-      };
       # Build the full NixOS system to get the complete home-manager config
       nixosSystem = inputs.nixpkgs.lib.nixosSystem {
         inherit (machine) system;
@@ -173,6 +177,8 @@ in
         cfg.darwinModules
         ++ machine.darwinModules
         ++ [
+          # nixpkgs configuration (overlays, allowUnfree)
+          nixpkgsConfigModule
           # `home-manager` module
           inputs.home-manager.darwinModules.home-manager
           (homeManagerConfig { inherit user machine; })
@@ -217,10 +223,6 @@ in
       specialArgs = {
         inherit user machine stateVersion;
         nixConfig = cfg.nixConfig;
-      };
-      # Module to apply nixpkgs config (overlays, allowUnfree, etc.)
-      nixpkgsConfigModule = {
-        nixpkgs = cfg.nixpkgsConfig;
       };
     in
     inputs.nixpkgs.lib.nixosSystem {
