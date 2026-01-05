@@ -2,11 +2,13 @@
   machine,
   lib,
   nixConfig,
+  user,
   ...
 }:
 {
   nix.settings.trusted-users = [
     "root"
+    user.login
   ];
 
   nix.extraOptions =

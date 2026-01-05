@@ -13,8 +13,8 @@ in
 {
   nix.enable = !machine.features.determinate;
 
-  # Add user to trusted-users if this machine is a builder
-  nix.settings.trusted-users = lib.mkIf isBuilder [ user.login ];
+  # Add user to trusted-users for ad-hoc builder overrides
+  nix.settings.trusted-users = [ user.login ];
 
   nix.extraOptions =
     let

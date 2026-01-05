@@ -24,6 +24,7 @@ let
         users.${user.login} = inputs.nixpkgs.lib.mkMerge (cfg.homeModules ++ machine.homeModules);
         extraSpecialArgs = {
           inherit user machine stateVersion;
+          nixConfig = cfg.nixConfig;
         };
       };
     };
