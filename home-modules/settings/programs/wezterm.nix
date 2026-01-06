@@ -15,6 +15,23 @@ let
       config.programs.cursor.package
     else
       config.programs.vscode.package;
+
+  # Generate SSH domains from machine remotes
+  remoteToDomain = remote:
+    let
+      domainName = if remote.alias != null then remote.alias else remote.name;
+    in
+    ''{
+        name = "${domainName}",
+        remote_address = "${domainName}",
+        multiplexing = "WezTerm",
+      }'';
+
+  sshDomainsLua =
+    if machine.remotes == [ ] then
+      ""
+    else
+      lib.concatStringsSep ",\n    " (map remoteToDomain machine.remotes);
 in
 {
   enable = true;
@@ -29,6 +46,11 @@ in
 
     local config = dofile("${weztermConfig}/wezterm.lua")
       ${lib.optionalString config.catppuccin.wezterm.enable ":apply(dofile(catppuccin_plugin))"}
+      :apply(function(c)
+        c.ssh_domains = {
+          ${sshDomainsLua}
+        }
+      end)
 
     -- This is the main event handler for opening links
     wezterm.on('open-uri', function(window, pane, uri)
@@ -69,15 +91,6 @@ in
        -- If the URI is not a file or web URL, let the default handler try it
        -- (This will return `nil`, allowing the chain to continue)
     end)
-
-    -- SSH domain for connecting to devbox with multiplexing
-    config.options.ssh_domains = {
-      {
-        name = "devbox",
-        remote_address = "devbox",  -- resolves via SSH config alias
-        multiplexing = "WezTerm",   -- use wezterm-mux-server on remote
-      },
-    }
 
     return config.options
   '';
