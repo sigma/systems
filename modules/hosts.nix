@@ -27,6 +27,7 @@
           pdev
           csp
           spectre-devbox
+          shirka
         ];
         features = [
           "determinate"
@@ -59,6 +60,7 @@
           pdev
           csp
           ash-devbox
+          shirka
         ];
         features = [
           "managed"
@@ -96,6 +98,8 @@
         remotes = [
           pdev
           csp
+          ash-devbox
+          spectre-devbox
         ];
         features = [
           "managed"
@@ -111,7 +115,11 @@
           maxJobs = 4;
           speedFactor = 10;
           sshUser = "nixbuilder";
-          supportedFeatures = [ "nixos-test" "big-parallel" "kvm" ];
+          supportedFeatures = [
+            "nixos-test"
+            "big-parallel"
+            "kvm"
+          ];
           sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA6RaKDYN9eLKKmk2M7y+m5HBQ3WI0h8Y/FgNR9i9P7v shirka-builder";
           storePublicKey = "shirka-builder:ljFu1tbLM+lH2DNlKfGRZJyrdrWNnTlbKC82qQFJB8g=";
         };
@@ -121,6 +129,9 @@
         name = "192.168.1.82";
         alias = "ash-devbox";
         system = "aarch64-linux";
+        remotes = [
+          shirka
+        ];
         features = [
           "managed"
           "fusion"
@@ -140,7 +151,10 @@
           maxJobs = 4;
           speedFactor = 10;
           sshUser = "nixbuilder";
-          supportedFeatures = [ "nixos-test" "big-parallel" ];
+          supportedFeatures = [
+            "nixos-test"
+            "big-parallel"
+          ];
           sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBu5UCinocrjwfRvjBhrjB7pQJFqdCNDpd6IC0NMkiq7 ash-devbox-builder";
           storePublicKey = "ash-devbox-builder:I0IgbNp3CBOF/4shE3EePUpcvokEQguuTyTbYfo3Bjc=";
         };
@@ -150,6 +164,9 @@
         name = "192.168.1.73";
         alias = "spectre-devbox";
         system = "aarch64-linux";
+        remotes = [
+          shirka
+        ];
         features = [
           "managed"
           "fusion"
@@ -169,7 +186,10 @@
           maxJobs = 4;
           speedFactor = 10;
           sshUser = "nixbuilder";
-          supportedFeatures = [ "nixos-test" "big-parallel" ];
+          supportedFeatures = [
+            "nixos-test"
+            "big-parallel"
+          ];
           sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBUh7zw1mlXTTeT9S3EMTrMEdQ1LMUYgDEqhaurbfaYP spectre-devbox-builder";
           storePublicKey = "spectre-devbox-builder:AcPGiyR/CKrwZ+/f7IvbDqKARmyNRf10XqgmtWrGNMQ=";
         };
