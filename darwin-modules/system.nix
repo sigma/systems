@@ -5,6 +5,7 @@
   ...
 }:
 {
+  services.ssh.enable = true;
   # zsh is enabled by default in nix-darwin
   programs.zsh.enable = lib.mkForce false;
 
