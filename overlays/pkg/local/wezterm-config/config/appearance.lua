@@ -52,6 +52,14 @@ M.apply_to_config = function(options, _opts)
 
    options.macos_window_background_blur = 10
    options.quick_select_remove_styling = true
+
+   -- Visual bell (brief flash for feedback)
+   options.audible_bell = "Disabled"
+   options.visual_bell = {
+      fade_in_duration_ms = 50,
+      fade_out_duration_ms = 100,
+      target = "CursorColor",
+   }
 end
 
 return M
