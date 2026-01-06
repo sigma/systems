@@ -22,6 +22,7 @@ M.apply_to_config = function(options, _opts)
    options.use_fancy_tab_bar = false
    options.tab_max_width = 30
    options.show_tab_index_in_tab_bar = false
+   options.show_new_tab_button_in_tab_bar = false
    options.switch_to_last_active_tab_when_closing_tab = true
 
    -- window
