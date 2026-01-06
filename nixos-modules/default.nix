@@ -9,6 +9,8 @@
     ./nix.nix
     ./nixos-user.nix
     ./tailscale.nix
+    ./utm.nix
+    ./utm-image.nix
     ./vmware-fusion.nix
     ./vmware-image.nix
   ];

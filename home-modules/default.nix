@@ -140,6 +140,7 @@
     ++ lib.optionals machine.features.mac [
       m-cli # useful macOS CLI commands
       # afsctool
+      qemu_kvm # for qemu-img and VM image manipulation (UTM)
     ]
     ++ lib.optionals machine.features.music [
       maschine-hacks

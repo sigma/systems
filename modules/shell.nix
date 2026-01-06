@@ -251,6 +251,31 @@ in
               echo "Image generated at: $OUTPUT_PATH"
             '';
           }
+          {
+            name = "vm-generate-utm";
+            category = "vm";
+            help = "Generate a UTM/QEMU image for a NixOS host (usage: vm-generate-utm <hostname> [output-dir])";
+            command = ''
+              ${findNix}
+              if [ -z "$1" ]; then
+                echo "Usage: vm-generate-utm <hostname> [output-dir]"
+                echo "Example: vm-generate-utm spectre-devbox ./vm-images"
+                exit 1
+              fi
+              HOST="$1"
+              OUTPUT_DIR="''${2:-.}"
+              OUTPUT_PATH="$OUTPUT_DIR/$HOST-utm"
+
+              echo "Generating UTM/QEMU image for $HOST..."
+              # Build directly from nixosConfigurations to use our patched pkgs
+              $NIX_BIN ${nixFlags} build \
+                ".#nixosConfigurations.$HOST.config.system.build.utmImage" \
+                -o "$OUTPUT_PATH"
+
+              echo "Image generated at: $OUTPUT_PATH"
+              echo "The qcow2 image can be imported into UTM"
+            '';
+          }
         ];
       };
     };

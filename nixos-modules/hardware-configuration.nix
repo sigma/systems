@@ -24,7 +24,8 @@
     "sr_mod"
   ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = lib.optionals (!machine.features.fusion) [ "kvm-intel" ];
+  # Only load kvm-intel on physical Intel machines (not VMs)
+  boot.kernelModules = lib.optionals (!machine.features.fusion && !machine.features.utm) [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" = {
@@ -54,7 +55,8 @@
 
   nixpkgs.hostPlatform = lib.mkDefault machine.system;
 
-  hardware = lib.optionalAttrs (!machine.features.fusion) {
+  # Only enable hardware-specific firmware on physical machines (not VMs)
+  hardware = lib.optionalAttrs (!machine.features.fusion && !machine.features.utm) {
     enableAllFirmware = true;
     cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   };

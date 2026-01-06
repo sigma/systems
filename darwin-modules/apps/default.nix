@@ -31,6 +31,7 @@
     "obsidian"
     "soundsource"
     "transnomino"
+    "utm"
     "whatsapp"
     "yubico-yubikey-manager"
   ];

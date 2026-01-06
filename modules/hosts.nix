@@ -4,7 +4,8 @@
     "firefly" # specifically for firefly engineering
     "subzero" # specifically for subzero contracting
     "music" # music production
-    "fusion" # for Fusion VMs
+    "fusion" # for VMware Fusion VMs
+    "utm" # for UTM/QEMU VMs
     "determinate" # for Determinate Nix
     "gaming" # for gaming
   ];
@@ -154,6 +155,7 @@
           supportedFeatures = [
             "nixos-test"
             "big-parallel"
+            "kvm"
           ];
           sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBu5UCinocrjwfRvjBhrjB7pQJFqdCNDpd6IC0NMkiq7 ash-devbox-builder";
           storePublicKey = "ash-devbox-builder:I0IgbNp3CBOF/4shE3EePUpcvokEQguuTyTbYfo3Bjc=";
@@ -189,6 +191,7 @@
           supportedFeatures = [
             "nixos-test"
             "big-parallel"
+            "kvm"
           ];
           sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBUh7zw1mlXTTeT9S3EMTrMEdQ1LMUYgDEqhaurbfaYP spectre-devbox-builder";
           storePublicKey = "spectre-devbox-builder:AcPGiyR/CKrwZ+/f7IvbDqKARmyNRf10XqgmtWrGNMQ=";

@@ -11,4 +11,8 @@ lib.mkIf machine.features.fusion {
     enable = true;
     headless = !machine.features.interactive;
   };
+
+  # Enable KVM for nested virtualization (requires VMware "Virtualize CPU" option)
+  boot.kernelModules = [ "kvm" ];
+  virtualisation.libvirtd.enable = false; # We just want KVM module, not full libvirt
 }
