@@ -127,7 +127,7 @@
       fill-labs.dependi
       dustypomerleau.rust-syntax
       ms-vscode-remote.remote-containers
-      ms-vscode-remote.remote-ssh
+      # ms-vscode-remote.remote-ssh
       ms-vscode-remote.remote-ssh-edit
       ms-vscode.remote-explorer
       ms-vscode.remote-repositories

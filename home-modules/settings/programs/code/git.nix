@@ -30,7 +30,7 @@
         github.copilot
         github.remotehub
         github.vscode-github-actions
-        github.vscode-pull-request-github
+        # github.vscode-pull-request-github
 
         vsls-contrib.gistfs
       ]

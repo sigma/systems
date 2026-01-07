@@ -23,8 +23,8 @@ in
         # Nix
         nix = {
           enable = true;
-          lsp.server = "nil";
-          format.type = "nixfmt";
+          lsp.servers = [ "nil" ];
+          format.type = [ "nixfmt" ];
         };
 
         # Lua (for neovim config)
@@ -42,7 +42,7 @@ in
           # Use gofumpt for stricter formatting
           format = {
             enable = true;
-            type = "gofumpt";
+            type = [ "gofumpt" ];
           };
         };
 
@@ -62,7 +62,7 @@ in
           # Use prettier for formatting
           format = {
             enable = true;
-            type = "prettierd";
+            type = [ "prettierd" ];
           };
           # Enable ESLint for extra diagnostics
           extraDiagnostics.enable = true;
@@ -76,7 +76,7 @@ in
           # Use black + isort for formatting
           format = {
             enable = true;
-            type = "black-and-isort";
+            type = [ "black" "isort" ];
           };
         };
 
