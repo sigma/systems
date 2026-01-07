@@ -125,7 +125,7 @@ in
 
       "user_format_short_commit_header(commit)" = ''
         separate(" ",
-          format_short_change_id_with_hidden_and_divergent_info(commit),
+          format_short_change_id_with_change_offset(commit),
           if(description,
             label("description title", description.first_line()),
             label(if(empty, "empty"), description_placeholder),
@@ -143,7 +143,7 @@ in
           format_short_signature(commit.author()),
           format_timestamp(commit_timestamp(commit)),
           commit.working_copies(),
-          if(commit.git_head(), label("git_head", "git_head()")),
+          if(commit.contained_in('first_parent(@)'), label("git_head", "git_head()")),
           if(config("ui.show-cryptographic-signatures").as_boolean(),
             format_short_cryptographic_signature(commit.signature())),
         )
