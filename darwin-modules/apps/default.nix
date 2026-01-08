@@ -9,7 +9,6 @@
     ./karabiner.nix
     ./kurtosis.nix
     ./secretive.nix
-    ./tailscale.nix
 
     ./settings
   ];
