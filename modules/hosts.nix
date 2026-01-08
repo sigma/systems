@@ -92,7 +92,7 @@
       };
 
       shirka = {
-        name = "shirka.local";
+        name = "192.168.1.157";
         alias = "shirka";
         system = "x86_64-linux";
         remotes = [
