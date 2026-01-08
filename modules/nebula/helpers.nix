@@ -4,19 +4,35 @@
   ...
 }:
 let
-  sshHost = r: {
-    name = if builtins.isNull r.alias then r.name else r.alias;
-    value = {
-      sendEnv = [ "WINDOW" ];
-    }
-    // lib.optionalAttrs (r.name != null) {
-      hostname = r.name;
-    }
-    // lib.optionalAttrs (r.user != null) {
-      user = r.user;
-    }
-    // lib.optionalAttrs (r.sshOpts != null) r.sshOpts;
-  };
+  # Create SSH matchBlock entry for a remote host
+  # Takes context about the current machine's features and shared domain
+  sshHost =
+    { machine, sharedDomain }:
+    r:
+    let
+      # Check if remote has tailscale feature (it's a list in host definition)
+      remoteHasTailscale = builtins.elem "tailscale" (r.features or [ ]);
+      # Check if current machine has tailscale (processed attrset)
+      machineHasTailscale = machine.features.tailscale or false;
+      # Use shared domain DNS if both have tailscale
+      useSharedDomain = machineHasTailscale && remoteHasTailscale && sharedDomain != "";
+      # Determine hostname
+      hostAlias = if r.alias != null then r.alias else r.name;
+      sharedHostname = "${hostAlias}.${sharedDomain}";
+      regularHostname = r.name;
+    in
+    {
+      name = if builtins.isNull r.alias then r.name else r.alias;
+      value =
+        {
+          sendEnv = [ "WINDOW" ];
+        }
+        // lib.optionalAttrs (r.name != null || useSharedDomain) {
+          hostname = if useSharedDomain then sharedHostname else regularHostname;
+        }
+        // lib.optionalAttrs (r.user != null) { user = r.user; }
+        // lib.optionalAttrs (r.sshOpts != null) r.sshOpts;
+    };
 
   # Find a remote by alias suffix (e.g., "devbox" matches "spectre-devbox")
   findRemoteByAliasSuffix =
@@ -64,9 +80,16 @@ in
           }) features
         ));
       features = (mapFeatures cfg.features false) // (mapFeatures host.features true);
+      # Create a partial machine object for sshHost context
+      machineContext = { inherit features; };
+      # Create sshHost function with context
+      sshHostFn = sshHost {
+        machine = machineContext;
+        sharedDomain = cfg.sharedDomain or "";
+      };
     in
     {
-      inherit hostKey;  # The original key from hosts.nix (e.g., "ash", "spectre")
+      inherit hostKey; # The original key from hosts.nix (e.g., "ash", "spectre")
       inherit (host)
         name
         system
@@ -86,7 +109,7 @@ in
       homeModules = [
         {
           programs.ssh.matchBlocks =
-            builtins.listToAttrs (builtins.map sshHost host.remotes)
+            builtins.listToAttrs (builtins.map sshHostFn host.remotes)
             // mkRemoteAlias host.remotes "devbox" "-devbox";
         }
       ];
