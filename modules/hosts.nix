@@ -27,7 +27,6 @@
         alias = "spectre";
         system = "aarch64-darwin";
         remotes = [
-          pdev
           csp
           spectre-devbox
           shirka
@@ -61,7 +60,6 @@
         alias = "ash";
         system = "aarch64-darwin";
         remotes = [
-          pdev
           csp
           ash-devbox
           shirka
@@ -101,7 +99,6 @@
         alias = "shirka";
         system = "x86_64-linux";
         remotes = [
-          pdev
           csp
           ash-devbox
           spectre-devbox
@@ -201,13 +198,6 @@
           sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBUh7zw1mlXTTeT9S3EMTrMEdQ1LMUYgDEqhaurbfaYP spectre-devbox-builder";
           storePublicKey = "spectre-devbox-builder:AcPGiyR/CKrwZ+/f7IvbDqKARmyNRf10XqgmtWrGNMQ=";
         };
-      };
-
-      pdev = {
-        name = "140.238.216.207";
-        alias = "pdev";
-        user = "ubuntu";
-        system = "aarch64-linux";
       };
 
       csp = {
