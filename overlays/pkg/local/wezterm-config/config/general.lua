@@ -11,6 +11,12 @@ M.apply_to_config = function(options, _opts)
 
    options.scrollback_lines = 5000
 
+   -- Quick select patterns (ctrl+shift+space to activate)
+   options.quick_select_patterns = {
+      -- jj change IDs: 8-32 character sequences from k-z alphabet
+      '[k-z]{8,32}',
+   }
+
    options.hyperlink_rules = {
       -- Matches: a URL in parens: (URL)
       {
