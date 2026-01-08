@@ -114,6 +114,12 @@ in
         type = nixConfigTypes;
         default = { };
       };
+
+      sharedDomain = mkOption {
+        type = types.str;
+        default = "";
+        description = "Shared DNS domain for SSH host resolution (e.g., van-scylla.ts.net)";
+      };
     };
   };
 
