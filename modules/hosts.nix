@@ -7,7 +7,10 @@
     "fusion" # for Fusion VMs
     "determinate" # for Determinate Nix
     "gaming" # for gaming
+    "tailscale" # for Tailscale VPN
   ];
+
+  nebula.sharedDomain = "van-scylla.ts.net";
 
   nebula.hosts =
     let
@@ -36,6 +39,7 @@
           "music"
           "firefly"
           "gaming"
+          "tailscale"
         ];
         u2fKeys = portableU2fKeys ++ [
           # desktop titan
@@ -72,6 +76,7 @@
           "determinate"
           "subzero"
           "gaming"
+          "tailscale"
         ];
         u2fKeys = portableU2fKeys ++ [
           # home dock yubikey
@@ -107,6 +112,7 @@
           "interactive"
           "work"
           "firefly"
+          "tailscale"
         ];
         enableSwap = false;
         bootLabel = "boot";
@@ -138,6 +144,7 @@
           "nixos"
           "work"
           "subzero"
+          "tailscale"
         ];
         sshOpts = {
           forwardAgent = true;
@@ -172,6 +179,7 @@
           "fusion"
           "nixos"
           "work"
+          "tailscale"
         ];
         sshOpts = {
           forwardAgent = true;
