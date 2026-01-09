@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  machine,
   ...
 }:
 let
@@ -89,6 +90,14 @@ in
     // lib.optionalAttrs config.programs.ripgrep.enable {
       "grep" = "rg -uuu";
     };
+
+  # On Linux, Fish 4.x binds Alt+Delete/Backspace to token operations by default.
+  # Override to use word operations (like macOS) for consistent cross-platform behavior.
+  # See: https://github.com/fish-shell/fish-shell/issues/10926
+  interactiveShellInit = lib.optionalString (machine.features.linux || machine.features.nixos) ''
+    bind alt-backspace backward-kill-word
+    bind alt-delete kill-word
+  '';
 
   functions = {
     "fish_greeting" = "";
