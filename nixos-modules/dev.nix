@@ -19,10 +19,15 @@
 
   user.programs.claude-code = {
     enable = true;
+    package = pkgs.master.claude-code;
 
     agents = {
 
     };
+  };
+
+  user.programs.jujutsu = {
+    package = pkgs.master.jujutsu;
   };
 
   user.home.packages = with pkgs; [

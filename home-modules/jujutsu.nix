@@ -47,10 +47,8 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [
-      pkgs.jujutsu
-    ]
-    ++ lib.optionals cfg.enableUI [
+    home.packages =
+      lib.optionals cfg.enableUI [
       pkgs.jjui
     ]
     ++ lib.optionals cfg.enableMergiraf [
