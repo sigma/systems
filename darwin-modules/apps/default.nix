@@ -19,6 +19,7 @@
     "container"
     "jj"
     "libusb"
+    "opencode"
   ];
 
   homebrew.casks = [

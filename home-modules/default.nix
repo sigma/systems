@@ -141,6 +141,9 @@
       m-cli # useful macOS CLI commands
       # afsctool
     ]
+    ++ lib.optionals (!machine.features.mac) [
+      pkgs.master.opencode
+    ]
     ++ lib.optionals machine.features.music [
       maschine-hacks
     ]
