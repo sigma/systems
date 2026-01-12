@@ -68,10 +68,11 @@ with lib;
     # This file is sourced before plugins (alphabetically: 00- < plugin-)
     # Note: `exit` in sourced files doesn't exit fish, so we use `exec true` to replace the shell
     xdg.configFile."fish/conf.d/00-tty-guard.fish".text = ''
-      # Skip shell initialization if no TTY available (e.g., VS Code Remote SSH without PTY)
-      # This prevents hangs when SSH connects with -T flag
-      # Using exec to replace the shell process since exit doesn't work in sourced files
-      if not isatty stdin
+      # Skip shell initialization if interactive but no TTY (e.g., VS Code Remote SSH with -T)
+      # This prevents hangs when SSH tries interactive session without PTY
+      # Only bail out if BOTH: no TTY AND fish thinks it's interactive
+      # Commands like `ssh -T host "echo hello"` run non-interactively and should work
+      if status is-interactive; and not isatty stdin
           exec true
       end
     '';
