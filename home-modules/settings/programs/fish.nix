@@ -83,6 +83,14 @@ in
     "jj_bg_color" = "000000";
   };
 
+  # Skip interactive setup if no TTY available (e.g., VS Code Remote SSH without PTY)
+  # This prevents hangs when SSH connects with -T flag
+  shellInit = ''
+    if not isatty stdin
+        return
+    end
+  '';
+
   shellAliases =
     lib.optionalAttrs config.programs.bat.enable {
       "cat" = "bat -pp";
