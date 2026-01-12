@@ -78,8 +78,6 @@
 
     # Remote SSH - disable dynamic forwarding to avoid conflicts with ControlMaster
     "remote.SSH.enableDynamicForwarding" = false;
-    # Remote SSH - force PTY allocation for shells that don't handle no-TTY well
-    "remote.SSH.permitPtyAllocation" = true;
   };
 
   keybindings = [

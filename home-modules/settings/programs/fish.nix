@@ -85,7 +85,7 @@ in
 
   # Skip interactive setup if no TTY available (e.g., VS Code Remote SSH without PTY)
   # This prevents hangs when SSH connects with -T flag
-  shellInit = ''
+  shellInit = lib.mkBefore ''
     if not isatty stdin
         return
     end
