@@ -11,5 +11,6 @@
     ./tailscale.nix
     ./vmware-fusion.nix
     ./vmware-image.nix
+    ./vscode-server.nix
   ];
 }

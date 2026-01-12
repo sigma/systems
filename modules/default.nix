@@ -30,6 +30,7 @@
     ../common-system-modules
     ../nixos-modules
     inputs.catppuccin.nixosModules.catppuccin
+    inputs.vscode-server.nixosModules.default
   ];
 
   nebula.darwinModules = [

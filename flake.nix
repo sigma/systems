@@ -46,6 +46,8 @@
     # VS Code
     vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
     vscode-extensions.inputs.nixpkgs.follows = "nixpkgs";
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
+    vscode-server.inputs.nixpkgs.follows = "nixpkgs";
 
     # Utils
     flake-compat.url = "github:edolstra/flake-compat";
