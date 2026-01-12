@@ -12,6 +12,12 @@ with lib;
   config = mkIf machine.features.nixos {
     services.vscode-server.enable = true;
 
+    # Watch both VS Code and Cursor server directories
+    services.vscode-server.installPath = [
+      "$HOME/.vscode-server"
+      "$HOME/.cursor-server"
+    ];
+
     # Auto-enable the user service for the machine user
     systemd.user.services.auto-fix-vscode-server.wantedBy = [ "default.target" ];
   };
