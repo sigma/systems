@@ -3,13 +3,8 @@
   enable = true;
   enableDefaultConfig = false;
 
-  # Force PTY allocation for NixOS hosts to prevent fish shell hangs with VS Code Remote SSH
-  # Fish hangs when started interactively without a TTY (ssh -T)
-  matchBlocks."shirka" = {
-    extraOptions = {
-      RequestTTY = "force";
-    };
-  };
+  # Note: NixOS hosts automatically get RequestTTY=force and -mux aliases
+  # via helpers.nix based on the "nixos" feature flag
 
   matchBlocks."*" = {
     compression = true;

@@ -16,6 +16,8 @@ let
       machineHasTailscale = machine.features.tailscale or false;
       # Use shared domain DNS if both have tailscale
       useSharedDomain = machineHasTailscale && remoteHasTailscale && sharedDomain != "";
+      # Check if remote is NixOS (needs RequestTTY force due to fish shell)
+      remoteIsNixOS = builtins.elem "nixos" (r.features or [ ]);
       # Determine hostname
       hostAlias = if r.alias != null then r.alias else r.name;
       sharedHostname = "${hostAlias}.${sharedDomain}";
@@ -31,7 +33,39 @@ let
           hostname = if useSharedDomain then sharedHostname else regularHostname;
         }
         // lib.optionalAttrs (r.user != null) { user = r.user; }
-        // lib.optionalAttrs (r.sshOpts != null) r.sshOpts;
+        // lib.optionalAttrs (r.sshOpts != null) (
+          # Merge extraOptions if both sshOpts and NixOS RequestTTY are present
+          if remoteIsNixOS && r.sshOpts ? extraOptions then
+            r.sshOpts // {
+              extraOptions = r.sshOpts.extraOptions // { RequestTTY = "force"; };
+            }
+          else
+            r.sshOpts
+        )
+        # NixOS hosts need forced TTY because fish hangs without one (ssh -T)
+        // lib.optionalAttrs (remoteIsNixOS && (r.sshOpts == null || !(r.sshOpts ? extraOptions))) {
+          extraOptions = { RequestTTY = "force"; };
+        };
+    };
+
+  # Create -mux SSH alias for NixOS hosts (used by WezTerm multiplexing)
+  # These bypass RequestTTY=force which breaks WezTerm's mux protocol
+  # Must resolve to full hostname since libssh-rs doesn't chain SSH config lookups
+  sshMuxAlias =
+    { machine, sharedDomain }:
+    r:
+    let
+      hostAlias = if r.alias != null then r.alias else r.name;
+      remoteIsNixOS = builtins.elem "nixos" (r.features or [ ]);
+      # Same hostname resolution logic as sshHost
+      remoteHasTailscale = builtins.elem "tailscale" (r.features or [ ]);
+      machineHasTailscale = machine.features.tailscale or false;
+      useSharedDomain = machineHasTailscale && remoteHasTailscale && sharedDomain != "";
+      sharedHostname = "${hostAlias}.${sharedDomain}";
+      resolvedHostname = if useSharedDomain then sharedHostname else r.name;
+    in
+    lib.optionalAttrs remoteIsNixOS {
+      "${hostAlias}-mux" = { hostname = resolvedHostname; };
     };
 
   # Find a remote by alias suffix (e.g., "devbox" matches "spectre-devbox")
@@ -87,6 +121,11 @@ in
         machine = machineContext;
         sharedDomain = cfg.sharedDomain or "";
       };
+      # Create sshMuxAlias function with same context
+      sshMuxAliasFn = sshMuxAlias {
+        machine = machineContext;
+        sharedDomain = cfg.sharedDomain or "";
+      };
     in
     {
       inherit hostKey; # The original key from hosts.nix (e.g., "ash", "spectre")
@@ -110,7 +149,9 @@ in
         {
           programs.ssh.matchBlocks =
             builtins.listToAttrs (builtins.map sshHostFn host.remotes)
-            // mkRemoteAlias host.remotes "devbox" "-devbox";
+            // mkRemoteAlias host.remotes "devbox" "-devbox"
+            # Add -mux aliases for NixOS hosts (used by WezTerm SSH domains)
+            // lib.foldl' (acc: r: acc // sshMuxAliasFn r) { } host.remotes;
         }
       ];
     };

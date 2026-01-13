@@ -64,14 +64,12 @@ with lib;
   };
 
   config = mkIf cfg.enable {
-    # Add TTY guard as earliest conf.d file to prevent hangs with VS Code Remote SSH
-    # This file is sourced before plugins (alphabetically: 00- < plugin-)
-    # When no TTY is available, exec bash instead of fish (bash handles no-TTY gracefully)
+    # TTY guard for interactive sessions without TTY (e.g., VS Code Remote SSH)
+    # Only applies to interactive sessions - non-interactive command execution
+    # (fish -c "command") should run normally without the guard
     xdg.configFile."fish/conf.d/00-tty-guard.fish".text = ''
-      # If no TTY available, switch to bash which handles this gracefully
-      # This allows VS Code Remote SSH to work (it uses ssh -T which disables PTY)
-      # Normal interactive sessions with a TTY will continue to use fish
-      if not isatty stdin
+      # Only guard interactive sessions - let command execution work normally
+      if status is-interactive; and not isatty stdin
           exec bash -l
       end
     '';

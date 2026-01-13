@@ -17,15 +17,21 @@ let
       config.programs.vscode.package;
 
   # Generate SSH domains from machine remotes
-  remoteToDomain = remote:
+  # For NixOS hosts, use -mux suffix for remote_address to avoid RequestTTY force
+  # which breaks WezTerm's multiplexing protocol
+  remoteToDomain =
+    remote:
     let
       domainName = if remote.alias != null then remote.alias else remote.name;
+      isNixOS = builtins.elem "nixos" (remote.features or [ ]);
+      remoteAddress = if isNixOS then "${domainName}-mux" else domainName;
     in
-    ''{
-        name = "${domainName}",
-        remote_address = "${domainName}",
-        multiplexing = "WezTerm",
-      }'';
+    ''
+      {
+              name = "${domainName}",
+              remote_address = "${remoteAddress}",
+              multiplexing = "WezTerm",
+            }'';
 
   sshDomainsLua =
     if machine.remotes == [ ] then
