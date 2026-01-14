@@ -10,7 +10,7 @@
     "editor.cursorBlinking" = "solid";
     "editor.cursorSurroundingLines" = 5;
     "editor.fontFamily" = "Fira Code, Menlo, Monaco, 'Courier New', monospace";
-    "editor.fontLigatures" = "'cv01', 'cv02', 'cv04', 'ss01', 'ss05', 'cv18', 'ss03', 'cv16', 'cv31'";
+    "editor.fontLigatures" = "'cv01', 'cv02', 'cv04', 'ss01', 'ss02', 'ss05', 'cv18', 'ss03', 'cv16', 'cv29', 'cv31'";
     "editor.fontSize" = 14;
     "editor.minimap.enabled" = false;
     "editor.stickyScroll.enabled" = false;

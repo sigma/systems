@@ -6,7 +6,7 @@ M.apply_to_config = function(options, _opts)
    options.font = wezterm.font{
       family = "FiraCode Nerd Font Mono",
       harfbuzz_features = {
-        'cv01', 'cv02', 'cv04', 'ss01', 'ss05', 'cv18', 'ss03', 'cv16', 'cv31',
+        'cv01', 'cv02', 'cv04', 'ss01', 'ss02', 'ss05', 'cv18', 'ss03', 'cv16', 'cv29', 'cv31',
       },
    }
    options.font_size = 14
