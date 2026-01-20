@@ -64,16 +64,26 @@ in
        if uri:find('^file:') then
          -- WezTerm's URL parser helps extract the clean file path
          local url = wezterm.url.parse(uri)
+         local domain = pane:get_domain_name()
 
-         -- Use SpawnCommandInNewTab to open the file with VS Code
-         -- This keeps the output from the command contained in a new tab
-         window:perform_action(
-           wezterm.action.SpawnCommandInNewTab {
-             -- The command to run. 'code' should be in your system's PATH.
-             args = { '${editor}/bin/cursor', url.file_path },
-           },
-           pane
-         )
+         if domain == "local" then
+           -- Local domain: open in Cursor
+           window:perform_action(
+             wezterm.action.SpawnCommandInNewTab {
+               args = { '${editor}/bin/cursor', url.file_path },
+               domain = "DefaultDomain",
+             },
+             pane
+           )
+         else
+           -- SSH domain: open in neovim on the remote
+           window:perform_action(
+             wezterm.action.SpawnCommandInNewTab {
+               args = { 'nvim', url.file_path },
+             },
+             pane
+           )
+         end
 
          -- Return false to prevent wezterm's default link handling
          return false
@@ -88,6 +98,8 @@ in
            wezterm.action.SpawnCommandInNewTab {
              -- Pass the clicked URL as an argument to your script
              args = { open_url_script, uri },
+             -- Force local execution even when in SSH domain
+             domain = "DefaultDomain",
            },
            pane
          )
