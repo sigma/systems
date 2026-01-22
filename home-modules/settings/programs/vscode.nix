@@ -23,6 +23,7 @@ in
   mutableExtensionsDir = true;
 
   profiles.default = makeProfile [
+    ./code/antigravity.nix
     ./code/cursor.nix
     ./code/custom.nix
     ./code/emacs.nix

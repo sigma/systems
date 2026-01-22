@@ -11,10 +11,20 @@ let
 
   weztermConfig = pkgs.local.wezterm-config;
   editor =
-    if config.programs.cursor.enable then
+    if config.programs.antigravity.enable then
+      config.programs.antigravity.package
+    else if config.programs.cursor.enable then
       config.programs.cursor.package
     else
       config.programs.vscode.package;
+
+  editorBin =
+    if config.programs.antigravity.enable then
+      "antigravity"
+    else if config.programs.cursor.enable then
+      "cursor"
+    else
+      "code";
 
   # Generate SSH domains from machine remotes
   # For NixOS hosts, use -mux suffix for remote_address to avoid RequestTTY force
@@ -66,16 +76,16 @@ in
          local url = wezterm.url.parse(uri)
          local domain = pane:get_domain_name()
 
-         if domain == "local" then
-           -- Local domain: open in Cursor
-           window:perform_action(
-             wezterm.action.SpawnCommandInNewTab {
-               args = { '${editor}/bin/cursor', url.file_path },
-               domain = "DefaultDomain",
-             },
-             pane
-           )
-         else
+          if domain == "local" then
+            -- Local domain: open in Editor
+            window:perform_action(
+              wezterm.action.SpawnCommandInNewTab {
+                args = { '${editor}/bin/${editorBin}', url.file_path },
+                domain = "DefaultDomain",
+              },
+              pane
+            )
+          else
            -- SSH domain: open in neovim on the remote
            window:perform_action(
              wezterm.action.SpawnCommandInNewTab {

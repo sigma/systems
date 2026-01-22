@@ -39,9 +39,13 @@ in
       };
       nerdFontsVersion = "3";
     };
-    os = lib.optionalAttrs config.programs.cursor.enable (
+    os = lib.optionalAttrs (config.programs.cursor.enable || config.programs.antigravity.enable) (
       let
-        editCommand = "${config.programs.cursor.package}/bin/cursor";
+        editCommand =
+          if config.programs.antigravity.enable then
+            "${config.programs.antigravity.package}/bin/antigravity"
+          else
+            "${config.programs.cursor.package}/bin/cursor";
       in
       {
         edit = "${editCommand} --reuse-window -- {{filename}}";

@@ -12,10 +12,11 @@ with lib;
   config = mkIf machine.features.nixos {
     services.vscode-server.enable = true;
 
-    # Watch both VS Code and Cursor server directories
+    # Watch VS Code (and variants) server directories
     services.vscode-server.installPath = [
       "$HOME/.vscode-server"
       "$HOME/.cursor-server"
+      "$HOME/.antigravity-server"
     ];
 
     # Auto-enable the user service for the machine user

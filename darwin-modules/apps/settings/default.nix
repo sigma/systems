@@ -6,7 +6,8 @@
   programs = {
     alfred.enable = true;
     brave.enable = true;
-    cursor.enable = true;
+    antigravity.enable = true;
+    # cursor.enable = true;
     secretive.enable = true;
   };
 

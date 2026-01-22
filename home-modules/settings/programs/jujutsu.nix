@@ -32,6 +32,28 @@ in
       pager = ":builtin";
     };
 
+    merge-tools.antigravity = lib.optionalAttrs config.programs.antigravity.enable {
+      program = "${config.programs.antigravity.package}/bin/antigravity";
+      merge-args = [
+        "--wait"
+        "--merge"
+        "$left"
+        "$right"
+        "$base"
+        "$output"
+      ];
+      merge-tool-edits-conflict-markers = true;
+      conflict-marker-style = "git";
+      diff-args = [
+        "--diff"
+        "$left"
+        "$right"
+        "--wait"
+      ];
+      diff-invocation-mode = "file-by-file";
+      edit-args = [ ];
+    };
+
     merge-tools.cursor = lib.optionalAttrs config.programs.cursor.enable {
       program = "${config.programs.cursor.package}/bin/cursor";
       merge-args = [

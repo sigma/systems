@@ -3,6 +3,7 @@
     ./1password.nix
     ./aerospace.nix
     ./alfred.nix
+    ./antigravity.nix
     ./brave.nix
     ./claude-code.nix
     ./cursor.nix
