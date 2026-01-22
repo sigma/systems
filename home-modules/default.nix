@@ -141,9 +141,16 @@
       m-cli # useful macOS CLI commands
       # afsctool
     ]
-    ++ lib.optionals (!machine.features.mac) [
-      pkgs.master.opencode
-    ]
+    ++ lib.optionals (!machine.features.mac) (
+      let
+        bun = if machine.features.nehalem then pkgs.master.bun-baseline else pkgs.master.bun;
+      in
+      [
+        bun
+        # Use bun-baseline on CPUs without AVX2 (pre-Haswell)
+        (pkgs.master.opencode.override { inherit bun; })
+      ]
+    )
     ++ lib.optionals machine.features.music [
       maschine-hacks
     ]

@@ -8,6 +8,7 @@
     "determinate" # for Determinate Nix
     "gaming" # for gaming
     "tailscale" # for Tailscale VPN
+    "nehalem" # CPU is pre-Haswell x86_64 (lacks AVX2)
   ];
 
   nebula.sharedDomain = "van-scylla.ts.net";
@@ -110,6 +111,7 @@
           "work"
           "firefly"
           "tailscale"
+          "nehalem" # Ivy Bridge CPU (Xeon E5 v2) lacks AVX2
         ];
         enableSwap = false;
         bootLabel = "boot";
