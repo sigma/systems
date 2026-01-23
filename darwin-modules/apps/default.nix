@@ -21,6 +21,7 @@
     "jj"
     "libusb"
     "opencode"
+    "oven-sh/bun/bun"
   ];
 
   homebrew.casks = [
