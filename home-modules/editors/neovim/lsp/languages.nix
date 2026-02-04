@@ -64,8 +64,7 @@ in
             enable = true;
             type = [ "prettierd" ];
           };
-          # Enable ESLint for extra diagnostics
-          extraDiagnostics.enable = true;
+          # ESLint configured via nvim-lint in lint.nix
         };
 
         # Python
