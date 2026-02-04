@@ -110,6 +110,7 @@ in
         treefmt.settings.formatters = [
           pkgs.nixfmt-rfc-style
           pkgs.mdformat
+          pkgs.nixfmt
           pkgs.beautysh
         ];
 
