@@ -55,6 +55,19 @@ mkIf machine.features.interactive {
     enable = true;
   };
 
+  # Screen locking and idle management
+  user.services.swayidle = {
+    enable = true;
+    events = [
+      { event = "before-sleep"; command = "${pkgs.swaylock}/bin/swaylock -f"; }
+      { event = "lock"; command = "${pkgs.swaylock}/bin/swaylock -f"; }
+    ];
+    timeouts = [
+      { timeout = 300; command = "${pkgs.swaylock}/bin/swaylock -f"; }
+      { timeout = 600; command = "${pkgs.niri}/bin/niri msg action power-off-monitors"; }
+    ];
+  };
+
   user.home.pointerCursor = {
     enable = true;
     package = pkgs.catppuccin-cursors.frappePeach;
