@@ -16,6 +16,10 @@
 
   homebrew.global.brewfile = true;
 
+  homebrew.taps = [
+    "oven-sh/bun"
+  ];
+
   homebrew.brews = [
     "container"
     "jj"
