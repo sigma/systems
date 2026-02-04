@@ -18,7 +18,7 @@ in
       (systemApp "Google Chrome")
       (systemApp "Brave Browser")
       (userApp "WezTerm")
-      (systemApp "Cursor")
+      (systemApp "Antigravity")
       (userApp "Emacs")
       (systemApp "Notion")
       (systemApp "Slack")
