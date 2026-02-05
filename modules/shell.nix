@@ -13,10 +13,12 @@ in
   perSystem =
     {
       pkgs,
+      system,
       config,
       ...
     }:
     let
+      masterPkgs = inputs.nixpkgs-master.legacyPackages.${system};
       isDarwin = pkgs.stdenvNoCC.isDarwin;
       nixFlags = "--extra-experimental-features 'nix-command flakes'";
 
@@ -108,9 +110,8 @@ in
         treefmt.enable = true;
 
         treefmt.settings.formatters = [
-          pkgs.nixfmt-rfc-style
-          pkgs.mdformat
           pkgs.nixfmt
+          masterPkgs.mdformat
           pkgs.beautysh
         ];
 
@@ -130,6 +131,7 @@ in
         # formatters
         programs.nixfmt.enable = true;
         programs.mdformat.enable = true;
+        programs.mdformat.package = masterPkgs.mdformat;
         programs.beautysh.enable = true;
       };
 
