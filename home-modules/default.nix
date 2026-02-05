@@ -23,6 +23,7 @@
     ./gcloud.nix
     ./jujutsu.nix
     ./just.nix
+    ./kew.nix
     ./kubeswitch.nix
     ./mailsetup.nix
     ./open-url.nix
