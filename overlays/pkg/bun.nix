@@ -8,6 +8,7 @@ let
   baselineHashes = {
     "1.3.5" = "sha256-a92s1qZYVWmLmBby10hx7aTdC3+pIRQMZEUkj5SnQv0=";
     "1.3.6" = "sha256-GVSr7giQDeYQqLRpL1//psaxXYr959HeTT+Iz8YOfV8=";
+    "1.3.8" = "sha256-u+RjKsA9dJUXfVQuzvqPIfmEknMQZSX2uxMXLsjkqyw=";
   };
 
   mkBunBaseline =
