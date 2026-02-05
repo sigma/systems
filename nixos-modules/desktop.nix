@@ -17,7 +17,7 @@ mkIf machine.features.interactive {
     alacritty
     fuzzel
     noctalia-shell
-    swaylock
+    local.noctalia-ipc
     waybar
 
     # chromium doesn't seem super happy about wayland right now
@@ -56,14 +56,15 @@ mkIf machine.features.interactive {
   };
 
   # Screen locking and idle management
+  # Uses noctalia-shell's lock screen via quickshell IPC
   user.services.swayidle = {
     enable = true;
     events = [
-      { event = "before-sleep"; command = "${pkgs.swaylock}/bin/swaylock -f"; }
-      { event = "lock"; command = "${pkgs.swaylock}/bin/swaylock -f"; }
+      { event = "before-sleep"; command = "${pkgs.local.noctalia-ipc}/bin/noctalia-ipc call lockScreen lock"; }
+      { event = "lock"; command = "${pkgs.local.noctalia-ipc}/bin/noctalia-ipc call lockScreen lock"; }
     ];
     timeouts = [
-      { timeout = 300; command = "${pkgs.swaylock}/bin/swaylock -f"; }
+      { timeout = 300; command = "${pkgs.local.noctalia-ipc}/bin/noctalia-ipc call lockScreen lock"; }
       { timeout = 600; command = "${pkgs.niri}/bin/niri msg action power-off-monitors"; }
     ];
   };
