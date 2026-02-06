@@ -28,6 +28,7 @@ mkIf machine.features.interactive {
     noctalia-shell
     local.noctalia-ipc
     waybar
+    wl-clipboard # Wayland clipboard for nvim, etc.
 
     # Chromium with GPU compositing disabled (older AMD GPUs have issues with ANGLE on Wayland)
     # Use enhanced-h264ify extension for hardware video decode via VA-API
