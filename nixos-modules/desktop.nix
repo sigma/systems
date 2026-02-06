@@ -13,6 +13,15 @@ mkIf machine.features.interactive {
     ELECTRON_OZONE_PLATFORM_HINT = "auto";
   };
 
+  # Enable VA-API for hardware video decoding (used by mpv, etc.)
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      mesa.drivers
+      libvdpau-va-gl
+    ];
+  };
+
   environment.systemPackages = with pkgs; [
     alacritty
     fuzzel
@@ -20,9 +29,10 @@ mkIf machine.features.interactive {
     local.noctalia-ipc
     waybar
 
-    # chromium doesn't seem super happy about wayland right now
+    # Chromium with GPU compositing disabled (older AMD GPUs have issues with ANGLE on Wayland)
+    # Use enhanced-h264ify extension for hardware video decode via VA-API
     (stdenv.mkDerivation {
-      pname = "chromium-gpu-fixed";
+      pname = "chromium-wrapped";
       version = chromium.version;
 
       buildInputs = [
@@ -33,7 +43,8 @@ mkIf machine.features.interactive {
       unpackPhase = "true";
       installPhase = ''
         mkdir -p $out/bin
-        makeWrapper ${chromium}/bin/chromium $out/bin/chromium --add-flags "--disable-gpu-compositing"
+        makeWrapper ${chromium}/bin/chromium $out/bin/chromium \
+          --add-flags "--disable-gpu-compositing"
       '';
     })
 
