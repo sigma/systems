@@ -23,7 +23,7 @@ local function discover_projects()
     home .. '/src/bitbucket.org',
   }
 
-  local History = require('project.utils.history')
+  local History = require('project.util.history')
   local discovered = 0
 
   -- Helper to add project to session_projects without changing cwd
@@ -90,7 +90,7 @@ end
 
 -- Helper: Build grouped and sorted project list
 local function get_grouped_projects()
-  local History = require('project.utils.history')
+  local History = require('project.util.history')
   local projects = History.get_recent_projects() or {}
 
   local by_org = {}
@@ -275,7 +275,7 @@ end
 
 -- Helper: Find project root for a given path
 local function find_project_root(path)
-  local History = require('project.utils.history')
+  local History = require('project.util.history')
   local projects = History.get_recent_projects() or {}
   local best_match = nil
   local best_match_len = 0
