@@ -3,6 +3,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 with lib;
@@ -11,6 +12,9 @@ let
 in
 {
   config = mkIf cfg.enable {
+    # tree-sitter CLI for grammar compilation
+    home.packages = [ pkgs.tree-sitter ];
+
     # Use the modular luaConfig options
     programs.neovim-ide = {
       # Suppress warnings (Lua module - runs early)
