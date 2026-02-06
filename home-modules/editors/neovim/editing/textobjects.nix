@@ -17,25 +17,27 @@ in
       "mini.ai" = {
         package = pkgs.vimPlugins.mini-nvim;
         event = [ "BufReadPost" "BufNewFile" ];
-        # Custom load function since package is mini.nvim but we only want mini.ai
-        load = "vim.cmd('packadd ' .. name)";
+        # Package is mini-nvim, not mini.ai
+        load = "vim.cmd('packadd mini.nvim')";
         after = ''
-          require('mini.ai').setup({
+          local ai = require('mini.ai')
+          local gen_spec = ai.gen_spec
+          ai.setup({
             n_lines = 500,
             custom_textobjects = {
-              f = require('mini.ai').gen_spec.treesitter({
+              f = gen_spec.treesitter({
                 a = '@function.outer',
                 i = '@function.inner',
               }),
-              c = require('mini.ai').gen_spec.treesitter({
+              c = gen_spec.treesitter({
                 a = '@class.outer',
                 i = '@class.inner',
               }),
-              o = require('mini.ai').gen_spec.treesitter({
+              o = gen_spec.treesitter({
                 a = { '@block.outer', '@conditional.outer', '@loop.outer' },
                 i = { '@block.inner', '@conditional.inner', '@loop.inner' },
               }),
-              a = require('mini.ai').gen_spec.treesitter({
+              a = gen_spec.treesitter({
                 a = '@parameter.outer',
                 i = '@parameter.inner',
               }),

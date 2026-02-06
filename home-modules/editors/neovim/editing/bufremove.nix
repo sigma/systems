@@ -17,8 +17,8 @@ in
       "mini.bufremove" = {
         package = pkgs.vimPlugins.mini-nvim;
         event = [ "BufReadPost" "BufNewFile" ];
-        # Custom load function since package is mini.nvim but we only want mini.bufremove
-        load = "vim.cmd('packadd ' .. name)";
+        # Package is mini-nvim, not mini.bufremove
+        load = "vim.cmd('packadd mini.nvim')";
         after = ''
           require('mini.bufremove').setup({
             set_vim_settings = true,
