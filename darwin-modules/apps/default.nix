@@ -38,6 +38,6 @@
     "soundsource"
     "transnomino"
     "whatsapp"
-    "yubico-yubikey-manager"
+    "yubico-authenticator"
   ];
 }
