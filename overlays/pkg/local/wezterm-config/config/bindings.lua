@@ -105,6 +105,21 @@ local function smart_split_swap(direction)
    end)
 end
 
+-- Wayland clipboard paste workaround: read directly from wl-paste
+-- WezTerm's internal clipboard doesn't always sync with Wayland clipboard
+local function wayland_paste()
+   return wezterm.action_callback(function(_window, pane)
+      local handle = io.popen('wl-paste --no-newline 2>/dev/null')
+      if handle then
+         local result = handle:read('*a')
+         handle:close()
+         if result and result ~= '' then
+            pane:send_paste(result)
+         end
+      end
+   end)
+end
+
 -- stylua: ignore
 local keys = {
    { key = 'f',   mods = mod.SUPER, action = act.Search({ CaseInSensitiveString = '' }) },
@@ -208,12 +223,30 @@ local key_tables = {
    },
 }
 
+-- Linux/Wayland: paste bindings using wl-paste (workaround for clipboard sync issues)
+if platform.is_linux then
+   table.insert(keys, { key = 'v', mods = 'CTRL|SHIFT', action = wayland_paste() })
+end
+
 local M = {}
+
+-- Mouse bindings (separate from keyboard bindings)
+local mouse_bindings = {}
+
+-- Linux/Wayland: middle-click paste from Wayland clipboard
+if platform.is_linux then
+   table.insert(mouse_bindings, {
+      event = { Up = { streak = 1, button = 'Middle' } },
+      mods = 'NONE',
+      action = wayland_paste(),
+   })
+end
 
 M.apply_to_config = function(options, _opts)
    options.send_composed_key_when_right_alt_is_pressed = true
    options.keys = keys
    options.key_tables = key_tables
+   options.mouse_bindings = mouse_bindings
 
    -- Handle swap requests from Neovim at edge via user var
    wezterm.on('user-var-changed', function(window, pane, name, value)
