@@ -111,10 +111,10 @@ in
         "FelixKratz/formulae"
       ];
       brews = optionals cfg.borders [
-        "borders"
+        "FelixKratz/formulae/borders"
       ];
       casks = [
-        "aerospace"
+        "nikitabobko/tap/aerospace"
       ];
     };
 
