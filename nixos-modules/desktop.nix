@@ -17,7 +17,7 @@ mkIf machine.features.interactive {
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
-      mesa.drivers
+      mesa
       libvdpau-va-gl
     ];
   };
