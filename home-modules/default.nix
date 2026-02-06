@@ -77,6 +77,7 @@
       htop
       less
       pinfo
+      playerctl
       procs
       rm-improved
       safe-rm
