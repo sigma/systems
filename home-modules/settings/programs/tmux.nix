@@ -16,7 +16,6 @@
   mouse = true;
   newSession = false;
   sensibleOnTop = true;
-  shell = "${pkgs.fish}/bin/fish";
   shortcut = "z";
   terminal = "screen-256color";
 
