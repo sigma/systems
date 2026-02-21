@@ -1,7 +1,16 @@
+local platform = require('utils.platform')
+
 local M = {}
 
 M.apply_to_config = function(options, _opts)
    options.automatically_reload_config = true
+
+   -- On Linux, default to the gcr-ssh-agent socket so that remote mux
+   -- clients that don't carry their own SSH_AUTH_SOCK still get a working agent.
+   local runtime_dir = os.getenv('XDG_RUNTIME_DIR')
+   if platform().is_linux and runtime_dir then
+      options.default_ssh_auth_sock = runtime_dir .. '/gcr/ssh'
+   end
    options.exit_behavior = 'CloseOnCleanExit'
    options.exit_behavior_messaging = 'Verbose'
    options.status_update_interval = 1000
