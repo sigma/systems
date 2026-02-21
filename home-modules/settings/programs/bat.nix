@@ -5,11 +5,17 @@
     style = "numbers,changes,header";
     italic-text = "always";
     map-syntax = [
+      # jsonnet
       "*.jsonnet:JSON"
       "*.libsonnet:JSON"
+
+      # starlark
       "*.bazel:Python"
+      "*.star:Python"
       "BUILD:Python"
       "WORKSPACE:Python"
+
+      # nix
       "flake.lock:JSON"
     ];
   };
