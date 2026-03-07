@@ -1,6 +1,7 @@
-{ ... }:
+{ pkgs, ... }:
 {
   enable = true;
+  package = pkgs.master.yt-dlp;
 
   settings = {
     audio-quality = 0;
@@ -37,6 +38,22 @@
         settings = {
           inherit download-archive;
           output = "%(playlist)s/%(chapter_number)s - %(chapter)s/%(title)s.%(ext)s";
+        };
+      }
+      {
+        root = "Video/YouTube";
+        settings = {
+          inherit download-archive;
+          output = "%(playlist)s/%(title)s.%(ext)s";
+          preset-alias = [
+            "mp4"
+            "sleep"
+          ];
+          retry-sleep = [
+            "linear=1::2"
+            "fragment:exp=1:20"
+            "extractor:300"
+          ];
         };
       }
     ];

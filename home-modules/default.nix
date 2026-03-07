@@ -65,7 +65,7 @@
       parallel
 
       # console tools
-      master.ast-grep
+      ast-grep
       broot
       btop
       chafa

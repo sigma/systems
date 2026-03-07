@@ -16,7 +16,6 @@
   };
 
   extensions = with extSet.vscode-marketplace; [
-    ms-kubernetes-tools.vscode-kubernetes-tools
     redhat.vscode-yaml
   ];
 }
