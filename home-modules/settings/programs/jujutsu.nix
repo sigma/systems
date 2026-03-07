@@ -122,6 +122,10 @@ in
         "-d"
         "trunk()"
       ];
+      tug = [
+        "bookmark"
+        "advance"
+      ];
     };
 
     revset-aliases = {
