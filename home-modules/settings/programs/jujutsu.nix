@@ -124,8 +124,13 @@ in
       ];
     };
 
+    revset-aliases = {
+      "last_change()" = "latest(ancestors(@) & ~empty())";
+    };
+
     revsets = {
       short-prefixes = "(trunk()..@)::";
+      bookmark-advance-to = "last_change()";
     };
 
     template-aliases = {
