@@ -33,7 +33,7 @@
           deltaBaseCacheLimit = "128m";
         };
 
-        colomn = {
+        column = {
           ui = "auto";
         };
 
