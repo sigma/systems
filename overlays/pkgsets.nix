@@ -16,15 +16,17 @@ let
 
   # Overlay to fix google-cloud-sdk components on Linux
   # The bundled Python in some components has _tkinter which needs tcl/tk
-  # libraries for autoPatchelfHook to succeed
+  # libraries for autoPatchelfHook to succeed.
+  # NOTE: The stdenv override below is scoped to the callPackage of
+  # components.nix only — it does NOT affect the global stdenv.
   gcloudOverlay = mfinal: mprev:
     let
-      # Patch the components to include tcl/tk for autoPatchelfHook
+      # Inject tcl/tk into buildInputs for gcloud component derivations only
       patchedComponents = mprev.callPackage
         "${inputs.nixpkgs-master}/pkgs/by-name/go/google-cloud-sdk/components.nix"
         {
           snapshotPath = "${inputs.nixpkgs-master}/pkgs/by-name/go/google-cloud-sdk/components.json";
-          # Override stdenv to inject tcl/tk into buildInputs for all component derivations
+          # Scoped stdenv override: only affects derivations built by components.nix
           stdenv = mprev.stdenv // {
             mkDerivation =
               args:
