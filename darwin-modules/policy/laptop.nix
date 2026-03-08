@@ -46,7 +46,6 @@ with lib;
       };
 
     programs.karabiner =
-      with lib;
       let
         keychron = pid: {
           vendorId = 13364;

@@ -3,7 +3,6 @@ with lib;
 {
   config = mkIf (!machine.features.laptop && machine.features.mac) {
     programs.karabiner =
-      with lib;
       let
         keychron = pid: {
           vendorId = 13364;
