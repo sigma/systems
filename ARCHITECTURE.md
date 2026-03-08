@@ -140,6 +140,39 @@ Each policy module can:
 - Configure Git/SCM for different contexts
 - Set up workspace layouts and window rules
 
+## Implicit Behaviors
+
+### The `user` Alias (`helpers.nix`)
+
+Darwin and NixOS modules receive a `user` argument that is **not a standard NixOS module argument**. It is injected by the Nebula layer via `specialArgs` and `mkAliasOptionModule`:
+
+```nix
+# In helpers.nix — this creates the magic alias
+bridgeModule =
+  args@{ user, ... }:
+  ((lib.mkAliasOptionModule [ "user" ] [ "home-manager" "users" "${user.login}" ]) args);
+```
+
+This means that in any darwin or NixOS module:
+
+```nix
+{ user, ... }:
+{
+  # This transparently becomes home-manager.users.<login>.programs.git.enable
+  user.programs.git.enable = true;
+}
+```
+
+The `user` option alias is **not available** when evaluating a module in isolation — it only works within the full Nebula-managed system evaluation.
+
+### SSH Configuration Behaviors (`helpers.nix`)
+
+SSH matchBlocks are automatically generated for each host's `remotes` list. The following behaviors are **implicit**:
+
+- **NixOS hosts get `RequestTTY = "force"`**: Fish shell hangs on NixOS when connected without a TTY (`ssh -T`). This is applied automatically when a remote has the `nixos` feature.
+- **Tailscale DNS resolution**: When both the current machine and a remote have the `tailscale` feature, and `nebula.sharedDomain` is set, SSH uses `<alias>.<sharedDomain>` instead of the raw hostname.
+- **`-mux` aliases**: For each NixOS remote, a `<name>-mux` SSH alias is generated that resolves to the full hostname without `RequestTTY=force`. This is used by WezTerm's SSH multiplexing, which breaks when TTY is forced.
+
 ## Cross-Platform Portability
 
 ### Package Management
