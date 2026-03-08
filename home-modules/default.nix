@@ -40,7 +40,6 @@
     jq.enable = true;
 
     gh-dash.enable = true;
-    # gitui.enable = true;
 
     neovim-ide.enable = true;
   };
@@ -141,7 +140,6 @@
     ]
     ++ lib.optionals machine.features.mac [
       m-cli # useful macOS CLI commands
-      # afsctool
     ]
     ++ lib.optionals (!machine.features.mac) (
       let
