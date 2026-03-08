@@ -123,6 +123,32 @@ in
           entry = "${pkgs.bash}/bin/bash -c '! ${pkgs.ripgrep}/bin/rg _\\\\d flake.lock'";
           pass_filenames = false;
         };
+
+        sops-keys = {
+          enable = secretsCfg.enable;
+          name = "SOPS age keys in sync";
+          description = "Check that .sops.yaml contains the same age keys as modules/secrets.nix";
+          files = "\\.(nix|yaml)$";
+          entry = "${pkgs.bash}/bin/bash -c '${
+            let
+              nixKeys = builtins.map (k: k.publicKey) secretsCfg.ageKeys;
+              checkCommands = builtins.map (key: ''
+                if ! ${pkgs.gnugrep}/bin/grep -qF "${key}" .sops.yaml 2>/dev/null; then
+                  echo "ERROR: age key missing from .sops.yaml: ${key}"
+                  echo "Run: sops-config > .sops.yaml && sops updatekeys secrets/secrets.yaml"
+                  exit 1
+                fi
+              '') nixKeys;
+            in
+              ''
+                if [ ! -f .sops.yaml ]; then
+                  echo "WARNING: .sops.yaml does not exist. Run: sops-config > .sops.yaml"
+                  exit 1
+                fi
+              '' + builtins.concatStringsSep "" checkCommands
+          }'";
+          pass_filenames = false;
+        };
       };
 
       treefmt.config = {
