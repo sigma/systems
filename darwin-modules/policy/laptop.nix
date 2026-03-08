@@ -77,6 +77,11 @@ with lib;
           ctrl
         ];
         pedal = kinesisPedal;
+
+        # M3 MBP isn't detected properly by Karabiner, so we clear the
+        # internal keyboard config. This means the laptop must only be
+        # connected to keyboards listed in ignoreKeyboards.
+        internalKeyboard = mkForce { };
       };
   };
 }
