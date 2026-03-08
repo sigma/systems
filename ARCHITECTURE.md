@@ -129,8 +129,7 @@ The policy system (`darwin-modules/policy/`) demonstrates feature-driven archite
 ```nix
 # policy/default.nix - Conditional imports based on features
 imports =
-  lib.optionals machine.features.subzero [ ./subzero.nix ]
-  ++ lib.optionals machine.features.firefly [ ./firefly.nix ]
+  lib.optionals machine.features.firefly [ ./firefly.nix ]
   ++ lib.optionals machine.features.work [ ./work.nix ];
 ```
 

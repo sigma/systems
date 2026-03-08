@@ -2,7 +2,6 @@
   nebula.features = [
     "work" # generic work feature
     "firefly" # specifically for firefly engineering
-    "subzero" # specifically for subzero contracting
     "music" # music production
     "fusion" # for Fusion VMs
     "determinate" # for Determinate Nix
@@ -73,7 +72,6 @@
           "music"
           "firefly"
           "determinate"
-          "subzero"
           "gaming"
           "tailscale"
         ];
@@ -142,7 +140,6 @@
           "fusion"
           "nixos"
           "work"
-          "subzero"
           "tailscale"
         ];
         sshOpts = {

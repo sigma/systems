@@ -6,7 +6,6 @@
     ./firefly.nix
     ./gaming.nix
     ./laptop.nix
-    ./subzero.nix
     ./work.nix
   ];
 }
