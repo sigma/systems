@@ -62,8 +62,7 @@ in
           arguments = [
             "authfile=/etc/u2f_mappings"
             "cue"
-            (if cfg.verification then "pinverification=1" else "")
-          ];
+          ] ++ lib.optionals cfg.verification [ "pinverification=1" ];
           comment = "security.pam.u2f";
         }
       ];
