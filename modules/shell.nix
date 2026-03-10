@@ -169,7 +169,7 @@ in
         };
 
         packages = with pkgs; [
-          nil # for VSCode integration.
+          nixd # for VSCode integration.
           age # for secrets encryption
           age-plugin-yubikey # for YubiKey-based age encryption
           sops # for secrets management

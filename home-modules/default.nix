@@ -131,6 +131,8 @@
       fh
       master.nix-inspect
       home-manager
+      nh
+      nix-output-monitor
 
       # keyboard QMK tools
       local.mdloader

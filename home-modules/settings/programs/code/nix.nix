@@ -6,9 +6,9 @@
 {
   userSettings = {
     "nix.enableLanguageServer" = true;
-    "nix.serverPath" = "${pkgs.nil}/bin/nil";
+    "nix.serverPath" = "${pkgs.nixd}/bin/nixd";
     "nix.serverSettings" = {
-      "nil" = {
+      "nixd" = {
         "formatting" = {
           "command" = [
             "${pkgs.nixfmt}/bin/nixfmt"

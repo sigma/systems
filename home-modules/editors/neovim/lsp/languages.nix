@@ -23,7 +23,7 @@ in
         # Nix
         nix = {
           enable = true;
-          lsp.servers = [ "nil" ];
+          lsp.servers = [ "nixd" ];
           format.type = [ "nixfmt" ];
         };
 
