@@ -127,7 +127,7 @@
       statix
       nixfmt
       comma
-      devenv
+      master.devenv
       fh
       master.nix-inspect
       home-manager
