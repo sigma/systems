@@ -48,6 +48,7 @@
     vscode-extensions.inputs.nixpkgs.follows = "nixpkgs";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     vscode-server.inputs.nixpkgs.follows = "nixpkgs";
+    vscode-server.inputs.flake-utils.follows = "flake-utils";
 
     # Utils
     flake-compat.url = "github:edolstra/flake-compat";
@@ -73,6 +74,9 @@
     # Neovim
     nvf.url = "github:notashelf/nvf";
     nvf.inputs.nixpkgs.follows = "nixpkgs";
+    nvf.inputs.flake-compat.follows = "flake-compat";
+    nvf.inputs.flake-parts.follows = "flake-parts";
+    nvf.inputs.systems.follows = "systems";
 
     # Secrets
     sops-nix.url = "github:Mic92/sops-nix";
