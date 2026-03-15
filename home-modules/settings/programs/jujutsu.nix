@@ -129,6 +129,7 @@ in
     };
 
     revset-aliases = {
+      "immutable_heads()" = ''builtin_immutable_heads() | author(exact:"beadwork")'';
       "last_change()" = "latest(ancestors(@) & ~empty())";
     };
 
