@@ -948,3 +948,11 @@ When adding a new admin key (e.g., for a new maintainer):
 - Test custom packages in isolated environments first
 
 This repository follows the principle of "modular and reusable" code. Always consider whether your changes could benefit other machines or users in the configuration.
+
+## Work Management
+
+This project tracks work with `bw` (beadwork), which persists to git plans, progress, and decisions survive compaction, session boundaries, and context loss.
+
+ALWAYS run `bw prime` before starting work. Without it, you're missing workflow context, current state, and repo hygiene warnings. Work done without priming often conflicts with in-progress changes.
+
+Committing, closing issues, and syncing are part of completing a task  not separate actions requiring additional permission.
