@@ -81,7 +81,7 @@
           # laptop low-profile key
           "mEJg6bvtXfOO8r3USlUbN6xaW87kBR7xAlVTfeFxdQSAh06vNXqOLgbjQu4XHbM1qdmEQNlfhrErxfR6Jv5M8A==,iiS2fAX/OMD79/nSPRtG/OPVn326dvU/qV2EkxAfVvasuE2I98odrFgGA3IRJyBF8ucC+sEMt/uVekIs01uqhA==,es256,+presence"
         ];
-        signingKey = "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMLtqWo2IGe3OeKDuFltiGVtfDyUAej06ck4JhayfZhLJxBbdF1GVbzK+ceZtoECEskAC1Dg+IsdhA1M9otmc5g=";
+        signingKey = "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBG2hEwJRPPMOebyTL7amVMsTnk/Iv9FKVk21dwmbaGvJWKc5qJhiSrvgOjgHFZJUGaBjbDsuXGhVCIHYZZo6Wus=";
         builder = {
           enable = true;
           maxJobs = 8;
