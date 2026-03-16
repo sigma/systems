@@ -1,0 +1,14 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-16T20:47:20Z",
+  "description": "Add ollama to the nix configuration. Ollama provides local LLM inference. Determine the best way to integrate it (homebrew cask, nixpkg, or custom package) and wire it up with appropriate feature flags.",
+  "id": "nix-ezo",
+  "labels": [],
+  "priority": 2,
+  "status": "open",
+  "title": "Install ollama",
+  "type": "task",
+  "updated_at": "2026-03-16T20:47:20Z"
+}
