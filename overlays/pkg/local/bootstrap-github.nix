@@ -12,7 +12,12 @@ writeShellApplication {
   text = ''
     # Determine the real user's home directory (handle running under sudo)
     if [[ -n "''${SUDO_USER:-}" ]]; then
-      REAL_HOME=$(getent passwd "$SUDO_USER" | cut -d: -f6)
+      if command -v getent &>/dev/null; then
+        REAL_HOME=$(getent passwd "$SUDO_USER" | cut -d: -f6)
+      else
+        # macOS doesn't have getent; use dscl instead
+        REAL_HOME=$(dscl . -read /Users/"$SUDO_USER" NFSHomeDirectory | awk '{print $2}')
+      fi
     else
       REAL_HOME="$HOME"
     fi
