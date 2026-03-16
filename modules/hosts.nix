@@ -7,6 +7,7 @@
     "determinate" # for Determinate Nix
     "gaming" # for gaming
     "tailscale" # for Tailscale VPN
+    "ollama" # for Ollama local LLM inference
     "nehalem" # CPU is pre-Haswell x86_64 (lacks AVX2)
   ];
 
@@ -73,6 +74,7 @@
           "firefly"
           "determinate"
           "gaming"
+          "ollama"
           "tailscale"
         ];
         u2fKeys = portableU2fKeys ++ [

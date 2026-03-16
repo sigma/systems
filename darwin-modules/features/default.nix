@@ -4,6 +4,7 @@
     ./ipfs.nix
     ./k8s.nix
     ./music.nix
+    ./ollama.nix
     ./tailscale.nix
   ];
 
@@ -11,6 +12,7 @@
     k8s.enable = machine.features.work;
     music.enable = machine.features.music;
     ipfs.enable = true;
+    ollama.enable = machine.features.ollama;
     tailscale.enable = machine.features.tailscale;
   };
 }
