@@ -2,25 +2,40 @@
   description = "Yann's systems";
 
   inputs = {
-    # Systems
-    systems.url = "github:nix-systems/default";
+    nix-pins.url = "github:firefly-engineering/nix-pins";
 
-    # Package sets
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nixpkgs-lib.url = "github:NixOS/nixpkgs/nixos-unstable?dir=lib";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.11";
-    darwin-stable.url = "github:NixOS/nixpkgs/nixpkgs-25.11-darwin";
-    nixpkgs-master.url = "github:NixOS/nixpkgs/master";
+    # Package sets (from nix-pins)
+    systems.follows = "nix-pins/systems";
+    nixpkgs.follows = "nix-pins/nixpkgs";
+    nixpkgs-lib.follows = "nix-pins/nixpkgs-lib";
+    nixpkgs-stable.follows = "nix-pins/nixpkgs-stable";
+    darwin-stable.follows = "nix-pins/darwin-stable";
+    nixpkgs-master.follows = "nix-pins/nixpkgs-master";
 
-    # flake-parts
-    flake-parts.url = "github:hercules-ci/flake-parts";
-    flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs-lib";
+    # Frameworks (from nix-pins)
+    flake-parts.follows = "nix-pins/flake-parts";
+    darwin.follows = "nix-pins/darwin";
+    home-manager.follows = "nix-pins/home-manager";
 
-    # Environment/system management
-    darwin.url = "github:lnl7/nix-darwin/nix-darwin-25.11";
-    darwin.inputs.nixpkgs.follows = "darwin-stable";
-    home-manager.url = "github:nix-community/home-manager/release-25.11";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs-stable";
+    # Rust (from nix-pins)
+    fenix.follows = "nix-pins/fenix";
+    naersk.follows = "nix-pins/naersk";
+
+    # Utils (from nix-pins)
+    flake-compat.follows = "nix-pins/flake-compat";
+    flake-utils.follows = "nix-pins/flake-utils";
+    flake-root.follows = "nix-pins/flake-root";
+
+    # Shell utils (from nix-pins)
+    devshell.follows = "nix-pins/devshell";
+    nix-index-database.follows = "nix-pins/nix-index-database";
+    treefmt-nix.follows = "nix-pins/treefmt-nix";
+    pre-commit-hooks-nix.follows = "nix-pins/pre-commit-hooks-nix";
+
+    # Secrets & infrastructure (from nix-pins)
+    sops-nix.follows = "nix-pins/sops-nix";
+    nixos-generators.follows = "nix-pins/nixos-generators";
+    fh.follows = "nix-pins/fh";
 
     # Personal flakes
     maschine-hacks.url = "github:sigma/maschine-hacks";
@@ -36,36 +51,12 @@
     chemacs2nix.inputs.emacs-overlay.follows = "emacs";
     chemacs2nix.inputs.pre-commit-hooks.follows = "pre-commit-hooks-nix";
 
-    # Rust
-    fenix.url = "github:nix-community/fenix";
-    fenix.inputs.nixpkgs.follows = "nixpkgs";
-    naersk.url = "github:nix-community/naersk";
-    naersk.inputs.nixpkgs.follows = "nixpkgs";
-    naersk.inputs.fenix.follows = "fenix";
-
     # VS Code
     vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
     vscode-extensions.inputs.nixpkgs.follows = "nixpkgs";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     vscode-server.inputs.nixpkgs.follows = "nixpkgs";
     vscode-server.inputs.flake-utils.follows = "flake-utils";
-
-    # Utils
-    flake-compat.url = "github:edolstra/flake-compat";
-    flake-utils.url = "github:numtide/flake-utils";
-    flake-utils.inputs.systems.follows = "systems";
-    flake-root.url = "github:srid/flake-root";
-
-    # Shell utils
-    devshell.url = "github:numtide/devshell";
-    devshell.inputs.nixpkgs.follows = "nixpkgs";
-    nix-index-database.url = "github:nix-community/nix-index-database";
-    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
-    treefmt-nix.url = "github:numtide/treefmt-nix";
-    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
-    pre-commit-hooks-nix.url = "github:cachix/pre-commit-hooks.nix";
-    pre-commit-hooks-nix.inputs.nixpkgs.follows = "nixpkgs";
-    pre-commit-hooks-nix.inputs.flake-compat.follows = "flake-compat";
 
     # Theme
     catppuccin.url = "github:catppuccin/nix";
@@ -78,19 +69,7 @@
     nvf.inputs.flake-parts.follows = "flake-parts";
     nvf.inputs.systems.follows = "systems";
 
-    # Secrets
-    sops-nix.url = "github:Mic92/sops-nix";
-    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-
-    # VM image generation
-    nixos-generators.url = "github:nix-community/nixos-generators";
-    nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
-
     # Flakehub
-    fh.url = "https://flakehub.com/f/DeterminateSystems/fh/*";
-    fh.inputs.nixpkgs.follows = "nixpkgs";
-    fh.inputs.fenix.follows = "fenix";
-
     nix.url = "https://flakehub.com/f/DeterminateSystems/nix-src/*";
     nix.inputs = {
       nixpkgs.follows = "nixpkgs";
@@ -103,6 +82,8 @@
     # Niri
     noctalia.url = "github:noctalia-dev/noctalia-shell";
     noctalia.inputs.nixpkgs.follows = "nixpkgs";
+    noctalia.inputs.noctalia-qs.inputs.systems.follows = "nix-pins/systems";
+    noctalia.inputs.noctalia-qs.inputs.treefmt-nix.follows = "nix-pins/treefmt-nix";
   };
 
   outputs =
