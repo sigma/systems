@@ -47,9 +47,6 @@ in
         home.packages = with pkgs; [
           terraform
           kubie
-          (local.jaeger.override {
-            inherit (pkgs.master) buildGoModule;
-          })
         ];
       }
     ]

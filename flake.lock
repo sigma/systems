@@ -3,19 +3,20 @@
     "catppuccin": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs"
+          "nixpkgs-stable"
         ]
       },
       "locked": {
-        "lastModified": 1773403535,
-        "narHash": "sha256-47MZaFrHxNO8tVUAmtVnerXUw2WWVluBOiU9MulN/yM=",
+        "lastModified": 1768256610,
+        "narHash": "sha256-IyL6nZo242nDLoLQVwkqAZXp8FO5kBfjL6Fuh+gZO10=",
         "owner": "catppuccin",
         "repo": "nix",
-        "rev": "d45b5665cc638bad1b794350de02f4dd41b0bb47",
+        "rev": "0734ad8c91342df34f1a1e5c183d053d70ba87c7",
         "type": "github"
       },
       "original": {
         "owner": "catppuccin",
+        "ref": "release-25.11",
         "repo": "nix",
         "type": "github"
       }
@@ -96,6 +97,18 @@
         "ref": "nixpkgs-25.11-darwin",
         "repo": "nixpkgs",
         "type": "github"
+      }
+    },
+    "devenv-root": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-d6xi4mKdjkX2JFicDIv5niSzpyI0m/Hnm8GGAIU04kY=",
+        "type": "file",
+        "url": "file:///dev/null"
+      },
+      "original": {
+        "type": "file",
+        "url": "file:///dev/null"
       }
     },
     "devshell": {
@@ -774,6 +787,7 @@
           "nix-pins",
           "systems"
         ],
+        "toolbox": "toolbox",
         "treefmt-nix": [
           "nix-pins",
           "treefmt-nix"
@@ -832,6 +846,61 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "teller": {
+      "inputs": {
+        "nix-pins": [
+          "toolbox",
+          "nix-pins"
+        ],
+        "nixpkgs": [
+          "toolbox",
+          "teller",
+          "nix-pins",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1773845232,
+        "narHash": "sha256-wWncrIvRfWOSX04wfO0jLuyFx1rpw+Oq+BdKtZQnBcs=",
+        "owner": "firefly-engineering",
+        "repo": "teller",
+        "rev": "417b9fc87e9c4a00f08abb5cd82b86e2dd164727",
+        "type": "github"
+      },
+      "original": {
+        "owner": "firefly-engineering",
+        "repo": "teller",
+        "type": "github"
+      }
+    },
+    "toolbox": {
+      "inputs": {
+        "devenv": [],
+        "devenv-root": "devenv-root",
+        "nix-pins": [
+          "nix-pins"
+        ],
+        "nixpkgs": [
+          "toolbox",
+          "nix-pins",
+          "nixpkgs"
+        ],
+        "teller": "teller"
+      },
+      "locked": {
+        "lastModified": 1774026268,
+        "narHash": "sha256-jTkcOdohE7xF3OMRbbiPJ6tDA22tcM8ajWT/16iBf50=",
+        "owner": "firefly-engineering",
+        "repo": "toolbox",
+        "rev": "7835c238be1b4ff949f7c71d73be19ee08568b75",
+        "type": "github"
+      },
+      "original": {
+        "owner": "firefly-engineering",
+        "repo": "toolbox",
         "type": "github"
       }
     },

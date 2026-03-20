@@ -37,6 +37,11 @@
     nixos-generators.follows = "nix-pins/nixos-generators";
     fh.follows = "nix-pins/fh";
 
+    # Toolbox
+    toolbox.url = "github:firefly-engineering/toolbox";
+    toolbox.inputs.nix-pins.follows = "nix-pins";
+    toolbox.inputs.devenv.follows = "";
+
     # Personal flakes
     maschine-hacks.url = "github:sigma/maschine-hacks";
     maschine-hacks.inputs.nixpkgs.follows = "nixpkgs";
@@ -59,8 +64,8 @@
     vscode-server.inputs.flake-utils.follows = "flake-utils";
 
     # Theme
-    catppuccin.url = "github:catppuccin/nix";
-    catppuccin.inputs.nixpkgs.follows = "nixpkgs";
+    catppuccin.url = "github:catppuccin/nix/release-25.11";
+    catppuccin.inputs.nixpkgs.follows = "nixpkgs-stable";
 
     # Neovim
     nvf.url = "github:notashelf/nvf";

@@ -122,6 +122,9 @@
       nmap
       prettyping
 
+      # work management
+      toolbox.beadwork
+
       # Useful nix related tools
       cachix
       statix

@@ -21,7 +21,7 @@ let
       home-manager = {
         useGlobalPkgs = true;
         useUserPackages = true;
-        users.${user.login} = inputs.nixpkgs.lib.mkMerge (cfg.homeModules ++ machine.homeModules);
+        users.${user.login} = inputs.nixpkgs-stable.lib.mkMerge (cfg.homeModules ++ machine.homeModules);
         extraSpecialArgs = {
           inherit user machine stateVersion;
           nixConfig = cfg.nixConfig;
@@ -103,7 +103,7 @@ let
     let
       user = userFor machine;
       # Build the full darwin system to get the complete home-manager config
-      darwinSystem = inputs.darwin.lib.darwinSystem {
+      darwinSystem = inputs.darwin-stable.lib.darwinSystem {
         inherit (machine) system;
         specialArgs = {
           inherit user machine stateVersion;
@@ -137,7 +137,7 @@ let
     let
       user = userFor machine;
       # Build the full NixOS system to get the complete home-manager config
-      nixosSystem = inputs.nixpkgs.lib.nixosSystem {
+      nixosSystem = inputs.nixpkgs-stable.lib.nixosSystem {
         inherit (machine) system;
         specialArgs = {
           inherit user machine stateVersion;
@@ -171,7 +171,7 @@ in
         nixConfig = cfg.nixConfig;
       };
     in
-    inputs.darwin.lib.darwinSystem {
+    inputs.darwin-stable.lib.darwinSystem {
       inherit (machine) system;
       inherit specialArgs;
       modules =
@@ -199,7 +199,7 @@ in
       };
     in
     inputs.home-manager.lib.homeManagerConfiguration {
-      pkgs = inputs.nixpkgs.legacyPackages.${machine.system} // cfg.nixpkgsConfig;
+      pkgs = inputs.nixpkgs-stable.legacyPackages.${machine.system} // cfg.nixpkgsConfig;
       modules =
         cfg.homeModules
         ++ cfg.linuxModules
@@ -226,7 +226,7 @@ in
         nixConfig = cfg.nixConfig;
       };
     in
-    inputs.nixpkgs.lib.nixosSystem {
+    inputs.nixpkgs-stable.lib.nixosSystem {
       inherit (machine) system;
       inherit specialArgs;
       modules =
