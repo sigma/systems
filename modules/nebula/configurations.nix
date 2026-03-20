@@ -103,7 +103,7 @@ let
     let
       user = userFor machine;
       # Build the full darwin system to get the complete home-manager config
-      darwinSystem = inputs.darwin-stable.lib.darwinSystem {
+      darwinSystem = inputs.darwin.lib.darwinSystem {
         inherit (machine) system;
         specialArgs = {
           inherit user machine stateVersion;
@@ -171,7 +171,7 @@ in
         nixConfig = cfg.nixConfig;
       };
     in
-    inputs.darwin-stable.lib.darwinSystem {
+    inputs.darwin.lib.darwinSystem {
       inherit (machine) system;
       inherit specialArgs;
       modules =
