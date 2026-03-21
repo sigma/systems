@@ -4,7 +4,9 @@
     "nix-61f.1",
     "nix-61f.3"
   ],
-  "blocks": [],
+  "blocks": [
+    "nix-61f.7"
+  ],
   "created": "2026-03-21T08:32:06Z",
   "description": "Implement UTM-specific guest configuration and image output.\n\n## Changes\n\n### 1. QEMU/virtio guest config\nIn `devbox-guest.nix` (from task 3), the UTM path should configure:\n- `services.qemuGuest.enable = true`\n- virtio kernel modules: `virtio_pci`, `virtio_blk`, `virtio_net`, `virtio_scsi`\n- `services.spice-vdagentd.enable` for clipboard/display if interactive\n- virtiofs/9p for shared folders (useful for nix store sharing with host)\n\n### 2. UTM image format\nUTM expects a .utm bundle (macOS package directory):\n```\nmyvm.utm/\n├── config.plist    # VM configuration (CPU, memory, drives, etc.)\n├── Data/\n│   └── disk-0.qcow2\n```\n\nOptions:\n- **Minimal**: Just generate qcow2, user creates UTM VM manually pointing to it\n- **Full**: Generate .utm bundle with config.plist template (CPU count, RAM, network, drive path)\n- **Auto-import**: Use `utmctl` CLI to import the generated VM\n\nStart with minimal (qcow2 + instructions), iterate to full bundle generation.\n\n### 3. UTM-specific NixOS config\n- Boot: EFI boot (UTM uses UEFI by default on ARM)\n- Display: virtio-gpu or spice\n- Network: virtio-net, bridged or shared networking\n- Serial console: enable for headless management\n\n### 4. Test with ash-devbox\n- Switch ash-devbox from `fusion` to `devbox.hypervisor = \"utm\"`\n- Generate image, import into UTM, verify boot and connectivity\n\n## Acceptance\n- `nix build .#nixosConfigurations.ash-devbox.config.system.build.devboxImage` produces qcow2\n- Image boots in UTM with network, SSH access\n- Guest tools (qemu-guest-agent, spice) functional",
   "id": "nix-61f.4",
