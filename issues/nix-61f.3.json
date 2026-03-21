@@ -3,7 +3,9 @@
   "blocked_by": [
     "nix-61f.1"
   ],
-  "blocks": [],
+  "blocks": [
+    "nix-61f.4"
+  ],
   "created": "2026-03-21T08:31:49Z",
   "description": "Replace VMware-specific modules with hypervisor-abstracted equivalents.\n\n## Changes\n\n### 1. `nixos-modules/devbox-guest.nix` (new, replaces vmware-fusion.nix)\nHypervisor-aware guest configuration:\n- `utm`/`kvm`: QEMU guest agent, virtio drivers, spice-vdagent (if interactive)\n- `vmware`: existing open-vm-tools config (preserve current behavior)\n\n```nix\nlib.mkIf machine.features.devbox {\n  # Common devbox guest config\n  boot.initrd.availableKernelModules = lib.optionals (machine.devbox.hypervisor != \"vmware\") [\n    \"virtio_pci\" \"virtio_blk\" \"virtio_net\" \"virtio_scsi\" \"9p\" \"9pnet_virtio\"\n  ] ++ lib.optionals (machine.devbox.hypervisor == \"vmware\") [\n    \"nvme\"\n  ];\n\n  # Hypervisor-specific guest tools\n  virtualisation.vmware.guest = lib.mkIf (machine.devbox.hypervisor == \"vmware\") { ... };\n  services.qemuGuest = lib.mkIf (machine.devbox.hypervisor != \"vmware\") { ... };\n  services.spice-vdagentd = lib.mkIf (machine.features.interactive \u0026\u0026 machine.devbox.hypervisor != \"vmware\") { ... };\n}\n```\n\n### 2. Update `nixos-modules/default.nix`\n- Remove imports of `vmware-fusion.nix` and `vmware-image.nix`\n- Add imports of `devbox-guest.nix` and `devbox-image.nix`\n\n### 3. Deprecation\n- Keep `fusion` feature working (mapped from `devbox.hypervisor = \"vmware\"`)\n- Mark vmware-fusion.nix and vmware-image.nix for removal after migration\n\n## Acceptance\n- Existing VMware devboxes still build and function\n- New UTM/KVM devboxes get correct guest tooling\n- `vmware-fusion.nix` and `vmware-image.nix` are no longer imported directly",
   "id": "nix-61f.3",
