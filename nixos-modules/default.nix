@@ -11,6 +11,7 @@
     ./nixos-user.nix
     ./tailscale.nix
     ./devbox-guest.nix
+    ./devbox-image.nix
     ./vscode-server.nix
   ];
 }
