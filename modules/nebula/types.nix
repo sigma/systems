@@ -125,7 +125,7 @@ rec {
           type = types.nullOr (types.submodule {
             options = {
               hypervisor = mkOption {
-                type = types.enum [ "tart" "kvm" "vmware" ];
+                type = types.enum [ "tart" "kvm" ];
                 description = "Hypervisor used to run this devbox";
               };
               guest = mkOption {

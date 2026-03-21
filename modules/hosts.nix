@@ -31,7 +31,6 @@ in
     "devbox" # for VM-based devboxes (any hypervisor)
     "tart" # for Tart hypervisor (macOS hosts)
     "kvm" # for KVM hypervisor (NixOS hosts)
-    "fusion" # for VMware Fusion VMs (legacy)
     "determinate" # for Determinate Nix
     "gaming" # for gaming
     "tailscale" # for Tailscale VPN

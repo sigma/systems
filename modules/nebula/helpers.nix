@@ -121,7 +121,6 @@ in
           [ "devbox" ]
           ++ lib.optional (host.devbox.hypervisor == "tart") "tart"
           ++ lib.optional (host.devbox.hypervisor == "kvm") "kvm"
-          ++ lib.optional (host.devbox.hypervisor == "vmware") "fusion"
         else
           [ ];
       features = (mapFeatures cfg.features false) // (mapFeatures (host.features ++ devboxFeatures) true);
