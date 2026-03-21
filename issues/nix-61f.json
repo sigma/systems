@@ -1,0 +1,14 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-21T08:31:11Z",
+  "description": "Migrate from VMware Fusion to a unified devbox generation system supporting:\n- **UTM** (macOS hosts) — replaces VMware Fusion, supports nested virtualization\n- **KVM/libvirt** (NixOS hosts) — same devbox workflow on NixOS machines\n- **macOS guests** — virtualize macOS in addition to NixOS Linux guests\n\n## Current State\n- `vm-generate` devshell command builds VMware images via `nixosConfigurations.*.config.system.build.vmwareImage`\n- `fusion` feature flag gates VMware guest tools and image generation\n- Two devboxes exist: `ash-devbox` and `spectre-devbox` (aarch64-linux NixOS VMs)\n- `nixos-generators` is already a flake input (unused currently for this)\n\n## Target State\n- `devbox-generate \u003chostname\u003e` command that auto-detects hypervisor from host/devbox config\n- Host type extended with `devbox.hypervisor` (utm | kvm | vmware) and `devbox.guest` (linux | macos)\n- UTM: generates qcow2 images, optionally auto-imports via `utmctl`\n- KVM: generates qcow2 images for libvirt on NixOS hosts\n- macOS guests: generates UTM-compatible macOS VM configs (IPSW-based)\n- Feature flag migration: `fusion` → `devbox` (with hypervisor sub-option)\n\n## Dependency Graph\n```mermaid\ngraph LR\n    A[nix-TASK1: devbox type system] --\u003e D[nix-TASK4: UTM guest modules]\n    A --\u003e E[nix-TASK5: KVM guest modules]\n    A --\u003e F[nix-TASK6: macOS guest support]\n    B[nix-TASK2: image generation infra] --\u003e G[nix-TASK7: devbox-generate command]\n    D --\u003e G\n    E --\u003e G\n    C[nix-TASK3: migrate fusion → devbox] --\u003e D\n    C --\u003e E\n    F --\u003e G\n```",
+  "id": "nix-61f",
+  "labels": [],
+  "priority": 2,
+  "status": "open",
+  "title": "Devbox generation: multi-hypervisor, multi-platform",
+  "type": "epic",
+  "updated_at": "2026-03-21T08:31:11Z"
+}
