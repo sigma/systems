@@ -13,6 +13,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    homebrew.casks = [ "ollama" ];
+    homebrew.casks = [ "ollama-app" ];
   };
 }
