@@ -10,24 +10,29 @@
 
   imports =
     [
-      # Always included
+      # Always included — these declare options that other (always-loaded)
+      # modules reference. Their config blocks are gated on cfg.enable, which
+      # defaults to false on devbox (the corresponding settings file isn't
+      # loaded), so promotion costs only the option declaration.
+      ./antigravity.nix
+      ./aspell.nix
       ./builder-access.nix
       ./catppuccin.nix
+      ./cursor.nix # referenced from settings/programs/jujutsu.nix
       ./editors
       ./jujutsu.nix
+      ./policy # gates internally on machine.features.<x>
       ./settings
       ./shells
+      ./tmuxp.nix # referenced from settings/programs/tmux.nix
     ]
     ++ lib.optionals (!machine.features.devbox) [
       # Full workstation modules (skip on devboxes)
       ./accounts.nix
       ./ai
-      ./aspell.nix
-      ./antigravity.nix
       ./claude-firefly.nix
       ./claude-glm.nix
       ./cloud-shell.nix
-      ./cursor.nix
       ./dosbox.nix
       ./darwin-apps.nix
       ./fonts
@@ -38,8 +43,6 @@
       ./mailsetup.nix
       ./open-url.nix
       ./opencode-firefly.nix
-      ./policy
-      ./tmuxp.nix
       ./yt-dlp.nix
     ];
 
