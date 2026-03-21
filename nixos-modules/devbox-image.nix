@@ -30,6 +30,7 @@ in
   config = lib.mkIf isDevbox {
     # Boot loader config for make-disk-image (needs GRUB, not systemd-boot)
     boot.loader.systemd-boot.enable = lib.mkIf (hypervisor != "vmware") (lib.mkForce false);
+    boot.loader.efi.canTouchEfiVariables = lib.mkIf (hypervisor != "vmware") (lib.mkForce false);
     boot.loader.grub = lib.mkIf (hypervisor != "vmware") {
       enable = true;
       efiSupport = true;
