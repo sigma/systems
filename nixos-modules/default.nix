@@ -10,8 +10,7 @@
     ./nix.nix
     ./nixos-user.nix
     ./tailscale.nix
-    ./vmware-fusion.nix
-    ./vmware-image.nix
+    ./devbox-guest.nix
     ./vscode-server.nix
   ];
 }
