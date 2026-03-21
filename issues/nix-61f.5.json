@@ -12,9 +12,15 @@
   "id": "nix-61f.5",
   "labels": [],
   "parent": "nix-61f",
+  "comments": [
+    {
+      "text": "Covered by devbox-guest.nix (virtio + qemu-guest-agent for kvm) and devbox-image.nix (qcow2-compressed format for kvm). Implemented as part of nix-61f.2 and nix-61f.3.",
+      "timestamp": "2026-03-21T10:00:52Z"
+    }
+  ],
   "priority": 2,
   "status": "open",
   "title": "KVM/libvirt guest modules and image generation",
   "type": "task",
-  "updated_at": "2026-03-21T08:32:55Z"
+  "updated_at": "2026-03-21T10:00:52Z"
 }
