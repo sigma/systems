@@ -115,7 +115,16 @@ in
             value = val;
           }) features
         ));
-      features = (mapFeatures cfg.features false) // (mapFeatures host.features true);
+      # Derive features from devbox config
+      devboxFeatures =
+        if host.devbox != null then
+          [ "devbox" ]
+          ++ lib.optional (host.devbox.hypervisor == "tart") "tart"
+          ++ lib.optional (host.devbox.hypervisor == "kvm") "kvm"
+          ++ lib.optional (host.devbox.hypervisor == "vmware") "fusion"
+        else
+          [ ];
+      features = (mapFeatures cfg.features false) // (mapFeatures (host.features ++ devboxFeatures) true);
       # Create a partial machine object for sshHost context
       machineContext = { inherit features; };
       # Create sshHost function with context
@@ -140,6 +149,7 @@ in
         enableSwap
         bootLabel
         remotes
+        devbox
         builder
         ;
       inherit features;

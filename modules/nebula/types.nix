@@ -121,6 +121,29 @@ rec {
           description = "The label of the boot partition";
         };
 
+        devbox = mkOption {
+          type = types.nullOr (types.submodule {
+            options = {
+              hypervisor = mkOption {
+                type = types.enum [ "tart" "kvm" "vmware" ];
+                description = "Hypervisor used to run this devbox";
+              };
+              guest = mkOption {
+                type = types.enum [ "linux" "macos" ];
+                default = "linux";
+                description = "Guest OS type";
+              };
+              parentHost = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+                description = "Host key of the machine that runs this VM";
+              };
+            };
+          });
+          default = null;
+          description = "Devbox VM configuration (null means this host is not a devbox)";
+        };
+
         builder = mkOption {
           type = types.nullOr (types.submodule {
             options = {

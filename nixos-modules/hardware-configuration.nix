@@ -24,7 +24,7 @@
     "sr_mod"
   ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = lib.optionals (!machine.features.fusion) [ "kvm-intel" ];
+  boot.kernelModules = lib.optionals (!machine.features.devbox) [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" = {
@@ -54,7 +54,7 @@
 
   nixpkgs.hostPlatform = lib.mkDefault machine.system;
 
-  hardware = lib.optionalAttrs (!machine.features.fusion) {
+  hardware = lib.optionalAttrs (!machine.features.devbox) {
     enableAllFirmware = true;
     cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   };

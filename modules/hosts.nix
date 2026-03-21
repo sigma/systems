@@ -28,7 +28,10 @@ in
     "work" # generic work feature
     "firefly" # specifically for firefly engineering
     "music" # music production
-    "fusion" # for Fusion VMs
+    "devbox" # for VM-based devboxes (any hypervisor)
+    "tart" # for Tart hypervisor (macOS hosts)
+    "kvm" # for KVM hypervisor (NixOS hosts)
+    "fusion" # for VMware Fusion VMs (legacy)
     "determinate" # for Determinate Nix
     "gaming" # for gaming
     "tailscale" # for Tailscale VPN
@@ -158,11 +161,15 @@ in
         ];
         features = [
           "managed"
-          "fusion"
           "nixos"
           "work"
           "tailscale"
         ];
+        devbox = {
+          hypervisor = "tart";
+          guest = "linux";
+          parentHost = "ash";
+        };
         sshOpts = {
           forwardAgent = true;
           extraOptions = {
@@ -191,11 +198,15 @@ in
         ];
         features = [
           "managed"
-          "fusion"
           "nixos"
           "work"
           "tailscale"
         ];
+        devbox = {
+          hypervisor = "tart";
+          guest = "linux";
+          parentHost = "spectre";
+        };
         sshOpts = {
           forwardAgent = true;
           extraOptions = {
