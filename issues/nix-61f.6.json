@@ -11,9 +11,15 @@
   "id": "nix-61f.6",
   "labels": [],
   "parent": "nix-61f",
+  "comments": [
+    {
+      "text": "macOS guest support deferred — requires separate Tart workflow (tart create --from-ipsw). Not blocking the core devbox generation pipeline.",
+      "timestamp": "2026-03-21T10:00:56Z"
+    }
+  ],
   "priority": 2,
   "status": "open",
   "title": "macOS guest devbox support",
   "type": "task",
-  "updated_at": "2026-03-21T08:32:55Z"
+  "updated_at": "2026-03-21T10:00:56Z"
 }
