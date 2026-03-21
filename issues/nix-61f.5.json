@@ -4,7 +4,9 @@
     "nix-61f.1",
     "nix-61f.3"
   ],
-  "blocks": [],
+  "blocks": [
+    "nix-61f.7"
+  ],
   "created": "2026-03-21T08:32:18Z",
   "description": "Implement KVM-specific guest configuration for devboxes running on NixOS hosts.\n\n## Changes\n\n### 1. KVM guest config\nIn `devbox-guest.nix`, the KVM path should configure:\n- `services.qemuGuest.enable = true`\n- Same virtio modules as UTM (both are QEMU-based)\n- `services.spice-vdagentd` if interactive\n\n### 2. KVM image format\n- qcow2 (same as UTM, since both use QEMU)\n- The image generation is shared with UTM\n\n### 3. Host-side libvirt integration (NixOS host module)\nNew module: `nixos-modules/features/devbox-host.nix` (or similar)\nFor NixOS machines that *host* devboxes:\n- `virtualisation.libvirtd.enable = true`\n- Bridge networking setup\n- Storage pool configuration\n- Optional: virsh domain XML generation from devbox config\n\n### 4. Deployment script for KVM\nThe `devbox-generate` command (task 7) should support:\n```bash\ndevbox-generate shirka-devbox  # generates qcow2\n# Then on the NixOS host:\nvirsh define shirka-devbox.xml\nvirsh start shirka-devbox\n```\n\nOr ideally, deploy remotely:\n```bash\ndevbox-deploy shirka-devbox  # copies image + defines VM on host\n```\n\n### 5. Add a KVM devbox host definition\nExample for shirka (NixOS host):\n```nix\nshirka-devbox = {\n  system = \"aarch64-linux\";  # or x86_64-linux matching host\n  devbox = {\n    hypervisor = \"kvm\";\n    guest = \"linux\";\n    parentHost = \"shirka\";\n  };\n  features = [ \"managed\" \"nixos\" \"work\" \"tailscale\" ];\n};\n```\n\n## Acceptance\n- KVM devbox image builds as qcow2\n- Image boots under libvirt/virsh on a NixOS host\n- Host module enables libvirtd with proper networking",
   "id": "nix-61f.5",
