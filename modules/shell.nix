@@ -253,74 +253,85 @@ in
             command = ''exec ${bootstrapCachix}/bin/bootstrap-cachix "$@"'';
           }
           {
-            name = "devbox-generate";
-            category = "devbox";
-            help = "Generate a devbox disk image (usage: devbox-generate <hostname> [output-dir])";
-            command = ''
-              ${findNix}
-              if [ -z "$1" ]; then
-                echo "Usage: devbox-generate <hostname> [output-dir]"
-                echo "Example: devbox-generate ash-devbox ./images"
-                exit 1
-              fi
-              HOST="$1"
-              OUTPUT_DIR="''${2:-.}"
-              OUTPUT_PATH="$OUTPUT_DIR/$HOST-devbox"
-
-              echo "Building devbox image for $HOST..."
-              $NIX_BIN ${nixFlags} build \
-                ".#nixosConfigurations.$HOST.config.system.build.devboxImage" \
-                -o "$OUTPUT_PATH"
-
-              echo "Image generated at: $OUTPUT_PATH/"
-              ls -lh "$OUTPUT_PATH/"
-            '';
-          }
-          {
             name = "devbox-install";
             category = "devbox";
-            help = "Generate and install a devbox into Tart (usage: devbox-install <hostname> [--disk-size <GB>])";
+            help = "Create a devbox VM and bootstrap NixOS (usage: devbox-install <hostname> [disk-gb])";
             command = ''
               ${findNix}
               if [ -z "$1" ]; then
-                echo "Usage: devbox-install <hostname> [--disk-size <GB>]"
-                echo "Example: devbox-install ash-devbox --disk-size 50"
-                exit 1
-              fi
-              HOST="$1"
-              DISK_SIZE="''${2:---disk-size}"
-              DISK_GB="''${3:-50}"
-
-              # Build the image
-              echo "Building devbox image for $HOST..."
-              $NIX_BIN ${nixFlags} build \
-                ".#nixosConfigurations.$HOST.config.system.build.devboxImage" \
-                -o "./$HOST-devbox"
-
-              # Find the raw image file
-              IMG=$(find "./$HOST-devbox" -name '*.raw' -o -name 'nixos.img' | head -1)
-              if [ -z "$IMG" ]; then
-                echo "Error: No image file found in ./$HOST-devbox/"
-                ls -la "./$HOST-devbox/"
+                echo "Usage: devbox-install <hostname> [disk-gb]"
+                echo "Example: devbox-install ash-devbox 50"
                 exit 1
               fi
 
-              # Create tart VM and swap disk
               if ! command -v tart &>/dev/null; then
-                echo "Error: tart not found. Install with: brew install tart"
+                echo "Error: tart not found. Install with: brew install cirruslabs/cli/tart"
                 exit 1
               fi
-              echo "Creating Tart VM '$HOST' with ''${DISK_GB}GB disk..."
+
+              HOST="$1"
+              DISK_GB="''${2:-50}"
+              FLAKE_DIR="$(pwd)"
+
+              # Step 1: Build the auto-install ISO
+              echo "==> Building installer ISO for $HOST..."
+              $NIX_BIN ${nixFlags} build \
+                ".#nixosConfigurations.$HOST.config.system.build.devboxInstaller" \
+                -o "./$HOST-installer"
+
+              ISO=$(find -L "./$HOST-installer" -name '*.iso' | head -1)
+              if [ -z "$ISO" ]; then
+                echo "Error: No ISO found in ./$HOST-installer/"
+                exit 1
+              fi
+
+              # Step 2: Create tart VM
+              echo "==> Creating Tart VM '$HOST' (''${DISK_GB}GB disk)..."
               tart delete "$HOST" 2>/dev/null || true
               tart create --linux "$HOST" --disk-size "$DISK_GB"
 
-              echo "Installing disk image..."
-              cp "$IMG" "$HOME/.tart/vms/$HOST/disk.img"
+              # Step 3: Boot ISO (auto-installs and powers off)
+              echo "==> Booting installer ISO (a VM window will open)..."
+              echo "    The VM will auto-partition, install NixOS, and shut down."
+              tart run --disk "$ISO:ro" "$HOST" || true
 
-              rm -rf "./$HOST-devbox"
+              # Step 4: Clean up ISO
+              rm -rf "./$HOST-installer"
+
               echo ""
-              echo "Done! Run: tart run $HOST"
-              echo "  (add --nested for nested virtualization on M3+)"
+              echo "==> Bootstrap install complete!"
+              echo ""
+              echo "Next steps:"
+              echo "  1. Start the VM:  tart run $HOST"
+              echo "  2. SSH in:        ssh $HOST"
+              echo "  3. Clone config:  git clone <your-config-repo>"
+              echo "  4. Rebuild:       sudo nixos-rebuild switch --flake .#$HOST"
+              echo ""
+              echo "Or run: devbox-rebuild $HOST"
+            '';
+          }
+          {
+            name = "devbox-rebuild";
+            category = "devbox";
+            help = "Rebuild a running devbox via SSH (usage: devbox-rebuild <hostname>)";
+            command = ''
+              ${findNix}
+              if [ -z "$1" ]; then
+                echo "Usage: devbox-rebuild <hostname>"
+                exit 1
+              fi
+
+              HOST="$1"
+              FLAKE_DIR="$(pwd)"
+
+              echo "==> Copying flake to $HOST..."
+              rsync -az --exclude='.git' --exclude='result' \
+                "$FLAKE_DIR/" "$HOST:/tmp/nix-config/"
+
+              echo "==> Running nixos-rebuild switch on $HOST..."
+              ssh -t "$HOST" "sudo nixos-rebuild switch --flake /tmp/nix-config#$HOST"
+
+              echo "==> Done! $HOST has been rebuilt."
             '';
           }
         ];

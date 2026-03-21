@@ -12,6 +12,7 @@
     ./tailscale.nix
     ./devbox-guest.nix
     ./devbox-image.nix
+    ./devbox-installer.nix
     ./vscode-server.nix
   ];
 }
