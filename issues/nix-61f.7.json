@@ -7,14 +7,15 @@
     "nix-61f.6"
   ],
   "blocks": [],
+  "closed_at": "2026-03-21T10:02:45Z",
   "created": "2026-03-21T08:32:50Z",
   "description": "Replace `vm-generate` with unified devbox management commands.\n\n## Changes\n\n### 1. `devbox-generate` command (replaces `vm-generate`)\nBuilds the disk image for a NixOS devbox, auto-detecting format from config:\n\n```bash\ndevbox-generate \u003chostname\u003e [output-dir]\n# Reads machine.devbox.hypervisor to determine:\n#   utm/kvm → builds qcow2 via system.build.devboxImage\n#   vmware  → builds vmdk via system.build.devboxImage (backward compat)\n```\n\nImplementation:\n```bash\nHOST=\"$1\"\nOUTPUT_DIR=\"${2:-.}\"\n$NIX_BIN build \".#nixosConfigurations.$HOST.config.system.build.devboxImage\" \\\n  -o \"$OUTPUT_DIR/$HOST-image\"\necho \"Image generated at: $OUTPUT_DIR/$HOST-image\"\n```\n\n### 2. `devbox-create` command (new, for macOS guests)\nCreates a macOS VM in UTM:\n```bash\ndevbox-create \u003chostname\u003e [--ipsw \u003cpath\u003e]\n# 1. Validates host is a macOS devbox\n# 2. Creates UTM VM (via utmctl or Apple Virtualization.framework CLI)\n# 3. Prints next steps for manual macOS setup\n```\n\n### 3. `devbox-bootstrap` command (new)\nBootstraps a running devbox with its Nix configuration:\n```bash\ndevbox-bootstrap \u003chostname\u003e\n# For NixOS: copies closure, runs nixos-rebuild switch\n# For macOS: installs Nix, clones repo, runs darwin-rebuild switch\n```\n\n### 4. `devbox-deploy` command (optional, for remote KVM hosts)\nDeploys a generated image to a remote NixOS host and defines the libvirt domain:\n```bash\ndevbox-deploy \u003chostname\u003e\n# 1. Generates image (or uses existing)\n# 2. Copies to parentHost via SSH\n# 3. Defines libvirt domain on parentHost\n```\n\n### 5. Remove `vm-generate`\nReplace with `devbox-generate` in `modules/shell.nix`. Add alias for backward compat initially.\n\n### 6. Command category\nChange devshell category from `\"vm\"` to `\"devbox\"`.\n\n## Acceptance\n- `devbox-generate ash-devbox` produces correct image format\n- `vm-generate` removed (or aliased)\n- Commands provide clear output about what was generated and next steps\n- Help text documents the workflow",
   "id": "nix-61f.7",
   "labels": [],
   "parent": "nix-61f",
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Unified devbox-generate / devbox-create devshell commands",
   "type": "task",
-  "updated_at": "2026-03-21T10:01:01Z"
+  "updated_at": "2026-03-21T10:02:45Z"
 }
