@@ -25,11 +25,13 @@
   homebrew.global.brewfile = true;
 
   homebrew.taps = [
+    "cirruslabs/cli"
     "oven-sh/bun"
   ];
 
   homebrew.brews =
     [
+      "cirruslabs/cli/tart"
       "jj"
       "libusb"
       "opencode"
