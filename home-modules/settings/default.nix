@@ -42,6 +42,30 @@
   ...
 }:
 let
+  # Programs to include on devboxes (minimal set)
+  devboxPrograms = [
+    "bat"
+    "carapace"
+    "direnv"
+    "eza"
+    "fish"
+    "fzf"
+    "git"
+    "jujutsu"
+    "ripgrep"
+    "ssh"
+    "starship"
+    "tmux"
+    "zile"
+    "zoxide"
+  ];
+
+  allFiles =
+    dir:
+    builtins.filter
+      (f: lib.hasSuffix ".nix" f)
+      (builtins.attrNames (builtins.readDir ./${dir}));
+
   loader =
     dir:
     builtins.listToAttrs (
@@ -60,11 +84,13 @@ let
           };
         })
         (
-          builtins.filter
-            # all .nix files, present company excluded
-            (f: (lib.hasSuffix ".nix" f))
-            # in directory dir
-            (builtins.attrNames (builtins.readDir ./${dir}))
+          let
+            files = allFiles dir;
+          in
+          if machine.features.devbox && dir == "programs" then
+            builtins.filter (f: builtins.elem (lib.removeSuffix ".nix" f) devboxPrograms) files
+          else
+            files
         )
     );
 in

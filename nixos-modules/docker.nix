@@ -1,5 +1,5 @@
-{ user, ... }:
-{
+{ user, lib, machine, ... }:
+lib.mkIf (!machine.features.devbox) {
   virtualisation.docker.enable = true;
   virtualisation.docker.listenOptions = [
     "/run/docker.sock"

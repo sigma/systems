@@ -8,58 +8,81 @@
 {
   home.stateVersion = stateVersion;
 
-  imports = [
-    ./accounts.nix
-    ./ai
-    ./aspell.nix
-    ./antigravity.nix
-    ./builder-access.nix
-    ./catppuccin.nix
-    ./claude-firefly.nix
-    ./claude-glm.nix
-    ./cloud-shell.nix
-    ./cursor.nix
-    ./dosbox.nix
-    ./darwin-apps.nix
-    ./editors
-    ./fonts
-    ./gcloud.nix
-    ./jujutsu.nix
-    ./just.nix
-    ./kew.nix
-    ./kubeswitch.nix
-    ./mailsetup.nix
-    ./opencode-firefly.nix
-    ./open-url.nix
-    ./policy
-    ./settings
-    ./shells
-    ./tmuxp.nix
-    ./yt-dlp.nix
-  ];
+  imports =
+    [
+      # Always included
+      ./builder-access.nix
+      ./catppuccin.nix
+      ./editors
+      ./jujutsu.nix
+      ./settings
+      ./shells
+    ]
+    ++ lib.optionals (!machine.features.devbox) [
+      # Full workstation modules (skip on devboxes)
+      ./accounts.nix
+      ./ai
+      ./aspell.nix
+      ./antigravity.nix
+      ./claude-firefly.nix
+      ./claude-glm.nix
+      ./cloud-shell.nix
+      ./cursor.nix
+      ./dosbox.nix
+      ./darwin-apps.nix
+      ./fonts
+      ./gcloud.nix
+      ./just.nix
+      ./kew.nix
+      ./kubeswitch.nix
+      ./mailsetup.nix
+      ./open-url.nix
+      ./opencode-firefly.nix
+      ./policy
+      ./tmuxp.nix
+      ./yt-dlp.nix
+    ];
 
   programs = {
-    cloudshell.enable = true;
     fd.enable = true;
     jq.enable = true;
 
-    gh-dash.enable = true;
-
     neovim-ide.enable = true;
+  } // lib.optionalAttrs (!machine.features.devbox) {
+    cloudshell.enable = true;
+    gh-dash.enable = true;
   };
 
   home.packages =
     with pkgs;
     [
-      # Some basics
+      # Core (always included)
       bash
       coreutils
       curl
       wget
+      gnumake
+      gnutar
+      htop
+      less
+      tree
 
+      # json/yaml helpers
+      jaq
+      yq-go
+
+      # work management
+      toolbox.beadwork
+
+      # Useful nix related tools
+      cachix
+      nixfmt
+      home-manager
+      nix-output-monitor
+    ]
+    ++ lib.optionals (!machine.features.devbox) [
       # build tools
       circleci-cli
-      gnumake
       goreleaser
       ninja
       master.buck2
@@ -75,10 +98,7 @@
       d2
       glow
       gum
-      gnutar
       hexyl
-      htop
-      less
       pinfo
       procs
       rm-improved
@@ -87,7 +107,6 @@
       skim
       soft-serve
       tealdeer
-      tree
 
       # writing tools
       hugo
@@ -115,10 +134,8 @@
       rust-analyzer-nightly
 
       # json/yaml helpers
-      jaq
       jsonnet
       jsonnet-bundler
-      yq-go
 
       # network tools
       autossh
@@ -126,20 +143,13 @@
       nmap
       prettyping
 
-      # work management
-      toolbox.beadwork
-
-      # Useful nix related tools
-      cachix
+      # more nix tools
       statix
-      nixfmt
       comma
       master.devenv
       fh
       master.nix-inspect
-      home-manager
       nh
-      nix-output-monitor
 
       # keyboard QMK tools
       local.mdloader
@@ -151,7 +161,7 @@
     ++ lib.optionals machine.features.mac [
       m-cli # useful macOS CLI commands
     ]
-    ++ lib.optionals (!machine.features.mac) (
+    ++ lib.optionals (!machine.features.mac && !machine.features.devbox) (
       let
         bun = if machine.features.nehalem then pkgs.toolbox.bun-baseline else pkgs.toolbox.bun;
       in
