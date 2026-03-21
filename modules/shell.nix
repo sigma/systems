@@ -253,27 +253,74 @@ in
             command = ''exec ${bootstrapCachix}/bin/bootstrap-cachix "$@"'';
           }
           {
-            name = "vm-generate";
-            category = "vm";
-            help = "Generate a VMware image for a NixOS host (usage: vm-generate <hostname> [output-dir])";
+            name = "devbox-generate";
+            category = "devbox";
+            help = "Generate a devbox disk image (usage: devbox-generate <hostname> [output-dir])";
             command = ''
               ${findNix}
               if [ -z "$1" ]; then
-                echo "Usage: vm-generate <hostname> [output-dir]"
-                echo "Example: vm-generate spectre-devbox ./vm-images"
+                echo "Usage: devbox-generate <hostname> [output-dir]"
+                echo "Example: devbox-generate ash-devbox ./images"
                 exit 1
               fi
               HOST="$1"
               OUTPUT_DIR="''${2:-.}"
-              OUTPUT_PATH="$OUTPUT_DIR/$HOST-vmware"
+              OUTPUT_PATH="$OUTPUT_DIR/$HOST-devbox"
 
-              echo "Generating VMware image for $HOST..."
-              # Build directly from nixosConfigurations to use our patched pkgs
+              echo "Building devbox image for $HOST..."
               $NIX_BIN ${nixFlags} build \
-                ".#nixosConfigurations.$HOST.config.system.build.vmwareImage" \
+                ".#nixosConfigurations.$HOST.config.system.build.devboxImage" \
                 -o "$OUTPUT_PATH"
 
-              echo "Image generated at: $OUTPUT_PATH"
+              echo "Image generated at: $OUTPUT_PATH/"
+              ls -lh "$OUTPUT_PATH/"
+            '';
+          }
+          {
+            name = "devbox-install";
+            category = "devbox";
+            help = "Generate and install a devbox into Tart (usage: devbox-install <hostname> [--disk-size <GB>])";
+            command = ''
+              ${findNix}
+              if [ -z "$1" ]; then
+                echo "Usage: devbox-install <hostname> [--disk-size <GB>]"
+                echo "Example: devbox-install ash-devbox --disk-size 50"
+                exit 1
+              fi
+              HOST="$1"
+              DISK_SIZE="''${2:---disk-size}"
+              DISK_GB="''${3:-50}"
+
+              # Build the image
+              echo "Building devbox image for $HOST..."
+              $NIX_BIN ${nixFlags} build \
+                ".#nixosConfigurations.$HOST.config.system.build.devboxImage" \
+                -o "./$HOST-devbox"
+
+              # Find the raw image file
+              IMG=$(find "./$HOST-devbox" -name '*.raw' -o -name 'nixos.img' | head -1)
+              if [ -z "$IMG" ]; then
+                echo "Error: No image file found in ./$HOST-devbox/"
+                ls -la "./$HOST-devbox/"
+                exit 1
+              fi
+
+              # Create tart VM and swap disk
+              if ! command -v tart &>/dev/null; then
+                echo "Error: tart not found. Install with: brew install tart"
+                exit 1
+              fi
+              echo "Creating Tart VM '$HOST' with ''${DISK_GB}GB disk..."
+              tart delete "$HOST" 2>/dev/null || true
+              tart create --linux "$HOST" --disk-size "$DISK_GB"
+
+              echo "Installing disk image..."
+              cp "$IMG" "$HOME/.tart/vms/$HOST/disk.img"
+
+              rm -rf "./$HOST-devbox"
+              echo ""
+              echo "Done! Run: tart run $HOST"
+              echo "  (add --nested for nested virtualization on M3+)"
             '';
           }
         ];
