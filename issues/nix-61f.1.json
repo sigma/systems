@@ -4,7 +4,8 @@
   "blocks": [
     "nix-61f.3",
     "nix-61f.4",
-    "nix-61f.5"
+    "nix-61f.5",
+    "nix-61f.6"
   ],
   "created": "2026-03-21T08:31:24Z",
   "description": "Extend `nebula.types.host` and the feature system to model devboxes properly.\n\n## Changes\n\n### 1. New host options (`modules/nebula/types.nix`)\nAdd to the `host` type:\n- `devbox.hypervisor` — enum: `\"utm\"` | `\"kvm\"` | `\"vmware\"` | `null` (default null, meaning not a devbox)\n- `devbox.guest` — enum: `\"linux\"` | `\"macos\"` (default `\"linux\"`)\n- `devbox.parentHost` — string, optional — the host key of the machine that runs this VM (e.g., `\"ash\"` for `ash-devbox`)\n\n### 2. New feature flags (`modules/hosts.nix`)\nAdd to `nebula.features`:\n- `\"devbox\"` — replaces `\"fusion\"` as the general \"this is a VM\" indicator\n- `\"utm\"` — UTM hypervisor\n- `\"kvm\"` — KVM hypervisor\n\nKeep `\"fusion\"` for backward compat during migration.\n\n### 3. Feature derivation (`modules/nebula/helpers.nix`)\nAuto-derive features from devbox config:\n- `devbox.hypervisor = \"utm\"` → features include `\"devbox\"` and `\"utm\"`\n- `devbox.hypervisor = \"kvm\"` → features include `\"devbox\"` and `\"kvm\"`\n- `devbox.hypervisor = \"vmware\"` → features include `\"devbox\"` and `\"fusion\"`\n\n### 4. Update existing devbox hosts\nMigrate `ash-devbox` and `spectre-devbox` to use the new schema:\n```nix\nash-devbox = {\n  # ... existing config ...\n  devbox = {\n    hypervisor = \"utm\";\n    guest = \"linux\";\n    parentHost = \"ash\";\n  };\n  features = [ \"managed\" \"nixos\" \"work\" \"tailscale\" ];\n  # \"fusion\" removed, \"devbox\"/\"utm\" auto-derived\n};\n```\n\n## Acceptance\n- `nix eval .#nebula.hosts.ash-devbox.devbox.hypervisor` returns `\"utm\"`\n- Feature system correctly derives `devbox` and `utm` features\n- Existing configurations still build (backward compat with fusion)",

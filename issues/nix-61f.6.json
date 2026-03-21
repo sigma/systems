@@ -1,6 +1,8 @@
 {
   "assignee": "",
-  "blocked_by": [],
+  "blocked_by": [
+    "nix-61f.1"
+  ],
   "blocks": [],
   "created": "2026-03-21T08:32:36Z",
   "description": "Support virtualizing macOS as a devbox guest, primarily on macOS hosts via UTM.\n\n## Context\nApple's Virtualization.framework (used by UTM 4+) supports macOS guests on Apple Silicon.\nThis is fundamentally different from NixOS devboxes:\n- macOS VMs are NOT NixOS — they boot from IPSW restore images\n- No nixosConfigurations involved — the VM is a stock macOS install\n- Configuration happens post-install (via nix-darwin after SSH access)\n\n## Changes\n\n### 1. macOS devbox host definition\n```nix\nash-macos-devbox = {\n  name = \"ash-macos-devbox.local\";\n  system = \"aarch64-darwin\";\n  devbox = {\n    hypervisor = \"utm\";\n    guest = \"macos\";\n    parentHost = \"ash\";\n  };\n  features = [ \"managed\" \"mac\" \"work\" \"tailscale\" ];\n};\n```\n\nThis is a darwin host that happens to be a VM. It gets full darwinConfigurations treatment.\n\n### 2. macOS VM creation workflow\nSince macOS VMs can't be \"generated\" as disk images from Nix:\n\n**Option A: UTM CLI-based creation**\n```bash\ndevbox-create ash-macos-devbox\n# 1. Downloads IPSW (or uses cached)\n# 2. Creates UTM VM via utmctl or Virtualization.framework\n# 3. Starts initial macOS setup\n# Post-setup: install Nix, run darwin-rebuild\n```\n\n**Option B: Template-based**\n- Maintain a base macOS .utm template (manually created once)\n- `devbox-create` clones the template and customizes\n\n**Option C: Scripted provisioning**\n- Create VM with minimal macOS\n- Use SSH + scripting to install Nix and bootstrap darwin config\n- `devbox-generate` becomes `devbox-bootstrap` for macOS guests\n\n### 3. Bootstrap script\nAfter macOS VM is running with SSH:\n```bash\ndevbox-bootstrap ash-macos-devbox\n# 1. SSH into VM\n# 2. Install Nix (Determinate installer)\n# 3. Clone this repo\n# 4. Run darwin-rebuild switch --flake .#ash-macos-devbox\n```\n\n### 4. Considerations\n- macOS license: Apple allows virtualizing macOS on Apple hardware\n- IPSW management: cache restore images locally\n- Networking: bridged networking for Tailscale integration\n- Storage: macOS VMs are large (~40-80GB), plan storage paths\n\n## Acceptance\n- macOS devbox defined in hosts.nix with darwinConfigurations generated\n- Creation/bootstrap workflow documented and scripted\n- darwin-rebuild works inside the macOS VM",
@@ -11,5 +13,5 @@
   "status": "open",
   "title": "macOS guest devbox support",
   "type": "task",
-  "updated_at": "2026-03-21T08:32:36Z"
+  "updated_at": "2026-03-21T08:32:55Z"
 }
