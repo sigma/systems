@@ -3,7 +3,7 @@
   "blocked_by": [],
   "blocks": [],
   "created": "2026-03-22T11:48:00Z",
-  "description": "Line numbers are currently disabled (display-line-numbers-type nil).\nConsider enabling relative line numbers for easier jump motions,\nespecially useful when navigating code.\n\nAffected file: `overlays/pkg/local/emacs-config/emacs.org` (line ~319)",
+  "description": "Consider enabling display-line-numbers in vanilla.org. Currently disabled to match Doom config, but vanilla users may prefer them.",
   "id": "nix-yx8.13",
   "labels": [],
   "parent": "nix-yx8",
@@ -11,5 +11,5 @@
   "status": "open",
   "title": "Consider enabling line numbers",
   "type": "task",
-  "updated_at": "2026-03-22T11:48:00Z"
+  "updated_at": "2026-03-22T17:15:44Z"
 }
