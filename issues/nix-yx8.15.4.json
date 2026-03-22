@@ -1,6 +1,8 @@
 {
   "assignee": "",
-  "blocked_by": [],
+  "blocked_by": [
+    "nix-yx8.15.3"
+  ],
   "blocks": [],
   "created": "2026-03-22T15:08:21Z",
   "description": "Add to vanilla.org: vertico, marginalia, orderless, consult, embark, corfu, cape, multiple-cursors, tempel, apheleia, vundo, smartparens, envrc, editorconfig.",
@@ -11,5 +13,5 @@
   "status": "open",
   "title": "Phase 3: Completion and editing",
   "type": "task",
-  "updated_at": "2026-03-22T15:08:21Z"
+  "updated_at": "2026-03-22T15:09:10Z"
 }
