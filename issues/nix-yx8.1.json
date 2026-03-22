@@ -2,14 +2,15 @@
   "assignee": "",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-03-22T17:15:22Z",
   "created": "2026-03-22T11:47:34Z",
   "description": "Switch from `company` to `corfu` (+icons +orderless) for code completion.\nCorfu uses Emacs's built-in completion APIs, is faster, and integrates\nnaturally with the vertico/orderless minibuffer stack already in use.\n\nAffected file: `overlays/pkg/local/emacs-config/emacs.org` (doom! init block, line ~41)\n\nChange: `company` → `(corfu +icons +orderless)`",
   "id": "nix-yx8.1",
   "labels": [],
   "parent": "nix-yx8",
   "priority": 1,
-  "status": "open",
+  "status": "closed",
   "title": "Replace Company with Corfu",
   "type": "task",
-  "updated_at": "2026-03-22T11:47:34Z"
+  "updated_at": "2026-03-22T17:15:22Z"
 }
