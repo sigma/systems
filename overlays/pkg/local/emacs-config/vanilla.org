@@ -325,3 +325,82 @@ All packages come from Nix, so disable automatic installation.
   :init
   (editorconfig-mode 1))
 #+end_src
+
+** Tools
+
+#+begin_src emacs-lisp
+;; Git porcelain
+(use-package magit
+  :bind ("C-x g" . magit-status))
+
+;; Eval overlay (like Doom's +overlay)
+(use-package eros
+  :init
+  (eros-mode 1))
+
+;; Dired
+(use-package dired
+  :hook (dired-mode . dired-hide-details-mode)
+  :config
+  (setq dired-dwim-target t
+        dired-listing-switches "-alh --group-directories-first"
+        dired-recursive-copies 'always
+        dired-recursive-deletes 'top))
+
+(use-package nerd-icons-dired
+  :hook (dired-mode . nerd-icons-dired-mode))
+
+;; Buffer management
+(use-package ibuffer
+  :bind ("C-x C-b" . ibuffer)
+  :config
+  (add-hook 'ibuffer-mode-hook #'yrh/ibuffer-auto-revert-setup))
+
+<<ibuffer-auto-revert-functions>>
+
+;; Project management (built-in)
+(use-package project)
+#+end_src
+
+** Window management
+
+#+begin_src emacs-lisp
+;; Windmove with WezTerm/tmux integration
+<<windmove-pane-functions>>
+
+(keymap-global-set "C-c <left>" #'my/pane-move-left)
+(keymap-global-set "C-c <right>" #'my/pane-move-right)
+(keymap-global-set "C-c <up>" #'my/pane-move-up)
+(keymap-global-set "C-c <down>" #'my/pane-move-down)
+
+;; Quick window switching
+(use-package ace-window
+  :bind ("M-o" . ace-window)
+  :config
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
+
+;; Tab bar for workspace-like behavior
+(use-package tab-bar
+  :config
+  (setq tab-bar-show 1
+        tab-bar-close-button-show nil
+        tab-bar-new-tab-choice "*scratch*")
+  (tab-bar-mode 1))
+
+;; Zen mode
+(use-package writeroom-mode
+  :config
+  <<writeroom-settings>>)
+
+;; Tame popups with display-buffer rules
+(setq display-buffer-alist
+      '(("\\*Help\\*"
+         (display-buffer-reuse-window display-buffer-pop-up-window)
+         (inhibit-same-window . t))
+        ("\\*Completions\\*"
+         (display-buffer-reuse-window display-buffer-pop-up-window)
+         (inhibit-same-window . t))
+        ("\\*compilation\\*"
+         (display-buffer-reuse-window display-buffer-below-selected)
+         (window-height . 0.3))))
+#+end_src

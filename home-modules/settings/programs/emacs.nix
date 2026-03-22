@@ -48,6 +48,13 @@ in
         smartparens
         envrc
         editorconfig
+        # tools
+        magit
+        eros
+        nerd-icons-dired
+        # window
+        ace-window
+        writeroom-mode
       ];
     };
   };
