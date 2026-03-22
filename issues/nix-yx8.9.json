@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:47:48Z",
+  "description": "org-super-agenda is on MELPA. Remove the explicit GitHub recipe and\nsimplify to `(package! org-super-agenda)`.\n\nAffected file: `overlays/pkg/local/emacs-config/emacs.org` (line ~997-998)",
+  "id": "nix-yx8.9",
+  "labels": [],
+  "parent": "nix-yx8",
+  "priority": 2,
+  "status": "open",
+  "title": "Simplify org-super-agenda recipe",
+  "type": "task",
+  "updated_at": "2026-03-22T11:47:48Z"
+}
