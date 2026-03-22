@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T15:08:21Z",
+  "description": "Create vanilla.org with early-init.el and init.el. Create vanilla.nix with chemacs profile, extraPackages, tangle derivation. Minimal bootable: GC, fonts, theme, core settings.",
+  "id": "nix-yx8.15.3",
+  "labels": [],
+  "parent": "nix-yx8.15",
+  "priority": 2,
+  "status": "open",
+  "title": "Phase 2: Bootstrap vanilla.org",
+  "type": "task",
+  "updated_at": "2026-03-22T15:08:21Z"
+}
