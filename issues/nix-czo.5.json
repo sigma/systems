@@ -4,14 +4,15 @@
   "blocks": [
     "nix-czo.9"
   ],
+  "closed_at": "2026-03-22T11:10:33Z",
   "created": "2026-03-22T11:02:41Z",
   "description": "Render markdown headings, code blocks, tables, checkboxes, and links directly in the buffer with concealment and highlights. More useful day-to-day than external preview tools (glow.nvim, markdown-preview.nvim).\n\nNew file: `home-modules/editors/neovim/ui/render-markdown.nix` or `utility/render-markdown.nix`",
   "id": "nix-czo.5",
   "labels": [],
   "parent": "nix-czo",
   "priority": 1,
-  "status": "open",
+  "status": "closed",
   "title": "Add render-markdown.nvim",
   "type": "task",
-  "updated_at": "2026-03-22T11:02:54Z"
+  "updated_at": "2026-03-22T11:10:33Z"
 }
