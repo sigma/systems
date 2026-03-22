@@ -6,5 +6,6 @@
     ./harpoon.nix
     ./todo-comments.nix
     ./projects.nix
+    ./oil.nix
   ];
 }
