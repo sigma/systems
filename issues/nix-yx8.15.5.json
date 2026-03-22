@@ -6,14 +6,15 @@
   "blocks": [
     "nix-yx8.15.6"
   ],
+  "closed_at": "2026-03-22T15:43:21Z",
   "created": "2026-03-22T15:08:21Z",
   "description": "Add to vanilla.org: magit, eros, dired, ibuffer, eshell, project.el, windmove, ace-window, display-buffer-alist, tab-bar-mode, writeroom-mode.",
   "id": "nix-yx8.15.5",
   "labels": [],
   "parent": "nix-yx8.15",
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Phase 4: Tools and window management",
   "type": "task",
-  "updated_at": "2026-03-22T15:42:09Z"
+  "updated_at": "2026-03-22T15:43:21Z"
 }
