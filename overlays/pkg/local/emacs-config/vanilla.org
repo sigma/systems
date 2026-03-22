@@ -179,8 +179,10 @@ All packages come from Nix, so disable automatic installation.
 ;; Disable line numbers (match Doom config)
 (setq display-line-numbers-type nil)
 
-;; Icons
-(use-package nerd-icons)
+;; Icons (Symbols Nerd Font installed via Nix)
+(use-package nerd-icons
+  :config
+  (setq nerd-icons-font-family "Symbols Nerd Font Mono"))
 
 ;; Highlight TODOs
 (use-package hl-todo

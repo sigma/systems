@@ -12,5 +12,6 @@
       fira-code
       sauce-code-pro
       intone-mono
+      symbols-only
     ]);
 }
