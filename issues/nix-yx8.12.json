@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:48:00Z",
+  "description": "Check if the g3doc export format is still in active use. If not, remove\nthe dead code (ox-gfm package, g3doc backend definition, and associated\nautoload functions).\n\nAffected file: `overlays/pkg/local/emacs-config/emacs.org` (lines ~904-968)",
+  "id": "nix-yx8.12",
+  "labels": [],
+  "parent": "nix-yx8",
+  "priority": 3,
+  "status": "open",
+  "title": "Review ox-gfm and g3doc exporter usage",
+  "type": "task",
+  "updated_at": "2026-03-22T11:48:00Z"
+}
