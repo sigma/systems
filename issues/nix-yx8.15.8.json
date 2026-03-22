@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T15:08:21Z",
+  "description": "Add notmuch config to vanilla.org from common.org.",
+  "id": "nix-yx8.15.8",
+  "labels": [],
+  "parent": "nix-yx8.15",
+  "priority": 2,
+  "status": "open",
+  "title": "Phase 7: Email",
+  "type": "task",
+  "updated_at": "2026-03-22T15:08:21Z"
+}
