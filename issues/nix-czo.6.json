@@ -4,15 +4,14 @@
     "nix-czo.14"
   ],
   "blocks": [],
-  "closed_at": "2026-03-22T11:27:11Z",
   "created": "2026-03-22T11:02:41Z",
   "description": "Adds language-aware motions: jump to next function/class, select function parameters, swap arguments. Complements existing mini.ai setup rather than replacing it.\n\nAffected area: `home-modules/editors/neovim/editing/`",
   "id": "nix-czo.6",
   "labels": [],
   "parent": "nix-czo",
   "priority": 2,
-  "status": "closed",
+  "status": "open",
   "title": "Add treesitter-textobjects",
   "type": "task",
-  "updated_at": "2026-03-22T11:35:53Z"
+  "updated_at": "2026-03-22T11:37:10Z"
 }
