@@ -3,7 +3,7 @@
   "blocked_by": [],
   "blocks": [],
   "created": "2026-03-22T11:48:00Z",
-  "description": "The manual exec-path manipulation for Emacs.app (lines 344-356) is fragile.\nConsider using exec-path-from-shell which handles this properly, or ensure\nthe Nix integration sets up the environment correctly before Emacs launches.\n\nAffected file: `overlays/pkg/local/emacs-config/emacs.org` (lines ~344-356)",
+  "description": "Replace the darwin-path-fix hack in common.org with exec-path-from-shell package for cleaner PATH inheritance.",
   "id": "nix-yx8.14",
   "labels": [],
   "parent": "nix-yx8",
@@ -11,5 +11,5 @@
   "status": "open",
   "title": "Replace PATH hack with exec-path-from-shell",
   "type": "task",
-  "updated_at": "2026-03-22T11:48:00Z"
+  "updated_at": "2026-03-22T17:15:44Z"
 }
