@@ -1,6 +1,8 @@
 {
   "assignee": "",
-  "blocked_by": [],
+  "blocked_by": [
+    "nix-yx8.15.6"
+  ],
   "blocks": [],
   "created": "2026-03-22T15:08:21Z",
   "description": "Add eglot, flymake, treesit, per-language modes to vanilla.org. Add LSP server packages to vanilla.nix.",
@@ -11,5 +13,5 @@
   "status": "open",
   "title": "Phase 6: Language support",
   "type": "task",
-  "updated_at": "2026-03-22T15:08:21Z"
+  "updated_at": "2026-03-22T15:09:11Z"
 }
