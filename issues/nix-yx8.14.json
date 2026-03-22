@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:48:00Z",
+  "description": "The manual exec-path manipulation for Emacs.app (lines 344-356) is fragile.\nConsider using exec-path-from-shell which handles this properly, or ensure\nthe Nix integration sets up the environment correctly before Emacs launches.\n\nAffected file: `overlays/pkg/local/emacs-config/emacs.org` (lines ~344-356)",
+  "id": "nix-yx8.14",
+  "labels": [],
+  "parent": "nix-yx8",
+  "priority": 3,
+  "status": "open",
+  "title": "Replace PATH hack with exec-path-from-shell",
+  "type": "task",
+  "updated_at": "2026-03-22T11:48:00Z"
+}
