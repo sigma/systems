@@ -2,14 +2,15 @@
   "assignee": "",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-03-22T11:27:11Z",
   "created": "2026-03-22T11:02:41Z",
   "description": "Edit the filesystem as a buffer - rename, move, delete files by editing text. Complements Neo-tree (sidebar browser) with a different workflow.\n\nNew file: `home-modules/editors/neovim/navigation/oil.nix`",
   "id": "nix-czo.8",
   "labels": [],
   "parent": "nix-czo",
   "priority": 2,
-  "status": "open",
+  "status": "closed",
   "title": "Add oil.nvim",
   "type": "task",
-  "updated_at": "2026-03-22T11:02:41Z"
+  "updated_at": "2026-03-22T11:27:11Z"
 }
