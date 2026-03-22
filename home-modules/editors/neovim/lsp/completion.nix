@@ -1,5 +1,5 @@
 # Completion configuration
-# nvim-cmp with LSP, buffer, path sources
+# blink.cmp - fast Rust-based completion engine
 {
   config,
   lib,
@@ -11,26 +11,29 @@ let
 in
 {
   config = mkIf cfg.enable {
-    programs.nvf.settings.vim.autocomplete.nvim-cmp = {
+    programs.nvf.settings.vim.autocomplete.blink-cmp = {
       enable = true;
 
-      # Completion behavior
+      # Enable friendly-snippets integration
+      friendly-snippets.enable = true;
+
       setupOpts = {
-        completion = {
-          completeopt = "menu,menuone,noinsert";
+        # Completion sources
+        sources.default = [
+          "lsp"
+          "path"
+          "snippets"
+          "buffer"
+        ];
+
+        # Documentation popup
+        completion.documentation = {
+          auto_show = true;
+          auto_show_delay_ms = 200;
         };
 
-        # Window styling - add borders for visibility with transparent background
-        window = {
-          completion = {
-            border = "rounded";
-            winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None";
-          };
-          documentation = {
-            border = "rounded";
-            winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder";
-          };
-        };
+        # Fuzzy matching - prefer Rust for performance, fall back to Lua
+        fuzzy.implementation = "prefer_rust";
       };
 
       # Key mappings matching LazyVim

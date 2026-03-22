@@ -24,9 +24,6 @@ in
       };
     };
 
-    # Snippet placeholder navigation keymaps (Lua module)
-    programs.neovim-ide.luaConfigPost."40-snippet-keymaps" = ''
-      require('user.snippets').setup()
-    '';
+    # Note: snippet navigation (Tab/S-Tab) is handled by blink.cmp
   };
 }
