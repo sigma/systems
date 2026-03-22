@@ -2,14 +2,15 @@
   "assignee": "unknown",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-03-22T22:31:57Z",
   "created": "2026-03-22T11:47:48Z",
   "description": "Simplify org-super-agenda config in common.org. Review custom Yann view for relevance, clean up category icons and formatting.",
   "id": "nix-yx8.9",
   "labels": [],
   "parent": "nix-yx8",
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Simplify org-super-agenda recipe",
   "type": "task",
-  "updated_at": "2026-03-22T22:31:12Z"
+  "updated_at": "2026-03-22T22:31:57Z"
 }
