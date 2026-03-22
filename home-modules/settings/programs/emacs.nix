@@ -3,6 +3,63 @@ let
   parentDir = config.programs.emacs.chemacs.defaultUserParentDir;
   doomDir = "${parentDir}/doom";
   vanillaDir = "${parentDir}/vanilla";
+  vanillaPackages = epkgs: with epkgs; [
+    # ui
+    doom-themes
+    doom-modeline
+    nerd-icons
+    hl-todo
+    diff-hl
+    which-key
+    # completion
+    vertico
+    vertico-posframe
+    marginalia
+    orderless
+    consult
+    embark
+    nerd-icons-completion
+    corfu
+    cape
+    # editing
+    multiple-cursors
+    tempel
+    apheleia
+    vundo
+    smartparens
+    envrc
+    editorconfig
+    # tools
+    magit
+    eros
+    nerd-icons-dired
+    # window
+    ace-window
+    writeroom-mode
+    # org
+    org-roam
+    org-roam-ui
+    websocket
+    vulpea
+    org-roam-bibtex
+    org-super-agenda
+    doct
+    ox-gfm
+    language-detection
+    citar
+    citar-org-roam
+    # languages
+    go-mode
+    rust-mode
+    nix-mode
+    yaml-mode
+    lua-mode
+    markdown-mode
+    auctex
+    d2-mode
+    # mail
+    notmuch
+  ];
 in
 {
   enable = true;
@@ -11,6 +68,16 @@ in
   doom.dir = doomDir;
   chemacs.profiles = {
     default = {
+      userDir = vanillaDir;
+      extraPackages = vanillaPackages;
+    };
+
+    vanilla = {
+      userDir = vanillaDir;
+      extraPackages = vanillaPackages;
+    };
+
+    doom = {
       userDir = doomDir;
       env.DOOMDIR = "~/.config/doom";
     };
@@ -18,67 +85,6 @@ in
     doom-dev = {
       userDir = doomDir;
       env.DOOMDIR = "~/.config/nix/overlays/pkg/local/emacs-config";
-    };
-
-    vanilla = {
-      userDir = vanillaDir;
-      extraPackages = epkgs: with epkgs; [
-        # ui
-        doom-themes
-        doom-modeline
-        nerd-icons
-        hl-todo
-        diff-hl
-        which-key
-        # completion
-        vertico
-        vertico-posframe
-        marginalia
-        orderless
-        consult
-        embark
-        nerd-icons-completion
-        corfu
-        cape
-        # editing
-        multiple-cursors
-        tempel
-        apheleia
-        vundo
-        smartparens
-        envrc
-        editorconfig
-        # tools
-        magit
-        eros
-        nerd-icons-dired
-        # window
-        ace-window
-        writeroom-mode
-        # org
-        org-roam
-        org-roam-ui
-        websocket
-        vulpea
-        org-roam-bibtex
-        org-super-agenda
-        doct
-        ox-gfm
-        language-detection
-        citar
-        citar-org-roam
-        # languages
-        go-mode
-        rust-mode
-        nix-mode
-        yaml-mode
-        lua-mode
-        markdown-mode
-        auctex
-        d2-mode
-        # mail
-        notmuch
-      ];
     };
   };
 }
