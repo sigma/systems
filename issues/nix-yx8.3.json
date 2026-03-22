@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:47:34Z",
+  "description": "Remove the `deft` UI module (unmaintained, sluggish with many files) and\nreplace with consult-org-roam for ripgrep-powered full-text search across\nnotes, integrating with the existing vertico stack. org-roam-node-find\nalready covers most of deft's use case.\n\nAffected file: `overlays/pkg/local/emacs-config/emacs.org` (doom! init block, line ~48)\n\nChange: comment out or remove `deft`, add consult-org-roam package",
+  "id": "nix-yx8.3",
+  "labels": [],
+  "parent": "nix-yx8",
+  "priority": 1,
+  "status": "open",
+  "title": "Replace Deft with consult-org-roam",
+  "type": "task",
+  "updated_at": "2026-03-22T11:47:34Z"
+}
