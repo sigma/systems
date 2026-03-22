@@ -1,5 +1,5 @@
 {
-  "assignee": "",
+  "assignee": "unknown",
   "blocked_by": [
     "nix-yx8.15.6"
   ],
@@ -12,8 +12,8 @@
   "labels": [],
   "parent": "nix-yx8.15",
   "priority": 2,
-  "status": "open",
+  "status": "in_progress",
   "title": "Phase 6: Language support",
   "type": "task",
-  "updated_at": "2026-03-22T15:09:11Z"
+  "updated_at": "2026-03-22T15:45:19Z"
 }
