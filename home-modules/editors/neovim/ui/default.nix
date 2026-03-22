@@ -13,5 +13,6 @@
     ./dashboard.nix
     ./dressing.nix
     ./wezterm.nix
+    ./render-markdown.nix
   ];
 }
