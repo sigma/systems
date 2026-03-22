@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:47:48Z",
+  "description": "writeroom-mode works but olivetti is a lighter, more focused alternative\nthat just centers text without full zen mode machinery. Since Doom's zen\nmodule already handles distraction-free editing, the extra writeroom\nfeatures may be redundant.\n\nEvaluate whether olivetti would be a better fit for the use case.\n\nAffected file: `overlays/pkg/local/emacs-config/emacs.org` (lines ~1410-1416)",
+  "id": "nix-yx8.10",
+  "labels": [],
+  "parent": "nix-yx8",
+  "priority": 2,
+  "status": "open",
+  "title": "Consider Olivetti over Writeroom",
+  "type": "task",
+  "updated_at": "2026-03-22T11:47:48Z"
+}
