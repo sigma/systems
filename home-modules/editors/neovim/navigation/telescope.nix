@@ -3,6 +3,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 with lib;
@@ -13,6 +14,22 @@ in
   config = mkIf cfg.enable {
     programs.nvf.settings.vim.telescope = {
       enable = true;
+
+      # Use fzf-native for faster sorting
+      extensions = [
+        {
+          name = "fzf";
+          packages = [ pkgs.vimPlugins.telescope-fzf-native-nvim ];
+          setup = {
+            fzf = {
+              fuzzy = true;
+              override_generic_sorter = true;
+              override_file_sorter = true;
+              case_mode = "smart_case";
+            };
+          };
+        }
+      ];
 
       setupOpts = {
         defaults = {
