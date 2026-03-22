@@ -2,14 +2,15 @@
   "assignee": "unknown",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-03-22T15:06:23Z",
   "created": "2026-03-22T14:58:06Z",
   "description": "Move emacs.nix to emacs/doom.nix, create emacs/default.nix, create empty common.org, update emacs-config.nix fileset. Build must pass unchanged.",
   "id": "nix-yx8.15.1",
   "labels": [],
   "parent": "nix-yx8.15",
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Phase 0: Restructure emacs module for vanilla migration",
   "type": "task",
-  "updated_at": "2026-03-22T14:58:11Z"
+  "updated_at": "2026-03-22T15:06:23Z"
 }
