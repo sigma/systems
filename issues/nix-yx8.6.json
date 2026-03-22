@@ -2,14 +2,15 @@
   "assignee": "unknown",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-03-22T22:36:35Z",
   "created": "2026-03-22T11:47:48Z",
   "description": "Simplify org-roam-bibtex config in common.org and vanilla.org. The current bibtex-completion setup is complex — evaluate whether citar alone suffices now that Doom's biblio module is gone.",
   "id": "nix-yx8.6",
   "labels": [],
   "parent": "nix-yx8",
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Simplify org-roam-bibtex recipe",
   "type": "task",
-  "updated_at": "2026-03-22T22:35:40Z"
+  "updated_at": "2026-03-22T22:36:35Z"
 }
