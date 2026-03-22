@@ -2,14 +2,15 @@
   "assignee": "",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-03-22T17:15:22Z",
   "created": "2026-03-22T11:47:48Z",
   "description": "envrc is installed as a private package but Doom has a built-in `direnv`\ntools module (currently commented out). Use the Doom module instead for\nbetter integration and maintenance. Or keep envrc but uncomment the\nmodule for proper integration.\n\nAffected file: `overlays/pkg/local/emacs-config/emacs.org` (lines ~108, ~1434-1442)",
   "id": "nix-yx8.8",
   "labels": [],
   "parent": "nix-yx8",
   "priority": 2,
-  "status": "open",
+  "status": "closed",
   "title": "Replace envrc with Doom direnv module",
   "type": "task",
-  "updated_at": "2026-03-22T11:47:48Z"
+  "updated_at": "2026-03-22T17:15:22Z"
 }
