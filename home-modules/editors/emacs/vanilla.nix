@@ -23,5 +23,10 @@ in
   config = mkIf (cfg.enable && cfg.vanilla.enable) {
     # Deploy tangled config to the chemacs profile directory
     home.file."${vanillaRelDir}".source = "${vanillaConfig}";
+
+    # Runtime dependencies (sqlite for org-roam/emacsql)
+    home.packages = with pkgs; [
+      sqlite
+    ];
   };
 }

@@ -426,9 +426,6 @@ All packages come from Nix, so disable automatic installation.
 ** Org Roam
 
 #+begin_src emacs-lisp
-;; Use Emacs 29+ built-in sqlite for emacsql
-(setq emacsql-sqlite-executable nil)
-
 (use-package org-roam
   :after org
   :config
