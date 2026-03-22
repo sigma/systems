@@ -67,6 +67,15 @@ in
         language-detection
         citar
         citar-org-roam
+        # languages
+        go-mode
+        rust-mode
+        nix-mode
+        yaml-mode
+        lua-mode
+        markdown-mode
+        auctex
+        d2-mode
       ];
     };
   };

@@ -605,3 +605,55 @@ All packages come from Nix, so disable automatic installation.
   <<g3doc-functions>>
   <<g3doc-backend-definition>>)
 #+end_src
+
+** Languages
+
+#+begin_src emacs-lisp
+;; Eglot (built-in LSP client)
+(use-package eglot
+  :hook ((go-mode . eglot-ensure)
+         (rust-mode . eglot-ensure)
+         (python-mode . eglot-ensure)
+         (java-mode . eglot-ensure)
+         (js-mode . eglot-ensure)
+         (typescript-mode . eglot-ensure)
+         (c-mode . eglot-ensure)
+         (c++-mode . eglot-ensure)
+         (lua-mode . eglot-ensure)
+         (yaml-mode . eglot-ensure)
+         (nix-mode . eglot-ensure)
+         (LaTeX-mode . eglot-ensure))
+  :config
+  (setq eglot-autoshutdown t
+        eglot-send-changes-idle-time 0.5))
+
+;; Flymake (built-in diagnostics)
+(use-package flymake
+  :hook (prog-mode . flymake-mode)
+  :bind (:map flymake-mode-map
+         ("M-n" . flymake-goto-next-error)
+         ("M-p" . flymake-goto-prev-error)))
+
+;; Tree-sitter (built-in)
+(use-package treesit
+  :when (treesit-available-p)
+  :config
+  (setq treesit-font-lock-level 4))
+
+;; Per-language modes
+(use-package go-mode)
+(use-package rust-mode)
+(use-package nix-mode)
+(use-package yaml-mode)
+(use-package lua-mode)
+(use-package markdown-mode
+  :mode (("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode)))
+(use-package auctex
+  :mode ("\\.tex\\'" . LaTeX-mode))
+(use-package d2-mode)
+
+;; Emacs Lisp enhancements
+(use-package emacs
+  :hook ((emacs-lisp-mode . eldoc-mode)))
+#+end_src
