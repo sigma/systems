@@ -2,14 +2,15 @@
   "assignee": "",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-03-22T11:27:11Z",
   "created": "2026-03-22T11:02:27Z",
   "description": "Replace LSP-based format-on-save with conform.nvim for per-filetype formatter control, fallback chains, and better error handling. LazyVim default formatter dispatcher.\n\nWould consolidate formatting config currently split between `lsp/languages.nix` format types and `lua/user/format.lua`.\n\nAffected files:\n- `home-modules/editors/neovim/lsp/formatting.nix`\n- `home-modules/editors/neovim/lua/user/format.lua`",
   "id": "nix-czo.3",
   "labels": [],
   "parent": "nix-czo",
   "priority": 2,
-  "status": "open",
+  "status": "closed",
   "title": "Add conform.nvim for formatting",
   "type": "task",
-  "updated_at": "2026-03-22T11:02:27Z"
+  "updated_at": "2026-03-22T11:27:11Z"
 }
