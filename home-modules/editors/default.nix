@@ -1,7 +1,7 @@
 { ... }:
 {
   imports = [
-    ./emacs.nix
+    ./emacs
     ./neovim
     ./zile.nix
   ];

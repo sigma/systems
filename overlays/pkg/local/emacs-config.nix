@@ -11,7 +11,10 @@ stdenv.mkDerivation {
   version = "dev";
   src = lib.fileset.toSource {
     root = ./emacs-config;
-    fileset = ./emacs-config/emacs.org;
+    fileset = lib.fileset.unions [
+      ./emacs-config/emacs.org
+      ./emacs-config/common.org
+    ];
   };
 
   buildInputs = [
