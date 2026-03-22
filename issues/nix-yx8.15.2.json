@@ -1,7 +1,9 @@
 {
   "assignee": "",
   "blocked_by": [],
-  "blocks": [],
+  "blocks": [
+    "nix-yx8.15.3"
+  ],
   "created": "2026-03-22T15:08:21Z",
   "description": "Move framework-independent elisp from emacs.org to common.org as named blocks. Update emacs.org to include them. Verify Doom tangled output is identical.",
   "id": "nix-yx8.15.2",
@@ -11,5 +13,5 @@
   "status": "open",
   "title": "Phase 1: Extract shared blocks to common.org",
   "type": "task",
-  "updated_at": "2026-03-22T15:08:21Z"
+  "updated_at": "2026-03-22T15:09:10Z"
 }

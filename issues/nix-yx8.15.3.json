@@ -1,6 +1,8 @@
 {
   "assignee": "",
-  "blocked_by": [],
+  "blocked_by": [
+    "nix-yx8.15.2"
+  ],
   "blocks": [],
   "created": "2026-03-22T15:08:21Z",
   "description": "Create vanilla.org with early-init.el and init.el. Create vanilla.nix with chemacs profile, extraPackages, tangle derivation. Minimal bootable: GC, fonts, theme, core settings.",
@@ -11,5 +13,5 @@
   "status": "open",
   "title": "Phase 2: Bootstrap vanilla.org",
   "type": "task",
-  "updated_at": "2026-03-22T15:08:21Z"
+  "updated_at": "2026-03-22T15:09:10Z"
 }
