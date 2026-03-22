@@ -3,7 +3,7 @@
   "blocked_by": [],
   "blocks": [],
   "created": "2026-03-22T11:47:48Z",
-  "description": "org-super-agenda is on MELPA. Remove the explicit GitHub recipe and\nsimplify to `(package! org-super-agenda)`.\n\nAffected file: `overlays/pkg/local/emacs-config/emacs.org` (line ~997-998)",
+  "description": "Simplify org-super-agenda config in common.org. Review custom Yann view for relevance, clean up category icons and formatting.",
   "id": "nix-yx8.9",
   "labels": [],
   "parent": "nix-yx8",
@@ -11,5 +11,5 @@
   "status": "open",
   "title": "Simplify org-super-agenda recipe",
   "type": "task",
-  "updated_at": "2026-03-22T11:47:48Z"
+  "updated_at": "2026-03-22T17:15:44Z"
 }
