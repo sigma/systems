@@ -6,14 +6,15 @@
   "blocks": [
     "nix-yx8.15.7"
   ],
+  "closed_at": "2026-03-22T15:45:16Z",
   "created": "2026-03-22T15:08:21Z",
   "description": "Add org core, org-roam, org-agenda, org-capture, org-export to vanilla.org. Include shared blocks from common.org with vanilla-specific wrappers.",
   "id": "nix-yx8.15.6",
   "labels": [],
   "parent": "nix-yx8.15",
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Phase 5: Org-mode ecosystem",
   "type": "task",
-  "updated_at": "2026-03-22T15:43:24Z"
+  "updated_at": "2026-03-22T15:45:16Z"
 }
