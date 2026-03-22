@@ -200,3 +200,128 @@ All packages come from Nix, so disable automatic installation.
   :config
   (setq which-key-idle-delay 0.5))
 #+end_src
+
+** Completion
+
+#+begin_src emacs-lisp
+;; Vertical completion UI
+(use-package vertico
+  :init
+  (vertico-mode 1)
+  :config
+  (setq vertico-cycle t
+        vertico-count 15))
+
+;; Childframe for vertico (replaces Doom's +childframe)
+(use-package vertico-posframe
+  :after vertico
+  :init
+  (vertico-posframe-mode 1)
+  :config
+  (setq vertico-posframe-parameters
+        '((left-fringe . 8)
+          (right-fringe . 8))))
+
+;; Rich annotations in minibuffer
+(use-package marginalia
+  :init
+  (marginalia-mode 1))
+
+;; Flexible matching
+(use-package orderless
+  :config
+  (setq completion-styles '(orderless basic)
+        completion-category-overrides '((file (styles partial-completion)))))
+
+;; Practical commands based on completing-read
+(use-package consult
+  :bind (("C-x b" . consult-buffer)
+         ("C-x 4 b" . consult-buffer-other-window)
+         ("M-g g" . consult-goto-line)
+         ("M-g M-g" . consult-goto-line)
+         ("M-s l" . consult-line)
+         ("M-s r" . consult-ripgrep)
+         ("M-s f" . consult-find)
+         ("M-y" . consult-yank-pop))
+  :config
+  (setq consult-narrow-key "<"))
+
+;; Contextual actions
+(use-package embark
+  :bind (("C-." . embark-act)
+         ("C-;" . embark-dwim))
+  :config
+  (setq prefix-help-command #'embark-prefix-help-command))
+
+;; Icons in completion
+(use-package nerd-icons-completion
+  :after marginalia
+  :init
+  (nerd-icons-completion-mode 1)
+  :hook (marginalia-mode . nerd-icons-completion-marginalia-setup))
+
+;; In-buffer completion
+(use-package corfu
+  :init
+  (global-corfu-mode 1)
+  :config
+  (setq corfu-auto t
+        corfu-auto-delay 0.2
+        corfu-auto-prefix 2
+        corfu-cycle t
+        corfu-preselect 'prompt))
+
+;; Completion-at-point extensions
+(use-package cape
+  :init
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file))
+#+end_src
+
+** Editing
+
+#+begin_src emacs-lisp
+;; Multiple cursors
+(use-package multiple-cursors
+  :bind (("C-S-c C-S-c" . mc/edit-lines)
+         ("C->" . mc/mark-next-like-this)
+         ("C-<" . mc/mark-previous-like-this)
+         ("C-c C-<" . mc/mark-all-like-this)))
+
+;; Template-based snippets
+(use-package tempel
+  :bind (("M-+" . tempel-complete)
+         ("M-*" . tempel-insert))
+  :init
+  (defun tempel-setup-capf ()
+    (setq-local completion-at-point-functions
+                (cons #'tempel-expand completion-at-point-functions)))
+  (add-hook 'conf-mode-hook #'tempel-setup-capf)
+  (add-hook 'prog-mode-hook #'tempel-setup-capf)
+  (add-hook 'text-mode-hook #'tempel-setup-capf))
+
+;; Format on save
+(use-package apheleia
+  :init
+  (apheleia-global-mode 1))
+
+;; Visual undo tree
+(use-package vundo
+  :bind ("C-x u" . vundo))
+
+;; Smart parentheses
+(use-package smartparens
+  :hook (prog-mode . smartparens-mode)
+  :config
+  (require 'smartparens-config))
+
+;; Direnv integration
+(use-package envrc
+  :init
+  (envrc-global-mode 1))
+
+;; EditorConfig support
+(use-package editorconfig
+  :init
+  (editorconfig-mode 1))
+#+end_src

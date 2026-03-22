@@ -30,6 +30,24 @@ in
         hl-todo
         diff-hl
         which-key
+        # completion
+        vertico
+        vertico-posframe
+        marginalia
+        orderless
+        consult
+        embark
+        nerd-icons-completion
+        corfu
+        cape
+        # editing
+        multiple-cursors
+        tempel
+        apheleia
+        vundo
+        smartparens
+        envrc
+        editorconfig
       ];
     };
   };
