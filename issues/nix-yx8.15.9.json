@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T15:08:21Z",
+  "description": "Change default chemacs profile from Doom to vanilla. Move Doom to fallback profile.",
+  "id": "nix-yx8.15.9",
+  "labels": [],
+  "parent": "nix-yx8.15",
+  "priority": 2,
+  "status": "open",
+  "title": "Phase 8: Switchover",
+  "type": "task",
+  "updated_at": "2026-03-22T15:08:21Z"
+}
