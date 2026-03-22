@@ -43,7 +43,7 @@ in
     nerd-icons-dired
     # window
     ace-window
-    writeroom-mode
+    olivetti
     # org
     org-roam
     org-roam-ui

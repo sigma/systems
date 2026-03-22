@@ -386,10 +386,13 @@ All packages come from Nix, so disable automatic installation.
       tab-bar-new-tab-choice "*scratch*")
 (tab-bar-mode 1)
 
-;; Zen mode
-(use-package writeroom-mode
+;; Zen mode — lightweight text centering
+(use-package olivetti
+  :hook ((text-mode . olivetti-mode)
+         (prog-mode . olivetti-mode))
   :config
-  <<writeroom-settings>>)
+  (setq olivetti-body-width 100
+        olivetti-style 'fancy))
 
 ;; Tame popups with display-buffer rules
 (setq display-buffer-alist
