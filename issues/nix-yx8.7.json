@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:47:48Z",
+  "description": "The config unpins helm-bibtex and ivy-bibtex even though vertico is used\n(not helm or ivy). This is unnecessary and could pull in breaking changes.\nRemove the unpin or scope it to just bibtex-completion.\n\nAffected file: `overlays/pkg/local/emacs-config/emacs.org` (line ~813)",
+  "id": "nix-yx8.7",
+  "labels": [],
+  "parent": "nix-yx8",
+  "priority": 2,
+  "status": "open",
+  "title": "Remove unnecessary bibtex-completion unpins",
+  "type": "task",
+  "updated_at": "2026-03-22T11:47:48Z"
+}
