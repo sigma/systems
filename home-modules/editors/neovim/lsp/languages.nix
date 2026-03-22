@@ -72,10 +72,10 @@ in
           enable = true;
           lsp.enable = true;
           treesitter.enable = true;
-          # Use black + isort for formatting
+          # Use ruff for formatting (replaces black + isort, much faster)
           format = {
             enable = true;
-            type = [ "black" "isort" ];
+            type = [ "ruff" ];
           };
         };
 
