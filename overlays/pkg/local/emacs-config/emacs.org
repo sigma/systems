@@ -328,9 +328,7 @@ Let's standardize on ~/org as the root of all orgs.
 #+begin_src emacs-lisp :tangle config.el
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory (file-truename (expand-file-name "~/org/")))
-(setq org-roam-directory (expand-file-name "roam" org-directory))
-(setq org-id-locations-file (expand-file-name ".orgids" org-directory))
+<<org-directory-settings>>
 #+end_src
 
 ** Paths
@@ -404,48 +402,14 @@ knowledge base using =org-roam=, which I also export using custom formats.
 :END:
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
 (after! org-clock
-  ;; Resume clocking task when emacs is restarted
-  (org-clock-persistence-insinuate)
-  ;; Show lot of clocking history so it's easy to pick items off the C-F11 list
-  (setq org-clock-history-length 23)
-  ;; Resume clocking task on clock-in if the clock is open
-  (setq org-clock-in-resume t)
-  ;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
-  (setq org-clock-out-remove-zero-time-clocks t)
-  ;; Clock out when moving task to a done state
-  (setq org-clock-out-when-done t)
-  ;; Save the running clock and all clock history when exiting Emacs, load it on startup
-  (setq org-clock-persist t)
-  ;; Include current clocking task in clock reports
-  (setq org-clock-report-include-clocking-task t))
+  <<org-clock-settings>>)
 
-(defvar short-link-regexp
-  (rx bow
-      (or (seq "go"
-               ?/ alnum (* (any alnum ?/ ?- ?_ ?# ?? ?& ?=)))
-          (seq "b" ?/
-               (+ (any (?0 . ?9)))))
-      eow)
-  "A regular expression matching short links (go/, etc.")
+<<short-link-regexp>>
 
 (after! org
-  (setq org-log-into-drawer t
-        org-todo-keywords
-        '((sequence
-           "TODO(t)"
-           "STRT(s/!)"
-           "WAIT(w@/!)"
-           "|"
-           "DONE(d!)"
-           "CANCELED(c@)"))
-        org-hide-emphasis-markers t
-        org-return-follows-link t
-        org-tag-alist '(("noexport")))
+  <<org-core-settings>>
   (add-hook! 'org-open-link-functions
-    (defun yrh/open-short-link (link)
-      (when (string-match-p short-link-regexp link)
-        (browse-url (concat "http://" link))
-        t))))
+    <<org-open-short-link-fn>>))
 #+end_src
 
 **** Yank DWIM
@@ -460,62 +424,12 @@ It leverages language-detection to handle code blocks
 #+end_src
 
 And a few helper functions.
-#+begin_src elisp :tangle modules/config/private/autoload/org-yank-dwim.el
-(defun org-yank-dwim-markdown-link (txt)
-  "Transform a markdown link TXT into a proper org link."
-  (when (string-match "^\\[\\(.+\\)\\](\\(.*\\))$" txt)
-    (org-link-make-string (match-string 2 txt) (match-string 1 txt))))
-
-(defun org-yank-dwim-code-block (txt)
-  "Transform a code snippet TXT into a proper org code block."
-  (unless (org-in-src-block-p)
-    (let ((lang (cdr (assoc (language-detection-string txt) org-yank-dwim-lang-list)))
-        (eol (string-suffix-p "\n" txt)))
-    (when lang
-      (format "#+begin_src %s\n%s%s#+end_src\n" lang txt (if eol "" "\n"))))))
-
-(defun org-yank-dwim (&optional _arg)
-  "Do what I mean when yanking text."
-  (let* ((mark (mark))
-         (point (point))
-         (orig (buffer-substring-no-properties mark point))
-         (txt (run-hook-with-args-until-success 'org-yank-dwim-functions orig)))
-    (when txt
-      (delete-region mark point)
-      (insert txt)
-      (push-mark mark 'nomsg))))
-
-;;;###autoload
-(define-minor-mode org-yank-dwim-mode
-  "Alter yanked text to fit `org-mode' better."
-  :lighter "^V"
-  (if org-yank-dwim-mode
-      (add-function :after (symbol-function 'org-yank) #'org-yank-dwim)
-    (remove-function (symbol-function 'org-yank) #'org-yank-dwim)))
+#+begin_src emacs-lisp :tangle modules/config/private/autoload/org-yank-dwim.el :comments no
+<<org-yank-dwim-functions>>
 #+end_src
 
-#+begin_src elisp :tangle modules/config/private/config.el
-(defvar org-yank-dwim-lang-list
-  '((c . "C")
-    (clojure . "clojure")
-    (cpp . "cpp")
-    (css . "css")
-    (emacslisp . "elisp")
-    (fortran . "F90")
-    (go . "go")
-    (haskell . "haskell")
-    (html . "html")
-    (java . "java")
-    (javascript . "javascript")
-    (json . "json")
-    (latex . "latex")
-    (python . "python")
-    (ruby . "ruby")
-    (rust . "rust")
-    (shell . "shell")
-    (xml . "xml")))
-
-(defvar org-yank-dwim-functions (list 'org-yank-dwim-markdown-link 'org-yank-dwim-code-block))
+#+begin_src emacs-lisp :tangle modules/config/private/config.el :comments no
+<<org-yank-dwim-lang-list>>
 
 (use-package! language-detection
   :preface
@@ -541,142 +455,27 @@ I need a few Roam extensions beyond what's built into Doom.
                                     time-stamp-format "\[%Y-%m-%d %a %H:%M\]")
                         (add-hook! 'before-save-hook :local #'time-stamp)))
 
-  (setq org-id-link-to-org-use-id t
-        org-roam-capture-templates
-        '(("d" "default" plain "%?" :target
-           (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+setupfile: ../_setup_roam.org\n#+title: ${title}\n#+category: ${title}\n")
-           :unnarrowed t)
-          ("p" "person" plain "%?" :target
-           (file+head "%<%Y%m%d%H%M%S>-${slug}.org" ":PROPERTIES:\n:ROAM_REFS: http://who/%^{ldap}\n:ROAM_ALIASES: @%\\1\n:END:\n#+setupfile: ../_setup_roam.org\n#+title: ${title}\n#+category: ${title}\n#+filetags: :person:\n")
-           :unnarrowed t)
-          ("u" "document" plain "%?" :target
-           (file+head "%<%Y%m%d%H%M%S>-${slug}.org" ":PROPERTIES:\n%(yrh/record-parsed-document):ROAM_REFS: %(identity -local-ref)\n:ROAM_ALIASES: %(identity -local-title)\n:END:\n#+setupfile: ../_setup_roam.org\n#+title: ${title}\n#+category: ${title}\n#+filetags: :doc:\n")
-           :unnarrowed t)
-          ("n" "document note" plain
-           "%?"
-           :target
-           (file+head
-            "%(expand-file-name citar-org-roam-subdir org-roam-directory)/${citar-citekey}.org"
-            ":PROPERTIES:\n:ROAM_REFS: [cite:@${citar-citekey}] ${citar-url}\n:END:\n#+setupfile: ../../_setup_roam_bib.org\n#+title: ${citar-citekey} :: ${note-title}.\n#+created: %U\n#+last_modified: %U\n\n")
-           :unnarrowed t))
-        org-roam-dailies-capture-templates
-        '(("d" "default" plain "**** %?\n" :target
-           (file+head+olp "journal.org" "#+setupfile: ../../_setup_roam_diary.org\n#+title: Dear diary\n#+filetags: :journal:\n"
-                          ("%<%Y>" "%<%Y-%m>" "[%<%Y-%m-%d %a>]"))))))
+  <<org-roam-capture-templates>>)
 #+end_src
 ***** Dailies
 :PROPERTIES:
 :ID:       9db185ef-8126-4016-bc98-57ce952e249d
 :END:
 #+begin_src emacs-lisp :tangle modules/config/private/autoload/roam.el
-(require 'calendar)
-
-;;;###autoload
-(defun yrh/org-roam-dailies-fixup-properties ()
-  (interactive)
-  (org-map-entries
-   (lambda ()
-     (org-id-get-create)
-     (let ((date (org-element-property :raw-value (org-element-context))))
-       (org-set-property "EXPORT_FILE_NAME"
-                         (car (split-string (substring date 1 -1))))
-       (org-set-property "EXPORT_DATE" date)
-       (org-set-property "DATE" date)))
-   "LEVEL=3" 'file 'archive 'comment))
-
-;;;###autoload
-(defun yrh/org-roam-dailies-entries (month year)
-  (let* ((query (vconcat
-                 [:select [title]
-                  :from nodes
-                  :where
-                  ]
-                 (list `(like title (quote ,(format "%%[%04d-%02d-%%" year month))))))
-         (db-entries (org-roam-db-query query)))
-    (mapcar (lambda (e)
-              (let ((p (parse-time-string (car e))))
-                (list (nth 4 p) (nth 3 p) (nth 5 p))))
-            db-entries)))
-
-;;;###autoload
-(defun yrh/org-roam-dailies-calendar-mark-monthly-entries ()
-  "Mark days in the calendar for which a daily-note is present."
-  (let ((dailies-dir (expand-file-name org-roam-dailies-directory org-roam-directory)))
-    (when (file-exists-p dailies-dir)
-      (let* ((month displayed-month)
-             (year displayed-year)
-             (range (list (calendar-increment-month-cons -1 month year)
-                          (cons month year)
-                          (calendar-increment-month-cons 1 month year))))
-        (mapc (lambda (item)
-                (let ((entries (yrh/org-roam-dailies-entries (car item) (cdr item))))
-                      (mapc (lambda (e)
-                              (when (calendar-date-is-visible-p e)
-                                (calendar-mark-visible-date e 'org-roam-dailies-calendar-note)))
-                            entries)))
-              range)))))
+<<org-roam-dailies-functions>>
 #+end_src
 
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
-(add-hook 'org-roam-dailies-find-file-hook #'yrh/org-roam-dailies-fixup-properties)
-(add-hook 'calendar-today-visible-hook #'yrh/org-roam-dailies-calendar-mark-monthly-entries)
-(add-hook 'calendar-today-invisible-hook #'yrh/org-roam-dailies-calendar-mark-monthly-entries)
+<<org-roam-dailies-hooks>>
 #+end_src
 ***** Roam-dwim
 :PROPERTIES:
 :ID:       c76db251-f3df-4e6a-a21e-eedd85575bcf
 :END:
 #+begin_src emacs-lisp :tangle modules/config/private/autoload/roam.el
-(defvar yrh/org-roam-capture-dwim-functions
-  '(yrh/org-roam-capture-link
-    yrh/org-roam-capture-ldap))
+<<org-roam-dwim-vars>>
 
-(defvar yrh/org-roam-capture-dwim-templates
-  '(("l" "link" plain "
-- author :: [[roam:${author}]]
-- link :: [[${url}][${title}]]
-%?"
-     :target
-     (file+head
-      "%<%Y%m%d%H%M%S>-${slug}.org"
-      ":PROPERTIES:
-:AUTHOR: ${author}
-:ROAM_REFS: ${url}
-:END:
-,#+setupfile: ../_setup_roam.org
-,#+title: ${title}
-,#+category: ${title}
-,#+filetags: :doc:
-")
-     :unnarrowed t)))
-
-;;;###autoload
-(defun yrh/org-roam-capture-dwim ()
-  (interactive)
-  (let* ((txt (read-from-minibuffer "Capture: "))
-         (res (run-hook-with-args-until-success 'yrh/org-roam-capture-dwim-functions txt)))
-    (when res
-      (org-roam-capture-
-       :node (org-roam-node-create :title (plist-get res :title))
-       :info (plist-get res :info)
-       :templates yrh/org-roam-capture-dwim-templates
-       :keys (plist-get res :keys)))))
-
-;;;###autoload
-(defun yrh/org-roam-capture-link (txt)
-  (let ((repr (yrh/parse-document-representation txt)))
-    (when (not (string-blank-p (car repr)))
-      (list :title (car repr)
-            :info (list :url (cdr repr) :author (read-from-minibuffer "Author: "))
-            :keys "l"))))
-
-;;;###autoload
-(defun yrh/org-roam-capture-ldap (txt)
-  (when (string-prefix-p "@" txt)
-    (let ((ldap (substring txt 1)))
-      (list :title (read-from-minibuffer "Name: ")
-            :info (list :ldap ldap)
-            :keys "p"))))
+<<org-roam-dwim-functions>>
 #+end_src
 ***** UI
 :PROPERTIES:
@@ -696,10 +495,7 @@ The Roam UI feature requires websocket support.
 (use-package! org-roam-ui
   :after org-roam
   :config
-  (setq org-roam-ui-sync-theme t
-        org-roam-ui-follow t
-        org-roam-ui-update-on-save t
-        org-roam-ui-open-on-start t))
+  <<org-roam-ui-settings>>)
 #+end_src
 
 ***** Vulpea
@@ -717,7 +513,7 @@ I keep some tasks in roam files. Due to the scalability problem of having a
 large number of files in the agenda list, I use a specific tag for roam files
 that contain such tasks. So only those will be added to the agenda.
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
-(defconst yrh/roam-tasks-tag "roam_tasks")
+<<vulpea-roam-tasks-tag>>
 
 (use-package! vulpea
   :after org-roam
@@ -733,71 +529,7 @@ that contain such tasks. So only those will be added to the agenda.
 #+end_src
 
 #+begin_src emacs-lisp :tangle modules/config/private/autoload/vulpea.el
-(require 'vulpea-buffer)
-
-;;;###autoload
-(defun yrh/vulpea-project-p ()
-  "Return non-nil if current buffer has any todo entry.
-
-TODO entries marked as done are ignored, meaning the this
-function returns nil if current buffer contains only completed
-tasks."
-  (org-element-map                          ; (2)
-      (org-element-parse-buffer 'headline) ; (1)
-      'headline
-    (lambda (h)
-      (eq (org-element-property :todo-type h)
-          'todo))
-    nil 'first-match))
-
-;;;###autoload
-(defun yrh/vulpea-project-update-tag ()
-      "Update PROJECT tag in the current buffer."
-      (when (and (not (active-minibuffer-window))
-                 (yrh/vulpea-buffer-p))
-        (save-excursion
-          (goto-char (point-min))
-          (let* ((tags (vulpea-buffer-tags-get))
-                 (original-tags tags))
-            (if (yrh/vulpea-project-p)
-                (setq tags (cons yrh/roam-tasks-tag tags))
-              (setq tags (remove yrh/roam-tasks-tag tags)))
-
-            ;; cleanup duplicates
-            (setq tags (seq-uniq tags))
-
-            ;; update tags if changed
-            (when (or (seq-difference tags original-tags)
-                      (seq-difference original-tags tags))
-              (apply #'vulpea-buffer-tags-set tags))))))
-
-;;;###autoload
-(defun yrh/vulpea-buffer-p ()
-  "Return non-nil if the currently visited buffer is a note."
-  (and buffer-file-name
-       (string-prefix-p
-        (expand-file-name (file-name-as-directory org-roam-directory))
-        (file-name-directory buffer-file-name))))
-
-;;;###autoload
-(defun yrh/vulpea-project-files ()
-  "Return a list of note files containing 'project' tag." ;
-  (seq-uniq
-   (seq-map
-    #'car
-    (org-roam-db-query
-     (vconcat
-      [:select [nodes:file]
-       :from tags
-       :left-join nodes
-       :on (= tags:node-id nodes:id)
-       :where
-       ]
-      (list `(like tag (quote ,(format "%%\"%s\"%%" yrh/roam-tasks-tag)))))))))
-
-;;;###autoload
-(defun yrh/inject-vulpea-project-files (org-agenda-files--output)
-  (append org-agenda-files--output (yrh/vulpea-project-files)))
+<<vulpea-functions>>
 #+end_src
 
 ***** Bibtex integration
@@ -814,29 +546,7 @@ tasks."
 #+end_src
 
 #+begin_src emacs-lisp :tangle modules/config/private/autoload/roam.el
-(require 'org-roam-capture)
-
-;;;###autoload
-(defun yrh/parse-document-representation (&optional repr)
-  (interactive)
-  (unless repr
-    (setq repr
-          (read-string "Document: ")))
-  (cond ((string-match "\\[\\(.+\\)\\](\\(.*\\))" repr)
-         (cons (match-string 1 repr) (match-string 2 repr)))
-        ((string-match "\\[\\[\\(.+\\)\\]\\[\\(.*\\)\\]\\]" repr)
-         (cons (match-string 2 repr) (match-string 1 repr)))
-        ((string-match-p "https?://.*" repr)
-         (cons repr repr))
-        (t
-         (cons "" ""))))
-
-;;;###autoload
-(defun yrh/record-parsed-document ()
-  (let ((repr (yrh/parse-document-representation)))
-    (set (make-local-variable '-local-title) (car repr))
-    (set (make-local-variable '-local-ref) (cdr repr))
-    ""))
+<<bibtex-parsing-functions>>
 
 #+end_src
 
@@ -912,59 +622,11 @@ tasks."
     :after ox))
 
 (after! (ox-publish ox-gfm)
-  (org-export-define-derived-backend 'g3doc 'gfm
-    :translate-alist '((headline . org-g3doc-headline)
-                       (inner-template . org-g3doc-inner-template)
-                       (keyword . org-g3doc-keyword)
-                       (link . org-g3doc-link))
-    :menu-entry
-    '(?3 "Export to g3doc Markdown"
-         ((?G "To temporary buffer"
-              (lambda (a s v b) (org-g3doc-export-as-markdown a s v)))
-          (?g "To file" (lambda (a s v b) (org-g3doc-export-to-markdown a s v)))
-          (?o "To file and open"
-              (lambda (a s v b)
-                (if a (org-g3doc-export-to-markdown t s v)
-                  (org-open-file (org-g3doc-export-to-markdown nil s v)))))))))
+  <<g3doc-backend-definition>>)
 #+end_src
 
 #+begin_src emacs-lisp :tangle modules/config/private/autoload/org.el
-;;;###autoload
-(defun org-g3doc-link (link desc info)
-  (let ((type (org-element-property :type link))
-        (path (org-element-property :path link)))
-    (if (and (equal type "fuzzy")
-             (string-match-p short-link-regexp path))
-        (format "[%s](http://%s)" path path)
-      (org-md-link link desc info))))
-
-;;;###autoload
-(defun org-g3doc-inner-template (contents info)
-  (concat
-   "<!-- generated by ox-g3doc -->\n"
-   contents))
-
-;;;###autoload
-(defun org-g3doc-keyword (keyword contents info)
-  (if (equal (org-element-property :key keyword) "TITLE")
-      (concat (format "# %s\n\n[TOC]" (org-element-property :value keyword)) contents)
-    contents))
-
-;;;###autoload
-(defun org-g3doc-headline (headline contents info)
-  (org-md-headline headline contents (plist-put info :headline-offset 1)))
-
-;;;###autoload
-(defun org-g3doc-export-as-markdown (&optional async subtreep visible-only)
-  (interactive)
-  (org-export-to-buffer 'g3doc "*Org g3doc Export*"
-    async subtreep visible-only nil nil (lambda () (text-mode))))
-
-;;;###autoload
-(defun org-g3doc-export-to-markdown (&optional async subtreep visible-only)
-  (interactive)
-  (let ((outfile (org-export-output-file-name ".md" subtreep)))
-    (org-export-to-file 'g3doc outfile async subtreep visible-only)))
+<<g3doc-functions>>
 #+end_src
 ***** Keybindings
 :PROPERTIES:
@@ -981,13 +643,7 @@ tasks."
 #+end_src
 
 #+begin_src emacs-lisp :tangle modules/config/private/autoload/roam.el
-;;;###autoload
-(defun yrh/org-roam-node-insert-immediate (arg &rest args)
-  (interactive "P")
-  (let ((args (cons arg args))
-        (org-roam-capture-templates (list (append (car org-roam-capture-templates)
-                                                  '(:immediate-finish t)))))
-    (apply #'org-roam-node-insert args)))
+<<org-roam-node-insert-immediate-fn>>
 #+end_src
 **** Agenda
 :PROPERTIES:
@@ -1003,82 +659,11 @@ tasks."
   :if (display-graphic-p))
 
 (after! org-agenda
-  (setq org-agenda-skip-scheduled-if-done t
-      org-agenda-skip-deadline-if-done t
-      org-agenda-include-deadlines t
-      org-agenda-block-separator #x2501
-      org-agenda-compact-blocks t
-      org-agenda-start-with-log-mode t
-      org-agenda-clockreport-parameter-plist
-      (quote (:link t :maxlevel 5 :fileskip0 t :compact t :narrow 80))
-      org-agenda-deadline-faces
-      '((1.0001 . org-warning)              ; due yesterday or before
-        (0.0    . org-upcoming-deadline))
-      org-agenda-breadcrumbs-separator " ❱ "
-      org-agenda-current-time-string "⏰ ┈┈┈┈┈┈┈┈┈┈┈ now"
-      org-agenda-time-grid '((weekly today require-timed)
-                             (800 1000 1200 1400 1600 1800 2000)
-                             "---" "┈┈┈┈┈┈┈┈┈┈┈┈┈")
-      org-agenda-prefix-format '((agenda . "%i %-12:c%?-12t%b% s")
-                                 (todo . " %i %-12:c")
-                                 (tags . " %i %-12:c")
-                                 (search . " %i %-12:c"))
-      org-agenda-format-date (lambda (date) (concat "\n" (make-string (window-width) 9472)
-                                                    "\n"
-                                                    (org-agenda-format-date-aligned date)))
-      org-cycle-separator-lines 2
-      org-agenda-category-icon-alist
-      `(("Work" ,(list (nerd-icons-faicon "nf-fa-cogs")) nil nil :ascent center)
-        ("Personal" ,(list (nerd-icons-octicon "nf-oct-person")) nil nil :ascent center)
-        ("Calendar" ,(list (nerd-icons-faicon "nf-fa-calendar")) nil nil :ascent center)
-        ("Reading" ,(list (nerd-icons-faicon "nf-fa-book")) nil nil :ascent center))))
+  <<org-agenda-settings>>)
 
 (use-package! org-super-agenda
   :config
-  (setq org-agenda-custom-commands
-      '(("y" "Yann view"
-         ((agenda "" ((org-agenda-start-day "today")
-                      (org-agenda-span 'day)
-                      (org-agenda-start-with-log-mode t)
-                      (org-agenda-log-mode-items '(closed clock state))
-                      (org-agenda-archives-mode t)
-                      (org-super-agenda-groups
-                       '((:name "Today"
-                          :time-grid t
-                          :log t
-                          :date today
-                          :todo "TODAY"
-                          :scheduled today
-                          :order 1)))))
-          (alltodo "" ((org-agenda-overriding-header "")
-                       (org-super-agenda-groups
-                        '(;; Each group has an implicit boolean OR operator between its selectors.
-                          (:name "Today"
-                           :deadline today
-                           :face (:background "black"))
-                          (:name "Passed deadline"
-                           :and (:deadline past :todo ("TODO" "STRT" "WAIT"))
-                           :face (:background "#7f1b19"))
-                          (:name "Work important"
-                           :and (:priority>= "B" :category "Work" :todo ("TODO" "STRT" "WAIT")))
-                          (:name "Work other"
-                           :and (:category "Work" :todo ("TODO" "STRT" "WAIT")))
-                          (:name "Important"
-                           :priority "A")
-                          (:priority<= "B"
-                           ;; Show this section after "Today" and "Important", because
-                           ;; their order is unspecified, defaulting to 0. Sections
-                           ;; are displayed lowest-number-first.
-                           :order 1)
-                          (:name "Papers"
-                           :file-path "org/roam/notes")
-                          (:name "Waiting"
-                           :todo "WAITING"
-                           :order 9)
-                          (:name "On hold"
-                           :todo "HOLD"
-                           :order 10)))))))))
-  (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode))
+  <<org-super-agenda-config>>)
 #+end_src
 
 **** Capture
@@ -1157,102 +742,11 @@ Declarative templates
 #+end_src
 
 #+begin_src emacs-lisp :tangle modules/config/private/autoload/org.el
-(defvar yrh/capture-frame-parameters
-  '((name . "org-capture-pop-frame")
-    (width . 80)
-    (height . 20)
-    (tool-bar-lines . 0)
-    (menu-bar-lines . 1)))
+<<capture-frame-params>>
 
-;;;###autoload
-(defun yrh/capture-delete-frame (&rest args)
-  "Close capture frame"
-  (if (equal (cdr (assoc 'name yrh/capture-frame-parameters))
-             (frame-parameter nil 'name))
-      (delete-frame)))
+<<capture-frame-functions>>
 
-;;;###autoload
-(defun yrh/capture-delete-other-windows (&rest args)
-  "Delete the extra window if we're in a capture frame"
-  (if (equal (cdr (assoc 'name yrh/capture-frame-parameters))
-             (frame-parameter nil 'name))
-      (let ((ignore-window-parameters t))
-        (delete-other-windows))))
-
-;;;###autoload
-(defun yrh/capture-switch-to-buffer (fn &rest args)
-  (if (equal (cdr (assoc 'name yrh/capture-frame-parameters))
-             (frame-parameter nil 'name))
-      (apply #'switch-to-buffer args)
-    (apply fn args)))
-
-;;;###autoload
-(defun yrh/org-capture (fn &optional goto keys)
-  "Create a new frame and run org-capture."
-  (interactive)
-  (if yrh/org-protocol-capture
-      (let ((frame-window-system window-system)
-            (after-make-frame-functions
-             #'(lambda (frame)
-                 (progn
-                   (select-frame frame)
-                   (x-focus-frame frame)
-                   (setq word-wrap nil)
-                   (setq truncate-lines nil)
-                   (with-selected-frame frame
-                     (condition-case nil
-                         (funcall fn goto keys)
-                       (user-error (yrh/capture-delete-frame))))
-                   ))))
-        (make-frame
-         `((window-system . ,frame-window-system)
-           ,@yrh/capture-frame-parameters)))
-    (funcall fn goto keys)))
-
-;;;###autoload
-(defun yrh/org-capture-keys-buttonize ()
-  (setq header-line-format
-        (list (propertize
-               (let ((directory-abbrev-alist
-                      (list (cons org-directory "ORG/"))))
-                 (abbreviate-file-name
-                  (buffer-file-name
-                   (buffer-base-buffer))))
-                 'face 'font-lock-string-face)
-              org-eldoc-breadcrumb-separator
-              "Capture buffer. "
-              (propertize (substitute-command-keys "Finish \\[org-capture-finalize], ")
-                          'mouse-face 'mode-line-highlight
-                          'keymap
-                          (let ((map (make-sparse-keymap)))
-                            (define-key map [header-line mouse-1] 'org-capture-finalize)
-                            map))
-              (propertize (substitute-command-keys "abort \\[org-capture-kill]. ")
-                          'mouse-face 'mode-line-highlight
-                          'keymap
-                          (let ((map (make-sparse-keymap)))
-                            (define-key map [header-line mouse-1] 'org-capture-kill)
-                            map)))))
-
-;;;###autoload
-(defun yrh/bibtex-link-capture-template ()
-  (pcase-let ((`(,title . ,url) (yrh/parse-document-representation)))
-    (format "* %s
-:PROPERTIES:
-:BTYPE: online
-:TITLE: %s
-:AUTHOR: %%^{author}
-:YEAR: %%^{year}
-:URL: %s
-:END:
-" title title url)))
-
-;;;###autoload
-(defun yrh/bibtex-set-short-link-id ()
-  ;; to be used in before-finalize hook
-  (let ((url (org-bibtex-get "URL")))
-    (when (string-match (concat "http://\\(" short-link-regexp "\\)") url)
-      (org-bibtex-put org-bibtex-key-property (s-replace "/" "::" (match-string 1 url))))))
+<<capture-bibtex-functions>>
 
 #+end_src
 **** Protocol
@@ -1288,14 +782,7 @@ Declarative templates
 #+end_src
 
 #+begin_src emacs-lisp :tangle modules/config/private/autoload/ibuffer.el
-(defun yrh/ibuffer-stale-p (&optional noconfirm)
-  (frame-or-buffer-changed-p 'ibuffer-auto-buffers-changed))
-
-;;;###autoload
-(defun yrh/ibuffer-auto-revert-setup ()
-  (setq-local buffer-stale-function #'yrh/ibuffer-stale-p)
-  (setq-local auto-revert-verbose nil)
-  (auto-revert-mode 1))
+<<ibuffer-auto-revert-functions>>
 #+end_src
 *** Perspectives
 :PROPERTIES:
@@ -1339,34 +826,7 @@ to disable uniquify when using persp-mode"
   ;; Smart window/pane navigation with edge detection.
   ;; If at window edge, delegate to terminal multiplexer (WezTerm or tmux).
 
-  (defun my/in-wezterm-p ()
-    "Return non-nil if running inside WezTerm."
-    (string= (getenv "TERM_PROGRAM") "WezTerm"))
-
-  (defun my/in-tmux-p ()
-    "Return non-nil if running inside tmux."
-    (getenv "TMUX"))
-
-  (defun my/pane-move (direction)
-    "Move to window in DIRECTION, or multiplexer pane if at edge.
-DIRECTION is a string: left, right, up, down."
-    (condition-case nil
-        (windmove-do-window-select (intern direction))
-      (error
-       (cond
-        ((my/in-wezterm-p)
-         (call-process "wezterm" nil nil nil
-                       "cli" "activate-pane-direction" direction))
-        ((my/in-tmux-p)
-         (let ((tmux-dir (pcase direction
-                           ("left" "-L") ("right" "-R")
-                           ("up" "-U") ("down" "-D"))))
-           (call-process "tmux" nil nil nil "select-pane" tmux-dir)))))))
-
-  (defun my/pane-move-left () (interactive) (my/pane-move "left"))
-  (defun my/pane-move-right () (interactive) (my/pane-move "right"))
-  (defun my/pane-move-up () (interactive) (my/pane-move "up"))
-  (defun my/pane-move-down () (interactive) (my/pane-move "down"))
+  <<windmove-pane-functions>>
 
   (map! "C-c <left>"  #'my/pane-move-left
         "C-c <right>" #'my/pane-move-right
@@ -1409,10 +869,7 @@ DIRECTION is a string: left, right, up, down."
 :END:
 #+begin_src emacs-lisp :tangle modules/config/private/config.el
 (after! writeroom-mode
-  (setq writeroom-fullscreen-effect 'maximized
-        writeroom-mode-line nil
-        writeroom-mode-line-toggle-position 'mode-line-format
-        writeroom-major-modes '(text-mode prog-mode special-mode dired-mode fundamental-mode)))
+  <<writeroom-settings>>)
 #+end_src
 *** Misc
 **** d2-mode

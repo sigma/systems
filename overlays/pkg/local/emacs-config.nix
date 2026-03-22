@@ -3,6 +3,7 @@
   stdenv,
   coreutils,
   findutils,
+  gnused,
   emacs,
   user ? null,
 }:
@@ -29,8 +30,11 @@ stdenv.mkDerivation {
       EOF
     '')
     + ''
-      # Tangle org files
-      ${coreutils}/bin/cp $src/emacs.org .
+      # Copy org files and append common.org blocks for noweb resolution
+      ${coreutils}/bin/cp $src/emacs.org $src/common.org .
+      ${coreutils}/bin/chmod u+w emacs.org
+      # Append common.org headings (named blocks) to emacs.org so noweb can resolve them
+      ${gnused}/bin/sed -n '/^\*/,$p' common.org >> emacs.org
       ${emacs}/bin/emacs --batch -Q \
         -l org \
         emacs.org \
