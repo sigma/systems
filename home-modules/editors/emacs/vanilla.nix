@@ -20,18 +20,5 @@ in
 
   config = mkIf (cfg.enable && cfg.vanilla.enable) {
     home.file.".config/vanilla".source = "${vanillaConfig}";
-
-    # LSP servers for eglot
-    home.packages = with pkgs; [
-      gopls
-      rust-analyzer
-      pyright
-      nil
-      nodePackages.typescript-language-server
-      clang-tools
-      lua-language-server
-      yaml-language-server
-      texlab
-    ];
   };
 }

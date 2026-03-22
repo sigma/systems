@@ -3,7 +3,15 @@ let
   parentDir = config.programs.emacs.chemacs.defaultUserParentDir;
   doomDir = "${parentDir}/doom";
   vanillaDir = "${parentDir}/vanilla";
-  vanillaPackages = epkgs: with epkgs; [
+in
+{
+  enable = true;
+
+  vanilla.enable = true;
+  doom.dir = doomDir;
+
+  # Packages available to all Emacs profiles (vanilla uses these via Nix)
+  extraPackages = epkgs: with epkgs; [
     # ui
     doom-themes
     doom-modeline
@@ -60,21 +68,14 @@ let
     # mail
     notmuch
   ];
-in
-{
-  enable = true;
 
-  vanilla.enable = true;
-  doom.dir = doomDir;
   chemacs.profiles = {
     default = {
       userDir = vanillaDir;
-      extraPackages = vanillaPackages;
     };
 
     vanilla = {
       userDir = vanillaDir;
-      extraPackages = vanillaPackages;
     };
 
     doom = {
