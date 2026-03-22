@@ -12,6 +12,8 @@ let
     inherit user;
     emacs = cfg.package;
   };
+  # Relative path from $HOME to the chemacs vanilla profile directory
+  vanillaRelDir = lib.removePrefix "${config.home.homeDirectory}/" "${cfg.chemacs.defaultUserParentDir}/vanilla";
 in
 {
   options.programs.emacs.vanilla = {
@@ -19,6 +21,7 @@ in
   };
 
   config = mkIf (cfg.enable && cfg.vanilla.enable) {
-    home.file.".config/vanilla".source = "${vanillaConfig}";
+    # Deploy tangled config to the chemacs profile directory
+    home.file."${vanillaRelDir}".source = "${vanillaConfig}";
   };
 }
