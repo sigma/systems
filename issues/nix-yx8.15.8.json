@@ -3,7 +3,9 @@
   "blocked_by": [
     "nix-yx8.15.7"
   ],
-  "blocks": [],
+  "blocks": [
+    "nix-yx8.15.9"
+  ],
   "created": "2026-03-22T15:08:21Z",
   "description": "Add notmuch config to vanilla.org from common.org.",
   "id": "nix-yx8.15.8",
