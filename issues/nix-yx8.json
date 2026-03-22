@@ -1,0 +1,14 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:47:17Z",
+  "description": "Modernize the Doom Emacs configuration in overlays/pkg/local/emacs-config/emacs.org.\nThe config is functional but uses several outdated packages. Focus on aligning\nwith modern Emacs built-ins (Emacs 29+) and simplifying where possible while\nkeeping the overall experience the same.",
+  "id": "nix-yx8",
+  "labels": [],
+  "priority": 2,
+  "status": "open",
+  "title": "Emacs configuration modernization",
+  "type": "epic",
+  "updated_at": "2026-03-22T11:47:17Z"
+}
