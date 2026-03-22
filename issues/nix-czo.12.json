@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:02:50Z",
+  "description": "Animated scope indicator for the current code block. Complements existing indent-blankline.nvim (static indent guides).\n\nAffected area: `home-modules/editors/neovim/ui/`",
+  "id": "nix-czo.12",
+  "labels": [],
+  "parent": "nix-czo",
+  "priority": 3,
+  "status": "open",
+  "title": "Add mini.indentscope",
+  "type": "task",
+  "updated_at": "2026-03-22T11:02:50Z"
+}
