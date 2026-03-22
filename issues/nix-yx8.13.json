@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:48:00Z",
+  "description": "Line numbers are currently disabled (display-line-numbers-type nil).\nConsider enabling relative line numbers for easier jump motions,\nespecially useful when navigating code.\n\nAffected file: `overlays/pkg/local/emacs-config/emacs.org` (line ~319)",
+  "id": "nix-yx8.13",
+  "labels": [],
+  "parent": "nix-yx8",
+  "priority": 3,
+  "status": "open",
+  "title": "Consider enabling line numbers",
+  "type": "task",
+  "updated_at": "2026-03-22T11:48:00Z"
+}
