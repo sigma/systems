@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:02:41Z",
+  "description": "Live-preview of LSP renames in the buffer as you type. Noice.nvim already has the preset option (currently disabled in noice.nix line 38).\n\nSteps:\n1. Add inc-rename.nvim plugin\n2. Set `inc_rename = true` in `home-modules/editors/neovim/ui/noice.nix`\n3. Add keymap (e.g. `\u003cleader\u003ecr` for rename)",
+  "id": "nix-czo.7",
+  "labels": [],
+  "parent": "nix-czo",
+  "priority": 2,
+  "status": "open",
+  "title": "Enable inc-rename.nvim",
+  "type": "task",
+  "updated_at": "2026-03-22T11:02:41Z"
+}
