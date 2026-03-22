@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:02:27Z",
+  "description": "blink.cmp (Rust-based) is significantly faster than nvim-cmp, has built-in fuzzy matching, ghost text preview, and built-in snippet support (can potentially drop LuaSnip). Now the default in LazyVim.\n\nAffected files:\n- `home-modules/editors/neovim/lsp/completion.nix`\n- `home-modules/editors/neovim/lsp/snippets.nix`\n- `home-modules/editors/neovim/lsp/lspkind.nix`\n\nCheck if nvf has native blink.cmp support; if not, load via `lazy.plugins`.",
+  "id": "nix-czo.1",
+  "labels": [],
+  "parent": "nix-czo",
+  "priority": 1,
+  "status": "open",
+  "title": "Replace nvim-cmp with blink.cmp",
+  "type": "task",
+  "updated_at": "2026-03-22T11:02:27Z"
+}
