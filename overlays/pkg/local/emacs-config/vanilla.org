@@ -18,8 +18,8 @@ common blocks from =common.org= are shared with the Doom config.
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6)
 
-;; Disable package.el — Nix manages all packages
-(setq package-enable-at-startup nil)
+;; Let Nix wrapper's package initialization load autoloads
+;; (package.el won't install anything — Nix manages all packages)
 
 ;; Prevent the glimpse of un-styled Emacs by disabling UI elements early
 (push '(menu-bar-lines . 0) default-frame-alist)
@@ -101,27 +101,25 @@ All packages come from Nix, so disable automatic installation.
 
 ;; Recent files
 (use-package recentf
-  :init
-  (recentf-mode 1)
   :config
-  (setq recentf-max-saved-items 200))
+  (setq recentf-max-saved-items 200)
+  (recentf-mode 1))
 
 ;; Save minibuffer history
 (use-package savehist
-  :init
+  :config
   (savehist-mode 1))
 
 ;; Remember cursor position
 (use-package saveplace
-  :init
+  :config
   (save-place-mode 1))
 
 ;; Auto-revert files changed on disk
 (use-package autorevert
-  :init
-  (global-auto-revert-mode 1)
   :config
-  (setq global-auto-revert-non-file-buffers t))
+  (setq global-auto-revert-non-file-buffers t)
+  (global-auto-revert-mode 1))
 
 ;; Unique buffer names
 (use-package uniquify
@@ -130,7 +128,7 @@ All packages come from Nix, so disable automatic installation.
 
 ;; Auto-close brackets
 (use-package elec-pair
-  :init
+  :config
   (electric-pair-mode 1))
 
 ;; Short answers
@@ -159,14 +157,15 @@ All packages come from Nix, so disable automatic installation.
 (use-package doom-themes
   :config
   (load-theme 'doom-tomorrow-night t)
+  (doom-themes-visual-bell-config)
+  (require 'doom-themes-ext-org)
   (doom-themes-org-config))
 
 ;; Modeline
 (use-package doom-modeline
-  :init
-  (doom-modeline-mode 1)
   :config
-  (setq doom-modeline-height 28))
+  (setq doom-modeline-height 28)
+  (doom-modeline-mode 1))
 
 ;; Font
 (set-face-attribute 'default nil
@@ -195,10 +194,9 @@ All packages come from Nix, so disable automatic installation.
 
 ;; Which-key for keybinding discovery
 (use-package which-key
-  :init
-  (which-key-mode 1)
   :config
-  (setq which-key-idle-delay 0.5))
+  (setq which-key-idle-delay 0.5)
+  (which-key-mode 1))
 #+end_src
 
 ** Completion
@@ -206,25 +204,23 @@ All packages come from Nix, so disable automatic installation.
 #+begin_src emacs-lisp
 ;; Vertical completion UI
 (use-package vertico
-  :init
-  (vertico-mode 1)
   :config
   (setq vertico-cycle t
-        vertico-count 15))
+        vertico-count 15)
+  (vertico-mode 1))
 
 ;; Childframe for vertico (replaces Doom's +childframe)
 (use-package vertico-posframe
   :after vertico
-  :init
-  (vertico-posframe-mode 1)
   :config
   (setq vertico-posframe-parameters
         '((left-fringe . 8)
-          (right-fringe . 8))))
+          (right-fringe . 8)))
+  (vertico-posframe-mode 1))
 
 ;; Rich annotations in minibuffer
 (use-package marginalia
-  :init
+  :config
   (marginalia-mode 1))
 
 ;; Flexible matching
@@ -256,20 +252,19 @@ All packages come from Nix, so disable automatic installation.
 ;; Icons in completion
 (use-package nerd-icons-completion
   :after marginalia
-  :init
+  :config
   (nerd-icons-completion-mode 1)
-  :hook (marginalia-mode . nerd-icons-completion-marginalia-setup))
+  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
 
 ;; In-buffer completion
 (use-package corfu
-  :init
-  (global-corfu-mode 1)
   :config
   (setq corfu-auto t
         corfu-auto-delay 0.2
         corfu-auto-prefix 2
         corfu-cycle t
-        corfu-preselect 'prompt))
+        corfu-preselect 'prompt)
+  (global-corfu-mode 1))
 
 ;; Completion-at-point extensions
 (use-package cape
@@ -302,7 +297,7 @@ All packages come from Nix, so disable automatic installation.
 
 ;; Format on save
 (use-package apheleia
-  :init
+  :config
   (apheleia-global-mode 1))
 
 ;; Visual undo tree
@@ -317,12 +312,12 @@ All packages come from Nix, so disable automatic installation.
 
 ;; Direnv integration
 (use-package envrc
-  :init
+  :config
   (envrc-global-mode 1))
 
 ;; EditorConfig support
 (use-package editorconfig
-  :init
+  :config
   (editorconfig-mode 1))
 #+end_src
 
@@ -335,7 +330,7 @@ All packages come from Nix, so disable automatic installation.
 
 ;; Eval overlay (like Doom's +overlay)
 (use-package eros
-  :init
+  :config
   (eros-mode 1))
 
 ;; Dired
@@ -380,12 +375,10 @@ All packages come from Nix, so disable automatic installation.
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
 ;; Tab bar for workspace-like behavior
-(use-package tab-bar
-  :config
-  (setq tab-bar-show 1
-        tab-bar-close-button-show nil
-        tab-bar-new-tab-choice "*scratch*")
-  (tab-bar-mode 1))
+(setq tab-bar-show 1
+      tab-bar-close-button-show nil
+      tab-bar-new-tab-choice "*scratch*")
+(tab-bar-mode 1)
 
 ;; Zen mode
 (use-package writeroom-mode
@@ -433,6 +426,9 @@ All packages come from Nix, so disable automatic installation.
 ** Org Roam
 
 #+begin_src emacs-lisp
+;; Use Emacs 29+ built-in sqlite for emacsql
+(setq emacsql-sqlite-executable nil)
+
 (use-package org-roam
   :after org
   :config
