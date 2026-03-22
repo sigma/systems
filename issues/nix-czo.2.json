@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:02:27Z",
+  "description": "Ruff now handles both formatting and import sorting, replacing both black and isort. Much faster (Rust-based). Already in the linter set.\n\nAffected file: `home-modules/editors/neovim/lsp/languages.nix` lines 76-79.\n\nChange `type = [ \"black\" \"isort\" ]` to `type = [ \"ruff\" ]`.",
+  "id": "nix-czo.2",
+  "labels": [],
+  "parent": "nix-czo",
+  "priority": 1,
+  "status": "open",
+  "title": "Replace black+isort with ruff for Python formatting",
+  "type": "task",
+  "updated_at": "2026-03-22T11:02:27Z"
+}
