@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:02:50Z",
+  "description": "Improved yank/paste with a yank ring - cycle through previous yanks with \u003cC-n\u003e/\u003cC-p\u003e after pasting. LazyVim default.\n\nNew file: `home-modules/editors/neovim/editing/yanky.nix`",
+  "id": "nix-czo.11",
+  "labels": [],
+  "parent": "nix-czo",
+  "priority": 3,
+  "status": "open",
+  "title": "Add yanky.nvim",
+  "type": "task",
+  "updated_at": "2026-03-22T11:02:50Z"
+}
