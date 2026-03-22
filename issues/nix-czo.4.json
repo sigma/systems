@@ -2,14 +2,15 @@
   "assignee": "",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-03-22T11:27:11Z",
   "created": "2026-03-22T11:02:27Z",
   "description": "Two options:\n1. Add telescope-fzf-native extension for faster sorting (minimal change)\n2. Switch to fzf-lua entirely (faster for large repos, drop-in replacement)\n\nOption 1 is lower risk. Option 2 is higher reward for large codebases.\n\nAffected file: `home-modules/editors/neovim/navigation/telescope.nix`",
   "id": "nix-czo.4",
   "labels": [],
   "parent": "nix-czo",
   "priority": 2,
-  "status": "open",
+  "status": "closed",
   "title": "Improve Telescope performance or switch to fzf-lua",
   "type": "task",
-  "updated_at": "2026-03-22T11:02:27Z"
+  "updated_at": "2026-03-22T11:27:11Z"
 }
