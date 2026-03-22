@@ -9,6 +9,12 @@
   "id": "nix-czo.6",
   "labels": [],
   "parent": "nix-czo",
+  "comments": [
+    {
+      "text": "nvf update to 85ca579 did not fix the issue. nvim-treesitter.config module still not found at runtime. This is an upstream nvf bug - their treesitter packaging uses lzn-auto-require which can't resolve the module.",
+      "timestamp": "2026-03-22T11:39:25Z"
+    }
+  ],
   "priority": 2,
   "status": "open",
   "title": "Add treesitter-textobjects",
