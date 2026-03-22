@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:47:34Z",
+  "description": "Switch from Flycheck (default) to Flymake (built into Emacs 29+). Flymake\npairs natively with Eglot (if adopted) and reduces external dependencies.\n\nAffected file: `overlays/pkg/local/emacs-config/emacs.org` (doom! init block, line ~100)\n\nChange: `syntax` → `(syntax +flymake)`",
+  "id": "nix-yx8.4",
+  "labels": [],
+  "parent": "nix-yx8",
+  "priority": 1,
+  "status": "open",
+  "title": "Switch syntax checker from Flycheck to Flymake",
+  "type": "task",
+  "updated_at": "2026-03-22T11:47:34Z"
+}
