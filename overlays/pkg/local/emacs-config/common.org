@@ -473,6 +473,15 @@ tasks."
              (:optional :subtitle :titleaddon :language :version :note :organization :month :addendum :pubstate :eprintclass :eprinttype :urldate))))
 #+end_src
 
+#+name: citar-org-roam-settings
+#+begin_src emacs-lisp
+(citar-org-roam-mode)
+(setq citar-org-roam-note-title-template "Notes on ${title}"
+      citar-org-roam-capture-template-key "n"
+      citar-org-roam-subdir "bib")
+(unless (assoc :citar-url citar-org-roam-template-fields)
+  (add-to-list 'citar-org-roam-template-fields '(:citar-url . ("url"))))
+#+end_src
 
 * Export
 

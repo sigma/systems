@@ -55,6 +55,18 @@ in
         # window
         ace-window
         writeroom-mode
+        # org
+        org-roam
+        org-roam-ui
+        websocket
+        vulpea
+        org-roam-bibtex
+        org-super-agenda
+        doct
+        ox-gfm
+        language-detection
+        citar
+        citar-org-roam
       ];
     };
   };

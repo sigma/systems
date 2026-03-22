@@ -404,3 +404,204 @@ All packages come from Nix, so disable automatic installation.
          (display-buffer-reuse-window display-buffer-below-selected)
          (window-height . 0.3))))
 #+end_src
+
+** Org core
+
+#+begin_src emacs-lisp
+(use-package org
+  :config
+  ;; Core settings from common.org
+  <<org-core-settings>>
+
+  ;; Clock
+  (with-eval-after-load 'org-clock
+    <<org-clock-settings>>)
+
+  ;; Short links
+  <<short-link-regexp>>
+  (add-hook 'org-open-link-functions
+            <<org-open-short-link-fn>>)
+
+  ;; Yank DWIM
+  <<org-yank-dwim-functions>>
+  <<org-yank-dwim-lang-list>>
+  (add-hook 'org-mode-hook #'org-yank-dwim-mode))
+
+(use-package language-detection)
+#+end_src
+
+** Org Roam
+
+#+begin_src emacs-lisp
+(use-package org-roam
+  :after org
+  :config
+  ;; Time-stamp on save
+  (add-hook 'org-mode-hook
+    <<org-roam-time-stamp-hook>>)
+
+  ;; Capture templates
+  <<org-roam-capture-templates>>
+
+  ;; Dailies
+  <<org-roam-dailies-hooks>>
+
+  ;; UI
+  (org-roam-db-autosync-mode 1)
+
+  :bind (("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n d" . org-roam-dailies-goto-today)
+         ("C-c n I" . yrh/org-roam-node-insert-immediate)
+         ("C-c n N" . yrh/org-roam-capture-dwim)))
+
+;; Dailies autoload functions
+<<org-roam-dailies-functions>>
+
+;; DWIM capture
+<<org-roam-dwim-vars>>
+<<org-roam-dwim-functions>>
+
+;; Insert immediate
+<<org-roam-node-insert-immediate-fn>>
+
+;; Roam UI
+(use-package websocket
+  :after org-roam)
+
+(use-package org-roam-ui
+  :after org-roam
+  :config
+  <<org-roam-ui-settings>>)
+
+;; Vulpea for project tracking
+<<vulpea-roam-tasks-tag>>
+
+(use-package vulpea
+  :after org-roam
+  :hook ((org-roam-db-autosync-mode . vulpea-db-autosync-enable))
+  :config
+  (add-to-list 'org-tags-exclude-from-inheritance yrh/roam-tasks-tag)
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (add-hook 'find-file-hook #'yrh/vulpea-project-update-tag nil t)
+              (add-hook 'before-save-hook #'yrh/vulpea-project-update-tag nil t)))
+  (advice-add 'org-agenda-files :filter-return #'yrh/inject-vulpea-project-files))
+
+<<vulpea-functions>>
+#+end_src
+
+** Org Roam Bibtex
+
+#+begin_src emacs-lisp
+;; Document parsing
+<<bibtex-parsing-functions>>
+
+(use-package org-roam-bibtex
+  :after org-roam
+  :config
+  (setq orb-roam-ref-format 'org-cite)
+  (add-hook 'org-roam-mode-hook (lambda () (org-roam-bibtex-mode 1))))
+
+(with-eval-after-load 'bibtex
+  <<bibtex-dialect-settings>>)
+
+(with-eval-after-load 'org
+  <<org-bibtex-types-config>>)
+
+(with-eval-after-load 'org
+  (let* ((dir (file-name-as-directory (expand-file-name org-directory)))
+         (bibfiles (mapcar
+                    (lambda (f) (concat dir f))
+                    (directory-files dir nil "\\.bib"))))
+    (with-eval-after-load 'citar
+      (setq citar-bibliography bibfiles)
+      (setq citar-notes-paths (list (file-name-as-directory (expand-file-name "bib" org-roam-directory)))))
+    (with-eval-after-load 'bibtex-completion
+      (setq bibtex-completion-bibliography bibfiles
+            bibtex-completion-notes-path (concat (file-name-as-directory org-roam-directory) "notes")
+            bibtex-completion-additional-search-fields '(keywords)
+            bibtex-completion-pdf-open-function
+            (lambda (fpath)
+              (call-process "open" nil 0 nil fpath))))))
+
+(use-package citar-org-roam
+  :after (citar org-roam)
+  :config
+  <<citar-org-roam-settings>>)
+#+end_src
+
+** Org Agenda
+
+#+begin_src emacs-lisp
+(use-package nerd-icons
+  :if (display-graphic-p))
+
+(with-eval-after-load 'org-agenda
+  <<org-agenda-settings>>)
+
+(use-package org-super-agenda
+  :config
+  <<org-super-agenda-config>>)
+#+end_src
+
+** Org Capture
+
+#+begin_src emacs-lisp
+(use-package doct
+  :commands (doct))
+
+;; Capture frame functions
+<<capture-frame-params>>
+<<capture-frame-functions>>
+<<capture-bibtex-functions>>
+
+(with-eval-after-load 'org-capture
+  (setq org-capture-templates
+        (doct '(("Personal todo" :keys "t"
+                 :file "todo.org"
+                 :headline "Inbox"
+                 :prepend t
+                 :template "* TODO %?\n%i\n%a")
+                ("Personal notes" :keys "n"
+                 :file "notes.org"
+                 :headline "Inbox"
+                 :prepend t
+                 :template "* %u %?\n%i\n%a")
+                ("Bibliography" :keys "b"
+                 :prepend t
+                 :after-finalize (lambda ()
+                                   (org-bibtex-check)
+                                   (org-bibtex "biblio.bib"))
+                 :before-finalize yrh/bibtex-set-short-link-id
+                 :children (("golink" :keys "g"
+                             :headline "Misc"
+                             :file "biblio.org"
+                             :template-file "templates/bibtex_golink_entry.txt")
+                            ("link" :keys "l"
+                             :headline "Misc"
+                             :file "biblio.org"
+                             :template yrh/bibtex-link-capture-template)))))))
+
+(with-eval-after-load 'org-protocol
+  (defvar yrh/org-protocol-capture nil)
+  (define-advice org-protocol-capture (:around (fn info) capture-in-frame)
+    (let ((yrh/org-protocol-capture t))
+      (funcall fn info)))
+  (advice-add 'org-capture :around #'yrh/org-capture)
+  (add-hook 'org-capture-mode-hook #'yrh/org-capture-keys-buttonize t)
+  (add-hook 'org-capture-after-finalize-hook #'yrh/capture-delete-frame)
+  (advice-add 'org-switch-to-buffer-other-window :around #'yrh/capture-switch-to-buffer))
+#+end_src
+
+** Org Export
+
+#+begin_src emacs-lisp
+(use-package ox-gfm
+  :after ox)
+
+(with-eval-after-load 'ox-gfm
+  <<g3doc-functions>>
+  <<g3doc-backend-definition>>)
+#+end_src
