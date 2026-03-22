@@ -49,7 +49,6 @@ in
     org-roam-ui
     websocket
     vulpea
-    org-roam-bibtex
     org-super-agenda
     doct
     ox-gfm

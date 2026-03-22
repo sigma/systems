@@ -452,11 +452,6 @@ tasks."
 
 ** Config
 
-#+name: org-roam-bibtex-settings
-#+begin_src emacs-lisp
-(setq orb-roam-ref-format 'org-cite)
-#+end_src
-
 #+name: bibtex-dialect-settings
 #+begin_src emacs-lisp
 (bibtex-set-dialect 'biblatex)

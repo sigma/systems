@@ -498,17 +498,11 @@ All packages come from Nix, so disable automatic installation.
 <<vulpea-functions>>
 #+end_src
 
-** Org Roam Bibtex
+** Bibliography
 
 #+begin_src emacs-lisp
 ;; Document parsing
 <<bibtex-parsing-functions>>
-
-(use-package org-roam-bibtex
-  :after org-roam
-  :config
-  (setq orb-roam-ref-format 'org-cite)
-  (add-hook 'org-roam-mode-hook (lambda () (org-roam-bibtex-mode 1))))
 
 (with-eval-after-load 'bibtex
   <<bibtex-dialect-settings>>)
@@ -523,14 +517,7 @@ All packages come from Nix, so disable automatic installation.
                     (directory-files dir nil "\\.bib"))))
     (with-eval-after-load 'citar
       (setq citar-bibliography bibfiles)
-      (setq citar-notes-paths (list (file-name-as-directory (expand-file-name "bib" org-roam-directory)))))
-    (with-eval-after-load 'bibtex-completion
-      (setq bibtex-completion-bibliography bibfiles
-            bibtex-completion-notes-path (concat (file-name-as-directory org-roam-directory) "notes")
-            bibtex-completion-additional-search-fields '(keywords)
-            bibtex-completion-pdf-open-function
-            (lambda (fpath)
-              (call-process "open" nil 0 nil fpath))))))
+      (setq citar-notes-paths (list (file-name-as-directory (expand-file-name "bib" org-roam-directory)))))))
 
 (use-package citar-org-roam
   :after (citar org-roam)
