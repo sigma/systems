@@ -13,5 +13,6 @@
     ./signature.nix
     ./dap.nix
     ./lint.nix
+    ./inc-rename.nix
   ];
 }

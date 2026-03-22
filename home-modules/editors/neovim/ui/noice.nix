@@ -34,8 +34,7 @@ in
           command_palette = true;
           # Send long messages to a split
           long_message_to_split = true;
-          # Enable inc-rename input dialog
-          inc_rename = false;
+          # inc-rename preset is enabled in lsp/inc-rename.nix
           # Add border to LSP hover docs
           lsp_doc_border = true;
         };
