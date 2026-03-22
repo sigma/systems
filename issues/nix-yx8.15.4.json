@@ -6,14 +6,15 @@
   "blocks": [
     "nix-yx8.15.5"
   ],
+  "closed_at": "2026-03-22T15:42:01Z",
   "created": "2026-03-22T15:08:21Z",
   "description": "Add to vanilla.org: vertico, marginalia, orderless, consult, embark, corfu, cape, multiple-cursors, tempel, apheleia, vundo, smartparens, envrc, editorconfig.",
   "id": "nix-yx8.15.4",
   "labels": [],
   "parent": "nix-yx8.15",
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Phase 3: Completion and editing",
   "type": "task",
-  "updated_at": "2026-03-22T15:41:08Z"
+  "updated_at": "2026-03-22T15:42:01Z"
 }
