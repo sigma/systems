@@ -1,10 +1,13 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 let
-  doomDir = "${config.programs.emacs.chemacs.defaultUserParentDir}/doom";
+  parentDir = config.programs.emacs.chemacs.defaultUserParentDir;
+  doomDir = "${parentDir}/doom";
+  vanillaDir = "${parentDir}/vanilla";
 in
 {
   enable = true;
 
+  vanilla.enable = true;
   doom.dir = doomDir;
   chemacs.profiles = {
     default = {
@@ -15,6 +18,19 @@ in
     doom-dev = {
       userDir = doomDir;
       env.DOOMDIR = "~/.config/nix/overlays/pkg/local/emacs-config";
+    };
+
+    vanilla = {
+      userDir = vanillaDir;
+      extraPackages = epkgs: with epkgs; [
+        # ui
+        doom-themes
+        doom-modeline
+        nerd-icons
+        hl-todo
+        diff-hl
+        which-key
+      ];
     };
   };
 }

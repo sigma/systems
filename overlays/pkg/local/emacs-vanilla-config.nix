@@ -8,14 +8,13 @@
   user ? null,
 }:
 stdenv.mkDerivation {
-  pname = "emacs-config";
+  pname = "emacs-vanilla-config";
   version = "dev";
   src = lib.fileset.toSource {
     root = ./emacs-config;
     fileset = lib.fileset.unions [
-      ./emacs-config/emacs.org
-      ./emacs-config/common.org
       ./emacs-config/vanilla.org
+      ./emacs-config/common.org
     ];
   };
 
@@ -32,13 +31,13 @@ stdenv.mkDerivation {
     '')
     + ''
       # Copy org files and append common.org blocks for noweb resolution
-      ${coreutils}/bin/cp $src/emacs.org $src/common.org .
-      ${coreutils}/bin/chmod u+w emacs.org
-      # Append common.org headings (named blocks) to emacs.org so noweb can resolve them
-      ${gnused}/bin/sed -n '/^\*/,$p' common.org >> emacs.org
+      ${coreutils}/bin/cp $src/vanilla.org $src/common.org .
+      ${coreutils}/bin/chmod u+w vanilla.org
+      # Append common.org headings (named blocks) for noweb references
+      ${gnused}/bin/sed -n '/^\*/,$p' common.org >> vanilla.org
       ${emacs}/bin/emacs --batch -Q \
         -l org \
-        emacs.org \
+        vanilla.org \
         -f org-babel-tangle
     '';
 
