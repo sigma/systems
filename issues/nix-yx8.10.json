@@ -2,14 +2,15 @@
   "assignee": "unknown",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-03-22T22:26:52Z",
   "created": "2026-03-22T11:47:48Z",
   "description": "Evaluate Olivetti as a replacement for writeroom-mode in vanilla.org. Olivetti is lighter and may fit better with the vanilla approach.",
   "id": "nix-yx8.10",
   "labels": [],
   "parent": "nix-yx8",
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Consider Olivetti over Writeroom",
   "type": "task",
-  "updated_at": "2026-03-22T22:25:54Z"
+  "updated_at": "2026-03-22T22:26:52Z"
 }
