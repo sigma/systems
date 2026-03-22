@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:02:41Z",
+  "description": "Adds language-aware motions: jump to next function/class, select function parameters, swap arguments. Complements existing mini.ai setup rather than replacing it.\n\nAffected area: `home-modules/editors/neovim/editing/`",
+  "id": "nix-czo.6",
+  "labels": [],
+  "parent": "nix-czo",
+  "priority": 2,
+  "status": "open",
+  "title": "Add treesitter-textobjects",
+  "type": "task",
+  "updated_at": "2026-03-22T11:02:41Z"
+}
