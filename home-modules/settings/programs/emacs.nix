@@ -53,6 +53,7 @@ in
     org-super-agenda
     doct
     ox-gfm
+    ox-hugo
     language-detection
     citar
     citar-org-roam
