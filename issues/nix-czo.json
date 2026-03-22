@@ -1,0 +1,14 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:01:57Z",
+  "description": "Modernize and improve the nvf-based Neovim configuration based on a comprehensive plugin review. Focus areas: completion engine, formatting, navigation, and in-editor UX.\n\n## Sequencing\n\n```mermaid\ngraph LR\n    1[blink.cmp] --\u003e 9[consolidate md preview]\n    2[ruff python] \n    3[conform.nvim]\n    4[fzf-lua or telescope-fzf-native]\n    5[render-markdown.nvim] --\u003e 9\n    6[treesitter-textobjects]\n    7[inc-rename]\n    8[oil.nvim]\n    10[nvim-spider]\n    11[yanky.nvim]\n    12[mini.indentscope]\n    13[trouble v3 symbols]\n```\n\nMost tasks are independent and can be done in any order, except consolidating markdown preview plugins (9) which depends on render-markdown.nvim (5) and potentially blink.cmp (1) being settled first.",
+  "id": "nix-czo",
+  "labels": [],
+  "priority": 2,
+  "status": "open",
+  "title": "Neovim plugin improvements",
+  "type": "epic",
+  "updated_at": "2026-03-22T11:01:57Z"
+}
