@@ -429,6 +429,10 @@ All packages come from Nix, so disable automatic installation.
 (use-package org-roam
   :after org
   :config
+  ;; Store database outside of the read-only Nix-managed profile directory
+  (setq org-roam-db-location
+        (expand-file-name "org-roam.db" org-roam-directory))
+
   ;; Time-stamp on save
   (add-hook 'org-mode-hook
     <<org-roam-time-stamp-hook>>)
