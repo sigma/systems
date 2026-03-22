@@ -1,6 +1,8 @@
 {
   "assignee": "",
-  "blocked_by": [],
+  "blocked_by": [
+    "nix-yx8.15.4"
+  ],
   "blocks": [],
   "created": "2026-03-22T15:08:21Z",
   "description": "Add to vanilla.org: magit, eros, dired, ibuffer, eshell, project.el, windmove, ace-window, display-buffer-alist, tab-bar-mode, writeroom-mode.",
@@ -11,5 +13,5 @@
   "status": "open",
   "title": "Phase 4: Tools and window management",
   "type": "task",
-  "updated_at": "2026-03-22T15:08:21Z"
+  "updated_at": "2026-03-22T15:09:10Z"
 }
