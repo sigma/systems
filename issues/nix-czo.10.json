@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:02:50Z",
+  "description": "Override w/b/e motions to respect camelCase and snake_case word boundaries. Useful for code navigation.\n\nNew file: `home-modules/editors/neovim/editing/spider.nix` or `navigation/spider.nix`",
+  "id": "nix-czo.10",
+  "labels": [],
+  "parent": "nix-czo",
+  "priority": 3,
+  "status": "open",
+  "title": "Add nvim-spider for camelCase/snake_case motions",
+  "type": "task",
+  "updated_at": "2026-03-22T11:02:50Z"
+}
