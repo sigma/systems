@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:57:50Z",
+  "description": "Doom Emacs development has slowed (3.0 release in limbo, less active maintenance).\nThe config doesn't use Evil (Doom's biggest value-add), and most customization\nis already in a private module. Nix already handles package management, making\nstraight.el redundant.\n\n## Why migrate\n\n- Not using Evil — removes Doom's biggest value proposition\n- Most P1 modernization recommendations point to Emacs built-ins (corfu, eglot, flymake)\n- Nix-managed packages are more reproducible than straight.el\n- Faster startup without Doom's framework overhead\n- Emacs 29+ absorbed many formerly-external packages (use-package, eglot, flymake, tree-sitter, project.el)\n\n## Lazy loading strategy\n\nThe main reason for staying with Doom was its lazy loading framework. Replacements:\n- **use-package** (built-in since Emacs 29): covers 90% of Doom's `after!`/`use-package!`\n  via `:defer`, `:commands`, `:hook`, `:mode`, `:after`\n- Doom's `after!` is just `with-eval-after-load`\n- Doom's `add-hook!` is syntactic sugar over `add-hook`\n- Nix handles package installation, so only need use-package for config + defer\n\n## Migration path (incremental)\n\n1. Set up `home-manager`'s `programs.emacs` with emacs-overlay for Nix-managed packages\n2. Port the private module config (org-roam, notmuch, bibtex, windmove, etc.)\n   into standalone `use-package` declarations\n3. Replace Doom modules one-by-one with native equivalents:\n   - company → corfu (built-in compatible)\n   - lsp → eglot (built-in)\n   - syntax → flymake (built-in)\n   - vertico stack stays as-is (already native)\n4. Drop the Doom framework once all modules are ported\n\n## What to preserve\n\n- org-roam + vulpea + bibtex integration (complex, port carefully)\n- notmuch email config\n- org-super-agenda custom views\n- WezTerm/tmux smart pane navigation\n- org-capture protocol frame handling\n- g3doc exporter (if still needed — see nix-yx8.12)\n- org-yank-dwim functionality\n\n## Scope\n\nThis is a large task. Consider doing it as a parallel config that can be\ntested alongside Doom before cutting over. The Nix setup makes this\nfeasible — both configs can coexist.",
+  "id": "nix-yx8.15",
+  "labels": [],
+  "parent": "nix-yx8",
+  "priority": 1,
+  "status": "open",
+  "title": "Explore migration from Doom Emacs to vanilla Emacs + Nix",
+  "type": "task",
+  "updated_at": "2026-03-22T11:57:50Z"
+}
