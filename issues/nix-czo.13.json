@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:02:50Z",
+  "description": "If on trouble v3, use `Trouble symbols` as a code outline/symbol navigator. Can complement or replace breadcrumbs for code navigation.\n\nAffected file: `home-modules/editors/neovim/lsp/trouble.nix`",
+  "id": "nix-czo.13",
+  "labels": [],
+  "parent": "nix-czo",
+  "priority": 3,
+  "status": "open",
+  "title": "Leverage trouble.nvim v3 symbol outline",
+  "type": "task",
+  "updated_at": "2026-03-22T11:02:50Z"
+}
