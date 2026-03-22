@@ -1,6 +1,8 @@
 {
   "assignee": "",
-  "blocked_by": [],
+  "blocked_by": [
+    "nix-yx8.15.5"
+  ],
   "blocks": [],
   "created": "2026-03-22T15:08:21Z",
   "description": "Add org core, org-roam, org-agenda, org-capture, org-export to vanilla.org. Include shared blocks from common.org with vanilla-specific wrappers.",
@@ -11,5 +13,5 @@
   "status": "open",
   "title": "Phase 5: Org-mode ecosystem",
   "type": "task",
-  "updated_at": "2026-03-22T15:08:21Z"
+  "updated_at": "2026-03-22T15:09:10Z"
 }
