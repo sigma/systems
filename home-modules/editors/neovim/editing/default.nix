@@ -10,6 +10,7 @@
     ./illuminate.nix
     ./bufremove.nix
     ./textobjects.nix
+    ./treesitter-textobjects.nix
     ./persistence.nix
   ];
 }
