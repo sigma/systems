@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:47:34Z",
+  "description": "Replace Fira Code with FiraCode Nerd Font for built-in Nerd Font glyphs,\nwhich benefits the nerd-icons usage in org-agenda and vertico +icons.\n\nAffected file: `overlays/pkg/local/emacs-config/emacs.org` (UI tweaks section, line ~308)\n\nChange font-spec family from \"Fira Code\" to \"FiraCode Nerd Font\"",
+  "id": "nix-yx8.5",
+  "labels": [],
+  "parent": "nix-yx8",
+  "priority": 1,
+  "status": "open",
+  "title": "Switch font to FiraCode Nerd Font",
+  "type": "task",
+  "updated_at": "2026-03-22T11:47:34Z"
+}
