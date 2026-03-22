@@ -4,14 +4,15 @@
   "blocks": [
     "nix-yx8.4"
   ],
+  "closed_at": "2026-03-22T17:15:22Z",
   "created": "2026-03-22T11:47:34Z",
   "description": "Switch from lsp-mode to Eglot for LSP support. Eglot is built into Emacs 29+,\nlighter, faster to start, and has less configuration surface. Doom supports\nit via `(lsp +eglot)` or a dedicated eglot module.\n\nAffected file: `overlays/pkg/local/emacs-config/emacs.org` (doom! init block, line ~115)\n\nChange: `lsp` → `(lsp +eglot)` or equivalent",
   "id": "nix-yx8.2",
   "labels": [],
   "parent": "nix-yx8",
   "priority": 1,
-  "status": "open",
+  "status": "closed",
   "title": "Replace lsp-mode with Eglot",
   "type": "task",
-  "updated_at": "2026-03-22T11:48:04Z"
+  "updated_at": "2026-03-22T17:15:22Z"
 }
