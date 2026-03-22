@@ -657,3 +657,11 @@ All packages come from Nix, so disable automatic installation.
 (use-package emacs
   :hook ((emacs-lisp-mode . eldoc-mode)))
 #+end_src
+
+** Email
+
+#+begin_src emacs-lisp
+(use-package notmuch
+  :config
+  <<notmuch-settings>>)
+#+end_src

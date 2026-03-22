@@ -76,6 +76,8 @@ in
         markdown-mode
         auctex
         d2-mode
+        # mail
+        notmuch
       ];
     };
   };
