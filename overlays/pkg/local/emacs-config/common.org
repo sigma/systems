@@ -571,58 +571,39 @@ tasks."
                                                   "\n"
                                                   (org-agenda-format-date-aligned date)))
     org-cycle-separator-lines 2
-    org-agenda-category-icon-alist
-    `(("Work" ,(list (nerd-icons-faicon "nf-fa-cogs")) nil nil :ascent center)
-      ("Personal" ,(list (nerd-icons-octicon "nf-oct-person")) nil nil :ascent center)
-      ("Calendar" ,(list (nerd-icons-faicon "nf-fa-calendar")) nil nil :ascent center)
-      ("Reading" ,(list (nerd-icons-faicon "nf-fa-book")) nil nil :ascent center)))
+    org-agenda-category-icon-alist nil)
 #+end_src
 
 #+name: org-super-agenda-config
 #+begin_src emacs-lisp
 (setq org-agenda-custom-commands
-    '(("y" "Yann view"
-       ((agenda "" ((org-agenda-start-day "today")
-                    (org-agenda-span 'day)
-                    (org-agenda-start-with-log-mode t)
-                    (org-agenda-log-mode-items '(closed clock state))
-                    (org-agenda-archives-mode t)
-                    (org-super-agenda-groups
-                     '((:name "Today"
-                        :time-grid t
-                        :log t
-                        :date today
-                        :todo "TODAY"
-                        :scheduled today
-                        :order 1)))))
-        (alltodo "" ((org-agenda-overriding-header "")
-                     (org-super-agenda-groups
-                      '(;; Each group has an implicit boolean OR operator between its selectors.
-                        (:name "Today"
-                         :deadline today
-                         :face (:background "black"))
-                        (:name "Passed deadline"
-                         :and (:deadline past :todo ("TODO" "STRT" "WAIT"))
-                         :face (:background "#7f1b19"))
-                        (:name "Work important"
-                         :and (:priority>= "B" :category "Work" :todo ("TODO" "STRT" "WAIT")))
-                        (:name "Work other"
-                         :and (:category "Work" :todo ("TODO" "STRT" "WAIT")))
-                        (:name "Important"
-                         :priority "A")
-                        (:priority<= "B"
-                         ;; Show this section after "Today" and "Important", because
-                         ;; their order is unspecified, defaulting to 0. Sections
-                         ;; are displayed lowest-number-first.
-                         :order 1)
-                        (:name "Papers"
-                         :file-path "org/roam/notes")
-                        (:name "Waiting"
-                         :todo "WAITING"
-                         :order 9)
-                        (:name "On hold"
-                         :todo "HOLD"
-                         :order 10)))))))))
+      '(("y" "Yann view"
+         ((agenda "" ((org-agenda-start-day "today")
+                      (org-agenda-span 'day)
+                      (org-super-agenda-groups
+                       '((:name "Schedule"
+                          :time-grid t
+                          :date today
+                          :scheduled today
+                          :order 1)))))
+          (alltodo "" ((org-agenda-overriding-header "")
+                       (org-super-agenda-groups
+                        '((:name "Overdue"
+                           :deadline past
+                           :order 0)
+                          (:name "Due today"
+                           :deadline today
+                           :order 1)
+                          (:name "Important"
+                           :priority>= "B"
+                           :order 2)
+                          (:name "In progress"
+                           :todo "STRT"
+                           :order 3)
+                          (:name "Waiting"
+                           :todo "WAIT"
+                           :order 8)
+                          (:discard (:anything t))))))))))
 (add-hook 'org-agenda-mode-hook 'org-super-agenda-mode)
 #+end_src
 
