@@ -30,6 +30,11 @@ stdenv.mkDerivation {
       EOF
     '')
     + ''
+      cat <<EOF > +dired.el
+      (setq insert-directory-program "${coreutils}/bin/ls")
+      EOF
+    ''
+    + ''
       # Copy org files and append common.org blocks for noweb resolution
       ${coreutils}/bin/cp $src/vanilla.org $src/common.org .
       ${coreutils}/bin/chmod u+w vanilla.org

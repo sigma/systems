@@ -24,9 +24,9 @@ in
     # Deploy tangled config to the chemacs profile directory
     home.file."${vanillaRelDir}".source = "${vanillaConfig}";
 
-    # Runtime dependencies (sqlite for org-roam/emacsql)
+    # Runtime dependencies
     home.packages = with pkgs; [
-      sqlite
+      sqlite # org-roam/emacsql
     ];
   };
 }
