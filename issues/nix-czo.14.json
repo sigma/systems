@@ -1,8 +1,6 @@
 {
   "assignee": "",
-  "blocked_by": [
-    "nix-czo.6"
-  ],
+  "blocked_by": [],
   "blocks": [],
   "created": "2026-03-22T11:35:10Z",
   "description": "Update the nvf flake input to the latest version. This may resolve:\n\n- treesitter-textobjects compatibility (nix-czo.6 is disabled due to\n  `nvim-treesitter.config` module not found error)\n- `vim.extensions.render-markdown-nvim` native support (currently using\n  `lazy.plugins` workaround)\n\nAfter updating, check if treesitter-textobjects can be re-enabled\n(`home-modules/editors/neovim/editing/treesitter-textobjects.nix`).",
@@ -13,5 +11,5 @@
   "status": "open",
   "title": "Update nvf to latest version",
   "type": "task",
-  "updated_at": "2026-03-22T11:35:10Z"
+  "updated_at": "2026-03-22T11:35:53Z"
 }
