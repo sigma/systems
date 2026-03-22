@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-03-22T11:47:48Z",
+  "description": "org-roam-bibtex is on MELPA now. Remove the explicit GitHub recipe and\nsimplify to `(package! org-roam-bibtex)`.\n\nAffected file: `overlays/pkg/local/emacs-config/emacs.org` (line ~808)",
+  "id": "nix-yx8.6",
+  "labels": [],
+  "parent": "nix-yx8",
+  "priority": 2,
+  "status": "open",
+  "title": "Simplify org-roam-bibtex recipe",
+  "type": "task",
+  "updated_at": "2026-03-22T11:47:48Z"
+}
