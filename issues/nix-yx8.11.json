@@ -3,7 +3,7 @@
   "blocked_by": [],
   "blocks": [],
   "created": "2026-03-22T11:48:00Z",
-  "description": "The language-detection package (used in org-yank-dwim for code block\ndetection) hasn't been updated in years. Consider whether tree-sitter-based\ndetection would be more accurate, though this would require a custom solution.\n\nLow priority since the current solution works.\n\nAffected file: `overlays/pkg/local/emacs-config/emacs.org` (lines ~458-460, ~520-523)",
+  "description": "Evaluate whether language-detection (used by org-yank-dwim in common.org) is still maintained and worth keeping vs a simpler approach.",
   "id": "nix-yx8.11",
   "labels": [],
   "parent": "nix-yx8",
@@ -11,5 +11,5 @@
   "status": "open",
   "title": "Evaluate language-detection package replacement",
   "type": "task",
-  "updated_at": "2026-03-22T11:48:00Z"
+  "updated_at": "2026-03-22T17:15:44Z"
 }
