@@ -32,6 +32,7 @@
     "calibre"
     "elgato-stream-deck"
     "google-chrome"
+    "iina"
     "jordanbaird-ice"
     "localsend"
     "obsidian"
