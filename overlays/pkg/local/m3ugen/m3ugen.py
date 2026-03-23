@@ -26,9 +26,9 @@ def sort_files(files: list[Path], order: str) -> list[Path]:
     return sorted(files, key=SORT_KEYS[key_name], reverse=reverse)
 
 
-def main() -> int:
+def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Generate .m3u8 playlists from audio files in a directory.")
-    parser.add_argument("directories", nargs="*", default=["."], help="directories containing audio files (default: .)")
+    parser.add_argument("directories", nargs="*", default=["."], help="directories containing audio files (default: .)").complete = {"bash": "directory", "fish": "directory", "zsh": "directory"}
     parser.add_argument("-n", "--name", default=None, help="playlist name without extension (default: first directory name)")
     parser.add_argument(
         "-o",
@@ -39,6 +39,11 @@ def main() -> int:
     )
     parser.add_argument("-r", "--recursive", action="store_true", help="scan subdirectories recursively")
     parser.add_argument("--stdout", action="store_true", help="write playlist to stdout instead of a file")
+    return parser
+
+
+def main() -> int:
+    parser = get_parser()
     args = parser.parse_args()
 
     cwd = Path.cwd()
