@@ -14,7 +14,9 @@ SORT_KEYS = {
 }
 
 
-def find_audio_files(directory: Path) -> list[Path]:
+def find_audio_files(directory: Path, recursive: bool = False) -> list[Path]:
+    if recursive:
+        return [f for f in directory.rglob("*") if f.is_file() and f.suffix.lower() in AUDIO_EXTENSIONS]
     return [f for f in directory.iterdir() if f.is_file() and f.suffix.lower() in AUDIO_EXTENSIONS]
 
 
@@ -26,45 +28,47 @@ def sort_files(files: list[Path], order: str) -> list[Path]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate .m3u8 playlists from audio files in a directory.")
-    parser.add_argument("directory", nargs="?", default=".", help="directory containing audio files (default: .)")
-    parser.add_argument("-n", "--name", default=None, help="playlist name without extension (default: directory name)")
+    parser.add_argument("directories", nargs="*", default=["."], help="directories containing audio files (default: .)")
+    parser.add_argument("-n", "--name", default=None, help="playlist name without extension (default: first directory name)")
     parser.add_argument(
         "-o",
         "--order",
-        default="-date",
+        default="name",
         choices=["name", "-name", "date", "-date"],
-        help="sort order (default: -date, newest first)",
+        help="sort order (default: name)",
     )
     parser.add_argument("-r", "--recursive", action="store_true", help="scan subdirectories recursively")
     parser.add_argument("--stdout", action="store_true", help="write playlist to stdout instead of a file")
     args = parser.parse_args()
 
-    directory = Path(args.directory).resolve()
-    if not directory.is_dir():
-        print(f"m3ugen: not a directory: {directory}", file=sys.stderr)
+    cwd = Path.cwd()
+    directories = [Path(d).resolve() for d in args.directories]
+
+    for d in directories:
+        if not d.is_dir():
+            print(f"m3ugen: not a directory: {d}", file=sys.stderr)
+            return 1
+
+    playlist_name = args.name if args.name else directories[0].name
+
+    # Collect files in directory order; sort within each directory
+    all_files: list[str] = []
+    for d in directories:
+        files = find_audio_files(d, recursive=args.recursive)
+        files = sort_files(files, args.order)
+        all_files.extend(os.path.relpath(f, cwd) for f in files)
+
+    if not all_files:
+        dirs = ", ".join(str(d) for d in directories)
+        print(f"m3ugen: no audio files found in {dirs}", file=sys.stderr)
         return 1
-
-    playlist_name = args.name if args.name else directory.name
-
-    if args.recursive:
-        files = [f for f in directory.rglob("*") if f.is_file() and f.suffix.lower() in AUDIO_EXTENSIONS]
-    else:
-        files = find_audio_files(directory)
-
-    if not files:
-        print(f"m3ugen: no audio files found in {directory}", file=sys.stderr)
-        return 1
-
-    files = sort_files(files, args.order)
-
-    lines = [os.path.relpath(f, directory) for f in files]
 
     if args.stdout:
-        print("\n".join(lines))
+        print("\n".join(all_files))
     else:
-        out_path = directory / f"{playlist_name}.m3u8"
-        out_path.write_text("\n".join(lines) + "\n")
-        print(f"{out_path} ({len(lines)} tracks)")
+        out_path = cwd / f"{playlist_name}.m3u8"
+        out_path.write_text("\n".join(all_files) + "\n")
+        print(f"{out_path} ({len(all_files)} tracks)")
 
     return 0
 
