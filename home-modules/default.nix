@@ -140,8 +140,9 @@
       # keyboard QMK tools
       local.mdloader
 
-      # for voice generation
+      # media tools
       ffmpeg
+      local.m3ugen
     ]
     ++ lib.optionals machine.features.mac [
       m-cli # useful macOS CLI commands
