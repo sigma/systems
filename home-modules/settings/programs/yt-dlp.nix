@@ -37,7 +37,11 @@
         root = "Video/Udemy";
         settings = {
           inherit download-archive;
-          output = "%(playlist)s/%(chapter_number)s - %(chapter)s/%(title)s.%(ext)s";
+          output = "%(playlist)s/%(chapter_number)s - %(chapter)s/%(playlist_index)s - %(title)s.%(ext)s";
+          merge-output-format = "mp4";
+          add-header = "Origin: https://www.udemy.com";
+          concurrent-fragments = "16";
+          format = "bestvideo+bestaudio/best";
         };
       }
       {
