@@ -14,6 +14,7 @@
     ./antigravity.nix
     ./builder-access.nix
     ./catppuccin.nix
+    ./claude-firefly.nix
     ./claude-glm.nix
     ./cloud-shell.nix
     ./cursor.nix
@@ -26,6 +27,7 @@
     ./kew.nix
     ./kubeswitch.nix
     ./mailsetup.nix
+    ./opencode-firefly.nix
     ./open-url.nix
     ./policy
     ./settings

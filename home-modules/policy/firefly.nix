@@ -42,7 +42,9 @@ in
             ];
         };
 
+        programs.claude-firefly.enable = true;
         programs.claude-glm.enable = true;
+        programs.opencode-firefly.enable = true;
 
         home.packages = with pkgs; [
           terraform
