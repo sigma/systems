@@ -4,13 +4,14 @@
     "nix-czo.5"
   ],
   "blocks": [],
+  "closed_at": "2026-03-25T18:59:22Z",
   "created": "2026-03-22T11:02:41Z",
   "description": "Currently have both glow.nvim (terminal preview) and markdown-preview.nvim (browser preview). After adding render-markdown.nvim, evaluate whether one or both external preview tools can be dropped.\n\nDepends on: render-markdown.nvim being added first.\n\nAffected files:\n- `home-modules/editors/neovim/utility/markdown-preview.nix`\n- `home-modules/editors/neovim/utility/glow.nix`",
   "id": "nix-czo.9",
   "labels": [],
   "parent": "nix-czo",
   "priority": 3,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Consolidate markdown preview plugins",
   "type": "task",
   "updated_at": "2026-03-25T18:59:22Z"
