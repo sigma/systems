@@ -12,5 +12,6 @@
     ./textobjects.nix
     ./treesitter-textobjects.nix
     ./persistence.nix
+    ./yanky.nix
   ];
 }
