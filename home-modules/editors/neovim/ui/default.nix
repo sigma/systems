@@ -14,5 +14,6 @@
     ./dressing.nix
     ./wezterm.nix
     ./render-markdown.nix
+    ./indentscope.nix
   ];
 }
