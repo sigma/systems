@@ -53,8 +53,6 @@ let
         };
       });
     };
-  # Import bun baseline overlay (no AVX2 requirement for older CPUs)
-  bunBaselineOverlay = import ./pkg/bun.nix;
 in
 {
   master =
@@ -62,7 +60,6 @@ in
       import inputs.nixpkgs-master {
         inherit system config;
         overlays = [
-          bunBaselineOverlay
           gcloudOverlay
         ];
       }

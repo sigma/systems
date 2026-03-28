@@ -151,7 +151,7 @@
     ]
     ++ lib.optionals (!machine.features.mac) (
       let
-        bun = if machine.features.nehalem then pkgs.master.bun-baseline else pkgs.master.bun;
+        bun = if machine.features.nehalem then pkgs.toolbox.bun-baseline else pkgs.toolbox.bun;
       in
       [
         bun
