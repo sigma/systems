@@ -1,7 +1,9 @@
 import AppKit
 
 class AppWatcher {
-    let excludedBundleIDs: Set<String>
+    var excludedBundleIDs: Set<String> {
+        didSet { checkFrontmostApp() }
+    }
     private(set) var isExcludedAppActive: Bool = false
     private var observer: NSObjectProtocol?
 

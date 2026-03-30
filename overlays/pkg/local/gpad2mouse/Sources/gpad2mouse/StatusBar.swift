@@ -4,18 +4,14 @@ import GameController
 class StatusBar {
     private var statusItem: NSStatusItem!
     private var enabledItem: NSMenuItem!
-    private var naturalScrollItem: NSMenuItem!
     private var controllerItem: NSMenuItem!
     private var statusTimer: DispatchSourceTimer?
+    private let settingsWindowController = SettingsWindowController()
 
     private(set) var isEnabled = true
-    var naturalScroll: Bool
 
+    weak var settings: Settings?
     weak var gamepadManager: GamepadManager?
-
-    init(naturalScroll: Bool) {
-        self.naturalScroll = naturalScroll
-    }
 
     func setup() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -40,10 +36,9 @@ class StatusBar {
         enabledItem.state = .on
         menu.addItem(enabledItem)
 
-        naturalScrollItem = NSMenuItem(title: "Natural Scrolling", action: #selector(toggleNaturalScroll), keyEquivalent: "")
-        naturalScrollItem.target = self
-        naturalScrollItem.state = naturalScroll ? .on : .off
-        menu.addItem(naturalScrollItem)
+        let settingsItem = NSMenuItem(title: "Settings...", action: #selector(openSettings), keyEquivalent: ",")
+        settingsItem.target = self
+        menu.addItem(settingsItem)
 
         menu.addItem(NSMenuItem.separator())
 
@@ -82,10 +77,9 @@ class StatusBar {
         fputs("gpad2mouse: \(isEnabled ? "enabled" : "disabled")\n", stderr)
     }
 
-    @objc private func toggleNaturalScroll() {
-        naturalScroll = !naturalScroll
-        naturalScrollItem.state = naturalScroll ? .on : .off
-        fputs("gpad2mouse: natural scroll \(naturalScroll ? "on" : "off")\n", stderr)
+    @objc private func openSettings() {
+        guard let settings = settings, let gamepadManager = gamepadManager else { return }
+        settingsWindowController.show(settings: settings, gamepadManager: gamepadManager)
     }
 
     @objc private func quit() {

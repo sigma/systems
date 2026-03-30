@@ -1,8 +1,10 @@
 import Foundation
 import AppKit
 import GameController
+import Combine
 
 let config = Config.parse(CommandLine.arguments)
+let settings = Settings(cliDefaults: config)
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     let gamepadManager = GamepadManager()
@@ -13,17 +15,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var sigintSource: DispatchSourceSignal?
     var sigtermSource: DispatchSourceSignal?
     var lastPollTime: CFAbsoluteTime = 0
+    var cancellables = Set<AnyCancellable>()
 
     override init() {
-        self.appWatcher = AppWatcher(excludedBundleIDs: config.excludedBundleIDs)
-        self.statusBar = StatusBar(naturalScroll: config.naturalScroll)
+        self.appWatcher = AppWatcher(excludedBundleIDs: Set(settings.excludedBundleIDs))
+        self.statusBar = StatusBar()
         super.init()
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        gamepadManager.debug = config.debug
+        gamepadManager.debug = settings.debugLogging
         gamepadManager.start()
         appWatcher.start()
+        statusBar.settings = settings
         statusBar.gamepadManager = gamepadManager
         statusBar.setup()
 
@@ -33,11 +37,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             _ = AXIsProcessTrustedWithOptions(opts)
         }
 
-        fputs("gpad2mouse: running (poll=\(Int(1.0 / config.pollInterval))Hz, cursor=\(config.cursorSpeed), scroll=\(config.scrollSpeed))\n", stderr)
-        if !config.excludedBundleIDs.isEmpty {
-            fputs("gpad2mouse: excluded apps: \(config.excludedBundleIDs.joined(separator: ", "))\n", stderr)
+        fputs("gpad2mouse: running (poll=\(Int(settings.pollHz))Hz, cursor=\(settings.cursorSpeed), scroll=\(settings.scrollSpeed))\n", stderr)
+        if !settings.excludedBundleIDs.isEmpty {
+            fputs("gpad2mouse: excluded apps: \(settings.excludedBundleIDs.joined(separator: ", "))\n", stderr)
         }
 
+        // Signal handling
         signal(SIGINT, SIG_IGN)
         signal(SIGTERM, SIG_IGN)
         sigintSource = DispatchSource.makeSignalSource(signal: SIGINT, queue: .main) as? DispatchSourceSignal
@@ -55,8 +60,34 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         sigintSource?.resume()
         sigtermSource?.resume()
 
+        // Start poll timer
+        startPollTimer()
+
+        // Recreate timer when poll rate changes
+        settings.$pollHz
+            .dropFirst()
+            .removeDuplicates()
+            .sink { [weak self] _ in self?.startPollTimer() }
+            .store(in: &cancellables)
+
+        // Update AppWatcher when excluded apps change
+        settings.$excludedBundleIDs
+            .dropFirst()
+            .sink { [weak self] ids in self?.appWatcher.excludedBundleIDs = Set(ids) }
+            .store(in: &cancellables)
+
+        // Update debug logging
+        settings.$debugLogging
+            .dropFirst()
+            .sink { [weak self] debug in self?.gamepadManager.debug = debug }
+            .store(in: &cancellables)
+    }
+
+    func startPollTimer() {
+        pollTimer?.cancel()
+        lastPollTime = 0
         pollTimer = DispatchSource.makeTimerSource(queue: .main) as? DispatchSourceTimer
-        pollTimer?.schedule(deadline: .now(), repeating: config.pollInterval)
+        pollTimer?.schedule(deadline: .now(), repeating: settings.pollInterval)
         pollTimer?.setEventHandler { [weak self] in
             self?.poll()
         }
@@ -68,28 +99,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         guard !appWatcher.isExcludedAppActive else { return }
         guard gamepadManager.controller != nil else { return }
 
-        // Use actual elapsed time so movement is framerate-independent
+        // Framerate-independent timing
         let now = CFAbsoluteTimeGetCurrent()
-        let dt = lastPollTime == 0 ? config.pollInterval : min(now - lastPollTime, 0.1)
+        let dt = lastPollTime == 0 ? settings.pollInterval : min(now - lastPollTime, 0.1)
         lastPollTime = now
 
-        let dz = config.deadzone
+        let dz = Float(settings.deadzone)
 
         // Left stick: fast cursor movement
         let (lx, ly) = gamepadManager.leftStick
         if abs(lx) > dz || abs(ly) > dz {
             let x = applyDeadzone(lx, dz)
             let y = applyDeadzone(ly, dz)
-            let dx = Double(x) * config.cursorSpeed * dt
-            let dy = Double(-y) * config.cursorSpeed * dt
+            let dx = Double(x) * settings.cursorSpeed * dt
+            let dy = Double(-y) * settings.cursorSpeed * dt
             mouseEmitter.moveCursor(dx: dx, dy: dy)
         }
 
         // D-pad: slow, precise cursor movement
         let (dpx, dpy) = gamepadManager.dpad
         if abs(dpx) > 0.1 || abs(dpy) > 0.1 {
-            let dx = Double(dpx) * config.dpadSpeed * dt
-            let dy = Double(-dpy) * config.dpadSpeed * dt
+            let dx = Double(dpx) * settings.dpadSpeed * dt
+            let dy = Double(-dpy) * settings.dpadSpeed * dt
             mouseEmitter.moveCursor(dx: dx, dy: dy)
         }
 
@@ -98,16 +129,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if abs(rx) > dz || abs(ry) > dz {
             let x = applyDeadzone(rx, dz)
             let y = applyDeadzone(ry, dz)
-            let scrollDir: Double = statusBar.naturalScroll ? -1.0 : 1.0
-            let sdx = Double(x) * config.scrollSpeed
-            let sdy = Double(y) * config.scrollSpeed * scrollDir
+            let scrollDir: Double = settings.naturalScroll ? -1.0 : 1.0
+            let sdx = Double(x) * settings.scrollSpeed
+            let sdy = Double(y) * settings.scrollSpeed * scrollDir
             mouseEmitter.scroll(dx: sdx, dy: sdy)
         }
 
-        // Buttons: mouse clicks
-        mouseEmitter.updateButton(.left, pressed: gamepadManager.isButtonPressed(config.leftClickButton))
-        mouseEmitter.updateButton(.right, pressed: gamepadManager.isButtonPressed(config.rightClickButton))
-        mouseEmitter.updateButton(.middle, pressed: gamepadManager.isButtonPressed(config.middleClickButton))
+        // Buttons: dispatch based on mappings
+        // Skip button dispatch during press-to-bind capture
+        guard gamepadManager.buttonCaptureHandler == nil else { return }
+
+        for (buttonName, action) in settings.buttonMappings {
+            let pressed = gamepadManager.isButtonPressed(buttonName)
+            switch action {
+            case .mouseClick(let mouseButton):
+                mouseEmitter.updateButton(mouseButton, pressed: pressed)
+            case .modifierHold(let key):
+                mouseEmitter.updateModifier(key, pressed: pressed)
+            case .keyboardShortcut(let combo):
+                mouseEmitter.pressKey(combo, pressed: pressed)
+            case .none:
+                break
+            }
+        }
     }
 }
 

@@ -11,6 +11,9 @@ class GamepadManager {
 
     var debug = false
 
+    // Press-to-bind: when set, next button press calls this instead of normal tracking
+    var buttonCaptureHandler: ((String) -> Void)?
+
     func start() {
         GCController.shouldMonitorBackgroundEvents = true
 
@@ -103,12 +106,19 @@ class GamepadManager {
 
     private func setupButton(_ name: String, input: GCControllerButtonInput) {
         input.pressedChangedHandler = { [weak self] _, _, pressed in
-            if pressed {
-                self?.pressedButtons.insert(name)
-            } else {
-                self?.pressedButtons.remove(name)
+            guard let self = self else { return }
+            // Press-to-bind capture: intercept on press, skip normal tracking
+            if pressed, let handler = self.buttonCaptureHandler {
+                self.buttonCaptureHandler = nil
+                DispatchQueue.main.async { handler(name) }
+                return
             }
-            if self?.debug == true {
+            if pressed {
+                self.pressedButtons.insert(name)
+            } else {
+                self.pressedButtons.remove(name)
+            }
+            if self.debug {
                 fputs("gpad2mouse: \(name) \(pressed ? "down" : "up")\n", stderr)
             }
         }

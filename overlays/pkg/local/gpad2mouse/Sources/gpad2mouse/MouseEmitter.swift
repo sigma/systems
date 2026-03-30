@@ -3,9 +3,18 @@ import Foundation
 
 class MouseEmitter {
     private var cursorPos: CGPoint
-    private var leftDown = false
-    private var rightDown = false
-    private var middleDown = false
+
+    // Button state tracking
+    private var buttonState: [MouseButton: Bool] = [
+        .left: false, .right: false, .middle: false, .back: false, .forward: false,
+    ]
+
+    // Modifier state tracking
+    private var activeModifiers: CGEventFlags = []
+    private var heldModifiers: [ModifierKey: Bool] = [:]
+
+    // Key state tracking (prevent repeated key-down events)
+    private var heldKeys: Set<String> = []
 
     init() {
         if let event = CGEvent(source: nil) {
@@ -16,7 +25,6 @@ class MouseEmitter {
     }
 
     func moveCursor(dx: Double, dy: Double) {
-        // Refresh position from system to stay in sync with real mouse
         if let event = CGEvent(source: nil) {
             cursorPos = event.location
         }
@@ -25,9 +33,8 @@ class MouseEmitter {
         cursorPos.y += dy
         clampToScreenBounds()
 
-        // Use the appropriate move event type depending on button state
-        let eventType: CGEventType = leftDown ? .leftMouseDragged
-            : rightDown ? .rightMouseDragged
+        let eventType: CGEventType = buttonState[.left] == true ? .leftMouseDragged
+            : buttonState[.right] == true ? .rightMouseDragged
             : .mouseMoved
 
         guard let moveEvent = CGEvent(
@@ -54,30 +61,28 @@ class MouseEmitter {
     }
 
     func updateButton(_ button: MouseButton, pressed: Bool) {
-        let wasPressed: Bool
-        switch button {
-        case .left: wasPressed = leftDown
-        case .right: wasPressed = rightDown
-        case .middle: wasPressed = middleDown
-        }
-
+        let wasPressed = buttonState[button] ?? false
         guard pressed != wasPressed else { return }
 
-        // Refresh cursor position
         if let event = CGEvent(source: nil) {
             cursorPos = event.location
         }
 
         let eventType: CGEventType
         let cgButton: CGMouseButton
+        let buttonNumber: Int64?
 
         switch (button, pressed) {
-        case (.left, true): eventType = .leftMouseDown; cgButton = .left
-        case (.left, false): eventType = .leftMouseUp; cgButton = .left
-        case (.right, true): eventType = .rightMouseDown; cgButton = .right
-        case (.right, false): eventType = .rightMouseUp; cgButton = .right
-        case (.middle, true): eventType = .otherMouseDown; cgButton = .center
-        case (.middle, false): eventType = .otherMouseUp; cgButton = .center
+        case (.left, true):    eventType = .leftMouseDown;  cgButton = .left;   buttonNumber = nil
+        case (.left, false):   eventType = .leftMouseUp;    cgButton = .left;   buttonNumber = nil
+        case (.right, true):   eventType = .rightMouseDown;  cgButton = .right;  buttonNumber = nil
+        case (.right, false):  eventType = .rightMouseUp;    cgButton = .right;  buttonNumber = nil
+        case (.middle, true):  eventType = .otherMouseDown;  cgButton = .center; buttonNumber = 2
+        case (.middle, false): eventType = .otherMouseUp;    cgButton = .center; buttonNumber = 2
+        case (.back, true):    eventType = .otherMouseDown;  cgButton = .center; buttonNumber = 3
+        case (.back, false):   eventType = .otherMouseUp;    cgButton = .center; buttonNumber = 3
+        case (.forward, true):  eventType = .otherMouseDown; cgButton = .center; buttonNumber = 4
+        case (.forward, false): eventType = .otherMouseUp;   cgButton = .center; buttonNumber = 4
         }
 
         guard let clickEvent = CGEvent(
@@ -87,17 +92,51 @@ class MouseEmitter {
             mouseButton: cgButton
         ) else { return }
 
-        if button == .middle {
-            clickEvent.setIntegerValueField(.mouseEventButtonNumber, value: 2)
+        if let num = buttonNumber {
+            clickEvent.setIntegerValueField(.mouseEventButtonNumber, value: num)
         }
 
         clickEvent.post(tap: .cgSessionEventTap)
+        buttonState[button] = pressed
+    }
 
-        switch button {
-        case .left: leftDown = pressed
-        case .right: rightDown = pressed
-        case .middle: middleDown = pressed
+    func updateModifier(_ key: ModifierKey, pressed: Bool) {
+        let wasPressed = heldModifiers[key] ?? false
+        guard pressed != wasPressed else { return }
+        heldModifiers[key] = pressed
+
+        // Recompute combined modifier flags
+        var flags: CGEventFlags = []
+        for (k, held) in heldModifiers where held {
+            flags.insert(k.cgEventFlag)
         }
+        activeModifiers = flags
+
+        guard let event = CGEvent(source: nil) else { return }
+        event.type = .flagsChanged
+        event.flags = activeModifiers
+        event.post(tap: .cgSessionEventTap)
+    }
+
+    func pressKey(_ combo: KeyCombo, pressed: Bool) {
+        let key = "\(combo.keyCode)-\(combo.modifiers)"
+        let wasPressed = heldKeys.contains(key)
+        guard pressed != wasPressed else { return }
+
+        if pressed {
+            heldKeys.insert(key)
+        } else {
+            heldKeys.remove(key)
+        }
+
+        guard let event = CGEvent(
+            keyboardEventSource: nil,
+            virtualKey: combo.keyCode,
+            keyDown: pressed
+        ) else { return }
+
+        event.flags = CGEventFlags(rawValue: combo.modifiers).union(activeModifiers)
+        event.post(tap: .cgSessionEventTap)
     }
 
     private func clampToScreenBounds() {
@@ -121,9 +160,5 @@ class MouseEmitter {
 
         cursorPos.x = max(minX, min(maxX - 1, cursorPos.x))
         cursorPos.y = max(minY, min(maxY - 1, cursorPos.y))
-    }
-
-    enum MouseButton {
-        case left, right, middle
     }
 }
