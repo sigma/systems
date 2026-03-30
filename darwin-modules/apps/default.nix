@@ -7,6 +7,7 @@
     ./brave.nix
     ./claude-code.nix
     ./cursor.nix
+    ./gpad2mouse.nix
     ./karabiner.nix
     ./kurtosis.nix
     ./secretive.nix
