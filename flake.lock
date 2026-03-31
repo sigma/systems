@@ -325,11 +325,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1774948225,
-        "narHash": "sha256-vFv6VQSTgISCdSI/S1m0burQexCatb+nUD9dQN4eXF4=",
+        "lastModified": 1774982984,
+        "narHash": "sha256-yK+geREx2x0wLBjcwZPjZIougFV1SlTrA6LpUMDbCTQ=",
         "owner": "sigma",
         "repo": "joyride",
-        "rev": "aa23a655e5ed8e758bb4a15f4440db6641fc1b0e",
+        "rev": "f0c035e51c96564d54ddd4e769ddaae7f82c6759",
         "type": "github"
       },
       "original": {
