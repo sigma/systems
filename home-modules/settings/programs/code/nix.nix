@@ -19,6 +19,8 @@
     "[nix]" = {
       "editor.formatOnSave" = true;
     };
+
+    "direnv.path.executable" = "${pkgs.direnv}/bin/direnv";
   };
 
   extensions = with extSet.vscode-marketplace; [
