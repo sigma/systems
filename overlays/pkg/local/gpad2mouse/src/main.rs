@@ -2,6 +2,8 @@ mod appwatcher;
 mod config;
 mod gamepad;
 mod mouse;
+mod settings;
+mod settings_window;
 mod statusbar;
 
 use std::cell::RefCell;
@@ -17,6 +19,7 @@ use appwatcher::AppWatcher;
 use config::Config;
 use gamepad::GamepadManager;
 use mouse::{MouseButtonKind, MouseEmitter};
+use settings::Settings;
 use statusbar::StatusBar;
 
 // Raw libdispatch FFI for timer
@@ -27,12 +30,7 @@ extern "C" {
         mask: usize,
         queue: *const c_void,
     ) -> *mut c_void;
-    fn dispatch_source_set_timer(
-        source: *mut c_void,
-        start: u64,
-        interval: u64,
-        leeway: u64,
-    );
+    fn dispatch_source_set_timer(source: *mut c_void, start: u64, interval: u64, leeway: u64);
     fn dispatch_source_set_event_handler_f(
         source: *mut c_void,
         handler: extern "C" fn(*mut c_void),
@@ -47,7 +45,7 @@ const NSEC_PER_SEC: u64 = 1_000_000_000;
 const DISPATCH_TIME_NOW: u64 = 0;
 
 struct PollContext {
-    config: Config,
+    settings: Rc<RefCell<Settings>>,
     gamepad: Rc<GamepadManager>,
     emitter: RefCell<MouseEmitter>,
     watcher: AppWatcher,
@@ -59,37 +57,39 @@ fn main() {
     let mtm = MainThreadMarker::new().expect("must run on main thread");
 
     let config = Config::from_args();
+    let settings = Settings::new(config);
 
     let app = NSApplication::sharedApplication(mtm);
     app.setActivationPolicy(NSApplicationActivationPolicy::Accessory);
 
     check_accessibility();
 
-    let gamepad = GamepadManager::new(config.debug);
+    let s = settings.borrow();
+    let gamepad = GamepadManager::new(s.debug);
     gamepad.start();
 
     let emitter = MouseEmitter::new();
-    let watcher = AppWatcher::new(&config.excluded_bundle_ids);
+    let watcher = AppWatcher::new(&s.excluded_bundle_ids);
     watcher.start();
 
-    let statusbar = StatusBar::new(mtm, &gamepad);
+    let statusbar = StatusBar::new(mtm, &gamepad, &settings);
 
     eprintln!(
         "gpad2mouse: running (poll={}Hz, cursor={}, scroll={})",
-        config.poll_hz as u32, config.cursor_speed, config.scroll_speed
+        s.poll_hz as u32, s.cursor_speed, s.scroll_speed
     );
-    if !config.excluded_bundle_ids.is_empty() {
+    if !s.excluded_bundle_ids.is_empty() {
         eprintln!(
             "gpad2mouse: excluded apps: {}",
-            config.excluded_bundle_ids.join(", ")
+            s.excluded_bundle_ids.join(", ")
         );
     }
 
-    // Set up dispatch timer for polling
-    let interval_ns = (NSEC_PER_SEC as f64 / config.poll_hz) as u64;
+    let interval_ns = (NSEC_PER_SEC as f64 / s.poll_hz) as u64;
+    drop(s);
 
     let ctx = Box::new(PollContext {
-        config,
+        settings,
         gamepad,
         emitter: RefCell::new(emitter),
         watcher,
@@ -124,8 +124,9 @@ extern "C" fn poll_callback(ctx_ptr: *mut c_void) {
     if ctx.watcher.is_excluded_active.get() {
         return;
     }
+
     let state = ctx.gamepad.state.borrow();
-    if ctx.gamepad.state.borrow().left_stick == (0.0, 0.0)
+    if state.left_stick == (0.0, 0.0)
         && state.right_stick == (0.0, 0.0)
         && state.dpad == (0.0, 0.0)
         && state.pressed_buttons.is_empty()
@@ -134,6 +135,8 @@ extern "C" fn poll_callback(ctx_ptr: *mut c_void) {
     }
     drop(state);
 
+    let settings = ctx.settings.borrow();
+
     // Framerate-independent timing
     let now = Instant::now();
     let mut last = ctx.last_time.borrow_mut();
@@ -141,7 +144,7 @@ extern "C" fn poll_callback(ctx_ptr: *mut c_void) {
     *last = now;
     drop(last);
 
-    let dz = ctx.config.deadzone;
+    let dz = settings.deadzone as f32;
     let state = ctx.gamepad.state.borrow();
     let mut emitter = ctx.emitter.borrow_mut();
 
@@ -150,16 +153,16 @@ extern "C" fn poll_callback(ctx_ptr: *mut c_void) {
     if lx.abs() > dz || ly.abs() > dz {
         let x = apply_deadzone(lx, dz);
         let y = apply_deadzone(ly, dz);
-        let dx = x as f64 * ctx.config.cursor_speed * dt;
-        let dy = -y as f64 * ctx.config.cursor_speed * dt;
+        let dx = x as f64 * settings.cursor_speed * dt;
+        let dy = -y as f64 * settings.cursor_speed * dt;
         emitter.move_cursor(dx, dy);
     }
 
     // D-pad: slow, precise cursor movement
     let (dpx, dpy) = state.dpad;
     if dpx.abs() > 0.1 || dpy.abs() > 0.1 {
-        let dx = dpx as f64 * ctx.config.dpad_speed * dt;
-        let dy = -dpy as f64 * ctx.config.dpad_speed * dt;
+        let dx = dpx as f64 * settings.dpad_speed * dt;
+        let dy = -dpy as f64 * settings.dpad_speed * dt;
         emitter.move_cursor(dx, dy);
     }
 
@@ -168,21 +171,26 @@ extern "C" fn poll_callback(ctx_ptr: *mut c_void) {
     if rx.abs() > dz || ry.abs() > dz {
         let x = apply_deadzone(rx, dz);
         let y = apply_deadzone(ry, dz);
-        let scroll_dir: f64 = if ctx.config.natural_scroll { -1.0 } else { 1.0 };
-        let sdx = x as f64 * ctx.config.scroll_speed;
-        let sdy = y as f64 * ctx.config.scroll_speed * scroll_dir;
+        let scroll_dir: f64 = if settings.natural_scroll { -1.0 } else { 1.0 };
+        let sdx = x as f64 * settings.scroll_speed;
+        let sdy = y as f64 * settings.scroll_speed * scroll_dir;
         emitter.scroll(sdx, sdy);
     }
 
-    // Buttons: mouse clicks
-    let button_map = [
-        (&ctx.config.left_click, MouseButtonKind::Left),
-        (&ctx.config.right_click, MouseButtonKind::Right),
-        (&ctx.config.middle_click, MouseButtonKind::Middle),
-    ];
-    for (button_name, mouse_button) in &button_map {
+    // Buttons: dispatch based on mapping
+    for (button_name, action) in &settings.button_map {
         let pressed = state.pressed_buttons.contains(button_name.as_str());
-        emitter.update_button(*mouse_button, pressed);
+        let mouse_button = match action.as_str() {
+            "leftClick" => Some(MouseButtonKind::Left),
+            "rightClick" => Some(MouseButtonKind::Right),
+            "middleClick" => Some(MouseButtonKind::Middle),
+            "backClick" => Some(MouseButtonKind::Back),
+            "forwardClick" => Some(MouseButtonKind::Forward),
+            _ => None,
+        };
+        if let Some(mb) = mouse_button {
+            emitter.update_button(mb, pressed);
+        }
     }
 }
 
