@@ -43,6 +43,9 @@
     toolbox.inputs.devenv.follows = "";
 
     # Personal flakes
+    joyride.url = "github:sigma/joyride";
+    joyride.inputs.nixpkgs.follows = "nixpkgs";
+
     maschine-hacks.url = "github:sigma/maschine-hacks";
     maschine-hacks.inputs.nixpkgs.follows = "nixpkgs";
     maschine-hacks.inputs.flake-parts.follows = "flake-parts";

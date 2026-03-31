@@ -318,6 +318,26 @@
         "type": "github"
       }
     },
+    "joyride": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1774948225,
+        "narHash": "sha256-vFv6VQSTgISCdSI/S1m0burQexCatb+nUD9dQN4eXF4=",
+        "owner": "sigma",
+        "repo": "joyride",
+        "rev": "aa23a655e5ed8e758bb4a15f4440db6641fc1b0e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sigma",
+        "repo": "joyride",
+        "type": "github"
+      }
+    },
     "maschine-hacks": {
       "inputs": {
         "flake-parts": [
@@ -742,6 +762,7 @@
           "nix-pins",
           "home-manager"
         ],
+        "joyride": "joyride",
         "maschine-hacks": "maschine-hacks",
         "naersk": [
           "nix-pins",

@@ -36,6 +36,7 @@
   nebula.darwinModules = [
     ../common-system-modules
     ../darwin-modules
+    inputs.joyride.darwinModules.default
   ];
 
   nebula.nixpkgsConfig = import ../pkg-config.nix { inherit inputs; };

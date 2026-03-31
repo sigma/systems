@@ -2,13 +2,15 @@
   lib,
   machine,
   pkgs,
+  user,
   ...
 }:
 with lib;
 {
   config = mkIf machine.features.gaming {
-    programs.gpad2mouse = {
+    programs.joyride = {
       enable = true;
+      user = user.login;
       excludeApps = [
         "com.trash80.m8c"
         "com.valvesoftware.steam"
