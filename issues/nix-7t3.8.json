@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-04-05T14:54:44Z",
+  "description": "modules/shell.nix line 54 defines systemBootstrap as an empty string. It's plumbed through shell commands at lines 186 and 196 but contributes nothing. Either implement the intended bootstrap logic or remove the variable and its references entirely.",
+  "id": "nix-7t3.8",
+  "labels": [],
+  "parent": "nix-7t3",
+  "priority": 2,
+  "status": "open",
+  "title": "Remove dead systemBootstrap variable in shell.nix",
+  "type": "task",
+  "updated_at": "2026-04-05T14:54:44Z"
+}
