@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-04-05T14:55:02Z",
+  "description": "Module function signatures are inconsistent across darwin-modules. Examples: brave.nix uses {config, lib, user, ...}, secretive.nix uses {config, user, lib, ...}, karabiner.nix uses {config, lib, machine, ...}. CLAUDE.md recommends {config, lib, pkgs, user, machine, ...}. Standardize all ~45 modules to follow this order. Also standardize 'with lib;' usage (28 files have it, 4 don't despite using lib functions).",
+  "id": "nix-7t3.9",
+  "labels": [],
+  "parent": "nix-7t3",
+  "priority": 3,
+  "status": "open",
+  "title": "Standardize module parameter order across darwin-modules",
+  "type": "task",
+  "updated_at": "2026-04-05T14:55:02Z"
+}
