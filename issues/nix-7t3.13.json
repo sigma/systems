@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-04-05T14:55:25Z",
+  "description": "Feature names like 'tailscale', 'nixos', 'mac', 'linux', 'managed', 'work' are hardcoded strings scattered across modules/hosts.nix, nebula/default.nix (defaultFeatures), and nebula/helpers.nix. Renaming a feature requires finding all string occurrences. Define feature constants in a single location (e.g., a features.nix or in nebula/types.nix) and reference those constants throughout.",
+  "id": "nix-7t3.13",
+  "labels": [],
+  "parent": "nix-7t3",
+  "priority": 3,
+  "status": "open",
+  "title": "Define feature name constants to eliminate magic strings",
+  "type": "task",
+  "updated_at": "2026-04-05T14:55:25Z"
+}
