@@ -8,6 +8,7 @@ with lib;
 let
   cfg = config.programs.claude-firefly;
   claude-code-pkg = config.programs.claude-code.finalPackage;
+  urls = import ./proxy-urls.nix;
 in
 {
   options.programs.claude-firefly = {
@@ -15,7 +16,7 @@ in
 
     baseUrl = mkOption {
       type = types.str;
-      default = "http://ai.van-scylla.ts.net";
+      default = urls.tailscaleProxy;
       description = "Anthropic API base URL (Tailscale proxy)";
     };
 

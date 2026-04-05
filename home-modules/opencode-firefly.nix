@@ -7,6 +7,7 @@
 with lib;
 let
   cfg = config.programs.opencode-firefly;
+  urls = import ./proxy-urls.nix;
 in
 {
   options.programs.opencode-firefly = {
@@ -14,7 +15,7 @@ in
 
     baseUrl = mkOption {
       type = types.str;
-      default = "http://ai.van-scylla.ts.net";
+      default = urls.tailscaleProxy;
       description = "OpenAI-compatible API base URL (Tailscale proxy)";
     };
 
