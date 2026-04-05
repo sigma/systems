@@ -1,15 +1,14 @@
 { lib, machine, ... }:
 with lib;
+let
+  kbd = import ../keyboards.nix;
+in
 {
   config = mkIf (!machine.features.laptop && machine.features.mac) {
     programs.karabiner =
       let
-        keychron = pid: {
-          vendorId = 13364;
-          productId = pid;
-        };
-        k8Pro = keychron 640;
-        wirelessLink = keychron 53296;
+        k8Pro = kbd.keychron 640;
+        wirelessLink = kbd.keychron 53296;
         usbPedal = {
           vendorId = 13651;
           productId = 45057;

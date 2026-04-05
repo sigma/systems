@@ -1,5 +1,8 @@
 { lib, machine, ... }:
 with lib;
+let
+  kbd = import ../keyboards.nix;
+in
 {
   config = mkIf machine.features.laptop {
     # This accounts for my docking stations.
@@ -47,17 +50,9 @@ with lib;
 
     programs.karabiner =
       let
-        keychron = pid: {
-          vendorId = 13364;
-          productId = pid;
-        };
-        q1Max = keychron 2064;
-        massdrop = pid: {
-          vendorId = 1240;
-          productId = pid;
-        };
-        ctrl = massdrop 61138;
-        wirelessLink = keychron 53296;
+        q1Max = kbd.keychron 2064;
+        ctrl = kbd.massdrop 61138;
+        wirelessLink = kbd.keychron 53296;
         kinesisPedal = {
           vendorId = 10730;
           productId = 256;
