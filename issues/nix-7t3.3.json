@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-04-05T14:54:20Z",
+  "description": "modules/nebula/helpers.nix duplicates hostname resolution logic between sshHost (lines 14-24) and sshMuxAlias (lines 58-65). Both compute remoteHasTailscale, machineHasTailscale, useSharedDomain, sharedHostname, and hostAlias identically. Extract into a shared resolveHostname helper. Also create a hasFeature helper to replace repeated builtins.elem patterns.",
+  "id": "nix-7t3.3",
+  "labels": [],
+  "parent": "nix-7t3",
+  "priority": 2,
+  "status": "open",
+  "title": "Deduplicate hostname resolution logic in nebula helpers",
+  "type": "task",
+  "updated_at": "2026-04-05T14:54:20Z"
+}
