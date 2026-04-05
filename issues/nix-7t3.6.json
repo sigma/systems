@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-04-05T14:54:36Z",
+  "description": "modules/hosts.nix has 5 near-identical builder configuration blocks (spectre, ash, shirka, ash-devbox, spectre-devbox) all sharing enable=true, speedFactor=10. Darwin hosts use maxJobs=8, Linux use maxJobs=4, with different sshUser conventions. Extract a mkBuilder helper that takes host-specific params (keys, maxJobs, sshUser) and generates the builder config. Document the darwin/linux convention difference.",
+  "id": "nix-7t3.6",
+  "labels": [],
+  "parent": "nix-7t3",
+  "priority": 2,
+  "status": "open",
+  "title": "Extract builder configuration helper in hosts.nix",
+  "type": "task",
+  "updated_at": "2026-04-05T14:54:36Z"
+}
