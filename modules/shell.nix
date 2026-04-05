@@ -51,8 +51,6 @@ in
         fi
       '';
 
-      systemBootstrap = "";
-
       systemBuild =
         if isDarwin then
           ''
@@ -183,7 +181,6 @@ in
             help = "Initial system setup (run once on new machines)";
             command = ''
               ${findNix}
-              ${systemBootstrap}
             '';
           }
           {
@@ -193,7 +190,6 @@ in
             command = ''
               ${findNix}
               ${systemSetup}
-              ${systemBootstrap}
               ${systemBuild}
               ${systemActivate}
             '';
