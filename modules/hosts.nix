@@ -1,3 +1,28 @@
+let
+  # Helper to reduce builder config boilerplate.
+  # Darwin hosts typically use maxJobs=8, sshUser="yann".
+  # Linux/NixOS hosts use maxJobs=4, sshUser="nixbuilder".
+  mkBuilder =
+    {
+      maxJobs,
+      sshUser,
+      sshPublicKey,
+      storePublicKey,
+      supportedFeatures ? [ "big-parallel" ],
+      speedFactor ? 10,
+    }:
+    {
+      enable = true;
+      inherit
+        maxJobs
+        speedFactor
+        sshUser
+        supportedFeatures
+        sshPublicKey
+        storePublicKey
+        ;
+    };
+in
 {
   nebula.features = [
     "work" # generic work feature
@@ -45,12 +70,9 @@
           # desktop titan
           "7fZp73vnETk6Nen9OqNu49XEnQvlpqIIYYeNJDM4p/w1DprKpyqw8kvRCalbqMNwfLaElmbhHYKN4nKvMvoTPg==,yxC16UIBA7Ajkr/2uVVGx5DUCPLJOEYXHi8bs0KrTlFSL4SH+eF9rChm6V13jcldqSfL/d66REtrbRYqg5/0xQ==,es256,+presence"
         ];
-        builder = {
-          enable = true;
+        builder = mkBuilder {
           maxJobs = 8;
-          speedFactor = 10;
           sshUser = "yann";
-          supportedFeatures = [ "big-parallel" ];
           sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICOFQODLDegQzo1pEDrnzP6GJwmSudZ270EeXzsSr2d3 spectre-builder";
           storePublicKey = "spectre-builder:jBwyDL6nsUSwyNgy6iNYCZD0pDiXfqD0xvy3Avxib20=";
         };
@@ -84,12 +106,9 @@
           "mEJg6bvtXfOO8r3USlUbN6xaW87kBR7xAlVTfeFxdQSAh06vNXqOLgbjQu4XHbM1qdmEQNlfhrErxfR6Jv5M8A==,iiS2fAX/OMD79/nSPRtG/OPVn326dvU/qV2EkxAfVvasuE2I98odrFgGA3IRJyBF8ucC+sEMt/uVekIs01uqhA==,es256,+presence"
         ];
         signingKey = "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBG2hEwJRPPMOebyTL7amVMsTnk/Iv9FKVk21dwmbaGvJWKc5qJhiSrvgOjgHFZJUGaBjbDsuXGhVCIHYZZo6Wus=";
-        builder = {
-          enable = true;
+        builder = mkBuilder {
           maxJobs = 8;
-          speedFactor = 10;
           sshUser = "yann";
-          supportedFeatures = [ "big-parallel" ];
           sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJXjN5tmhFNXn0VC06tPgWLRYOEMqrNnS38fjHe+ClOc ash-builder";
           storePublicKey = "ash-builder:dzF0FVd4nvgsJE5NUybyngj9UXyF8FS+zjdsPPpPatM=";
         };
@@ -115,10 +134,8 @@
         ];
         enableSwap = false;
         bootLabel = "boot";
-        builder = {
-          enable = true;
+        builder = mkBuilder {
           maxJobs = 4;
-          speedFactor = 10;
           sshUser = "nixbuilder";
           supportedFeatures = [
             "nixos-test"
@@ -151,10 +168,8 @@
           };
         };
         bootLabel = "boot";
-        builder = {
-          enable = true;
+        builder = mkBuilder {
           maxJobs = 4;
-          speedFactor = 10;
           sshUser = "nixbuilder";
           supportedFeatures = [
             "nixos-test"
@@ -187,10 +202,8 @@
         };
         bootLabel = "boot";
         enableSwap = false;
-        builder = {
-          enable = true;
+        builder = mkBuilder {
           maxJobs = 4;
-          speedFactor = 10;
           sshUser = "nixbuilder";
           supportedFeatures = [
             "nixos-test"
