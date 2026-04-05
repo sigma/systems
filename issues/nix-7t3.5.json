@@ -2,14 +2,15 @@
   "assignee": "unknown",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-04-05T15:00:59Z",
   "created": "2026-04-05T14:54:31Z",
   "description": "home-modules/just.nix line 13 defines the option as 'enabled' (options.programs.just.enabled) instead of the standard 'enable'. Every other module in the repo uses 'enable'. This breaks convention and will confuse anyone expecting the standard pattern. Rename to 'enable' and update all references (including settings/programs/code/just.nix line 8 which checks config.programs.just.enabled).",
   "id": "nix-7t3.5",
   "labels": [],
   "parent": "nix-7t3",
   "priority": 1,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Fix just.nix option naming: 'enabled' should be 'enable'",
   "type": "task",
-  "updated_at": "2026-04-05T14:59:12Z"
+  "updated_at": "2026-04-05T15:00:59Z"
 }
