@@ -1,5 +1,5 @@
 {
-  "assignee": "",
+  "assignee": "unknown",
   "blocked_by": [],
   "blocks": [],
   "created": "2026-04-05T14:54:36Z",
@@ -8,8 +8,8 @@
   "labels": [],
   "parent": "nix-7t3",
   "priority": 2,
-  "status": "open",
+  "status": "in_progress",
   "title": "Extract builder configuration helper in hosts.nix",
   "type": "task",
-  "updated_at": "2026-04-05T14:54:36Z"
+  "updated_at": "2026-04-05T15:15:47Z"
 }
