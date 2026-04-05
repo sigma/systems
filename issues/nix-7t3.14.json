@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-04-05T14:55:27Z",
+  "description": "darwin-modules/apps/aerospace/config.nix (lines 28-83) has complex nested string generation with multiple layers of optionalString and concatSep for window rules. Also, darwin-modules/apps/settings/aerospace.nix has duplicated app IDs (com.apple.finder appears twice, com.google.Chrome appears twice). Extract a clean window rule formatter function and deduplicate app ID references.",
+  "id": "nix-7t3.14",
+  "labels": [],
+  "parent": "nix-7t3",
+  "priority": 3,
+  "status": "open",
+  "title": "Simplify aerospace window-rule generation",
+  "type": "task",
+  "updated_at": "2026-04-05T14:55:27Z"
+}
