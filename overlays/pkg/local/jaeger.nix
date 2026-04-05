@@ -104,20 +104,15 @@ buildGoModule rec {
 
   src = compositeSrc;
 
-  vendorHash = null;
-
   subPackages = [ "cmd/jaeger" ];
 
-  # Use modSha256 and proxyVendor to avoid vendoring issues
-  modSha256 = "sha256-3BK2jfspWNtNKlpaCa5LmDguXNIs1PmqFu2ulHhd3pY=";
   proxyVendor = true;
+  vendorHash = "sha256-3BK2jfspWNtNKlpaCa5LmDguXNIs1PmqFu2ulHhd3pY=";
 
   # Override GOPROXY to allow module downloads
   preBuild = ''
     export GOPROXY=https://proxy.golang.org,direct
   '';
-
-  nativeBuildInputs = [ ];
 
   # Set version information for debugging
   ldflags = [
