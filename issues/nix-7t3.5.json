@@ -1,5 +1,5 @@
 {
-  "assignee": "",
+  "assignee": "unknown",
   "blocked_by": [],
   "blocks": [],
   "created": "2026-04-05T14:54:31Z",
@@ -8,8 +8,8 @@
   "labels": [],
   "parent": "nix-7t3",
   "priority": 1,
-  "status": "open",
+  "status": "in_progress",
   "title": "Fix just.nix option naming: 'enabled' should be 'enable'",
   "type": "task",
-  "updated_at": "2026-04-05T14:54:31Z"
+  "updated_at": "2026-04-05T14:59:12Z"
 }
