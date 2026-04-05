@@ -2,14 +2,15 @@
   "assignee": "unknown",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-04-05T15:15:44Z",
   "created": "2026-04-05T14:54:28Z",
   "description": "home-modules/claude-firefly.nix, claude-glm.nix, and opencode-firefly.nix all implement near-identical patterns: define options for enable/baseUrl/timeoutMs, create a writeShellApplication wrapper with env vars, add to home.packages. Extract a reusable mkProxyWrapper helper function. Also dedup the hardcoded baseUrl 'http://ai.van-scylla.ts.net' shared between claude-firefly and opencode-firefly.",
   "id": "nix-7t3.4",
   "labels": [],
   "parent": "nix-7t3",
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Deduplicate API proxy wrapper modules",
   "type": "task",
-  "updated_at": "2026-04-05T15:14:45Z"
+  "updated_at": "2026-04-05T15:15:44Z"
 }
