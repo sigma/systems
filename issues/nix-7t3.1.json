@@ -2,14 +2,15 @@
   "assignee": "unknown",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-04-05T15:02:49Z",
   "created": "2026-04-05T14:54:13Z",
   "description": "The keychron helper function and keyboard definitions are duplicated across darwin-modules/policy/laptop.nix, darwin-modules/policy/desktop.nix, and darwin-modules/apps/karabiner.nix. Vendor ID 13364 is hardcoded in 3 places. Extract to a shared keyboard registry module (e.g., darwin-modules/hardware/keyboards.nix) that policy and app modules can reference.",
   "id": "nix-7t3.1",
   "labels": [],
   "parent": "nix-7t3",
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Extract shared keychron keyboard definitions",
   "type": "task",
-  "updated_at": "2026-04-05T15:02:09Z"
+  "updated_at": "2026-04-05T15:02:49Z"
 }
