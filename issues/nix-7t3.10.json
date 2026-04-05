@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-04-05T14:55:10Z",
+  "description": "overlays/pkg/local/bootstrap-github.nix (lines 14-23) handles both getent (Linux) and dscl (macOS) for REAL_HOME detection under sudo. bootstrap-cachix.nix (lines 18-26) lacks this logic entirely. Both scripts also hardcode /run/secrets and ~/.ssh/id_ed25519 paths. Unify the home detection logic and consider extracting shared path constants.",
+  "id": "nix-7t3.10",
+  "labels": [],
+  "parent": "nix-7t3",
+  "priority": 2,
+  "status": "open",
+  "title": "Harmonize bootstrap script home-directory detection",
+  "type": "task",
+  "updated_at": "2026-04-05T14:55:10Z"
+}
