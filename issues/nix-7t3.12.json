@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-04-05T14:55:18Z",
+  "description": "Custom packages in overlays/pkg/local/ inconsistently use runHook in install phases. wezterm-config.nix, emacs-config.nix, emacs-vanilla-config.nix skip runHook pre/postInstall, while mdloader.nix, myrient-downloader.nix, m3ugen.nix use them properly. Add runHook preInstall/postInstall to all packages for consistency and extensibility.",
+  "id": "nix-7t3.12",
+  "labels": [],
+  "parent": "nix-7t3",
+  "priority": 3,
+  "status": "open",
+  "title": "Consistent runHook usage in custom package installPhases",
+  "type": "task",
+  "updated_at": "2026-04-05T14:55:18Z"
+}
