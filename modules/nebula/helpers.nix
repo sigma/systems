@@ -4,24 +4,33 @@
   ...
 }:
 let
+  # Check if a remote host (raw feature list) has a given feature
+  remoteHasFeature = feature: r: builtins.elem feature (r.features or [ ]);
+
+  # Resolve hostname for a remote, using shared domain when both ends have tailscale
+  resolveRemote =
+    { machine, sharedDomain }:
+    r:
+    let
+      remoteHasTailscale = remoteHasFeature "tailscale" r;
+      machineHasTailscale = machine.features.tailscale or false;
+      useSharedDomain = machineHasTailscale && remoteHasTailscale && sharedDomain != "";
+      hostAlias = if r.alias != null then r.alias else r.name;
+    in
+    {
+      inherit hostAlias;
+      remoteIsNixOS = remoteHasFeature "nixos" r;
+      hostname = if useSharedDomain then "${hostAlias}.${sharedDomain}" else r.name;
+    };
+
   # Create SSH matchBlock entry for a remote host
   # Takes context about the current machine's features and shared domain
   sshHost =
     { machine, sharedDomain }:
     r:
     let
-      # Check if remote has tailscale feature (it's a list in host definition)
-      remoteHasTailscale = builtins.elem "tailscale" (r.features or [ ]);
-      # Check if current machine has tailscale (processed attrset)
-      machineHasTailscale = machine.features.tailscale or false;
-      # Use shared domain DNS if both have tailscale
-      useSharedDomain = machineHasTailscale && remoteHasTailscale && sharedDomain != "";
-      # Check if remote is NixOS (needs RequestTTY force due to fish shell)
-      remoteIsNixOS = builtins.elem "nixos" (r.features or [ ]);
-      # Determine hostname
-      hostAlias = if r.alias != null then r.alias else r.name;
-      sharedHostname = "${hostAlias}.${sharedDomain}";
-      regularHostname = r.name;
+      resolved = resolveRemote { inherit machine sharedDomain; } r;
+      inherit (resolved) hostAlias remoteIsNixOS hostname;
     in
     {
       name = if builtins.isNull r.alias then r.name else r.alias;
@@ -29,8 +38,8 @@ let
         {
           sendEnv = [ "WINDOW" ];
         }
-        // lib.optionalAttrs (r.name != null || useSharedDomain) {
-          hostname = if useSharedDomain then sharedHostname else regularHostname;
+        // lib.optionalAttrs (r.name != null || hostname != r.name) {
+          inherit hostname;
         }
         // lib.optionalAttrs (r.user != null) { user = r.user; }
         // lib.optionalAttrs (r.sshOpts != null) (
@@ -55,17 +64,10 @@ let
     { machine, sharedDomain }:
     r:
     let
-      hostAlias = if r.alias != null then r.alias else r.name;
-      remoteIsNixOS = builtins.elem "nixos" (r.features or [ ]);
-      # Same hostname resolution logic as sshHost
-      remoteHasTailscale = builtins.elem "tailscale" (r.features or [ ]);
-      machineHasTailscale = machine.features.tailscale or false;
-      useSharedDomain = machineHasTailscale && remoteHasTailscale && sharedDomain != "";
-      sharedHostname = "${hostAlias}.${sharedDomain}";
-      resolvedHostname = if useSharedDomain then sharedHostname else r.name;
+      resolved = resolveRemote { inherit machine sharedDomain; } r;
     in
-    lib.optionalAttrs remoteIsNixOS {
-      "${hostAlias}-mux" = { hostname = resolvedHostname; };
+    lib.optionalAttrs resolved.remoteIsNixOS {
+      "${resolved.hostAlias}-mux" = { hostname = resolved.hostname; };
     };
 
   # Find a remote by alias suffix (e.g., "devbox" matches "spectre-devbox")
