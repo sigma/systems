@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-04-05T14:54:17Z",
+  "description": "overlays/pkg/local/emacs-config.nix and emacs-vanilla-config.nix are ~85% identical. Both implement the same org-tangle build process differing only in which .org file they process. Extract a parameterized builder function that accepts the org file as input, reducing ~100 lines of duplication to ~40.",
+  "id": "nix-7t3.2",
+  "labels": [],
+  "parent": "nix-7t3",
+  "priority": 2,
+  "status": "open",
+  "title": "Deduplicate emacs-config and emacs-vanilla-config overlays",
+  "type": "task",
+  "updated_at": "2026-04-05T14:54:17Z"
+}
