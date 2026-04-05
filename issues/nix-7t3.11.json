@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-04-05T14:55:14Z",
+  "description": "darwin-modules/apps/default.nix (lines 17-43) installs homebrew brews (container, jj, libusb, opencode, bun) and casks unconditionally on all hosts. Some of these are development-specific or work-specific. Gate with appropriate feature flags (machine.features.developer, machine.features.work, etc.). Similarly, features/default.nix line 14 unconditionally enables IPFS on all machines.",
+  "id": "nix-7t3.11",
+  "labels": [],
+  "parent": "nix-7t3",
+  "priority": 2,
+  "status": "open",
+  "title": "Add feature flag guards to unconditional homebrew packages",
+  "type": "task",
+  "updated_at": "2026-04-05T14:55:14Z"
+}
