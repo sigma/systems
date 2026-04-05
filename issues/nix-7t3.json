@@ -1,0 +1,14 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-04-05T14:54:05Z",
+  "description": "Maintainability issues found during global code review on 2025-04-05. Covers darwin-modules, home-modules, modules/, overlays/, and flake.nix.",
+  "id": "nix-7t3",
+  "labels": [],
+  "priority": 2,
+  "status": "open",
+  "title": "Global code review: maintainability issues",
+  "type": "epic",
+  "updated_at": "2026-04-05T14:54:05Z"
+}
