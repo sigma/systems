@@ -214,31 +214,30 @@ in
   [mode.arrange.binding]
   esc = ['mode main']
   enter = ['mode main']
-  ${directions.left} = ['focus left']
-  ${directions.down} = ['focus down']
-  ${directions.up} = ['focus up']
-  ${directions.right} = ['focus right']
+  r = ['mode resize']
+
+  ${directions.left}   = ['join-with left']
+  ${directions.down}   = ['join-with down']
+  ${directions.up}     = ['join-with up']
+  ${directions.right}  = ['join-with right']
+
   shift-${directions.left}   = ['move left']
   shift-${directions.down}   = ['move down']
   shift-${directions.up}     = ['move up']
   shift-${directions.right}  = ['move right']
-  minus = 'resize smart -50'
-  equal = 'resize smart +50'
-  ${mods.primary}-${directions.left}   = ['join-with left']
-  ${mods.primary}-${directions.down}   = ['join-with down']
-  ${mods.primary}-${directions.up}     = ['join-with up']
-  ${mods.primary}-${directions.right}  = ['join-with right']
 
   [mode.resize.binding]
-  # See: https://nikitabobko.github.io/AeroSpace/commands#resize
+  esc = ['mode main']
+  enter = ['mode main']
+  a = ['mode arrange']
+
   ${directions.left} = 'resize width -50'
   ${directions.down} = 'resize height +50'
   ${directions.up} = 'resize height -50'
   ${directions.right} = 'resize width +50'
+
   minus = 'resize smart -50'
   equal = 'resize smart +50'
-  enter = 'mode main'
-  esc = 'mode main'
 
   [workspace-to-monitor-force-assignment]
   ${workspaceAssignments}
