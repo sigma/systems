@@ -1,4 +1,5 @@
 {
+  swift,
   stdenv,
   lib,
 }:
@@ -8,13 +9,14 @@ stdenv.mkDerivation {
 
   src = ./midi-session-manager;
 
+  nativeBuildInputs = [ swift ];
+
   # CoreMIDI, Foundation, AppKit frameworks are in the default Darwin SDK
 
   buildPhase = ''
     runHook preBuild
-    $CC -fobjc-arc -O2 -Wall -o midi-session-manager main.m \
-      -framework CoreMIDI -framework Foundation -framework AppKit \
-      -lobjc
+    swiftc -O -o midi-session-manager main.swift \
+      -framework CoreMIDI -framework Foundation -framework AppKit
     runHook postBuild
   '';
 
