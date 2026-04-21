@@ -594,10 +594,6 @@ All packages come from Nix, so disable automatic installation.
 #+begin_src emacs-lisp
 (use-package ox-gfm
   :after ox)
-
-(with-eval-after-load 'ox-gfm
-  <<g3doc-functions>>
-  <<g3doc-backend-definition>>)
 #+end_src
 
 ** Languages
