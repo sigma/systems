@@ -63,6 +63,8 @@ in
     markdown-mode
     auctex
     d2-mode
+    # environment
+    exec-path-from-shell
     # mail
     notmuch
   ];
