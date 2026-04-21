@@ -2,14 +2,15 @@
   "assignee": "",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-04-21T20:33:00Z",
   "created": "2026-03-22T11:48:00Z",
   "description": "Replace the darwin-path-fix hack in common.org with exec-path-from-shell package for cleaner PATH inheritance.",
   "id": "nix-yx8.14",
   "labels": [],
   "parent": "nix-yx8",
   "priority": 3,
-  "status": "open",
+  "status": "closed",
   "title": "Replace PATH hack with exec-path-from-shell",
   "type": "task",
-  "updated_at": "2026-03-22T17:15:44Z"
+  "updated_at": "2026-04-21T20:33:00Z"
 }
