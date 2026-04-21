@@ -178,8 +178,9 @@ All packages come from Nix, so disable automatic installation.
                     :family "FiraCode Nerd Font"
                     :height 130)
 
-;; Disable line numbers (match Doom config)
-(setq display-line-numbers-type nil)
+;; Show line numbers
+(setq display-line-numbers-type t)
+(global-display-line-numbers-mode 1)
 
 ;; Icons (Symbols Nerd Font installed via Nix)
 (use-package nerd-icons
