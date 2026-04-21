@@ -13,7 +13,7 @@ in
 {
   config = mkIf cfg.enable {
     programs.nvf.settings.vim.treesitter.textobjects = {
-      enable = false; # blocked: nvf's treesitter packaging doesn't expose nvim-treesitter.config
+      enable = false; # blocked: nvf's lzn-auto-require can't resolve nvim-treesitter.config (still broken as of nvf f4de19e1)
 
       setupOpts = {
         # Jump to next/previous function, class, parameter
