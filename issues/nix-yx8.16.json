@@ -2,14 +2,15 @@
   "assignee": "",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-04-21T20:33:00Z",
   "created": "2026-03-22T17:16:39Z",
   "description": "Remove doom.nix, the Doom chemacs profiles (default/doom/doom-dev), the Doom activation action (git clone), emacs.org, and Doom-specific dependencies (ripgrep force, binutils, gnutls, editorconfig-core-c). Clean up common.org to remove any blocks only used by Doom. Update emacs-config.nix to only handle vanilla (or remove if no longer needed).",
   "id": "nix-yx8.16",
   "labels": [],
   "parent": "nix-yx8",
   "priority": 2,
-  "status": "open",
+  "status": "closed",
   "title": "Remove Doom Emacs config",
   "type": "task",
-  "updated_at": "2026-03-22T17:16:39Z"
+  "updated_at": "2026-04-21T20:33:00Z"
 }
