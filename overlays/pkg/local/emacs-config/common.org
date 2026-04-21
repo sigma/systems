@@ -2,9 +2,8 @@
 #+AUTHOR: Yann
 #+PROPERTY: header-args:emacs-lisp :tangle no :noweb yes :results none
 
-Shared elisp blocks used by both Doom and vanilla Emacs configurations.
-Blocks defined here are included via =#+INCLUDE= directives in the
-consuming config files, making them available for noweb references.
+Shared elisp blocks included via =#+INCLUDE= directives in vanilla.org,
+making them available for noweb references.
 
 * Org
 

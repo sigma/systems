@@ -1,14 +1,12 @@
 { config, pkgs, ... }:
 let
   parentDir = config.programs.emacs.chemacs.defaultUserParentDir;
-  doomDir = "${parentDir}/doom";
   vanillaDir = "${parentDir}/vanilla";
 in
 {
   enable = true;
 
   vanilla.enable = true;
-  doom.dir = doomDir;
 
   # Packages available to all Emacs profiles (vanilla uses these via Nix)
   extraPackages = epkgs: with epkgs; [
@@ -76,16 +74,6 @@ in
 
     vanilla = {
       userDir = vanillaDir;
-    };
-
-    doom = {
-      userDir = doomDir;
-      env.DOOMDIR = "~/.config/doom";
-    };
-
-    doom-dev = {
-      userDir = doomDir;
-      env.DOOMDIR = "~/.config/nix/overlays/pkg/local/emacs-config";
     };
   };
 }

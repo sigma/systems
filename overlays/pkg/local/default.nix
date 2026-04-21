@@ -4,7 +4,6 @@
 {
   local = {
     # packages for my configs
-    emacs-config = pkgs.callPackage ./emacs-config.nix { };
     emacs-vanilla-config = pkgs.callPackage ./emacs-vanilla-config.nix { };
     wezterm-config = pkgs.callPackage ./wezterm-config.nix { };
 

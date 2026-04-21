@@ -24,7 +24,10 @@ in
     # Deploy tangled config to the chemacs profile directory
     home.file."${vanillaRelDir}".source = "${vanillaConfig}";
 
-    # Runtime dependencies
+    programs.texlive.enable = mkForce true;
+    programs.aspell.enable = mkForce true;
+    programs.pandoc.enable = mkForce true;
+
     home.packages = with pkgs; [
       sqlite # org-roam/emacsql
     ];
