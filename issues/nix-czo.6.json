@@ -13,6 +13,10 @@
     {
       "text": "nvf update to 85ca579 did not fix the issue. nvim-treesitter.config module still not found at runtime. This is an upstream nvf bug - their treesitter packaging uses lzn-auto-require which can't resolve the module.",
       "timestamp": "2026-03-22T11:39:25Z"
+    },
+    {
+      "text": "nvf 4de19e1 (2026-04-20) still has the lzn-auto-require bug. nvim-treesitter.config module not found at runtime. This is an nvf packaging issue, not a config issue.",
+      "timestamp": "2026-04-21T03:57:06Z"
     }
   ],
   "priority": 2,
