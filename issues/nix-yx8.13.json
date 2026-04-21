@@ -2,14 +2,15 @@
   "assignee": "",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-04-21T20:33:00Z",
   "created": "2026-03-22T11:48:00Z",
   "description": "Consider enabling display-line-numbers in vanilla.org. Currently disabled to match Doom config, but vanilla users may prefer them.",
   "id": "nix-yx8.13",
   "labels": [],
   "parent": "nix-yx8",
   "priority": 3,
-  "status": "open",
+  "status": "closed",
   "title": "Consider enabling line numbers",
   "type": "task",
-  "updated_at": "2026-03-22T17:15:44Z"
+  "updated_at": "2026-04-21T20:33:00Z"
 }
