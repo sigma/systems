@@ -1,4 +1,4 @@
-{ user, config, ... }:
+{ config, user, ... }:
 let
   homeDir = config.users.users.${user.login}.home;
   userDir = name: "${homeDir}/${name}";

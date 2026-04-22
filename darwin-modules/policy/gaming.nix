@@ -1,8 +1,8 @@
 {
   lib,
-  machine,
   pkgs,
   user,
+  machine,
   ...
 }:
 with lib;

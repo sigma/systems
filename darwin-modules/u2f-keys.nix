@@ -1,6 +1,6 @@
 {
-  machine,
   user,
+  machine,
   ...
 }:
 {
