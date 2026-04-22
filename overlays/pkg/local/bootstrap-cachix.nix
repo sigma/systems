@@ -14,6 +14,18 @@ writeShellApplication {
   ];
   meta.description = "Configure cachix authentication using decrypted token matching GitHub handle";
   text = ''
+    # Determine the real user's home directory (handle running under sudo)
+    if [[ -n "''${SUDO_USER:-}" ]]; then
+      if command -v getent &>/dev/null; then
+        REAL_HOME=$(getent passwd "$SUDO_USER" | cut -d: -f6)
+      else
+        # macOS doesn't have getent; use dscl instead
+        REAL_HOME=$(dscl . -read /Users/"$SUDO_USER" NFSHomeDirectory | awk '{print $2}')
+      fi
+    else
+      REAL_HOME="$HOME"
+    fi
+
     # Determine secrets directory at runtime
     if [[ -n "${secretsDir}" ]]; then
       SECRETS_DIR="${secretsDir}"
@@ -22,7 +34,7 @@ writeShellApplication {
       SECRETS_DIR="/run/secrets"
     else
       # Standalone home-manager on Linux
-      SECRETS_DIR="$HOME/.config/sops-nix/secrets"
+      SECRETS_DIR="$REAL_HOME/.config/sops-nix/secrets"
     fi
 
     # Get GitHub handle (use argument if provided, otherwise detect via gh)
