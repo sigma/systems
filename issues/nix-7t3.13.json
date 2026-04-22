@@ -8,6 +8,12 @@
   "id": "nix-7t3.13",
   "labels": [],
   "parent": "nix-7t3",
+  "comments": [
+    {
+      "text": "Won't fix: feature name strings are stable and rarely change. Constants would add indirection without meaningful safety benefit.",
+      "timestamp": "2026-04-22T08:40:20Z"
+    }
+  ],
   "priority": 3,
   "status": "closed",
   "title": "Define feature name constants to eliminate magic strings",
