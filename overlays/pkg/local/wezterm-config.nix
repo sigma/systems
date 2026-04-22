@@ -37,15 +37,19 @@ stdenv.mkDerivation {
   dontUnpack = true;
 
   buildPhase = ''
+    runHook preBuild
     ${coreutils}/bin/cp -R $src/* .
 
     # plugins
     ${coreutils}/bin/cp -R $tabline/plugin/tabline .
     ${coreutils}/bin/cp -R $smart_workspace_switcher/plugin ./smart_workspace_switcher
     ${coreutils}/bin/cp -R $tmux/plugin ./tmux
+    runHook postBuild
   '';
 
   installPhase = ''
+    runHook preInstall
     ${findutils}/bin/find . -exec ${coreutils}/bin/install -vDm 755 {} $out/{} \;
+    runHook postInstall
   '';
 }

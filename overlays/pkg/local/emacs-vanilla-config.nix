@@ -23,7 +23,10 @@ stdenv.mkDerivation {
     coreutils
   ];
   buildPhase =
-    (lib.optionalString (user != null) ''
+    ''
+      runHook preBuild
+    ''
+    + (lib.optionalString (user != null) ''
       cat <<EOF > +id.el
       (setq user-full-name "${user.name}"
         user-mail-address "${user.email}")
@@ -44,11 +47,14 @@ stdenv.mkDerivation {
         -l org \
         vanilla.org \
         -f org-babel-tangle
+      runHook postBuild
     '';
 
   dontUnpack = true;
 
   installPhase = ''
+    runHook preInstall
     ${findutils}/bin/find . -name "*.el" -exec ${coreutils}/bin/install -vDm 755 {} $out/{} \;
+    runHook postInstall
   '';
 }
