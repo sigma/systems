@@ -140,6 +140,8 @@
       ms-vscode.vscode-speech
       tamasfe.even-better-toml
       shd101wyy.markdown-preview-enhanced
+      vsls-contrib.gistfs
+      vsls-contrib.codetour
     ])
     ++ (with extSet.vscode-marketplace-release; [
       rust-lang.rust-analyzer
