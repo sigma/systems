@@ -36,17 +36,19 @@
       "container"
     ];
 
-  homebrew.casks = [
-    "calibre"
-    "elgato-stream-deck"
-    "google-chrome"
-    "iina"
-    "jordanbaird-ice"
-    "localsend"
-    "obsidian"
-    "soundsource"
-    "transnomino"
-    "whatsapp"
-    "yubico-authenticator"
-  ];
+  homebrew.casks =
+    [
+      "calibre"
+      "elgato-stream-deck"
+      "google-chrome"
+      "iina"
+      "jordanbaird-ice"
+      "localsend"
+      "obsidian"
+      "soundsource"
+      "transnomino"
+      "whatsapp"
+      "yubico-authenticator"
+      "fuse-t"
+    ];
 }
