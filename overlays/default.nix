@@ -23,6 +23,7 @@
   # example: pkg = inputs.FOO.packages.${final.stdenv.system}.default;
   (final: prev: {
     home-manager = inputs.home-manager.packages.${final.stdenv.system}.home-manager;
+    zed-editor = inputs.zed.packages.${final.stdenv.system}.default;
   })
 
   inputs.noctalia.overlays.default

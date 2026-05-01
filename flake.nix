@@ -87,6 +87,12 @@
       git-hooks-nix.follows = "";
     };
 
+    # Zed editor
+    zed.url = "github:zed-industries/zed/v1.1.x";
+    zed.inputs.nixpkgs.follows = "nixpkgs";
+    zed.inputs.flake-parts.follows = "flake-parts";
+    zed.inputs.crane.follows = "nix-pins/fh/crane";
+
     # Niri
     noctalia.url = "github:noctalia-dev/noctalia-shell";
     noctalia.inputs.nixpkgs.follows = "nixpkgs";
