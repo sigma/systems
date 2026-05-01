@@ -24,7 +24,7 @@ with lib;
     programs.claude-code.enable = true;
 
     homebrew.casks = [
-      "linear-linear"
+      "linear"
       "notion"
       "notion-calendar"
       "slack"
