@@ -45,6 +45,7 @@
       "jordanbaird-ice"
       "localsend"
       "obsidian"
+      "openusage"
       "soundsource"
       "transnomino"
       "whatsapp"
