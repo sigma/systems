@@ -9,9 +9,6 @@
 
     "editor.cursorBlinking" = "solid";
     "editor.cursorSurroundingLines" = 5;
-    "editor.fontFamily" = "Fira Code, Menlo, Monaco, 'Courier New', monospace";
-    "editor.fontLigatures" = "'cv01', 'cv02', 'cv04', 'ss01', 'ss02', 'ss05', 'cv18', 'ss03', 'cv16', 'cv29', 'cv31'";
-    "editor.fontSize" = 14;
     "editor.minimap.enabled" = false;
     "editor.stickyScroll.enabled" = false;
     "editor.suggestSelection" = "first";
@@ -46,10 +43,6 @@
 
     "terminal.external.osxExec" = "${pkgs.wezterm}/bin/wezterm";
     "terminal.integrated.cursorBlinking" = true;
-    "terminal.integrated.fontFamily" =
-      "Fira Code, SauceCodePro Nerd Font Mono, Menlo, Monaco, 'Courier New', 'monospace'";
-    "terminal.integrated.fontSize" = 13;
-    "terminal.integrated.fontWeight" = "600";
     "terminal.integrated.inheritEnv" = false;
 
     "workbench.activityBar.orientation" = "vertical";

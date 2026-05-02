@@ -21,6 +21,7 @@
     ./dosbox.nix
     ./darwin-apps.nix
     ./editors
+    ./fonts
     ./gcloud.nix
     ./jujutsu.nix
     ./just.nix

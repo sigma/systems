@@ -48,6 +48,44 @@ let
       ""
     else
       lib.concatStringsSep ",\n    " (map remoteToDomain machine.remotes);
+
+  # Wezterm's font weight expects a string from a known set, not a number.
+  weightToWezterm =
+    w:
+    {
+      "100" = "Thin";
+      "200" = "ExtraLight";
+      "300" = "Light";
+      "400" = "Regular";
+      "500" = "Medium";
+      "600" = "DemiBold";
+      "700" = "Bold";
+      "800" = "ExtraBold";
+      "900" = "Black";
+    }
+    .${toString w} or "Regular";
+
+  termProfile = config.programs.fontProfiles.terminal;
+
+  luaQuoted = s: "\"${s}\"";
+  luaList = items: "{ ${lib.concatStringsSep ", " items} }";
+
+  primaryFontLua =
+    let
+      features = lib.optional (termProfile.features != [ ]) (
+        "harfbuzz_features = ${luaList (map luaQuoted termProfile.features)}"
+      );
+      weight = lib.optional (termProfile.weight != null) (
+        "weight = ${luaQuoted (weightToWezterm termProfile.weight)}"
+      );
+      attrs = [ "family = ${luaQuoted termProfile.family.family}" ] ++ features ++ weight;
+    in
+    "{ ${lib.concatStringsSep ", " attrs} }";
+
+  fbName = f: if lib.isString f then f else f.family;
+  fallbackFontLua = map (f: luaQuoted (fbName f)) termProfile.fallbacks;
+
+  fontWithFallbackLua = luaList ([ primaryFontLua ] ++ fallbackFontLua);
 in
 {
   enable = true;
@@ -62,6 +100,10 @@ in
 
     local config = dofile("${weztermConfig}/wezterm.lua")
       ${lib.optionalString config.catppuccin.wezterm.enable ":apply(dofile(catppuccin_plugin))"}
+      :apply(function(c)
+        c.font = wezterm.font_with_fallback(${fontWithFallbackLua})
+        c.font_size = ${toString termProfile.size}
+      end)
       :apply(function(c)
         c.ssh_domains = {
           ${sshDomainsLua}

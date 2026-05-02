@@ -6,6 +6,7 @@
   gnused,
   emacs,
   user ? null,
+  fonts ? null,
 }:
 stdenv.mkDerivation {
   pname = "emacs-vanilla-config";
@@ -37,6 +38,17 @@ stdenv.mkDerivation {
       (setq insert-directory-program "${coreutils}/bin/ls")
       EOF
     ''
+    + (lib.optionalString (fonts != null) ''
+      cat <<EOF > +fonts.el
+      (set-face-attribute 'default nil
+                          :family "${fonts.family}"
+                          :height ${toString (fonts.size * 10)}
+                          :weight 'regular)
+      (set-face-attribute 'variable-pitch nil
+                          :family "${fonts.family}"
+                          :height ${toString (fonts.size * 10)})
+      EOF
+    '')
     + ''
       # Copy org files and append common.org blocks for noweb resolution
       ${coreutils}/bin/cp $src/vanilla.org $src/common.org .

@@ -1,4 +1,9 @@
-{ pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   # Wrap `zed` (the real binary) and point `zeditor` at it so both invocations
   # see the same PATH. We bypass the home-manager module's `extraPackages`
@@ -24,6 +29,10 @@ let
       ln -sf zed $out/bin/zeditor
     '';
   };
+
+  profiles = config.programs.fontProfiles;
+  fbName = f: if lib.isString f then f else f.family;
+  fallbackNames = p: map fbName p.fallbacks;
 in
 {
   enable = true;
@@ -46,39 +55,20 @@ in
       "!nil"
     ];
 
-    buffer_font_family = "Fira Code";
-    buffer_font_fallbacks = [
-      "Menlo"
-      "Monaco"
-      "Courier New"
-      "monospace"
-    ];
-    buffer_font_size = 14;
-    buffer_font_features = {
-      cv01 = true;
-      cv02 = true;
-      cv04 = true;
-      cv16 = true;
-      cv18 = true;
-      cv29 = true;
-      cv31 = true;
-      ss01 = true;
-      ss02 = true;
-      ss03 = true;
-      ss05 = true;
-    };
+    buffer_font_family = profiles.editor.family.family;
+    buffer_font_fallbacks = fallbackNames profiles.editor;
+    buffer_font_size = profiles.editor.size;
+    buffer_font_features = lib.genAttrs profiles.editor.features (_: true);
+
+    ui_font_family = profiles.ui.family.family;
+    ui_font_fallbacks = fallbackNames profiles.ui;
+    ui_font_size = profiles.ui.size;
 
     terminal = {
-      font_family = "Fira Code";
-      font_fallbacks = [
-        "SauceCodePro Nerd Font Mono"
-        "Menlo"
-        "Monaco"
-        "Courier New"
-        "monospace"
-      ];
-      font_size = 13;
-      font_weight = 600;
+      font_family = profiles.terminal.family.family;
+      font_fallbacks = fallbackNames profiles.terminal;
+      font_size = profiles.terminal.size;
+      font_weight = profiles.terminal.weight;
     };
   };
 }

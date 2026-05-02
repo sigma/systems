@@ -8,9 +8,14 @@
 with lib;
 let
   cfg = config.programs.emacs;
+  editorProfile = config.programs.fontProfiles.editor;
   vanillaConfig = pkgs.local.emacs-vanilla-config.override {
     inherit user;
     emacs = cfg.package;
+    fonts = {
+      family = editorProfile.family.family;
+      size = editorProfile.size;
+    };
   };
   # Relative path from $HOME to the chemacs vanilla profile directory
   vanillaRelDir = lib.removePrefix "${config.home.homeDirectory}/" "${cfg.chemacs.defaultUserParentDir}/vanilla";
