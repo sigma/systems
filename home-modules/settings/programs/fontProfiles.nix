@@ -1,12 +1,15 @@
 { config, ... }:
 let
   f = config.programs.fontCatalog;
+  codingFont = f.fira-code;
   systemFallbacks = [
     "Menlo"
     "Monaco"
     "Courier New"
     "monospace"
   ];
+  terminalFallbacks = [ f.sauce-code-pro-nerd ] ++ systemFallbacks;
+  fontSize = 14;
   ligatureFeatures = [
     "cv01"
     "cv02"
@@ -23,23 +26,23 @@ let
 in
 {
   editor = {
-    family = f.fira-code;
+    family = codingFont;
     fallbacks = systemFallbacks;
-    size = 14;
+    size = fontSize;
     features = ligatureFeatures;
   };
 
   terminal = {
-    family = f.fira-code;
-    fallbacks = [ f.sauce-code-pro-nerd ] ++ systemFallbacks;
-    size = 13;
+    family = codingFont;
+    fallbacks = terminalFallbacks;
+    size = fontSize;
     weight = 600;
     features = ligatureFeatures;
   };
 
   ui = {
-    family = f.fira-code;
+    family = codingFont;
     fallbacks = systemFallbacks;
-    size = 13;
+    size = fontSize;
   };
 }
