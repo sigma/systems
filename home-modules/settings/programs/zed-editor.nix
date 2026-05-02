@@ -3,7 +3,17 @@ let
   # Wrap `zed` (the real binary) and point `zeditor` at it so both invocations
   # see the same PATH. We bypass the home-manager module's `extraPackages`
   # because it wraps `zeditor` only, leaving `zed` unwrapped.
-  extras = [ pkgs.direnv ];
+  extras = [
+    pkgs.direnv
+    pkgs.fish-lsp
+    pkgs.gopls
+    pkgs.jsonnet-language-server
+    pkgs.just-lsp
+    pkgs.lua-language-server
+    pkgs.nixd
+    pkgs.rust-analyzer
+    pkgs.starpls
+  ];
 
   wrapped = pkgs.symlinkJoin {
     name = "${lib.getName pkgs.zed-editor}-wrapped-${lib.getVersion pkgs.zed-editor}";
@@ -29,4 +39,11 @@ in
     "nix"
     "starlark"
   ];
+
+  userSettings = {
+    languages.Nix.language_servers = [
+      "nixd"
+      "!nil"
+    ];
+  };
 }
