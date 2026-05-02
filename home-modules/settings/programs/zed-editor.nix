@@ -18,4 +18,15 @@ in
 {
   enable = true;
   package = wrapped;
+  extensions = [
+    "catppuccin-icons"
+    "elisp"
+    "fish"
+    "git-firefly"
+    "jsonnet"
+    "justfile"
+    "lua"
+    "nix"
+    "starlark"
+  ];
 }
