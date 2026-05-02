@@ -68,9 +68,12 @@ with lib;
     # Only applies to interactive sessions - non-interactive command execution
     # (fish -c "command") should run normally without the guard
     xdg.configFile."fish/conf.d/00-tty-guard.fish".text = ''
-      # Only guard interactive sessions - let command execution work normally
+      # Only guard interactive sessions - let command execution work normally.
+      # Return early instead of exec'ing bash: callers like Zed launch
+      # `fish -i` with a write-only pipe on fd 0 to capture the env, and
+      # exec'ing bash there blows up with `script file read error`.
       if status is-interactive; and not isatty stdin
-          exec bash -l
+          return
       end
     '';
 
