@@ -48,7 +48,28 @@ in
       }
     ];
 
-    environment.etc."u2f_mappings".text = lib.concatStringsSep "\n" cfg.authorizations;
+    # pam_u2f's authfile expects ONE line per user with all keys joined by ":".
+    # Multiple "user:..." lines silently overwrite each other (only the last
+    # one's keyhandle ends up active), so group authorizations by user and
+    # emit a single line per user.
+    environment.etc."u2f_mappings".text =
+      let
+        parsed = map (
+          s:
+          let
+            parts = lib.splitString ":" s;
+          in
+          {
+            user = lib.head parts;
+            key = lib.concatStringsSep ":" (lib.tail parts);
+          }
+        ) cfg.authorizations;
+        byUser = lib.groupBy (e: e.user) parsed;
+        lines = lib.mapAttrsToList (
+          user: entries: "${user}:${lib.concatStringsSep ":" (map (e: e.key) entries)}"
+        ) byUser;
+      in
+      lib.concatStringsSep "\n" lines;
 
     security.pam.reattach.enable = true;
     security.pam.sudo_local.entries =
