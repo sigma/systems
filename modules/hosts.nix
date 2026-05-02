@@ -46,6 +46,7 @@ in
       portableU2fKeys = [
         "tuvcXGI/wWRVabcV+UUWX020RzbDI7HulNsYLY3Tl9CC1/wGPqwfF5r+SaDftEbfxm8DMl6eZrn3ePnJ0XOOfA==,Qy70KNjI9hqsn1vjMaX05+mnB593q1Bek2bf6KfiTbyGrnh/Lq4qXgRh8fBDJThsFkUlUSHwpg+B8GpbeOc9Wg==,es256,+presence"
         "sKyQL1tKpsjH1WsM+fZXysX4Cdff/N6FjS4G3SinILb5TZOF6JrFI4hdIYzmn+2kYXJru+DMHtSj/NRYrhDldA==,kP7KSC4S4Fqgei6HBZ/BFpS/Chun+4Kn6H0fZ2OyFEvq6y9jkqz+IWTrlk3XiU4DoBcdF/uj+Muofq/DTaQCMw==,es256,+presence"
+        "KJW8IpdkSbj1mbCLbCpOIwpDXG7bp6xwx0BYs9nhz9jfKkQko8RqkcFT8pC6P6Z0pVsBpWGcjFuhC72cFcFENg==,XcXOiEvMm0z1urKGK6tNXaY3bHVvqK9d0RW2QoAHfIKxCuCA4PSbsLaq50LK83MhNWy2mzILS1QXDuWnHQhxWg==,es256,+presence"
       ];
     in
     rec {
