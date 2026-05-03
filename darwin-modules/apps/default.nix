@@ -12,12 +12,15 @@
     ./brave.nix
     ./claude-code.nix
     ./cursor.nix
+    ./gemini-cli.nix
     ./karabiner.nix
     ./kurtosis.nix
     ./secretive.nix
 
     ./settings
   ];
+
+  programs.gemini-cli.enable = true;
 
   homebrew.global.brewfile = true;
 
