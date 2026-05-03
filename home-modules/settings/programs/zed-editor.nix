@@ -33,6 +33,9 @@ let
   profiles = config.programs.fontProfiles;
   fbName = f: if lib.isString f then f else f.family;
   fallbackNames = p: map fbName p.fallbacks;
+
+  ai = config.programs.aiProfiles;
+  zedAgents = lib.filter (p: p.acp != null) ai.agents;
 in
 {
   enable = true;
@@ -83,5 +86,27 @@ in
       font_size = profiles.terminal.size;
       font_weight = profiles.terminal.weight;
     };
+
+    agent_servers = lib.listToAttrs (
+      map (p: {
+        name = p.acp;
+        value = {
+          type = "registry";
+        };
+      }) zedAgents
+    );
+  }
+  // lib.optionalAttrs (ai.editPredictions != null) {
+    edit_predictions =
+      let
+        ep = ai.editPredictions;
+      in
+      {
+        provider = ep.model.provider;
+        ${ep.model.provider} = {
+          model = ep.model.model;
+          max_output_tokens = ep.max_output_tokens;
+        };
+      };
   };
 }
