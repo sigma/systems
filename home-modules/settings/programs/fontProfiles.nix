@@ -6,7 +6,6 @@ let
     "Menlo"
     "Monaco"
     "Courier New"
-    "monospace"
   ];
   terminalFallbacks = [ f.sauce-code-pro-nerd ] ++ systemFallbacks;
   fontSize = 14;
