@@ -109,6 +109,16 @@ in
           workspace = "E";
         }
         {
+          appId = "dev.zed.Zed";
+          layout = "tiling";
+          workspace = "E";
+        }
+        {
+          appId = "dev.zed.Zed-Nightly";
+          layout = "tiling";
+          workspace = "E";
+        }
+        {
           appId = "org.gnu.Emacs";
           layout = "floating";
           windowTitleRegexSubstring = "^posframe.*";
