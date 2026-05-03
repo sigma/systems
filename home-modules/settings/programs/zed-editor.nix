@@ -58,6 +58,11 @@ in
       "!nil"
     ];
 
+    telemetry = {
+      diagnostics = false;
+      metrics = false;
+    };
+
     cli_default_open_behavior = "new_window";
     base_keymap = "Emacs";
 
