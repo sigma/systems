@@ -10,6 +10,7 @@
 
   imports = [
     ./accounts.nix
+    ./ai
     ./aspell.nix
     ./antigravity.nix
     ./builder-access.nix
