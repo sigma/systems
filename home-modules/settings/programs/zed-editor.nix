@@ -55,6 +55,19 @@ in
       "!nil"
     ];
 
+    cli_default_open_behavior = "new_window";
+    base_keymap = "Emacs";
+
+    project_panel.dock = "right";
+    outline_panel.dock = "right";
+    collaboration_panel.dock = "right";
+    git_panel.dock = "right";
+    agent = {
+      dock = "left";
+      favorite_models = [ ];
+      model_parameters = [ ];
+    };
+
     buffer_font_family = profiles.editor.family.family;
     buffer_font_fallbacks = fallbackNames profiles.editor;
     buffer_font_size = profiles.editor.size;
