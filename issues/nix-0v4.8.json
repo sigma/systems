@@ -2,7 +2,8 @@
   "assignee": "",
   "blocked_by": [
     "nix-0v4.1",
-    "nix-0v4.3"
+    "nix-0v4.3",
+    "nix-0v4.4"
   ],
   "blocks": [],
   "created": "2026-05-04T07:45:50Z",
