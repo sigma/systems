@@ -387,6 +387,23 @@ in
               HOST="$1"
               FLAKE_DIR="$(pwd)"
 
+              # Set up the parent's age identity so sops can decrypt and re-key.
+              if [ -z "''${SOPS_AGE_KEY_FILE:-}" ] && [ -z "''${SOPS_AGE_KEY:-}" ]; then
+                SSH_AGE_SRC="''${SOPS_AGE_SSH_PRIVATE_KEY:-$HOME/.ssh/id_ed25519}"
+                if [ -f "$SSH_AGE_SRC" ]; then
+                  SOPS_AGE_KEY=$(${pkgs.ssh-to-age}/bin/ssh-to-age -private-key -i "$SSH_AGE_SRC")
+                  export SOPS_AGE_KEY
+                fi
+              fi
+
+              # Re-key sops with the in-store config (no .sops.yaml on disk).
+              # Idempotent: no-op when secrets.yaml's recipients already match
+              # modules/secrets.nix. Catches the common case of a fresh
+              # devbox-keygen recipient that wasn't yet propagated.
+              echo "==> Refreshing sops recipients..."
+              ${pkgs.sops}/bin/sops --config ${sopsConfigFile} \
+                updatekeys -y "$FLAKE_DIR/secrets/secrets.yaml"
+
               # Resolve via tart so first rebuild works before tailscale comes up.
               # Bypasses the SSH config alias (which points at *.ts.net) and the
               # known_hosts entry (the VM's host key changes across rebuilds).
@@ -397,26 +414,26 @@ in
                 exit 1
               fi
 
-              # Disable mux so we don't reuse an existing tailscale-aliased connection.
+              # Connect to the raw IP, not the SSH config alias. The alias
+              # carries RequestTTY=force, a tailscale Hostname, and a custom
+              # ControlPath — which interfere with first-rebuild auth before
+              # the devbox is on the tailnet. Using $IP picks up only the *
+              # block, mirroring `ssh $IP` which authenticates with the agent.
               SSH_OPTS=(
-                -o "HostName=$IP"
                 -o "StrictHostKeyChecking=accept-new"
                 -o "UserKnownHostsFile=/dev/null"
                 -o "LogLevel=ERROR"
-                -o "ControlMaster=no"
-                -o "ControlPath=none"
               )
 
-              # rsync needs a clean binary channel — explicitly disable the
-              # RequestTTY=force that helpers.nix sets for NixOS hosts.
-              RSYNC_SSH_OPTS=(-T -o "RequestTTY=no" "''${SSH_OPTS[@]}")
+              # -T keeps rsync's channel clean of pty escape interpretation.
+              RSYNC_SSH_OPTS=(-T "''${SSH_OPTS[@]}")
 
               echo "==> Copying flake to $HOST ($IP)..."
               rsync -az --rsh "ssh ''${RSYNC_SSH_OPTS[*]}" --exclude='.git' --exclude='result' \
-                "$FLAKE_DIR/" "$HOST:/tmp/nix-config/"
+                "$FLAKE_DIR/" "$IP:/tmp/nix-config/"
 
               echo "==> Running nixos-rebuild switch on $HOST..."
-              ssh "''${SSH_OPTS[@]}" -t "$HOST" "sudo nixos-rebuild switch --flake /tmp/nix-config#$HOST"
+              ssh "''${SSH_OPTS[@]}" -t "$IP" "sudo nixos-rebuild switch --flake /tmp/nix-config#$HOST"
 
               echo "==> Done! $HOST has been rebuilt."
               echo "    If $HOST isn't on your tailnet yet, register it manually:"
