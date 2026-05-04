@@ -46,6 +46,10 @@
 
   services.openssh.enable = true;
 
+  # Devboxes are throwaway and rebuilt over SSH from the parent host;
+  # passwordless wheel keeps `devbox-rebuild` non-interactive.
+  security.sudo.wheelNeedsPassword = lib.mkIf machine.features.devbox false;
+
   system.stateVersion = "25.11";
 
   networking.firewall = {
