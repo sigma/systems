@@ -39,6 +39,11 @@ let
       sshUser = mkOption { type = types.str; default = "nixbuilder"; };
       sshPublicKey = mkOption { type = types.nullOr types.str; default = null; };
       storePublicKey = mkOption { type = types.nullOr types.str; default = null; };
+      parentHost = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "If this builder is a devbox, the host key of its parent";
+      };
     };
   };
 
@@ -137,6 +142,7 @@ in
         # Transform to builder entries for nixConfig
         builderEntries = lib.mapAttrs (name: m: {
           inherit (m) name system alias;
+          parentHost = if m.devbox != null then m.devbox.parentHost else null;
           inherit (m.builder)
             maxJobs
             speedFactor

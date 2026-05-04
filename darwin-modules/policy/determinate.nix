@@ -3,11 +3,34 @@
   lib,
   user,
   machine,
+  nixConfig,
   ...
 }:
 with lib;
 let
   isBuilder = machine.builder != null && machine.builder.enable or false;
+
+  # Devboxes whose parent is this host — exposed as remote builders.
+  myDevboxes = filterAttrs (name: b: b.parentHost == machine.hostKey) nixConfig.builders;
+  hasMyDevboxes = myDevboxes != { };
+
+  # Format a builder for the nix.conf `builders =` line.
+  # Layout: uri systems sshKey maxJobs speedFactor supportedFeatures mandatoryFeatures publicHostKey
+  formatBuilder = name: b:
+    let
+      host = if b.alias != null then b.alias else b.name;
+      sshKeyPath = config.sops.secrets."builder-keys/${name}".path;
+      features = if b.supportedFeatures == [ ] then "-" else concatStringsSep "," b.supportedFeatures;
+      pubKey = if b.publicHostKey != null then b.publicHostKey else "-";
+    in
+    "ssh-ng://${b.sshUser}@${host} ${b.system} ${sshKeyPath} ${toString b.maxJobs} ${toString b.speedFactor} ${features} - ${pubKey}";
+
+  buildersLine = concatStringsSep " ; " (mapAttrsToList formatBuilder myDevboxes);
+
+  # Devbox store signing keys to trust (so signed paths from the devbox are accepted)
+  myDevboxStoreKeys = filter (k: k != null) (
+    mapAttrsToList (_: b: b.storePublicKey) myDevboxes
+  );
 in
 {
   config = mkIf machine.features.determinate {
@@ -24,6 +47,15 @@ in
         # Determinate Nix Linux Builder
         extra-experimental-features = external-builders
         external-builders = [{"systems":["aarch64-linux","x86_64-linux"],"program":"/usr/local/bin/determinate-nixd","args":["builder"]}]
+      ''}
+
+      ${lib.optionalString hasMyDevboxes ''
+        # Distributed builds via this host's devbox(es)
+        builders = ${buildersLine}
+        builders-use-substitutes = true
+        ${lib.optionalString (myDevboxStoreKeys != [ ]) ''
+          extra-trusted-public-keys = ${concatStringsSep " " myDevboxStoreKeys}
+        ''}
       ''}
 
       ${config.nix.extraOptions}
