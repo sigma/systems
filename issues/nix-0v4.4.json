@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-05-04T07:45:49Z",
+  "description": "Add tailscale-authkey sops secret. Extend nixos-modules/tailscale.nix to use services.tailscale.authKeyFile when machine.features.devbox. Document acquisition of an ephemeral preauth key from the tailnet admin console.",
+  "id": "nix-0v4.4",
+  "labels": [],
+  "parent": "nix-0v4",
+  "priority": 2,
+  "status": "open",
+  "title": "Plumb Tailscale auto-auth on devboxes",
+  "type": "task",
+  "updated_at": "2026-05-04T07:45:49Z"
+}
