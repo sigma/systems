@@ -264,14 +264,14 @@ in
             command = ''exec ${devboxTools.devbox-keygen}/bin/devbox-keygen "$@"'';
           }
           {
-            name = "devbox-install";
+            name = "devbox-bootstrap";
             category = "devbox";
-            help = "Create a devbox VM and bootstrap NixOS (usage: devbox-install <hostname> [disk-gb])";
+            help = "Create a devbox VM and bootstrap a minimal NixOS (run devbox-rebuild after) (usage: devbox-bootstrap <hostname> [disk-gb])";
             command = ''
               ${findNix}
               if [ -z "$1" ]; then
-                echo "Usage: devbox-install <hostname> [disk-gb]"
-                echo "Example: devbox-install ash-devbox 50"
+                echo "Usage: devbox-bootstrap <hostname> [disk-gb]"
+                echo "Example: devbox-bootstrap ash-devbox 50"
                 exit 1
               fi
 
@@ -357,15 +357,15 @@ in
               rm -rf "./$HOST-installer"
 
               echo ""
-              echo "==> Bootstrap install complete!"
+              echo "==> Bootstrap complete! The VM has a minimal NixOS — no home-manager,"
+              echo "    no flake config yet. Next:"
               echo ""
-              echo "Next steps:"
-              echo "  1. Start the VM:  tart run $NESTED_FLAG $HOST"
-              echo "  2. SSH in:        ssh $HOST"
-              echo "  3. Clone config:  git clone <your-config-repo>"
-              echo "  4. Rebuild:       sudo nixos-rebuild switch --flake .#$HOST"
-              echo ""
-              echo "Or run: devbox-rebuild $HOST"
+              echo "      devbox-start $HOST              # if not already running"
+              echo "      devbox-rebuild $HOST            # apply the full config"
+              echo "      ssh $HOST sudo tailscale up    # register on the tailnet (manual"
+              echo "                                       so we don't bake an expiring authkey"
+              echo "                                       into sops). Use a key from"
+              echo "                                       https://login.tailscale.com/admin/settings/keys"
             '';
           }
           {
@@ -418,7 +418,7 @@ in
                   exit 0
                 fi
               else
-                echo "Error: tart VM '$HOST' not found. Run devbox-install $HOST first."
+                echo "Error: tart VM '$HOST' not found. Run devbox-bootstrap $HOST first."
                 exit 1
               fi
 
@@ -528,7 +528,7 @@ in
               echo "==> $HOST removed."
               echo "    Note: sops entry devbox-keys/$HOST and the age recipient in"
               echo "    modules/secrets.nix were left in place. Drop them manually if"
-              echo "    you don't plan to reuse them with devbox-install $HOST."
+              echo "    you don't plan to reuse them with devbox-bootstrap $HOST."
             '';
           }
         ];

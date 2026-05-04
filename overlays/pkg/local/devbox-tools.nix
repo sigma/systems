@@ -75,7 +75,7 @@ let
       echo ""
       echo "       \"devbox-keys/$HOST\" = systemSecret;"
       echo ""
-      echo "  3. Run: devbox-install $HOST"
+      echo "  3. Run: devbox-bootstrap $HOST  (then devbox-rebuild $HOST)"
       echo ""
       echo "  devbox-rebuild re-keys secrets/secrets.yaml automatically using"
       echo "  the in-store sops config; no .sops.yaml on disk needed."

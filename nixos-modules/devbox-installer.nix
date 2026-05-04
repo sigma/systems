@@ -132,7 +132,7 @@ let
 in
 {
   config = lib.mkIf isDevbox {
-    # Expose VM creation parameters so devbox-install can query them
+    # Expose VM creation parameters so devbox-bootstrap can query them
     system.build.devboxNested = lib.boolToString (machine.devbox.nested or false);
 
     # Build a custom auto-install ISO
