@@ -10,9 +10,15 @@
   "id": "nix-0v4.4",
   "labels": [],
   "parent": "nix-0v4",
+  "comments": [
+    {
+      "text": "Reverted: auto-auth via sops would create reproducibility issues since tailscale auth keys expire (max 90d). Devbox tailnet registration is now manual: 'ssh $HOST sudo tailscale up' after first devbox-rebuild. Surfaced in devbox-bootstrap and devbox-rebuild post-messages.",
+      "timestamp": "2026-05-04T11:12:48Z"
+    }
+  ],
   "priority": 2,
   "status": "closed",
   "title": "Plumb Tailscale auto-auth on devboxes",
   "type": "task",
-  "updated_at": "2026-05-04T09:26:46Z"
+  "updated_at": "2026-05-04T11:12:48Z"
 }
