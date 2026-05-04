@@ -1,5 +1,5 @@
 {
-  "assignee": "",
+  "assignee": "unknown",
   "blocked_by": [],
   "blocks": [
     "nix-0v4.8"
@@ -10,8 +10,8 @@
   "labels": [],
   "parent": "nix-0v4",
   "priority": 2,
-  "status": "open",
+  "status": "in_progress",
   "title": "Add nested-virt option to nebula.devbox",
   "type": "task",
-  "updated_at": "2026-05-04T07:45:53Z"
+  "updated_at": "2026-05-04T07:46:37Z"
 }
