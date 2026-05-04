@@ -1,0 +1,14 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-05-04T07:45:31Z",
+  "description": "Wire each Mac to a tart-managed Linux devbox VM with transparent SSH and remote-builder integration. Sequence in: feat(devbox): nested-virt option; devbox-keygen command; ISO host-key + authorized_keys injection; Tailscale auto-auth; Determinate external-builders extension; flake.lock regen on toolkpyu; abandon tmp/vms.",
+  "id": "nix-0v4",
+  "labels": [],
+  "priority": 1,
+  "status": "open",
+  "title": "Land devbox-on-mac plan",
+  "type": "epic",
+  "updated_at": "2026-05-04T07:45:31Z"
+}
