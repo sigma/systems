@@ -6,7 +6,9 @@
     "nix-0v4.4",
     "nix-0v4.5"
   ],
-  "blocks": [],
+  "blocks": [
+    "nix-0v4.7"
+  ],
   "created": "2026-05-04T07:45:50Z",
   "description": "On ash: devbox-keygen ash-devbox -\u003e update modules/secrets.nix -\u003e sops updatekeys -\u003e devbox-install ash-devbox -\u003e devbox-rebuild -\u003e nix build a derivation and verify it goes to the devbox. Same on spectre.",
   "id": "nix-0v4.8",

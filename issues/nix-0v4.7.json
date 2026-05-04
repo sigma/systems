@@ -1,6 +1,8 @@
 {
   "assignee": "",
-  "blocked_by": [],
+  "blocked_by": [
+    "nix-0v4.8"
+  ],
   "blocks": [],
   "created": "2026-05-04T07:45:50Z",
   "description": "After tart-based devbox path is verified end-to-end, abandon the wmrxwwxz UTM commit on tmp/vms branch since UTM is no longer in scope.",
@@ -11,5 +13,5 @@
   "status": "open",
   "title": "Abandon tmp/vms (wmrxwwxz)",
   "type": "task",
-  "updated_at": "2026-05-04T07:45:50Z"
+  "updated_at": "2026-05-04T07:45:54Z"
 }
