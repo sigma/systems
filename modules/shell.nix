@@ -101,6 +101,11 @@ in
       # Bootstrap tools packages (auto-detect secrets directory at runtime)
       bootstrapGithub = pkgs.callPackage ../overlays/pkg/local/bootstrap-github.nix { };
       bootstrapCachix = pkgs.callPackage ../overlays/pkg/local/bootstrap-cachix.nix { };
+
+      # Devbox tools (key generation; install/rebuild are inline below)
+      devboxTools = pkgs.callPackage ../overlays/pkg/local/devbox-tools.nix {
+        inherit sopsConfigFile;
+      };
     in
     {
       pre-commit.settings.hooks = {
@@ -251,6 +256,12 @@ in
             category = "bootstrap";
             help = "Configure cachix authentication using decrypted tokens";
             command = ''exec ${bootstrapCachix}/bin/bootstrap-cachix "$@"'';
+          }
+          {
+            name = "devbox-keygen";
+            category = "devbox";
+            help = "Generate an SSH key for a devbox and stash it in sops (usage: devbox-keygen <hostname>)";
+            command = ''exec ${devboxTools.devbox-keygen}/bin/devbox-keygen "$@"'';
           }
           {
             name = "devbox-install";
