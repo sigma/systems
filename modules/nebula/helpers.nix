@@ -145,6 +145,7 @@ in
         alias
         u2fKeys
         signingKey
+        userSshPublicKey
         enableSwap
         bootLabel
         remotes

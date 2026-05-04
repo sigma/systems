@@ -103,6 +103,12 @@ rec {
           description = "The SSH signing key for git commits";
         };
 
+        userSshPublicKey = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = "The host's primary user SSH public key, used to authorize logins from this host into devboxes it parents";
+        };
+
         remotes = mkOption {
           type = types.listOf host;
           default = [ ];

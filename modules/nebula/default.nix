@@ -62,6 +62,11 @@ let
         default = { };
         description = "All available builders keyed by hostname";
       };
+      userPublicKeys = mkOption {
+        type = types.attrsOf types.str;
+        default = { };
+        description = "Map of host key -> primary user SSH public key (for cross-host authorization)";
+      };
     };
   };
 in
@@ -158,6 +163,11 @@ in
         builderStoreKeys = lib.filter (k: k != null) (
           lib.mapAttrsToList (name: m: m.builder.storePublicKey or null) builderHosts
         );
+
+        # Per-host user SSH public keys (only hosts that declared one)
+        userPublicKeys = lib.mapAttrs (_: m: m.userSshPublicKey) (
+          lib.filterAttrs (_: m: m.userSshPublicKey != null) machines
+        );
       in
       {
         # make sure the predefined features are always included
@@ -165,6 +175,9 @@ in
 
         # Populate builders in nixConfig
         nebula.nixConfig.builders = builderEntries;
+
+        # Per-host user SSH public keys for cross-host authorization
+        nebula.nixConfig.userPublicKeys = userPublicKeys;
 
         # Add builder store keys to trusted-public-keys
         nebula.nixConfig.trusted-public-keys = lib.mkAfter builderStoreKeys;

@@ -110,6 +110,7 @@ in
           "mEJg6bvtXfOO8r3USlUbN6xaW87kBR7xAlVTfeFxdQSAh06vNXqOLgbjQu4XHbM1qdmEQNlfhrErxfR6Jv5M8A==,iiS2fAX/OMD79/nSPRtG/OPVn326dvU/qV2EkxAfVvasuE2I98odrFgGA3IRJyBF8ucC+sEMt/uVekIs01uqhA==,es256,+presence"
         ];
         signingKey = "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBG2hEwJRPPMOebyTL7amVMsTnk/Iv9FKVk21dwmbaGvJWKc5qJhiSrvgOjgHFZJUGaBjbDsuXGhVCIHYZZo6Wus=";
+        userSshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOk2ssX0+PedgzjBV87OZtHIKl6G4EVaSkbLZ7GDkHH1 yann@ash.local";
         builder = mkBuilder {
           maxJobs = 8;
           sshUser = "yann";

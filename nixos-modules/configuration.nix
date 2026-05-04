@@ -3,8 +3,19 @@
   user,
   pkgs,
   lib,
+  nixConfig,
   ...
 }:
+let
+  # If this host is a devbox, authorize its parent's user SSH key so the
+  # parent can `ssh <devbox-alias>` and `devbox-rebuild` works after the
+  # tailnet alias becomes resolvable.
+  parentSshKey =
+    if machine.devbox != null && machine.devbox.parentHost != null then
+      nixConfig.userPublicKeys.${machine.devbox.parentHost} or null
+    else
+      null;
+in
 {
   # Disable documentation on devbox VMs to reduce image size
   documentation.enable = lib.mkDefault (!machine.features.devbox);
@@ -26,6 +37,7 @@
     isNormalUser = true;
     extraGroups = [ "wheel" ];
     shell = pkgs.fish;
+    openssh.authorizedKeys.keys = lib.optional (parentSshKey != null) parentSshKey;
   };
 
   programs.fish.enable = true;
