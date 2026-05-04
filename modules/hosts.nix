@@ -177,6 +177,7 @@ in
           };
         };
         bootLabel = "boot";
+        enableSwap = false; # devbox-installer only creates ESP + nixos partitions
         builder = mkBuilder {
           maxJobs = 4;
           sshUser = "nixbuilder";
