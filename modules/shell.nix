@@ -379,17 +379,48 @@ in
                 exit 1
               fi
 
+              if ! command -v tart &>/dev/null; then
+                echo "Error: tart not found. Install with: brew install cirruslabs/cli/tart"
+                exit 1
+              fi
+
               HOST="$1"
               FLAKE_DIR="$(pwd)"
 
-              echo "==> Copying flake to $HOST..."
-              rsync -az --exclude='.git' --exclude='result' \
+              # Resolve via tart so first rebuild works before tailscale comes up.
+              # Bypasses the SSH config alias (which points at *.ts.net) and the
+              # known_hosts entry (the VM's host key changes across rebuilds).
+              IP=$(tart ip "$HOST" 2>/dev/null || true)
+              if [ -z "$IP" ]; then
+                echo "Error: tart ip returned no address for $HOST. Is it running?"
+                echo "       devbox-start $HOST"
+                exit 1
+              fi
+
+              # Disable mux so we don't reuse an existing tailscale-aliased connection.
+              SSH_OPTS=(
+                -o "HostName=$IP"
+                -o "StrictHostKeyChecking=accept-new"
+                -o "UserKnownHostsFile=/dev/null"
+                -o "LogLevel=ERROR"
+                -o "ControlMaster=no"
+                -o "ControlPath=none"
+              )
+
+              # rsync needs a clean binary channel — explicitly disable the
+              # RequestTTY=force that helpers.nix sets for NixOS hosts.
+              RSYNC_SSH_OPTS=(-T -o "RequestTTY=no" "''${SSH_OPTS[@]}")
+
+              echo "==> Copying flake to $HOST ($IP)..."
+              rsync -az --rsh "ssh ''${RSYNC_SSH_OPTS[*]}" --exclude='.git' --exclude='result' \
                 "$FLAKE_DIR/" "$HOST:/tmp/nix-config/"
 
               echo "==> Running nixos-rebuild switch on $HOST..."
-              ssh -t "$HOST" "sudo nixos-rebuild switch --flake /tmp/nix-config#$HOST"
+              ssh "''${SSH_OPTS[@]}" -t "$HOST" "sudo nixos-rebuild switch --flake /tmp/nix-config#$HOST"
 
               echo "==> Done! $HOST has been rebuilt."
+              echo "    If $HOST isn't on your tailnet yet, register it manually:"
+              echo "      ssh $HOST sudo tailscale up"
             '';
           }
           {
