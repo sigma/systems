@@ -1,7 +1,9 @@
 {
   "assignee": "",
   "blocked_by": [],
-  "blocks": [],
+  "blocks": [
+    "nix-0v4.8"
+  ],
   "created": "2026-05-04T07:45:49Z",
   "description": "Extend modules/nebula/types.nix devbox submodule with 'nested' bool (default false). Set ash-devbox.devbox.nested = true in modules/hosts.nix. Make devbox-install pass --nested to tart create when set.",
   "id": "nix-0v4.1",
@@ -11,5 +13,5 @@
   "status": "open",
   "title": "Add nested-virt option to nebula.devbox",
   "type": "task",
-  "updated_at": "2026-05-04T07:45:49Z"
+  "updated_at": "2026-05-04T07:45:53Z"
 }
