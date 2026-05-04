@@ -4,6 +4,12 @@
 # This replaces devbox-image.nix. Instead of building the full system image
 # on macOS (which hits cross-build hash mismatches), we boot this ISO inside
 # the VM and let it install a minimal NixOS natively on Linux.
+#
+# Two impure inputs are read from the environment when present:
+#   DEVBOX_SSH_KEY        — path to the new devbox user's SSH private key
+#   DEVBOX_PARENT_PUBKEY  — path to the parent host's SSH public key
+# When set, the installer drops the private key at /home/<user>/.ssh/id_ed25519
+# and authorizes the parent's public key so `devbox-rebuild` can SSH in.
 {
   config,
   lib,
@@ -15,6 +21,19 @@
 }:
 let
   isDevbox = machine.features.devbox;
+
+  sshKeyPath = builtins.getEnv "DEVBOX_SSH_KEY";
+  hasSshKey = sshKeyPath != "";
+  sshKeyFile = if hasSshKey then pkgs.writeText "devbox-id_ed25519" (builtins.readFile sshKeyPath) else null;
+
+  parentPubKeyPath = builtins.getEnv "DEVBOX_PARENT_PUBKEY";
+  hasParentPubKey = parentPubKeyPath != "";
+  parentPubKey = if hasParentPubKey then lib.removeSuffix "\n" (builtins.readFile parentPubKeyPath) else "";
+
+  authorizedKeysAttr = lib.optionalString hasParentPubKey ''
+    users.users.${user.login}.openssh.authorizedKeys.keys = [ "${parentPubKey}" ];
+    users.users.root.openssh.authorizedKeys.keys = [ "${parentPubKey}" ];
+  '';
 
   # Auto-install script that runs inside the ISO
   autoInstallScript = pkgs.writeShellScript "devbox-auto-install" ''
@@ -71,6 +90,8 @@ let
 
       users.users.root.initialPassword = "devbox";
 
+      ${authorizedKeysAttr}
+
       # Allow passwordless sudo for rebuild
       security.sudo.wheelNeedsPassword = false;
 
@@ -89,6 +110,21 @@ let
 
     echo "Running nixos-install..."
     nixos-install --no-root-passwd
+
+    ${lib.optionalString hasSshKey ''
+      echo "Installing devbox SSH user key..."
+      USER_UID=$(${pkgs.gnugrep}/bin/grep "^${user.login}:" /mnt/etc/passwd | ${pkgs.coreutils}/bin/cut -d: -f3)
+      USER_GID=$(${pkgs.gnugrep}/bin/grep "^${user.login}:" /mnt/etc/passwd | ${pkgs.coreutils}/bin/cut -d: -f4)
+      ${pkgs.coreutils}/bin/install -m 0700 -o "$USER_UID" -g "$USER_GID" -d /mnt/home/${user.login}/.ssh
+      KEY=/mnt/home/${user.login}/.ssh/id_ed25519
+      ${pkgs.coreutils}/bin/install -m 0600 -o "$USER_UID" -g "$USER_GID" \
+        ${sshKeyFile} "$KEY"
+      # ssh-keygen refuses to read keys with permissive perms; derive the
+      # public half from the post-install copy (mode 0600), not the store path.
+      ${pkgs.openssh}/bin/ssh-keygen -y -f "$KEY" > "$KEY.pub"
+      ${pkgs.coreutils}/bin/chown "$USER_UID:$USER_GID" "$KEY.pub"
+      ${pkgs.coreutils}/bin/chmod 0644 "$KEY.pub"
+    ''}
 
     echo "=== Installation complete, shutting down ==="
     poweroff

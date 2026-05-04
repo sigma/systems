@@ -284,9 +284,46 @@ in
               DISK_GB="''${2:-50}"
               FLAKE_DIR="$(pwd)"
 
-              # Step 1: Build the auto-install ISO
+              KEY_TMPDIR=$(mktemp -d)
+              # shellcheck disable=SC2064
+              trap "rm -rf $KEY_TMPDIR" EXIT
+              chmod 0700 "$KEY_TMPDIR"
+
+              # Make the parent's SSH key available to sops as an age identity
+              if [ -z "''${SOPS_AGE_KEY_FILE:-}" ] && [ -z "''${SOPS_AGE_KEY:-}" ]; then
+                SSH_AGE_SRC="''${SOPS_AGE_SSH_PRIVATE_KEY:-$HOME/.ssh/id_ed25519}"
+                if [ -f "$SSH_AGE_SRC" ]; then
+                  SOPS_AGE_KEY=$(${pkgs.ssh-to-age}/bin/ssh-to-age -private-key -i "$SSH_AGE_SRC")
+                  export SOPS_AGE_KEY
+                fi
+              fi
+
+              # Decrypt the devbox SSH user key from sops if present
+              SOPS_ERR="$KEY_TMPDIR/sops.err"
+              if ${pkgs.sops}/bin/sops -d --extract "[\"devbox-keys\"][\"$HOST\"]" \
+                   "$FLAKE_DIR/secrets/secrets.yaml" > "$KEY_TMPDIR/id_ed25519" 2>"$SOPS_ERR"; then
+                chmod 0600 "$KEY_TMPDIR/id_ed25519"
+                export DEVBOX_SSH_KEY="$KEY_TMPDIR/id_ed25519"
+                echo "==> Loaded SSH key for $HOST from sops"
+              else
+                echo "==> Could not decrypt devbox-keys/$HOST from sops; installer will skip key injection"
+                echo "    sops error:"
+                ${pkgs.gnused}/bin/sed 's/^/      /' "$SOPS_ERR"
+                echo "    If the entry is missing, run: devbox-keygen $HOST"
+              fi
+
+              # Pass the parent's SSH public key so the installer can authorize it
+              PARENT_PUBKEY="$HOME/.ssh/id_ed25519.pub"
+              if [ -f "$PARENT_PUBKEY" ]; then
+                cp "$PARENT_PUBKEY" "$KEY_TMPDIR/parent.pub"
+                export DEVBOX_PARENT_PUBKEY="$KEY_TMPDIR/parent.pub"
+              else
+                echo "==> No $PARENT_PUBKEY found; SSH from this host into $HOST will require manual setup"
+              fi
+
+              # Step 1: Build the auto-install ISO (impure: reads DEVBOX_* env vars)
               echo "==> Building installer ISO for $HOST..."
-              $NIX_BIN ${nixFlags} build \
+              $NIX_BIN ${nixFlags} build --impure \
                 ".#nixosConfigurations.$HOST.config.system.build.devboxInstaller" \
                 -o "./$HOST-installer"
 
