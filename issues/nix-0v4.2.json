@@ -1,7 +1,9 @@
 {
   "assignee": "",
   "blocked_by": [],
-  "blocks": [],
+  "blocks": [
+    "nix-0v4.3"
+  ],
   "created": "2026-05-04T07:45:49Z",
   "description": "New devshell command: generates ed25519 host key, encrypts private to sops as devbox-host-keys/\u003chost\u003e, prints age recipient for modules/secrets.nix, runs sops updatekeys. Also seeds parent's authorized_keys reference.",
   "id": "nix-0v4.2",
@@ -11,5 +13,5 @@
   "status": "open",
   "title": "Add devbox-keygen devshell command",
   "type": "task",
-  "updated_at": "2026-05-04T07:45:49Z"
+  "updated_at": "2026-05-04T07:45:53Z"
 }
