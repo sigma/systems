@@ -6,14 +6,15 @@
   "blocks": [
     "nix-0v4.8"
   ],
+  "closed_at": "2026-05-04T09:25:21Z",
   "created": "2026-05-04T07:45:49Z",
   "description": "Modify nixos-modules/devbox-installer.nix to drop pre-generated SSH host key into /etc/ssh/ before sshd keygen, and seed user authorized_keys from host's ~/.ssh/id_ed25519.pub. devbox-install must decrypt the sops secret on the parent and pass via --impure path.",
   "id": "nix-0v4.3",
   "labels": [],
   "parent": "nix-0v4",
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Inject SSH host key + authorized_keys in installer",
   "type": "task",
-  "updated_at": "2026-05-04T09:20:43Z"
+  "updated_at": "2026-05-04T09:25:21Z"
 }
