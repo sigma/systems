@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-05-04T07:45:50Z",
+  "description": "Modify darwin-modules/policy/determinate.nix: when host.devbox.parentHost == hostKey for some declared devbox, append it to external-builders JSON alongside Determinate's bundled builder. Reuses nixConfig.builders.",
+  "id": "nix-0v4.5",
+  "labels": [],
+  "parent": "nix-0v4",
+  "priority": 2,
+  "status": "open",
+  "title": "Extend Determinate policy with devbox builder",
+  "type": "task",
+  "updated_at": "2026-05-04T07:45:50Z"
+}
