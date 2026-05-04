@@ -138,6 +138,11 @@ rec {
                 default = null;
                 description = "Host key of the machine that runs this VM";
               };
+              nested = mkOption {
+                type = types.bool;
+                default = false;
+                description = "Enable nested virtualization (requires M3+ Apple Silicon and macOS 15+ for tart)";
+              };
             };
           });
           default = null;

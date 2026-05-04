@@ -168,6 +168,7 @@ in
           hypervisor = "tart";
           guest = "linux";
           parentHost = "ash";
+          nested = true; # ash is M5, supports nested virt via Virtualization.framework
         };
         sshOpts = {
           forwardAgent = true;

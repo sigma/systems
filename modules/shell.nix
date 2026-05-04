@@ -285,6 +285,16 @@ in
                 exit 1
               fi
 
+              # Query whether nested virt is requested for this host.
+              # Note: tart's --nested is a `tart run` flag (not `tart create`).
+              NESTED=$($NIX_BIN ${nixFlags} eval --raw \
+                ".#nixosConfigurations.$HOST.config.system.build.devboxNested")
+              NESTED_FLAG=""
+              if [ "$NESTED" = "true" ]; then
+                NESTED_FLAG="--nested"
+                echo "==> Nested virtualization enabled for $HOST"
+              fi
+
               # Step 2: Create tart VM
               echo "==> Creating Tart VM '$HOST' (''${DISK_GB}GB disk)..."
               tart delete "$HOST" 2>/dev/null || true
@@ -293,7 +303,7 @@ in
               # Step 3: Boot ISO (auto-installs and powers off)
               echo "==> Booting installer ISO (a VM window will open)..."
               echo "    The VM will auto-partition, install NixOS, and shut down."
-              tart run --disk "$ISO:ro" "$HOST" || true
+              tart run $NESTED_FLAG --disk "$ISO:ro" "$HOST" || true
 
               # Step 4: Clean up ISO
               rm -rf "./$HOST-installer"
@@ -302,7 +312,7 @@ in
               echo "==> Bootstrap install complete!"
               echo ""
               echo "Next steps:"
-              echo "  1. Start the VM:  tart run $HOST"
+              echo "  1. Start the VM:  tart run $NESTED_FLAG $HOST"
               echo "  2. SSH in:        ssh $HOST"
               echo "  3. Clone config:  git clone <your-config-repo>"
               echo "  4. Rebuild:       sudo nixos-rebuild switch --flake .#$HOST"
