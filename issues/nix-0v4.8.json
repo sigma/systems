@@ -14,9 +14,15 @@
   "id": "nix-0v4.8",
   "labels": [],
   "parent": "nix-0v4",
+  "comments": [
+    {
+      "text": "ash-devbox verified end-to-end: bootstrap, rebuild, sops decryption on devbox, docker server, ssh via tailnet alias. spectre-devbox follows the same recipe — devbox-keygen spectre-devbox, drop the new age recipient into modules/secrets.nix, devbox-bootstrap then devbox-rebuild.",
+      "timestamp": "2026-05-04T15:02:32Z"
+    }
+  ],
   "priority": 2,
   "status": "open",
   "title": "End-to-end test: spectre-devbox + ash-devbox",
   "type": "task",
-  "updated_at": "2026-05-04T07:45:54Z"
+  "updated_at": "2026-05-04T15:02:32Z"
 }
