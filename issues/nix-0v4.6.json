@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-05-04T07:45:50Z",
+  "description": "Run nix flake lock on the toolkpyu jj change so both zed and firefly-forage transitive rust-overlay paths get their own node entries.",
+  "id": "nix-0v4.6",
+  "labels": [],
+  "parent": "nix-0v4",
+  "priority": 2,
+  "status": "open",
+  "title": "Regenerate flake.lock on toolkpyu",
+  "type": "task",
+  "updated_at": "2026-05-04T07:45:50Z"
+}
