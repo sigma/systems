@@ -344,6 +344,145 @@ in
               echo "==> Done! $HOST has been rebuilt."
             '';
           }
+          {
+            name = "devbox-start";
+            category = "devbox";
+            help = "Start a devbox VM headless in the background (usage: devbox-start <hostname>)";
+            command = ''
+              ${findNix}
+              if [ -z "$1" ]; then
+                echo "Usage: devbox-start <hostname>"
+                exit 1
+              fi
+
+              if ! command -v tart &>/dev/null; then
+                echo "Error: tart not found. Install with: brew install cirruslabs/cli/tart"
+                exit 1
+              fi
+
+              HOST="$1"
+
+              if tart list --quiet 2>/dev/null | grep -qE "^$HOST(\s|$)"; then
+                STATE=$(tart list --format json 2>/dev/null \
+                  | ${pkgs.jq}/bin/jq -r ".[] | select(.Name == \"$HOST\") | .State")
+                if [ "$STATE" = "running" ]; then
+                  echo "==> $HOST is already running"
+                  exit 0
+                fi
+              else
+                echo "Error: tart VM '$HOST' not found. Run devbox-install $HOST first."
+                exit 1
+              fi
+
+              # --nested is a tart run flag and must be passed each invocation
+              NESTED=$($NIX_BIN ${nixFlags} eval --raw \
+                ".#nixosConfigurations.$HOST.config.system.build.devboxNested")
+              NESTED_FLAG=""
+              if [ "$NESTED" = "true" ]; then
+                NESTED_FLAG="--nested"
+              fi
+
+              LOG_DIR="''${XDG_STATE_HOME:-$HOME/.local/state}/devbox"
+              mkdir -p "$LOG_DIR"
+              LOG="$LOG_DIR/$HOST.log"
+
+              echo "==> Starting $HOST headless (log: $LOG)..."
+              nohup tart run $NESTED_FLAG --no-graphics "$HOST" \
+                >> "$LOG" 2>&1 < /dev/null &
+              disown
+
+              # Wait briefly for tart to register the VM as running
+              for _ in 1 2 3 4 5; do
+                sleep 1
+                STATE=$(tart list --format json 2>/dev/null \
+                  | ${pkgs.jq}/bin/jq -r ".[] | select(.Name == \"$HOST\") | .State")
+                if [ "$STATE" = "running" ]; then
+                  IP=$(tart ip "$HOST" 2>/dev/null || true)
+                  echo "==> $HOST is running (ip: ''${IP:-pending})"
+                  exit 0
+                fi
+              done
+
+              echo "==> $HOST start initiated; check $LOG if it doesn't come up"
+            '';
+          }
+          {
+            name = "devbox-stop";
+            category = "devbox";
+            help = "Stop a running devbox VM (usage: devbox-stop <hostname>)";
+            command = ''
+              if [ -z "$1" ]; then
+                echo "Usage: devbox-stop <hostname>"
+                exit 1
+              fi
+
+              if ! command -v tart &>/dev/null; then
+                echo "Error: tart not found. Install with: brew install cirruslabs/cli/tart"
+                exit 1
+              fi
+
+              HOST="$1"
+
+              STATE=$(tart list --format json 2>/dev/null \
+                | ${pkgs.jq}/bin/jq -r ".[] | select(.Name == \"$HOST\") | .State")
+              if [ -z "$STATE" ] || [ "$STATE" = "null" ]; then
+                echo "Error: tart VM '$HOST' not found"
+                exit 1
+              fi
+              if [ "$STATE" != "running" ]; then
+                echo "==> $HOST is not running (state: $STATE)"
+                exit 0
+              fi
+
+              echo "==> Stopping $HOST..."
+              tart stop "$HOST"
+              echo "==> $HOST stopped"
+            '';
+          }
+          {
+            name = "devbox-remove";
+            category = "devbox";
+            help = "Stop and delete a devbox VM, plus its local logs (usage: devbox-remove <hostname>)";
+            command = ''
+              if [ -z "$1" ]; then
+                echo "Usage: devbox-remove <hostname>"
+                exit 1
+              fi
+
+              if ! command -v tart &>/dev/null; then
+                echo "Error: tart not found. Install with: brew install cirruslabs/cli/tart"
+                exit 1
+              fi
+
+              HOST="$1"
+
+              STATE=$(tart list --format json 2>/dev/null \
+                | ${pkgs.jq}/bin/jq -r ".[] | select(.Name == \"$HOST\") | .State")
+              if [ -z "$STATE" ] || [ "$STATE" = "null" ]; then
+                echo "==> tart VM '$HOST' not found; nothing to do"
+                exit 0
+              fi
+
+              if [ "$STATE" = "running" ]; then
+                echo "==> Stopping $HOST..."
+                tart stop "$HOST"
+              fi
+
+              echo "==> Deleting tart VM '$HOST'..."
+              tart delete "$HOST"
+
+              LOG="''${XDG_STATE_HOME:-$HOME/.local/state}/devbox/$HOST.log"
+              if [ -f "$LOG" ]; then
+                rm -f "$LOG"
+                echo "==> Removed $LOG"
+              fi
+
+              echo "==> $HOST removed."
+              echo "    Note: sops entry devbox-keys/$HOST and the age recipient in"
+              echo "    modules/secrets.nix were left in place. Drop them manually if"
+              echo "    you don't plan to reuse them with devbox-install $HOST."
+            '';
+          }
         ];
       };
     };
