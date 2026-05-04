@@ -1,7 +1,8 @@
 {
   "assignee": "",
   "blocked_by": [
-    "nix-0v4.1"
+    "nix-0v4.1",
+    "nix-0v4.3"
   ],
   "blocks": [],
   "created": "2026-05-04T07:45:50Z",
@@ -13,5 +14,5 @@
   "status": "open",
   "title": "End-to-end test: spectre-devbox + ash-devbox",
   "type": "task",
-  "updated_at": "2026-05-04T07:45:53Z"
+  "updated_at": "2026-05-04T07:45:54Z"
 }
