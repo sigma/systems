@@ -35,14 +35,32 @@ in
     # Allow nixbuilder to perform nix operations
     nix.settings.trusted-users = [ "nixbuilder" ];
 
-    # Configure store signing if we have a store key
-    # The secret-key-files option tells nix to sign all built paths
+    # Configure store signing if we have a store key.
     sops.secrets."store-keys/${machine.hostKey}" = {
       mode = "0400";
     };
 
-    nix.settings.secret-key-files = [
-      config.sops.secrets."store-keys/${machine.hostKey}".path
-    ];
+    # Reference the store key indirectly so nix-daemon can start even when
+    # sops hasn't decrypted yet (first boot, or sops failure leaving
+    # /run/secrets empty). The include file is populated by the activation
+    # script below after setupSecrets runs.
+    nix.extraOptions = ''
+      !include /etc/nix/store-signing.conf
+    '';
+
+    system.activationScripts.storeSigningConf = {
+      deps = [ "setupSecrets" ];
+      text = ''
+        SECRET="${config.sops.secrets."store-keys/${machine.hostKey}".path}"
+        if [ -r "$SECRET" ]; then
+          printf 'secret-key-files = %s\n' "$SECRET" > /etc/nix/store-signing.conf
+        else
+          rm -f /etc/nix/store-signing.conf
+        fi
+        # Pick up the new include without manual intervention. try-restart
+        # is a no-op when the unit isn't running (early boot).
+        ${pkgs.systemd}/bin/systemctl try-restart nix-daemon.service 2>/dev/null || true
+      '';
+    };
   };
 }
