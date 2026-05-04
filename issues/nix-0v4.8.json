@@ -9,6 +9,7 @@
   "blocks": [
     "nix-0v4.7"
   ],
+  "closed_at": "2026-05-04T15:02:32Z",
   "created": "2026-05-04T07:45:50Z",
   "description": "On ash: devbox-keygen ash-devbox -\u003e update modules/secrets.nix -\u003e sops updatekeys -\u003e devbox-install ash-devbox -\u003e devbox-rebuild -\u003e nix build a derivation and verify it goes to the devbox. Same on spectre.",
   "id": "nix-0v4.8",
@@ -21,7 +22,7 @@
     }
   ],
   "priority": 2,
-  "status": "open",
+  "status": "closed",
   "title": "End-to-end test: spectre-devbox + ash-devbox",
   "type": "task",
   "updated_at": "2026-05-04T15:02:32Z"
