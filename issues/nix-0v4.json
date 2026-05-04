@@ -6,9 +6,15 @@
   "description": "Wire each Mac to a tart-managed Linux devbox VM with transparent SSH and remote-builder integration. Sequence in: feat(devbox): nested-virt option; devbox-keygen command; ISO host-key + authorized_keys injection; Tailscale auto-auth; Determinate external-builders extension; flake.lock regen on toolkpyu; abandon tmp/vms.",
   "id": "nix-0v4",
   "labels": [],
+  "comments": [
+    {
+      "text": "Implementation complete (steps 1–6). Stack tip is qoosqxpl. End-to-end testing (nix-0v4.8) needs the user on actual hardware: devbox-keygen + secrets.nix update + sops updatekeys + devbox-install + devbox-rebuild. tmp/vms abandonment (nix-0v4.7) is gated on E2E success.",
+      "timestamp": "2026-05-04T09:54:54Z"
+    }
+  ],
   "priority": 1,
   "status": "in_progress",
   "title": "Land devbox-on-mac plan",
   "type": "epic",
-  "updated_at": "2026-05-04T07:46:37Z"
+  "updated_at": "2026-05-04T09:54:54Z"
 }
