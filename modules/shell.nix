@@ -282,7 +282,10 @@ in
 
               HOST="$1"
               DISK_GB="''${2:-50}"
-              FLAKE_DIR="$(pwd)"
+              FLAKE_DIR=$(${pkgs.git}/bin/git rev-parse --show-toplevel 2>/dev/null) || {
+                echo "Error: not in a git repo (devbox-bootstrap needs the flake root)"
+                exit 1
+              }
 
               KEY_TMPDIR=$(mktemp -d)
               # shellcheck disable=SC2064
@@ -385,7 +388,10 @@ in
               fi
 
               HOST="$1"
-              FLAKE_DIR="$(pwd)"
+              FLAKE_DIR=$(${pkgs.git}/bin/git rev-parse --show-toplevel 2>/dev/null) || {
+                echo "Error: not in a git repo (devbox-rebuild needs the flake root)"
+                exit 1
+              }
 
               # Set up the parent's age identity so sops can decrypt and re-key.
               if [ -z "''${SOPS_AGE_KEY_FILE:-}" ] && [ -z "''${SOPS_AGE_KEY:-}" ]; then

@@ -4,6 +4,7 @@
   ssh-to-age,
   sops,
   jq,
+  git,
   sopsConfigFile ? null,
 }:
 let
@@ -14,6 +15,7 @@ let
       ssh-to-age
       sops
       jq
+      git
     ];
     meta.description = "Generate a fresh SSH user key for a devbox and stash it in sops";
     text = ''
@@ -24,11 +26,14 @@ let
       fi
 
       HOST="$1"
-      SECRETS_FILE="''${SECRETS_FILE:-secrets/secrets.yaml}"
+      ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || {
+        echo "Error: not in a git repo (devbox-keygen needs the flake root)"
+        exit 1
+      }
+      SECRETS_FILE="''${SECRETS_FILE:-$ROOT/secrets/secrets.yaml}"
 
       if [[ ! -f "$SECRETS_FILE" ]]; then
         echo "Error: secrets file not found at $SECRETS_FILE"
-        echo "Run from the flake root, or set SECRETS_FILE."
         exit 1
       fi
 
