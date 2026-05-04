@@ -170,6 +170,8 @@ in
           guest = "linux";
           parentHost = "ash";
           nested = true; # ash is M5, supports nested virt via Virtualization.framework
+          memoryMB = 32768;
+          diskGB = 150;
         };
         sshOpts = {
           forwardAgent = true;

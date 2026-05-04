@@ -134,6 +134,9 @@ in
   config = lib.mkIf isDevbox {
     # Expose VM creation parameters so devbox-bootstrap can query them
     system.build.devboxNested = lib.boolToString (machine.devbox.nested or false);
+    system.build.devboxMemoryMB =
+      if (machine.devbox.memoryMB or null) == null then "" else toString machine.devbox.memoryMB;
+    system.build.devboxDiskGB = toString (machine.devbox.diskGB or 50);
 
     # Build a custom auto-install ISO
     system.build.devboxInstaller = (import "${modulesPath}/../lib/eval-config.nix" {

@@ -149,6 +149,16 @@ rec {
                 default = false;
                 description = "Enable nested virtualization (requires M3+ Apple Silicon and macOS 15+ for tart)";
               };
+              memoryMB = mkOption {
+                type = types.nullOr types.int;
+                default = null;
+                description = "VM memory in MB; null leaves tart's default";
+              };
+              diskGB = mkOption {
+                type = types.int;
+                default = 50;
+                description = "VM disk size in GB at creation time";
+              };
             };
           });
           default = null;

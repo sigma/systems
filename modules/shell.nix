@@ -281,11 +281,14 @@ in
               fi
 
               HOST="$1"
-              DISK_GB="''${2:-50}"
               FLAKE_DIR=$(${pkgs.git}/bin/git rev-parse --show-toplevel 2>/dev/null) || {
                 echo "Error: not in a git repo (devbox-bootstrap needs the flake root)"
                 exit 1
               }
+              # CLI arg overrides the per-host devbox.diskGB declaration.
+              CONFIG_DISK_GB=$($NIX_BIN ${nixFlags} eval --raw \
+                ".#nixosConfigurations.$HOST.config.system.build.devboxDiskGB" 2>/dev/null)
+              DISK_GB="''${2:-''${CONFIG_DISK_GB:-50}}"
 
               KEY_TMPDIR=$(mktemp -d)
               # shellcheck disable=SC2064
@@ -346,10 +349,17 @@ in
                 echo "==> Nested virtualization enabled for $HOST"
               fi
 
+              MEMORY=$($NIX_BIN ${nixFlags} eval --raw \
+                ".#nixosConfigurations.$HOST.config.system.build.devboxMemoryMB")
+
               # Step 2: Create tart VM
               echo "==> Creating Tart VM '$HOST' (''${DISK_GB}GB disk)..."
               tart delete "$HOST" 2>/dev/null || true
               tart create --linux "$HOST" --disk-size "$DISK_GB"
+              if [ -n "$MEMORY" ]; then
+                echo "==> Setting VM memory to ''${MEMORY}MB..."
+                tart set "$HOST" --memory "$MEMORY"
+              fi
 
               # Step 3: Boot ISO (auto-installs and powers off)
               echo "==> Booting installer ISO (a VM window will open)..."
@@ -439,7 +449,10 @@ in
                 "$FLAKE_DIR/" "$IP:/tmp/nix-config/"
 
               echo "==> Running nixos-rebuild switch on $HOST..."
-              ssh "''${SSH_OPTS[@]}" -t "$IP" "sudo nixos-rebuild switch --flake /tmp/nix-config#$HOST"
+              # Heavy substitutions (zed-editor and friends) need more fds than
+              # the default 1024 soft limit. Raise it for this session — the
+              # hard limit on NixOS is high enough to allow this.
+              ssh "''${SSH_OPTS[@]}" -t "$IP" "ulimit -n 65536 && sudo nixos-rebuild switch --flake /tmp/nix-config#$HOST"
 
               echo "==> Done! $HOST has been rebuilt."
               echo "    If $HOST isn't on your tailnet yet, register it manually:"

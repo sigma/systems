@@ -2,6 +2,8 @@
   config,
   pkgs,
   lib,
+  machine,
+  nixConfig,
   ...
 }:
 let
@@ -36,6 +38,16 @@ let
 
   ai = config.programs.aiProfiles;
   zedAgents = lib.filter (p: p.acp != null) ai.agents;
+
+  # Devboxes whose parent is this host — surfaced to Zed as ssh_connections
+  # so the editor can open remote workspaces against them.
+  myDevboxes = lib.filterAttrs (_: b: b.parentHost == machine.hostKey) (
+    nixConfig.builders or { }
+  );
+  devboxSshConnections = lib.mapAttrsToList (name: b: {
+    host = if b.alias != null then b.alias else b.name;
+    projects = [ ];
+  }) myDevboxes;
 in
 {
   enable = true;
@@ -100,6 +112,8 @@ in
         };
       }) zedAgents
     );
+
+    ssh_connections = devboxSshConnections;
   }
   // lib.optionalAttrs (ai.editPredictions != null) {
     edit_predictions =

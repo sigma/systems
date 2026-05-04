@@ -39,6 +39,7 @@
   lib,
   machine,
   user,
+  nixConfig,
   ...
 }:
 let
@@ -80,6 +81,7 @@ let
               lib
               machine
               user
+              nixConfig
               ;
           };
         })
