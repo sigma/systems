@@ -61,6 +61,10 @@
       provider = "ollama";
       model = "gemma4:26b";
     };
+    gemma4-31b-coding = {
+      provider = "ollama";
+      model = "gemma4:31b-coding-mtp-bf16";
+    };
     qwen3-coder = {
       provider = "ollama";
       model = "qwen3-coder-next:latest";

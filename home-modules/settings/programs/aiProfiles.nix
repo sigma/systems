@@ -20,7 +20,7 @@ in
     ];
 
   editPredictions = {
-    model = c.localModels.gemma4-26b;
+    model = c.localModels.gemma4-31b-coding;
     max_output_tokens = 64;
   };
 }
