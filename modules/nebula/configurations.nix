@@ -225,11 +225,7 @@ in
         inherit user machine stateVersion;
         nixConfig = cfg.nixConfig;
       };
-    in
-    inputs.nixpkgs-stable.lib.nixosSystem {
-      inherit (machine) system;
-      inherit specialArgs;
-      modules =
+      sharedModules =
         cfg.nixosModules
         ++ machine.nixosModules
         ++ [
@@ -241,7 +237,33 @@ in
           nixModule
         ]
         ++ (sopsNixosModules user);
-    };
+    in
+    if machine.devbox != null then
+      inputs.devbox.lib.mkDevbox {
+        nixpkgs = inputs.nixpkgs-stable;
+        inherit (machine) system;
+        inherit specialArgs;
+        hypervisor = machine.devbox.hypervisor;
+        vm = {
+          nested = machine.devbox.nested or false;
+          memoryMB = machine.devbox.memoryMB or null;
+          diskGB = machine.devbox.diskGB or 50;
+        };
+        modules = sharedModules ++ [
+          # Bridge: the new flake's auto-installer reads the bootstrap user
+          # from config.devbox.user.login, while this repo carries the login
+          # in the `user` specialArg. Tie them together so SSH key paths in
+          # the installer match the post-rebuild user that configuration.nix
+          # creates.
+          { devbox.user.login = user.login; }
+        ];
+      }
+    else
+      inputs.nixpkgs-stable.lib.nixosSystem {
+        inherit (machine) system;
+        inherit specialArgs;
+        modules = sharedModules;
+      };
 
   inherit nixosHome;
 }

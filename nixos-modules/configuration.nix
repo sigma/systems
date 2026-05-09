@@ -17,13 +17,6 @@ let
       null;
 in
 {
-  # Disable documentation on devbox VMs to reduce image size
-  documentation.enable = lib.mkDefault (!machine.features.devbox);
-  documentation.man.enable = lib.mkDefault (!machine.features.devbox);
-  documentation.doc.enable = lib.mkDefault (!machine.features.devbox);
-  documentation.info.enable = lib.mkDefault (!machine.features.devbox);
-  documentation.nixos.enable = lib.mkDefault (!machine.features.devbox);
-
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -57,28 +50,6 @@ in
   };
 
   services.openssh.enable = true;
-
-  # Devboxes are throwaway and rebuilt over SSH from the parent host;
-  # passwordless wheel keeps `devbox-rebuild` non-interactive.
-  security.sudo.wheelNeedsPassword = lib.mkIf machine.features.devbox false;
-
-  # Heavy substitution from cache.nixos.org during devbox-rebuild can blow
-  # past the default 1024 fd limit. Bump nix-daemon and SSH login sessions
-  # so manual `nixos-rebuild` and `nix build` invocations on the devbox
-  # don't trip on the soft limit.
-  systemd.services.nix-daemon.serviceConfig.LimitNOFILE =
-    lib.mkIf machine.features.devbox 65536;
-  security.pam.loginLimits = lib.mkIf machine.features.devbox [
-    { domain = "*"; type = "soft"; item = "nofile"; value = "65536"; }
-  ];
-
-  # zram-backed swap soaks up RAM bursts during cargo/rust builds without
-  # touching disk. Defaults to 50% of RAM.
-  zramSwap.enable = lib.mkIf machine.features.devbox true;
-
-  # Resizing the tart disk (e.g., bumping devbox.diskGB) only grows vda;
-  # auto-grow the root partition + filesystem on boot to match.
-  boot.growPartition = lib.mkIf machine.features.devbox true;
 
   system.stateVersion = "25.11";
 
