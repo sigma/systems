@@ -43,7 +43,7 @@
     toolbox.inputs.devenv.follows = "";
 
     # Devbox (NixOS VM lifecycle, Tart)
-    devbox.url = "path:/Users/yann/src/github.com/firefly-engineering/devbox";
+    devbox.url = "github:firefly-engineering/devbox";
     devbox.inputs.nix-pins.follows = "nix-pins";
 
     # Personal flakes

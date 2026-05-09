@@ -111,13 +111,17 @@
         ]
       },
       "locked": {
-        "narHash": "sha256-zhQuHG1mLhXo0qyTbmp6sPAN1fz7jU0iDdbjvZiCUl0=",
-        "path": "/Users/yann/src/github.com/firefly-engineering/devbox",
-        "type": "path"
+        "lastModified": 1778344150,
+        "narHash": "sha256-K7B+VHytnyqyfdrU19Gh4xwkCpHTuv1c10sOBaZY44Y=",
+        "owner": "firefly-engineering",
+        "repo": "devbox",
+        "rev": "fe5a23fb1dac7fd9ce04c3671df78290aa7ba114",
+        "type": "github"
       },
       "original": {
-        "path": "/Users/yann/src/github.com/firefly-engineering/devbox",
-        "type": "path"
+        "owner": "firefly-engineering",
+        "repo": "devbox",
+        "type": "github"
       }
     },
     "devenv-root": {
