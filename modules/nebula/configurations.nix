@@ -254,8 +254,15 @@ in
           # from config.devbox.user.login, while this repo carries the login
           # in the `user` specialArg. Tie them together so SSH key paths in
           # the installer match the post-rebuild user that configuration.nix
-          # creates.
-          { devbox.user.login = user.login; }
+          # creates. Substituters declared in nebula.nixConfig flow into
+          # devbox.nix.* so the auto-installer ISO, the bootstrap config it
+          # writes, and the host-side `nix build` of the installer all
+          # benefit from the same caches the rest of the fleet uses.
+          {
+            devbox.user.login = user.login;
+            devbox.nix.substituters = cfg.nixConfig.trusted-substituters;
+            devbox.nix.trustedPublicKeys = cfg.nixConfig.trusted-public-keys;
+          }
         ];
       }
     else
