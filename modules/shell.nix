@@ -106,6 +106,73 @@ in
       devboxTools = pkgs.callPackage ../overlays/pkg/local/devbox-tools.nix {
         inherit sopsConfigFile;
       };
+
+      # Lifecycle scripts (bootstrap/rebuild/start/stop/remove) come from
+      # firefly-engineering/devbox. Hooks here weave in this repo's
+      # specifics: per-host SSH keys live in sops, the parent's pubkey
+      # comes from ~/.ssh/id_ed25519.pub, and rebuilds re-key sops first.
+      devboxScripts = inputs.devbox.lib.mkScripts {
+        inherit pkgs;
+        flakeRef = ".";
+
+        privateKeyHook = ''
+          KEY_TMPDIR=$(mktemp -d)
+          # shellcheck disable=SC2064
+          trap "rm -rf $KEY_TMPDIR" EXIT
+          chmod 0700 "$KEY_TMPDIR"
+
+          # Make the parent's SSH key available to sops as an age identity
+          if [ -z "''${SOPS_AGE_KEY_FILE:-}" ] && [ -z "''${SOPS_AGE_KEY:-}" ]; then
+            SSH_AGE_SRC="''${SOPS_AGE_SSH_PRIVATE_KEY:-$HOME/.ssh/id_ed25519}"
+            if [ -f "$SSH_AGE_SRC" ]; then
+              SOPS_AGE_KEY=$(${pkgs.ssh-to-age}/bin/ssh-to-age -private-key -i "$SSH_AGE_SRC")
+              export SOPS_AGE_KEY
+            fi
+          fi
+
+          # Decrypt the devbox SSH user key from sops if present.
+          SOPS_ERR="$KEY_TMPDIR/sops.err"
+          if ${pkgs.sops}/bin/sops -d --extract "[\"devbox-keys\"][\"$HOST\"]" \
+               "secrets/secrets.yaml" > "$KEY_TMPDIR/id_ed25519" 2>"$SOPS_ERR"; then
+            chmod 0600 "$KEY_TMPDIR/id_ed25519"
+            export DEVBOX_SSH_KEY="$KEY_TMPDIR/id_ed25519"
+            echo "==> Loaded SSH key for $HOST from sops"
+          else
+            echo "==> Could not decrypt devbox-keys/$HOST from sops; installer will skip key injection"
+            echo "    sops error:"
+            ${pkgs.gnused}/bin/sed 's/^/      /' "$SOPS_ERR"
+            echo "    If the entry is missing, run: devbox-keygen $HOST"
+          fi
+        '';
+
+        parentPubKeyHook = ''
+          PARENT_PUBKEY="$HOME/.ssh/id_ed25519.pub"
+          if [ -f "$PARENT_PUBKEY" ]; then
+            export DEVBOX_PARENT_PUBKEY="$PARENT_PUBKEY"
+          else
+            echo "==> No $PARENT_PUBKEY found; SSH from this host into $HOST will require manual setup"
+          fi
+        '';
+
+        preRebuildHook = ''
+          # Set up the parent's age identity so sops can decrypt and re-key.
+          if [ -z "''${SOPS_AGE_KEY_FILE:-}" ] && [ -z "''${SOPS_AGE_KEY:-}" ]; then
+            SSH_AGE_SRC="''${SOPS_AGE_SSH_PRIVATE_KEY:-$HOME/.ssh/id_ed25519}"
+            if [ -f "$SSH_AGE_SRC" ]; then
+              SOPS_AGE_KEY=$(${pkgs.ssh-to-age}/bin/ssh-to-age -private-key -i "$SSH_AGE_SRC")
+              export SOPS_AGE_KEY
+            fi
+          fi
+
+          # Re-key sops with the in-store config (no .sops.yaml on disk).
+          # Idempotent: no-op when secrets.yaml's recipients already match
+          # modules/secrets.nix. Catches the common case of a fresh
+          # devbox-keygen recipient that wasn't yet propagated.
+          echo "==> Refreshing sops recipients..."
+          ${pkgs.sops}/bin/sops --config ${sopsConfigFile} \
+            updatekeys -y "secrets/secrets.yaml"
+        '';
+      };
     in
     {
       pre-commit.settings.hooks = {
@@ -266,337 +333,32 @@ in
           {
             name = "devbox-bootstrap";
             category = "devbox";
-            help = "Create a devbox VM and bootstrap a minimal NixOS (run devbox-rebuild after) (usage: devbox-bootstrap <hostname> [disk-gb])";
-            command = ''
-              ${findNix}
-              if [ -z "$1" ]; then
-                echo "Usage: devbox-bootstrap <hostname> [disk-gb]"
-                echo "Example: devbox-bootstrap ash-devbox 50"
-                exit 1
-              fi
-
-              if ! command -v tart &>/dev/null; then
-                echo "Error: tart not found. Install with: brew install cirruslabs/cli/tart"
-                exit 1
-              fi
-
-              HOST="$1"
-              FLAKE_DIR=$(${pkgs.git}/bin/git rev-parse --show-toplevel 2>/dev/null) || {
-                echo "Error: not in a git repo (devbox-bootstrap needs the flake root)"
-                exit 1
-              }
-              # CLI arg overrides the per-host devbox.diskGB declaration.
-              CONFIG_DISK_GB=$($NIX_BIN ${nixFlags} eval --raw \
-                ".#nixosConfigurations.$HOST.config.system.build.devboxDiskGB" 2>/dev/null)
-              DISK_GB="''${2:-''${CONFIG_DISK_GB:-50}}"
-
-              KEY_TMPDIR=$(mktemp -d)
-              # shellcheck disable=SC2064
-              trap "rm -rf $KEY_TMPDIR" EXIT
-              chmod 0700 "$KEY_TMPDIR"
-
-              # Make the parent's SSH key available to sops as an age identity
-              if [ -z "''${SOPS_AGE_KEY_FILE:-}" ] && [ -z "''${SOPS_AGE_KEY:-}" ]; then
-                SSH_AGE_SRC="''${SOPS_AGE_SSH_PRIVATE_KEY:-$HOME/.ssh/id_ed25519}"
-                if [ -f "$SSH_AGE_SRC" ]; then
-                  SOPS_AGE_KEY=$(${pkgs.ssh-to-age}/bin/ssh-to-age -private-key -i "$SSH_AGE_SRC")
-                  export SOPS_AGE_KEY
-                fi
-              fi
-
-              # Decrypt the devbox SSH user key from sops if present
-              SOPS_ERR="$KEY_TMPDIR/sops.err"
-              if ${pkgs.sops}/bin/sops -d --extract "[\"devbox-keys\"][\"$HOST\"]" \
-                   "$FLAKE_DIR/secrets/secrets.yaml" > "$KEY_TMPDIR/id_ed25519" 2>"$SOPS_ERR"; then
-                chmod 0600 "$KEY_TMPDIR/id_ed25519"
-                export DEVBOX_SSH_KEY="$KEY_TMPDIR/id_ed25519"
-                echo "==> Loaded SSH key for $HOST from sops"
-              else
-                echo "==> Could not decrypt devbox-keys/$HOST from sops; installer will skip key injection"
-                echo "    sops error:"
-                ${pkgs.gnused}/bin/sed 's/^/      /' "$SOPS_ERR"
-                echo "    If the entry is missing, run: devbox-keygen $HOST"
-              fi
-
-              # Pass the parent's SSH public key so the installer can authorize it
-              PARENT_PUBKEY="$HOME/.ssh/id_ed25519.pub"
-              if [ -f "$PARENT_PUBKEY" ]; then
-                cp "$PARENT_PUBKEY" "$KEY_TMPDIR/parent.pub"
-                export DEVBOX_PARENT_PUBKEY="$KEY_TMPDIR/parent.pub"
-              else
-                echo "==> No $PARENT_PUBKEY found; SSH from this host into $HOST will require manual setup"
-              fi
-
-              # Step 1: Build the auto-install ISO (impure: reads DEVBOX_* env vars)
-              echo "==> Building installer ISO for $HOST..."
-              $NIX_BIN ${nixFlags} build --impure \
-                ".#nixosConfigurations.$HOST.config.system.build.devboxInstaller" \
-                -o "./$HOST-installer"
-
-              ISO=$(find -L "./$HOST-installer" -name '*.iso' | head -1)
-              if [ -z "$ISO" ]; then
-                echo "Error: No ISO found in ./$HOST-installer/"
-                exit 1
-              fi
-
-              # Query whether nested virt is requested for this host.
-              # Note: tart's --nested is a `tart run` flag (not `tart create`).
-              NESTED=$($NIX_BIN ${nixFlags} eval --raw \
-                ".#nixosConfigurations.$HOST.config.system.build.devboxNested")
-              NESTED_FLAG=""
-              if [ "$NESTED" = "true" ]; then
-                NESTED_FLAG="--nested"
-                echo "==> Nested virtualization enabled for $HOST"
-              fi
-
-              MEMORY=$($NIX_BIN ${nixFlags} eval --raw \
-                ".#nixosConfigurations.$HOST.config.system.build.devboxMemoryMB")
-
-              # Step 2: Create tart VM
-              echo "==> Creating Tart VM '$HOST' (''${DISK_GB}GB disk)..."
-              tart delete "$HOST" 2>/dev/null || true
-              tart create --linux "$HOST" --disk-size "$DISK_GB"
-              if [ -n "$MEMORY" ]; then
-                echo "==> Setting VM memory to ''${MEMORY}MB..."
-                tart set "$HOST" --memory "$MEMORY"
-              fi
-
-              # Step 3: Boot ISO (auto-installs and powers off)
-              echo "==> Booting installer ISO (a VM window will open)..."
-              echo "    The VM will auto-partition, install NixOS, and shut down."
-              tart run $NESTED_FLAG --disk "$ISO:ro" "$HOST" || true
-
-              # Step 4: Clean up ISO
-              rm -rf "./$HOST-installer"
-
-              echo ""
-              echo "==> Bootstrap complete! The VM has a minimal NixOS — no home-manager,"
-              echo "    no flake config yet. Next:"
-              echo ""
-              echo "      devbox-start $HOST              # if not already running"
-              echo "      devbox-rebuild $HOST            # apply the full config"
-              echo "      ssh $HOST sudo tailscale up    # register on the tailnet (manual"
-              echo "                                       so we don't bake an expiring authkey"
-              echo "                                       into sops). Use a key from"
-              echo "                                       https://login.tailscale.com/admin/settings/keys"
-            '';
+            help = "Create a devbox VM and bootstrap a minimal NixOS (run devbox-rebuild after) (usage: devbox-bootstrap <hostname>)";
+            command = ''exec ${devboxScripts.devbox-bootstrap}/bin/devbox-bootstrap "$@"'';
           }
           {
             name = "devbox-rebuild";
             category = "devbox";
             help = "Rebuild a running devbox via SSH (usage: devbox-rebuild <hostname>)";
-            command = ''
-              ${findNix}
-              if [ -z "$1" ]; then
-                echo "Usage: devbox-rebuild <hostname>"
-                exit 1
-              fi
-
-              if ! command -v tart &>/dev/null; then
-                echo "Error: tart not found. Install with: brew install cirruslabs/cli/tart"
-                exit 1
-              fi
-
-              HOST="$1"
-              FLAKE_DIR=$(${pkgs.git}/bin/git rev-parse --show-toplevel 2>/dev/null) || {
-                echo "Error: not in a git repo (devbox-rebuild needs the flake root)"
-                exit 1
-              }
-
-              # Set up the parent's age identity so sops can decrypt and re-key.
-              if [ -z "''${SOPS_AGE_KEY_FILE:-}" ] && [ -z "''${SOPS_AGE_KEY:-}" ]; then
-                SSH_AGE_SRC="''${SOPS_AGE_SSH_PRIVATE_KEY:-$HOME/.ssh/id_ed25519}"
-                if [ -f "$SSH_AGE_SRC" ]; then
-                  SOPS_AGE_KEY=$(${pkgs.ssh-to-age}/bin/ssh-to-age -private-key -i "$SSH_AGE_SRC")
-                  export SOPS_AGE_KEY
-                fi
-              fi
-
-              # Re-key sops with the in-store config (no .sops.yaml on disk).
-              # Idempotent: no-op when secrets.yaml's recipients already match
-              # modules/secrets.nix. Catches the common case of a fresh
-              # devbox-keygen recipient that wasn't yet propagated.
-              echo "==> Refreshing sops recipients..."
-              ${pkgs.sops}/bin/sops --config ${sopsConfigFile} \
-                updatekeys -y "$FLAKE_DIR/secrets/secrets.yaml"
-
-              # Resolve via tart so first rebuild works before tailscale comes up.
-              # Bypasses the SSH config alias (which points at *.ts.net) and the
-              # known_hosts entry (the VM's host key changes across rebuilds).
-              IP=$(tart ip "$HOST" 2>/dev/null || true)
-              if [ -z "$IP" ]; then
-                echo "Error: tart ip returned no address for $HOST. Is it running?"
-                echo "       devbox-start $HOST"
-                exit 1
-              fi
-
-              # Connect to the raw IP, not the SSH config alias. The alias
-              # carries RequestTTY=force, a tailscale Hostname, and a custom
-              # ControlPath — which interfere with first-rebuild auth before
-              # the devbox is on the tailnet. Using $IP picks up only the *
-              # block, mirroring `ssh $IP` which authenticates with the agent.
-              SSH_OPTS=(
-                -o "StrictHostKeyChecking=accept-new"
-                -o "UserKnownHostsFile=/dev/null"
-                -o "LogLevel=ERROR"
-              )
-
-              # -T keeps rsync's channel clean of pty escape interpretation.
-              RSYNC_SSH_OPTS=(-T "''${SSH_OPTS[@]}")
-
-              echo "==> Copying flake to $HOST ($IP)..."
-              rsync -az --rsh "ssh ''${RSYNC_SSH_OPTS[*]}" --exclude='.git' --exclude='result' \
-                "$FLAKE_DIR/" "$IP:/tmp/nix-config/"
-
-              echo "==> Running nixos-rebuild switch on $HOST..."
-              # Heavy substitutions (zed-editor and friends) need more fds than
-              # the default 1024 soft limit. Raise it for this session — the
-              # hard limit on NixOS is high enough to allow this.
-              ssh "''${SSH_OPTS[@]}" -t "$IP" "ulimit -n 65536 && sudo nixos-rebuild switch --flake /tmp/nix-config#$HOST"
-
-              echo "==> Done! $HOST has been rebuilt."
-              echo "    If $HOST isn't on your tailnet yet, register it manually:"
-              echo "      ssh $HOST sudo tailscale up"
-            '';
+            command = ''exec ${devboxScripts.devbox-rebuild}/bin/devbox-rebuild "$@"'';
           }
           {
             name = "devbox-start";
             category = "devbox";
             help = "Start a devbox VM headless in the background (usage: devbox-start <hostname>)";
-            command = ''
-              ${findNix}
-              if [ -z "$1" ]; then
-                echo "Usage: devbox-start <hostname>"
-                exit 1
-              fi
-
-              if ! command -v tart &>/dev/null; then
-                echo "Error: tart not found. Install with: brew install cirruslabs/cli/tart"
-                exit 1
-              fi
-
-              HOST="$1"
-
-              if tart list --quiet 2>/dev/null | grep -qE "^$HOST(\s|$)"; then
-                STATE=$(tart list --format json 2>/dev/null \
-                  | ${pkgs.jq}/bin/jq -r ".[] | select(.Name == \"$HOST\") | .State")
-                if [ "$STATE" = "running" ]; then
-                  echo "==> $HOST is already running"
-                  exit 0
-                fi
-              else
-                echo "Error: tart VM '$HOST' not found. Run devbox-bootstrap $HOST first."
-                exit 1
-              fi
-
-              # --nested is a tart run flag and must be passed each invocation
-              NESTED=$($NIX_BIN ${nixFlags} eval --raw \
-                ".#nixosConfigurations.$HOST.config.system.build.devboxNested")
-              NESTED_FLAG=""
-              if [ "$NESTED" = "true" ]; then
-                NESTED_FLAG="--nested"
-              fi
-
-              LOG_DIR="''${XDG_STATE_HOME:-$HOME/.local/state}/devbox"
-              mkdir -p "$LOG_DIR"
-              LOG="$LOG_DIR/$HOST.log"
-
-              echo "==> Starting $HOST headless (log: $LOG)..."
-              nohup tart run $NESTED_FLAG --no-graphics "$HOST" \
-                >> "$LOG" 2>&1 < /dev/null &
-              disown
-
-              # Wait briefly for tart to register the VM as running
-              for _ in 1 2 3 4 5; do
-                sleep 1
-                STATE=$(tart list --format json 2>/dev/null \
-                  | ${pkgs.jq}/bin/jq -r ".[] | select(.Name == \"$HOST\") | .State")
-                if [ "$STATE" = "running" ]; then
-                  IP=$(tart ip "$HOST" 2>/dev/null || true)
-                  echo "==> $HOST is running (ip: ''${IP:-pending})"
-                  exit 0
-                fi
-              done
-
-              echo "==> $HOST start initiated; check $LOG if it doesn't come up"
-            '';
+            command = ''exec ${devboxScripts.devbox-start}/bin/devbox-start "$@"'';
           }
           {
             name = "devbox-stop";
             category = "devbox";
             help = "Stop a running devbox VM (usage: devbox-stop <hostname>)";
-            command = ''
-              if [ -z "$1" ]; then
-                echo "Usage: devbox-stop <hostname>"
-                exit 1
-              fi
-
-              if ! command -v tart &>/dev/null; then
-                echo "Error: tart not found. Install with: brew install cirruslabs/cli/tart"
-                exit 1
-              fi
-
-              HOST="$1"
-
-              STATE=$(tart list --format json 2>/dev/null \
-                | ${pkgs.jq}/bin/jq -r ".[] | select(.Name == \"$HOST\") | .State")
-              if [ -z "$STATE" ] || [ "$STATE" = "null" ]; then
-                echo "Error: tart VM '$HOST' not found"
-                exit 1
-              fi
-              if [ "$STATE" != "running" ]; then
-                echo "==> $HOST is not running (state: $STATE)"
-                exit 0
-              fi
-
-              echo "==> Stopping $HOST..."
-              tart stop "$HOST"
-              echo "==> $HOST stopped"
-            '';
+            command = ''exec ${devboxScripts.devbox-stop}/bin/devbox-stop "$@"'';
           }
           {
             name = "devbox-remove";
             category = "devbox";
             help = "Stop and delete a devbox VM, plus its local logs (usage: devbox-remove <hostname>)";
-            command = ''
-              if [ -z "$1" ]; then
-                echo "Usage: devbox-remove <hostname>"
-                exit 1
-              fi
-
-              if ! command -v tart &>/dev/null; then
-                echo "Error: tart not found. Install with: brew install cirruslabs/cli/tart"
-                exit 1
-              fi
-
-              HOST="$1"
-
-              STATE=$(tart list --format json 2>/dev/null \
-                | ${pkgs.jq}/bin/jq -r ".[] | select(.Name == \"$HOST\") | .State")
-              if [ -z "$STATE" ] || [ "$STATE" = "null" ]; then
-                echo "==> tart VM '$HOST' not found; nothing to do"
-                exit 0
-              fi
-
-              if [ "$STATE" = "running" ]; then
-                echo "==> Stopping $HOST..."
-                tart stop "$HOST"
-              fi
-
-              echo "==> Deleting tart VM '$HOST'..."
-              tart delete "$HOST"
-
-              LOG="''${XDG_STATE_HOME:-$HOME/.local/state}/devbox/$HOST.log"
-              if [ -f "$LOG" ]; then
-                rm -f "$LOG"
-                echo "==> Removed $LOG"
-              fi
-
-              echo "==> $HOST removed."
-              echo "    Note: sops entry devbox-keys/$HOST and the age recipient in"
-              echo "    modules/secrets.nix were left in place. Drop them manually if"
-              echo "    you don't plan to reuse them with devbox-bootstrap $HOST."
-            '';
+            command = ''exec ${devboxScripts.devbox-remove}/bin/devbox-remove "$@"'';
           }
         ];
       };
