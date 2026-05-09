@@ -99,6 +99,27 @@
         "type": "github"
       }
     },
+    "devbox": {
+      "inputs": {
+        "nix-pins": [
+          "nix-pins"
+        ],
+        "nixpkgs": [
+          "devbox",
+          "nix-pins",
+          "nixpkgs-stable"
+        ]
+      },
+      "locked": {
+        "narHash": "sha256-ruo/jJ6m+Bcyz0bXx5dTgFz332/Mhif4dCs/Nj5HRgQ=",
+        "path": "/Users/yann/src/github.com/firefly-engineering/devbox",
+        "type": "path"
+      },
+      "original": {
+        "path": "/Users/yann/src/github.com/firefly-engineering/devbox",
+        "type": "path"
+      }
+    },
     "devenv-root": {
       "flake": false,
       "locked": {
@@ -729,6 +750,7 @@
           "nix-pins",
           "darwin-stable"
         ],
+        "devbox": "devbox",
         "devshell": [
           "nix-pins",
           "devshell"

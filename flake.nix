@@ -42,6 +42,10 @@
     toolbox.inputs.nix-pins.follows = "nix-pins";
     toolbox.inputs.devenv.follows = "";
 
+    # Devbox (NixOS VM lifecycle, Tart)
+    devbox.url = "path:/Users/yann/src/github.com/firefly-engineering/devbox";
+    devbox.inputs.nix-pins.follows = "nix-pins";
+
     # Personal flakes
     joyride.url = "github:sigma/joyride";
     joyride.inputs.nixpkgs.follows = "nixpkgs";
