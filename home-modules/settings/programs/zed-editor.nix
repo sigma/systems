@@ -115,15 +115,20 @@ in
 
     ssh_connections = devboxSshConnections;
   }
-  // lib.optionalAttrs (ai.editPredictions != null) {
+  // lib.optionalAttrs (
+    ai.editPredictions != null && config.programs.aiApis ? ${ai.editPredictions.model.api}
+  ) {
     edit_predictions =
       let
         ep = ai.editPredictions;
+        apiUrl = config.programs.aiApis.${ep.model.api};
       in
       {
-        provider = ep.model.provider;
-        ${ep.model.provider} = {
+        provider = "open_ai_compatible_api";
+        open_ai_compatible_api = {
+          api_url = "${apiUrl}/v1/completions";
           model = ep.model.model;
+          prompt_format = ep.model.promptFormat;
           max_output_tokens = ep.max_output_tokens;
         };
       };

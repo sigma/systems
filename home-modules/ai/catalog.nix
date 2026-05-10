@@ -1,9 +1,17 @@
-# AI catalog: known plans, providers, and local models.
+# AI catalog: known plans, backends, and local models.
 #
 # Plans pair a vendor with the bits each consumer needs to wire up: ACP server
 # name (for Zed's external-agent registry), CLI packages, optional auth source,
 # and an optional reference to an existing wrapper module that already knows
 # how to provision the plan (claude-firefly, claude-glm, opencode-firefly).
+#
+# Backends are local LLM inference servers. Each declares the API protocol it
+# speaks (e.g. "openai-compatible") and the endpoint it serves on. A host
+# selects at most one via `programs.aiActiveBackend`; consumers then look up
+# `programs.aiApis.${api}` and never name the backend directly.
+#
+# Local models reference an `api` (not a backend) so the same model entry
+# works on any host whose active backend speaks that protocol.
 { pkgs, ... }:
 {
   plans = {
@@ -49,25 +57,30 @@
     };
   };
 
-  providers = {
-    ollama = {
-      packages = [ pkgs.ollama ];
-      endpoint = "http://localhost:11434";
+  backends = {
+    # Apple Silicon, MLX-based. Installed via Homebrew (formula + DMG menu-bar
+    # app); see darwin-modules/features/llm.nix.
+    omlx = {
+      api = "openai-compatible";
+      endpoint = "http://localhost:8000";
     };
   };
 
   localModels = {
     gemma4-26b = {
-      provider = "ollama";
+      api = "openai-compatible";
       model = "gemma4:26b";
+      promptFormat = "code_gemma";
     };
     gemma4-31b-coding = {
-      provider = "ollama";
+      api = "openai-compatible";
       model = "gemma4:31b-coding-mtp-bf16";
+      promptFormat = "code_gemma";
     };
     qwen3-coder = {
-      provider = "ollama";
+      api = "openai-compatible";
       model = "qwen3-coder-next:latest";
+      promptFormat = "qwen";
     };
   };
 }

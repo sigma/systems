@@ -6,9 +6,14 @@
 # from `programs.aiCatalog` so vendor identifiers, ACP names, and required
 # packages stay in one place.
 #
+# Local inference is layered: a host selects one backend via
+# `programs.aiActiveBackend` (e.g. "omlx" on darwin); this module then
+# exposes `programs.aiApis.${api} = endpoint` so consumers can reach the
+# active backend by API protocol without naming the backend itself.
+#
 # As a side effect, this module also:
 # - installs `packages` declared by every plan in `aiProfiles.agents`
-# - installs the provider packages backing `aiProfiles.editPredictions`
+# - installs the active backend's `packages` (if any)
 # - turns on the wrapper module each plan references via `enableModule`
 # - asserts that any sops-backed plan's secret is actually declared
 {
@@ -61,20 +66,22 @@ let
     };
   };
 
-  providerType = types.submodule {
+  backendType = types.submodule {
     options = {
+      api = mkOption { type = types.str; };
+      endpoint = mkOption { type = types.str; };
       packages = mkOption {
         type = types.listOf types.package;
         default = [ ];
       };
-      endpoint = mkOption { type = types.str; };
     };
   };
 
   modelRefType = types.submodule {
     options = {
-      provider = mkOption { type = types.str; };
+      api = mkOption { type = types.str; };
       model = mkOption { type = types.str; };
+      promptFormat = mkOption { type = types.str; };
     };
   };
 
@@ -107,13 +114,11 @@ let
 
   cfg = config.programs.aiProfiles;
 
-  activeProviders = unique (
-    optional (cfg.editPredictions != null) cfg.editPredictions.model.provider
-  );
-
-  providerPackages = concatMap (
-    p: catalog.providers.${p}.packages or [ ]
-  ) activeProviders;
+  activeBackend =
+    if config.programs.aiActiveBackend != null then
+      catalog.backends.${config.programs.aiActiveBackend}
+    else
+      null;
 
   enableModules = filter (m: m != null) (map (p: p.enableModule or null) cfg.agents);
 in
@@ -122,7 +127,7 @@ in
     type = catalogType;
     default = catalog;
     readOnly = true;
-    description = "Available AI plans, providers, and local models.";
+    description = "Available AI plans, backends, and local models.";
   };
 
   options.programs.aiProfiles = mkOption {
@@ -131,8 +136,33 @@ in
     description = "Named AI profiles consumable by editors and CLI wrappers.";
   };
 
+  options.programs.aiActiveBackend = mkOption {
+    type = types.nullOr types.str;
+    default = null;
+    description = ''
+      Name of the local LLM backend running on this host (key into
+      `aiCatalog.backends`). Set by the platform feature module that
+      provisions the backend (e.g. darwin-modules/features/llm.nix).
+    '';
+  };
+
+  options.programs.aiApis = mkOption {
+    type = types.attrsOf types.str;
+    default = { };
+    description = ''
+      API protocol → endpoint URL, populated from the active backend.
+      Consumers read this instead of naming a backend directly.
+    '';
+  };
+
   config = {
-    home.packages = concatMap (p: p.packages or [ ]) cfg.agents ++ providerPackages;
+    home.packages =
+      concatMap (p: p.packages or [ ]) cfg.agents
+      ++ optionals (activeBackend != null) (activeBackend.packages or [ ]);
+
+    programs.aiApis = optionalAttrs (activeBackend != null) {
+      ${activeBackend.api} = activeBackend.endpoint;
+    };
 
     # Static option paths (not `programs.${m}.enable`) — dynamic keys here
     # confuse home-manager's freeformType resolution and trigger an infinite
