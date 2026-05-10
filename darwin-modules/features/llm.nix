@@ -28,7 +28,7 @@ in
         clone_target = "https://github.com/jundot/omlx";
       }
     ];
-    homebrew.brews = [ "omlx" ];
+    homebrew.brews = [ "jundot/omlx/omlx" ];
 
     user.programs.aiActiveBackend = "omlx";
   };

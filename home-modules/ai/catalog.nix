@@ -12,7 +12,7 @@
 #
 # Local models reference an `api` (not a backend) so the same model entry
 # works on any host whose active backend speaks that protocol.
-{ pkgs, ... }:
+{ ... }:
 {
   plans = {
     # Personal subscriptions
@@ -23,14 +23,18 @@
       # listed here, to avoid a buildEnv conflict with the existing wrappers
       # that already enable that module.
       enableModule = "claude-code";
-      auth = { type = "manual"; };
+      auth = {
+        type = "manual";
+      };
     };
     google-ai-pro = {
       vendor = "google";
       acp = "gemini";
       # gemini-cli installed via Homebrew (darwin-modules/apps/gemini-cli.nix)
       # rather than nixpkgs, since the nixpkgs version lags behind upstream.
-      auth = { type = "manual"; };
+      auth = {
+        type = "manual";
+      };
     };
     z-ai-coding = {
       vendor = "z-ai";
@@ -47,13 +51,17 @@
       vendor = "anthropic-proxy";
       acp = null;
       enableModule = "claude-firefly";
-      auth = { type = "static"; };
+      auth = {
+        type = "static";
+      };
     };
     firefly-opencode = {
       vendor = "openai-proxy";
       acp = null;
       enableModule = "opencode-firefly";
-      auth = { type = "static"; };
+      auth = {
+        type = "static";
+      };
     };
   };
 
@@ -67,20 +75,14 @@
   };
 
   localModels = {
-    gemma4-26b = {
+    # Zed's open-weights edit-prediction model. Fetch into the omlx model dir
+    # (default: ~/.omlx/models) from
+    # https://huggingface.co/zed-industries/zeta-2.1 — you may need an
+    # MLX-converted variant (mlx-community/zeta-2.1-* or `mlx_lm.convert`).
+    zeta = {
       api = "openai-compatible";
-      model = "gemma4:26b";
-      promptFormat = "code_gemma";
-    };
-    gemma4-31b-coding = {
-      api = "openai-compatible";
-      model = "gemma4:31b-coding-mtp-bf16";
-      promptFormat = "code_gemma";
-    };
-    qwen3-coder = {
-      api = "openai-compatible";
-      model = "qwen3-coder-next:latest";
-      promptFormat = "qwen";
+      model = "zeta-2.1";
+      promptFormat = "zeta2_1";
     };
   };
 }
