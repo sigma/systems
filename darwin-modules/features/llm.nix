@@ -5,11 +5,11 @@
 }:
 with lib;
 let
-  cfg = config.features.ollama;
+  cfg = config.features.llm;
 in
 {
-  options.features.ollama = {
-    enable = mkEnableOption "Ollama local LLM inference";
+  options.features.llm = {
+    enable = mkEnableOption "Local LLM inference";
   };
 
   config = mkIf cfg.enable {

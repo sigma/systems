@@ -3,9 +3,9 @@
   imports = [
     ./ipfs.nix
     ./k8s.nix
+    ./llm.nix
     ./midi-sessions.nix
     ./music.nix
-    ./ollama.nix
     ./tailscale.nix
   ];
 
@@ -14,7 +14,7 @@
     midi-sessions.enable = machine.features.music;
     music.enable = machine.features.music;
     ipfs.enable = true;
-    ollama.enable = machine.features.ollama;
+    llm.enable = machine.features.llm;
     tailscale.enable = machine.features.tailscale;
   };
 }
