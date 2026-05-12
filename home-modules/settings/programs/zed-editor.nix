@@ -75,6 +75,12 @@ in
       metrics = false;
     };
 
+    # Experimental Zed features. Opt in via discussion #25936.
+    feature_flags = {
+      notebooks = "on";
+      "tabular-data-preview" = "on";
+    };
+
     cli_default_open_behavior = "new_window";
     base_keymap = "Emacs";
 
