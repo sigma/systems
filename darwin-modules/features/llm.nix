@@ -9,27 +9,21 @@ let
 in
 {
   options.features.llm = {
-    enable = mkEnableOption "Local LLM inference (omlx backend on darwin)";
+    enable = mkEnableOption "Local LLM inference (LM Studio on darwin)";
   };
 
-  # Hybrid install:
-  # - Homebrew formula via the upstream tap → CLI (`omlx serve`).
-  # - Menu-bar app comes from the DMG at https://github.com/jundot/omlx/releases
-  #   (no cask is published, so it stays a manual one-time drag to /Applications).
-  # The menu-bar app handles autostart and is the expected runtime; the CLI is
-  # available for scripting and one-offs.
+  # GUI-driven workflow: LM Studio.app exposes an OpenAI-compatible server
+  # at http://localhost:1234. After install, launch the app, toggle the
+  # server on under the Developer tab, and enable "Start server when app
+  # starts" so it persists across launches. Models are fetched via the
+  # app's Discover tab (GGUF format) and live under ~/.lmstudio/models/.
   #
-  # The tap repo doesn't follow the standard `homebrew-<name>` convention, so
-  # the URL must be passed explicitly via `clone_target`.
+  # For headless / launchd autostart, run `lms server start` from a
+  # `launchd.user.agents` block instead; not wired here because the GUI
+  # path is sufficient for current use.
   config = mkIf cfg.enable {
-    homebrew.taps = [
-      {
-        name = "jundot/omlx";
-        clone_target = "https://github.com/jundot/omlx";
-      }
-    ];
-    homebrew.brews = [ "jundot/omlx/omlx" ];
+    homebrew.casks = [ "lm-studio" ];
 
-    user.programs.aiActiveBackend = "omlx";
+    user.programs.aiActiveBackend = "lmstudio";
   };
 }
