@@ -24,7 +24,7 @@ in
   editPredictions =
     if machine.features.llm or false then
       {
-        model = c.localModels.zeta;
+        model = c.localModels.gemma;
         max_output_tokens = 64;
       }
     else

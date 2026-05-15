@@ -75,17 +75,15 @@
   };
 
   localModels = {
-    # Zed's open-weights edit-prediction model. Fetch a GGUF build via the
-    # LM Studio Discover tab (looks for `zed-industries/zeta-2.1` or a
-    # community GGUF conversion thereof); files land under ~/.lmstudio/models/.
-    # The `model` field is whatever LM Studio's /v1/models endpoint reports
-    # after loading; the HF-style `<publisher>/<name>` path is the usual
-    # default. Verify with `curl -s localhost:1234/v1/models | jq` if a
+    # Edit-prediction model served by LM Studio. Fetch a GGUF build via the
+    # app's Discover tab; files land under ~/.lmstudio/models/. The `model`
+    # field is whatever LM Studio's /v1/models endpoint reports after
+    # loading — verify with `curl -s localhost:1234/v1/models | jq` if a
     # different identifier shows up.
-    zeta = {
+    gemma = {
       api = "openai-compatible";
-      model = "zed-industries/zeta-2.1";
-      promptFormat = "zeta2_1";
+      model = "google/gemma-4-e4b";
+      promptFormat = "infer";
     };
   };
 }
