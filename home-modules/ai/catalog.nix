@@ -72,6 +72,13 @@
       api = "openai-compatible";
       endpoint = "http://localhost:8000";
     };
+
+    # GUI-driven local server (Homebrew cask `lm-studio`). Default server
+    # port is 1234; toggle on under the app's Developer tab.
+    lmstudio = {
+      api = "openai-compatible";
+      endpoint = "http://localhost:1234";
+    };
   };
 
   localModels = {
