@@ -126,6 +126,24 @@ in
         "bookmark"
         "advance"
       ];
+      # Compound aliases via `util exec` — jj's own alias system can't chain
+      # subcommands, so shell out and re-enter jj.
+      pull = [
+        "util"
+        "exec"
+        "--"
+        "sh"
+        "-c"
+        "jj git fetch && jj rebase-all"
+      ];
+      push = [
+        "util"
+        "exec"
+        "--"
+        "sh"
+        "-c"
+        "jj tug && jj git push"
+      ];
     };
 
     revset-aliases = {
