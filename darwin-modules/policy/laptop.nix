@@ -1,8 +1,5 @@
 { lib, machine, ... }:
 with lib;
-let
-  kbd = import ../keyboards.nix;
-in
 {
   config = mkIf machine.features.laptop {
     # This accounts for my docking stations.
@@ -48,35 +45,34 @@ in
         ];
       };
 
-    programs.karabiner =
-      let
-        q1Max = kbd.keychron 2064;
-        ctrl = kbd.massdrop 61138;
-        wirelessLink = kbd.keychron 53296;
-        kinesisPedal = {
-          vendorId = 10730;
-          productId = 256;
-        };
-      in
-      {
-        # I always use karabiner on my laptops
-        enable = mkForce true;
+    programs.kanata = {
+      enable = mkForce true;
 
-        # My docking stations for laptops are connected to QMK keybaords,
-        # so I don't need Karabiner to handle them.
-        ignoreKeyboards = [
-          # home
-          q1Max
-          wirelessLink
-          # office
-          ctrl
-        ];
-        pedal = kinesisPedal;
+      # Include-list: only these devices are intercepted; QMK docking-
+      # station keyboards (Keychron Q1 Max, Massdrop CTRL, Keychron
+      # Wireless Link) are not listed and pass through untouched.
+      devices = [
+        "Apple Internal Keyboard / Trackpad"
+        # Kinesis Savant Elite2 pedal; must be reflashed to emit
+        # F20/F21/F22 from left/right/middle (kanata cannot grab the
+        # default mouse-button HID events).
+        "Kinesis Savant Elite2"
+      ];
 
-        # M3 MBP isn't detected properly by Karabiner, so we clear the
-        # internal keyboard config. This means the laptop must only be
-        # connected to keyboards listed in ignoreKeyboards.
-        internalKeyboard = mkForce { };
+      mods = {
+        swapAltCmd = true;
+        fnDndHack = true;
+        hyperFromLctl = true;
+        capsEscCtrl = true;
+        enterRctrl = true;
+        shiftParens = true;
       };
+
+      pedal = {
+        left = "f18"; # paired with macOS Dictation Shortcut = F18
+        right = "ret";
+        middle = "lmet";
+      };
+    };
   };
 }
