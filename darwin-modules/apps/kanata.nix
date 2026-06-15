@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  user,
   ...
 }:
 with lib;
@@ -24,8 +25,9 @@ let
       capsEscCtrl
       enterRctrl
       shiftParens
+      bracketChords
       ;
-    inherit (cfg.timing) tapMs holdMs;
+    inherit (cfg.timing) tapMs holdMs chordMs;
     pedal = cfg.pedal;
   };
 
@@ -99,6 +101,14 @@ in
         default = false;
         description = "Shift tap: left=`(`, right=`)`; hold behaves as Shift.";
       };
+      bracketChords = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Bottom-row chords for brackets/braces/angles:
+          `zx`→`[`, `./`→`]`, `xc`→`{`, `,.`→`}`, `zc`→`<`, `,/`→`>`.
+        '';
+      };
     };
 
     timing = {
@@ -119,6 +129,15 @@ in
           without pressing any other key still commits to the hold
           action. (With tap-hold-press, pressing another key during
           the window also commits to hold regardless of this value.)
+        '';
+      };
+      chordMs = mkOption {
+        type = types.int;
+        default = 80;
+        description = ''
+          Maximum delay (ms) between successive chord-key presses
+          for the chord to register. Tighter values reduce accidental
+          triggers during fast rolling typing.
         '';
       };
     };
@@ -169,11 +188,38 @@ in
     # Karabiner-Elements' grabber would compete with kanata for HID
     # access. Best-effort disable on each activation; safe to fail if
     # the daemon isn't installed yet.
+    #
+    # The optional second block disables caps-lock on the Apple
+    # internal keyboard at the macOS HID layer. Apple's LED is driven
+    # by macOS when the *physical* key is pressed — independent of
+    # what kanata then emits — so without this the LED toggles even
+    # though the OS receives Esc/Ctrl. Stored in the per-host plist
+    # under `0-0-0` (the internal-keyboard sentinel); HID code
+    # 30064771129 = caps lock, 30064771072 = "No Action".
     system.activationScripts.postActivation.text = ''
       if launchctl print system/org.pqrs.service.daemon.karabiner_grabber >/dev/null 2>&1; then
         launchctl disable system/org.pqrs.service.daemon.karabiner_grabber || true
         launchctl bootout system/org.pqrs.service.daemon.karabiner_grabber || true
       fi
+    ''
+    + optionalString cfg.mods.capsEscCtrl ''
+      uuid=$(/usr/sbin/ioreg -d2 -c IOPlatformExpertDevice | /usr/bin/awk -F'"' '/IOPlatformUUID/{print $4}')
+      plist="/Users/${user.login}/Library/Preferences/ByHost/.GlobalPreferences.$uuid.plist"
+      key='com.apple.keyboard.modifiermapping.0-0-0'
+      if [ ! -f "$plist" ]; then
+        sudo -u ${user.login} -- /usr/bin/plutil -create xml1 "$plist"
+      fi
+      # Idempotent: delete-then-add. PlistBuddy uses : as separator
+      # so the dotted top-level key parses correctly (plutil would
+      # mis-treat the dots as a nested path).
+      sudo -u ${user.login} -- /usr/libexec/PlistBuddy -c "Delete :$key" "$plist" 2>/dev/null || true
+      sudo -u ${user.login} -- /usr/libexec/PlistBuddy \
+        -c "Add :$key array" \
+        -c "Add :$key:0 dict" \
+        -c "Add :$key:0:HIDKeyboardModifierMappingSrc integer 30064771129" \
+        -c "Add :$key:0:HIDKeyboardModifierMappingDst integer 30064771072" \
+        "$plist"
+      sudo -u ${user.login} -- /usr/bin/killall cfprefsd 2>/dev/null || true
     '';
 
     # Same DND-on-F16 system shortcut the karabiner module wires up.

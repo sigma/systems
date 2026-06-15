@@ -66,7 +66,13 @@ with lib;
         capsEscCtrl = true;
         enterRctrl = true;
         shiftParens = true;
+        bracketChords = true;
       };
+
+      # 80ms (default) mistriggered on "xc" bigrams (e.g. "exception")
+      # and "./" sequences. 30ms requires a near-simultaneous press
+      # for the chord to register, which rules out rolling typing.
+      timing.chordMs = 30;
 
       pedal = {
         left = "f18"; # paired with macOS Dictation Shortcut = F18
