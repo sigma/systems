@@ -86,6 +86,14 @@ let
           tgst (switch
             ((base-layer base))  (layer-switch stock) break
             ((base-layer stock)) (layer-switch base)  break)'')
+        # Context-aware "do nothing" for unmapped slots in the fkeys
+        # layer: block (XX) while operating from base, fall through
+        # (_) while operating from stock so the guest still gets
+        # natural typing on stray Fn+letter combos.
+        (lib.optional stockToggle ''
+          nop  (switch
+            ((base-layer base))  XX break
+            ((base-layer stock)) _  break)'')
       ];
     in
     if lines == [ ] then
@@ -157,28 +165,36 @@ let
         left up down right${pedalRow})
     '';
 
-  # When mediaKeys is on, holding fn switches the F-row back to plain
-  # F1-F12 via this layer. Most other slots are transparent (`_`) so
-  # the base layer's mods (caps/Ctrl, shift parens, etc.) keep working.
-  # The non-transparent slots reproduce Apple's stock Fn shortcuts:
-  # Fn+Bspc=Forward Delete, Fn+Ret=Keypad Enter, Fn+E=Character Viewer,
-  # Fn+A=Show/hide Dock, Fn+←=Home, Fn+→=End, Fn+↑=PgUp, Fn+↓=PgDn.
+  # Holding fn switches the F-row back to plain F1-F12 and exposes
+  # Apple's stock Fn shortcuts: Fn+Bspc=Forward Delete, Fn+Ret=Keypad
+  # Enter, Fn+E=Character Viewer, Fn+A=Show/hide Dock, Fn+←=Home,
+  # Fn+→=End, Fn+↑=PgUp, Fn+↓=PgDn.
+  #
+  # Unmapped slots:
+  #   - Without stockToggle: `XX` (no output) so stray Fn+letter combos
+  #     don't dribble through as the literal letter.
+  #   - With stockToggle: `@nop`, a context-aware alias that evaluates
+  #     to `XX` while base is the active layer and `_` (transparent)
+  #     while stock is. Lets a guest type letters under Fn+key without
+  #     having to maintain two parallel fkeys layers.
+  #
   # When stockToggle is on, the top-left esc slot becomes the toggle
-  # into the `stock` layer (binding: Fn+Esc).
+  # into / out of the `stock` layer.
   fkeysLayerMac =
     { withPedal, stockToggle }:
     let
       esc = if stockToggle then "@tgst" else "_";
-      pedalRow = optionalString withPedal "\n  _   _   _";
+      f = if stockToggle then "@nop" else "XX";
+      pedalRow = optionalString withPedal "\n  ${f} ${f} ${f}";
     in
     ''
       (deflayer fkeys
         ${esc} f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
-        _    _  _  _  _  _  _  _  _  _  _   _   _   del
-        _    _  _  C-M-spc _  _  _  _  _  _  _   _   _   _
-        _    M-A-d _ _ _ _ _ _ _ _ _ _ kprt
-        _    _  _  _  _  _  _  _  _  _  _   _
-        _    _  _  _   _   _  _
+        ${f} ${f} ${f} ${f} ${f} ${f} ${f} ${f} ${f} ${f} ${f} ${f} ${f} del
+        ${f} ${f} ${f} C-M-spc ${f} ${f} ${f} ${f} ${f} ${f} ${f} ${f} ${f} ${f}
+        ${f} M-A-d ${f} ${f} ${f} ${f} ${f} ${f} ${f} ${f} ${f} ${f} kprt
+        ${f} ${f} ${f} ${f} ${f} ${f} ${f} ${f} ${f} ${f} ${f} ${f}
+        ${f} ${f} ${f} ${f} ${f} ${f} ${f}
         home pgup pgdn end${pedalRow})
     '';
 
