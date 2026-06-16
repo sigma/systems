@@ -26,6 +26,7 @@ let
       enterRctrl
       shiftParens
       bracketChords
+      mediaKeys
       ;
     inherit (cfg.timing) tapMs holdMs chordMs;
     pedal = cfg.pedal;
@@ -107,6 +108,16 @@ in
         description = ''
           Bottom-row chords for brackets/braces/angles:
           `zx`→`[`, `./`→`]`, `xc`→`{`, `,.`→`}`, `zc`→`<`, `,/`→`>`.
+        '';
+      };
+      mediaKeys = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Top-row keys emit Apple media-key codes (brightness, mission
+          control, spotlight, dictation, DND, media transport, mute,
+          volume). Holding `fn` flips them back to plain F1-F12.
+          Obsoletes `fnDndHack` — F6 emits the real DND code directly.
         '';
       };
     };

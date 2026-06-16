@@ -61,12 +61,14 @@ with lib;
 
       mods = {
         swapAltCmd = true;
-        fnDndHack = true;
         hyperFromLctl = true;
         capsEscCtrl = true;
         enterRctrl = true;
         shiftParens = true;
         bracketChords = true;
+        # Media keys natively, fn+F-key for plain F1-F12.
+        # Subsumes fnDndHack (F6 emits the real DND code).
+        mediaKeys = true;
       };
 
       # 80ms (default) mistriggered on "xc" bigrams (e.g. "exception")
