@@ -69,6 +69,8 @@ with lib;
         # Media keys natively, fn+F-key for plain F1-F12.
         # Subsumes fnDndHack (F6 emits the real DND code).
         mediaKeys = true;
+        # Fn+Esc → flip into a pass-through layer for guest use.
+        stockToggle = true;
       };
 
       # 80ms (default) mistriggered on "xc" bigrams (e.g. "exception")

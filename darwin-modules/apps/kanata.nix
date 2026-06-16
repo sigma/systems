@@ -27,6 +27,7 @@ let
       shiftParens
       bracketChords
       mediaKeys
+      stockToggle
       ;
     inherit (cfg.timing) tapMs holdMs chordMs;
     pedal = cfg.pedal;
@@ -118,6 +119,17 @@ in
           control, spotlight, dictation, DND, media transport, mute,
           volume). Holding `fn` flips them back to plain F1-F12.
           Obsoletes `fnDndHack` — F6 emits the real DND code directly.
+        '';
+      };
+      stockToggle = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Fn+Esc toggles a "stock" layer that bypasses all kanata
+          remaps (no caps→Ctrl, no shift-parens, no chords, no
+          alt↔cmd swap) — useful when handing the laptop to someone
+          else. Requires `mediaKeys` (the toggle lives on the fkeys
+          layer).
         '';
       };
     };

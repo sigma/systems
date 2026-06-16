@@ -63,6 +63,7 @@ let
       enterRctrl,
       shiftParens,
       mediaKeys,
+      stockToggle,
       tapMs,
       holdMs,
     }:
@@ -77,6 +78,14 @@ let
         # Holding fn flips the F-row from media keys back to plain
         # F1-F12 via the `fkeys` layer defined below.
         (lib.optional mediaKeys "fnl  (layer-while-held fkeys)")
+        # Conditional permanent switch: from base, switch to stock;
+        # from stock, switch back to base. `layer-toggle` is a name-
+        # alias for layer-while-held in kanata and would only hold
+        # the layer for the duration of Esc.
+        (lib.optional stockToggle ''
+          tgst (switch
+            ((base-layer base))  (layer-switch stock) break
+            ((base-layer stock)) (layer-switch base)  break)'')
       ];
     in
     if lines == [ ] then
@@ -151,14 +160,17 @@ let
   # When mediaKeys is on, holding fn switches the F-row back to plain
   # F1-F12 via this layer. Everything else is transparent (`_`) so the
   # base layer's mods (caps/Ctrl, shift parens, etc.) keep working.
+  # When stockToggle is on, the top-left esc slot becomes the toggle
+  # into the `stock` layer (so the binding is Fn+Esc).
   fkeysLayerMac =
-    { withPedal }:
+    { withPedal, stockToggle }:
     let
+      esc = if stockToggle then "@tgst" else "_";
       pedalRow = optionalString withPedal "\n  _   _   _";
     in
     ''
       (deflayer fkeys
-        _    f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
+        ${esc} f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
         _    _  _  _  _  _  _  _  _  _  _   _   _   _
         _    _  _  _  _  _  _  _  _  _  _   _   _   _
         _    _  _  _  _  _  _  _  _  _  _   _   _
@@ -167,16 +179,44 @@ let
         _    _  _  _${pedalRow})
     '';
 
+  # Pass-through "guest mode" layer — what the keyboard would do
+  # without any kanata remaps. Reached via Fn+Esc from base; the same
+  # combo from stock toggles back. `fn` explicitly triggers fkeys
+  # since after `layer-switch stock` the base of the stack is stock,
+  # so `_` here would fall through to defsrc (literal fn).
+  stockLayerMac =
+    { withPedal }:
+    let
+      pedalRow = optionalString withPedal "\n  f18 ret  lmet";
+    in
+    ''
+      (deflayer stock
+        esc  brdn brup mctl sls dtn dnd prev pp next mute vold volu
+        grv  1  2  3  4  5  6  7  8  9  0  -  =  bspc
+        tab  q  w  e  r  t  y  u  i  o  p  [  ]  \
+        caps a s d f g h j k l ; ' ret
+        lsft z x c v b n m , . / rsft
+        @fnl lctl lalt lmet spc rmet ralt
+        left up down right${pedalRow})
+    '';
+
   # Bracket chords on the bottom row: zxc and ,./ → [ ] { } < >.
   # Tight default timeout (chordMs) so rolling-finger typing of "exc",
-  # "...", etc. doesn't accidentally fire chords.
+  # "...", etc. doesn't accidentally fire chords. When stockToggle is
+  # on, chords are disabled inside the `stock` layer so guests get
+  # plain z/x/c/,/./ behavior.
   mkChords =
-    { bracketChords, chordMs }:
+    {
+      bracketChords,
+      chordMs,
+      stockToggle,
+    }:
     if !bracketChords then
       ""
     else
       let
-        line = keys: out: "(${keys}) ${out} ${toString chordMs} all-released ()";
+        disabled = if stockToggle then "(stock)" else "()";
+        line = keys: out: "(${keys}) ${out} ${toString chordMs} all-released ${disabled}";
       in
       ''
         (defchordsv2
@@ -205,6 +245,11 @@ in
       # volume) and holding fn flips back to plain F1-F12. Obsoletes
       # `fnDndHack` since F6→dnd is direct in this mode.
       mediaKeys ? false,
+      # When true: Fn+Esc toggles a `stock` layer that bypasses all
+      # kanata remaps (no caps→Ctrl, no shift-parens, no chords, no
+      # alt↔cmd swap). Requires mediaKeys to be on so the fkeys layer
+      # exists to host the Fn+Esc binding.
+      stockToggle ? false,
       # Tap-hold timing window (ms). tapMs: max press duration that
       # still counts as a tap. holdMs: time-based fallback for the
       # "press alone, no other key" case.
@@ -221,6 +266,8 @@ in
     }:
     assert lib.assertMsg (platform == "macos")
       "kanata config generator currently only supports platform = \"macos\"";
+    assert lib.assertMsg (!stockToggle || mediaKeys)
+      "kanata stockToggle requires mediaKeys (the Fn+Esc binding lives in the fkeys layer)";
     let
       withPedal = pedal != null;
       pedalCfg =
@@ -249,11 +296,14 @@ in
             enterRctrl
             shiftParens
             mediaKeys
+            stockToggle
             tapMs
             holdMs
             ;
         })
-        (mkChords { inherit bracketChords chordMs; })
+        (mkChords {
+          inherit bracketChords chordMs stockToggle;
+        })
         (deflayerMac {
           inherit
             withPedal
@@ -268,6 +318,7 @@ in
           pedal = pedalCfg;
         })
       ]
-      ++ lib.optional mediaKeys (fkeysLayerMac { inherit withPedal; })
+      ++ lib.optional mediaKeys (fkeysLayerMac { inherit withPedal stockToggle; })
+      ++ lib.optional stockToggle (stockLayerMac { inherit withPedal; })
     );
 }
