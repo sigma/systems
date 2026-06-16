@@ -158,10 +158,12 @@ let
     '';
 
   # When mediaKeys is on, holding fn switches the F-row back to plain
-  # F1-F12 via this layer. Everything else is transparent (`_`) so the
-  # base layer's mods (caps/Ctrl, shift parens, etc.) keep working.
-  # When stockToggle is on, the top-left esc slot becomes the toggle
-  # into the `stock` layer (so the binding is Fn+Esc).
+  # F1-F12 via this layer. Most other slots are transparent (`_`) so
+  # the base layer's mods (caps/Ctrl, shift parens, etc.) keep working.
+  # The non-transparent slots reproduce Apple's stock Fn shortcuts:
+  # Fn+Bspc=Forward Delete, Fn+Ret=Keypad Enter, Fn+←=Home, Fn+→=End,
+  # Fn+↑=PgUp, Fn+↓=PgDn. When stockToggle is on, the top-left esc
+  # slot becomes the toggle into the `stock` layer (binding: Fn+Esc).
   fkeysLayerMac =
     { withPedal, stockToggle }:
     let
@@ -171,12 +173,12 @@ let
     ''
       (deflayer fkeys
         ${esc} f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
+        _    _  _  _  _  _  _  _  _  _  _   _   _   del
         _    _  _  _  _  _  _  _  _  _  _   _   _   _
-        _    _  _  _  _  _  _  _  _  _  _   _   _   _
-        _    _  _  _  _  _  _  _  _  _  _   _   _
+        _    _  _  _  _  _  _  _  _  _  _   _   kprt
         _    _  _  _  _  _  _  _  _  _  _   _
         _    _  _  _   _   _  _
-        _    _  _  _${pedalRow})
+        home pgup pgdn end${pedalRow})
     '';
 
   # Pass-through "guest mode" layer — what the keyboard would do
