@@ -20,6 +20,7 @@
       ./catppuccin.nix
       ./cursor.nix # referenced from settings/programs/jujutsu.nix
       ./editors
+      ./hunk.nix
       ./jujutsu.nix
       ./policy # gates internally on machine.features.<x>
       ./settings

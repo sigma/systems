@@ -52,6 +52,7 @@ let
     "fish"
     "fzf"
     "git"
+    "hunk"
     "jujutsu"
     "ripgrep"
     "ssh"
