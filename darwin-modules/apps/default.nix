@@ -10,6 +10,7 @@
     ./alfred.nix
     ./antigravity.nix
     ./brave.nix
+    ./chrome.nix
     ./claude-code.nix
     ./cursor.nix
     ./gemini-cli.nix
@@ -46,7 +47,6 @@
     [
       "calibre"
       "elgato-stream-deck"
-      "google-chrome"
       "iina"
       "jordanbaird-ice"
       "localsend"
