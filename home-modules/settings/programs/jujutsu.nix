@@ -144,6 +144,17 @@ in
         "-c"
         "jj tug && jj git push"
       ];
+      # Open the unpushed-changes revset in hunk's TUI. Only defined
+      # when programs.hunk is enabled, and pinned to the wrapped
+      # binary so it doesn't depend on hunk being on PATH.
+      review = lib.mkIf config.programs.hunk.enable [
+        "util"
+        "exec"
+        "--"
+        "${config.programs.hunk.finalPackage}/bin/hunk"
+        "show"
+        "pending()"
+      ];
     };
 
     revset-aliases = {

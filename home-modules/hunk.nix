@@ -45,6 +45,17 @@ in
       description = "The hunk package to install.";
     };
 
+    finalPackage = mkOption {
+      type = types.package;
+      readOnly = true;
+      description = ''
+        The hunk package after applying any env-override wrapping
+        (pager/editor). External consumers (jj aliases, etc.) should
+        reference this rather than `package` to get the wrapped
+        binary with the right env.
+      '';
+    };
+
     pager = mkOption {
       type = types.nullOr types.str;
       default = null;
@@ -123,6 +134,8 @@ in
 
   config = mkIf cfg.enable (mkMerge [
     {
+      programs.hunk.finalPackage = finalPackage;
+
       home.packages = [ finalPackage ];
 
       # Baseline written to ~/.config/hunk/config.toml. These match
