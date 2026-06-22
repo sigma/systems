@@ -13,7 +13,9 @@ lib.mkIf (machine.features.devbox or false) {
   # passthru (so HM still computes the right binary name), but whose `bin/zed`
   # is a no-op symlink.
   programs.zed-editor = {
-    enable = true;
+    # Disabled while not actively using Zed; flip back to true to get
+    # the remote-server stub on devboxes for the parent to connect.
+    enable = false;
     installRemoteServer = true;
     package = pkgs.runCommand "zed-editor-stub-${pkgs.zed-editor.version}" {
       passthru = { inherit (pkgs.zed-editor) version remote_server; };

@@ -50,7 +50,7 @@ let
   }) myDevboxes;
 in
 {
-  enable = true;
+  enable = false;
   package = wrapped;
   extensions = [
     "catppuccin-icons"
