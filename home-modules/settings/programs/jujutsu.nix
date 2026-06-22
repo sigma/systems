@@ -149,6 +149,9 @@ in
     revset-aliases = {
       "immutable_heads()" = ''builtin_immutable_heads() | author(exact:"beadwork")'';
       "last_change()" = "latest(ancestors(@) & ~empty())";
+      # Everything reachable from @ that isn't already on a remote —
+      # i.e., the changes that haven't been pushed yet.
+      "pending()" = "remote_bookmarks()..@";
     };
 
     revsets = {
