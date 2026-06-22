@@ -10,21 +10,6 @@ let
   interactive = machine.features.mac || machine.features.interactive;
 
   weztermConfig = pkgs.local.wezterm-config;
-  editor =
-    if config.programs.antigravity.enable then
-      config.programs.antigravity.package
-    else if config.programs.cursor.enable then
-      config.programs.cursor.package
-    else
-      config.programs.vscode.package;
-
-  editorBin =
-    if config.programs.antigravity.enable then
-      "antigravity"
-    else if config.programs.cursor.enable then
-      "cursor"
-    else
-      "code";
 
   # Generate SSH domains from machine remotes
   # For NixOS hosts, use -mux suffix for remote_address to avoid RequestTTY force
@@ -112,32 +97,16 @@ in
 
     -- This is the main event handler for opening links
     wezterm.on('open-uri', function(window, pane, uri)
-       -- Check for a file URI (e.g., file:///path/to/your/file)
+       -- file URI: send `nvim <path>` to the current pane so the
+       -- shell launches nvim in place (rather than spawning a new
+       -- tab). Works the same locally and over SSH — the active
+       -- shell's PATH resolves nvim.
        if uri:find('^file:') then
-         -- WezTerm's URL parser helps extract the clean file path
          local url = wezterm.url.parse(uri)
-         local domain = pane:get_domain_name()
-
-          if domain == "local" then
-            -- Local domain: open in Editor
-            window:perform_action(
-              wezterm.action.SpawnCommandInNewTab {
-                args = { '${editor}/bin/${editorBin}', url.file_path },
-                domain = "DefaultDomain",
-              },
-              pane
-            )
-          else
-           -- SSH domain: open in neovim on the remote
-           window:perform_action(
-             wezterm.action.SpawnCommandInNewTab {
-               args = { 'nvim', url.file_path },
-             },
-             pane
-           )
-         end
-
-         -- Return false to prevent wezterm's default link handling
+         window:perform_action(
+           wezterm.action.SendString('nvim ' .. wezterm.shell_join_args({ url.file_path }) .. '\r'),
+           pane
+         )
          return false
        end
 
