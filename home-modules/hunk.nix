@@ -8,6 +8,31 @@ with lib;
 let
   cfg = config.programs.hunk;
   tomlFormat = pkgs.formats.toml { };
+
+  # When any env override (pager / editor) is set, expose hunk via a
+  # thin wrapper that exports the variables before invoking the real
+  # binary. The symlinkJoin keeps the rest of the package layout
+  # (skills, etc.) available at the same relative paths.
+  envOverrides = lib.filterAttrs (_: v: v != null) {
+    HUNK_TEXT_PAGER = cfg.pager;
+    EDITOR = cfg.editor;
+  };
+
+  finalPackage =
+    if envOverrides == { } then
+      cfg.package
+    else
+      pkgs.symlinkJoin {
+        name = "${cfg.package.name}-wrapped";
+        paths = [ cfg.package ];
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/hunk \
+            ${lib.concatStringsSep " \\\n            " (
+              lib.mapAttrsToList (k: v: "--set ${k} ${lib.escapeShellArg (toString v)}") envOverrides
+            )}
+        '';
+      };
 in
 {
   options.programs.hunk = {
@@ -18,6 +43,29 @@ in
       default = pkgs.toolbox.hunk;
       defaultText = literalExpression "pkgs.toolbox.hunk";
       description = "The hunk package to install.";
+    };
+
+    pager = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      description = ''
+        Text pager hunk uses for its inline text-view (sets the
+        `HUNK_TEXT_PAGER` env var). When set, the hunk binary is
+        wrapped to export this value before exec. Leave null to let
+        hunk pick its own default.
+      '';
+      example = "less -RF";
+    };
+
+    editor = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      description = ''
+        Editor hunk launches for review actions (sets the `EDITOR`
+        env var on the wrapped binary). Use a full nix-store path
+        unless the binary is guaranteed to be on PATH.
+      '';
+      example = literalExpression ''"''${config.programs.nvf.finalPackage}/bin/nvim"'';
     };
 
     settings = mkOption {
@@ -75,7 +123,7 @@ in
 
   config = mkIf cfg.enable (mkMerge [
     {
-      home.packages = [ cfg.package ];
+      home.packages = [ finalPackage ];
 
       # Baseline written to ~/.config/hunk/config.toml. These match
       # hunk's own internal defaults but having them in the file
@@ -93,7 +141,7 @@ in
     }
 
     (mkIf cfg.git.enable {
-      programs.git.settings.core.pager = "${cfg.package}/bin/hunk pager";
+      programs.git.settings.core.pager = "${finalPackage}/bin/hunk pager";
       # HM's delta module auto-sets core.pager when enabled; disable
       # its wiring so we don't double-define. `pkgs.delta` is still
       # in scope for direct references (lazygit, gh, jj's `delta`
@@ -104,7 +152,7 @@ in
     (mkIf cfg.jj.enable {
       programs.jujutsu.settings.ui = {
         pager = mkForce [
-          "${cfg.package}/bin/hunk"
+          "${finalPackage}/bin/hunk"
           "pager"
         ];
         diff-formatter = mkForce ":git";
@@ -112,7 +160,7 @@ in
     })
 
     (mkIf cfg.claudeSkill.enable {
-      programs.claude-code.skills.hunk-review = "${cfg.package}/skills/hunk-review";
+      programs.claude-code.skills.hunk-review = "${finalPackage}/skills/hunk-review";
     })
 
     # Catppuccin integration: when catppuccin is globally enabled,
