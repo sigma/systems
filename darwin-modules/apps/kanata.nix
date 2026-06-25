@@ -22,6 +22,7 @@ let
       swapAltCmd
       fnDndHack
       hyperFromLctl
+      rOptHyper
       capsEscCtrl
       enterRctrl
       shiftParens
@@ -87,6 +88,14 @@ in
         type = types.bool;
         default = false;
         description = "Left Control becomes Hyper (Ctrl+Alt+Cmd).";
+      };
+      rOptHyper = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Right Option becomes Hyper+Shift (Ctrl+Alt+Cmd+Shift).
+          Takes precedence over `swapAltCmd` for that key.
+        '';
       };
       capsEscCtrl = mkOption {
         type = types.bool;

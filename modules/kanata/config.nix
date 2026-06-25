@@ -59,6 +59,7 @@ let
   mkAliases =
     {
       hyperFromLctl,
+      rOptHyper,
       capsEscCtrl,
       enterRctrl,
       shiftParens,
@@ -71,6 +72,9 @@ let
       t = "${toString tapMs} ${toString holdMs}";
       lines = lib.flatten [
         (lib.optional hyperFromLctl "hyp  (multi lctl lalt lmet)")
+        # Hyper+Shift (Ctrl+Alt+Cmd+Shift) — distinct from `hyp`, which
+        # omits shift. Bound to the right-option key via rOptHyper.
+        (lib.optional rOptHyper "rhyp (multi lctl lalt lmet lsft)")
         (lib.optional capsEscCtrl "cap  (tap-hold-press ${t} esc lctl)")
         (lib.optional enterRctrl "ent  (tap-hold-press ${t} ret rctl)")
         (lib.optional shiftParens "lpar (tap-hold-press ${t} S-9 lsft)")
@@ -114,6 +118,7 @@ let
       swapAltCmd,
       fnDndHack,
       hyperFromLctl,
+      rOptHyper,
       capsEscCtrl,
       enterRctrl,
       shiftParens,
@@ -147,7 +152,15 @@ let
       # HID-level option is `lalt`/`ralt`, command is `lmet`/`rmet`.
       lalt = if swapAltCmd then "lmet" else "lalt";
       lmet = if swapAltCmd then "lalt" else "lmet";
-      ralt = if swapAltCmd then "rmet" else "ralt";
+      # rOptHyper claims the physical right-option slot for Hyper+Shift,
+      # overriding the alt↔cmd swap there.
+      ralt =
+        if rOptHyper then
+          "@rhyp"
+        else if swapAltCmd then
+          "rmet"
+        else
+          "ralt";
       rmet = if swapAltCmd then "ralt" else "rmet";
 
       # Pedal: left=dictation-trigger (F18, paired with macOS Keyboard
@@ -255,6 +268,9 @@ in
       swapAltCmd ? false,
       fnDndHack ? false,
       hyperFromLctl ? false,
+      # Right option becomes Hyper+Shift (Ctrl+Alt+Cmd+Shift). Wins over
+      # swapAltCmd for that key.
+      rOptHyper ? false,
       capsEscCtrl ? false,
       enterRctrl ? false,
       shiftParens ? false,
@@ -311,6 +327,7 @@ in
         (mkAliases {
           inherit
             hyperFromLctl
+            rOptHyper
             capsEscCtrl
             enterRctrl
             shiftParens
@@ -329,6 +346,7 @@ in
             swapAltCmd
             fnDndHack
             hyperFromLctl
+            rOptHyper
             capsEscCtrl
             enterRctrl
             shiftParens

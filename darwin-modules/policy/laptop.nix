@@ -62,6 +62,8 @@ with lib;
       mods = {
         swapAltCmd = true;
         hyperFromLctl = true;
+        # Right option → Hyper+Shift (Ctrl+Alt+Cmd+Shift).
+        rOptHyper = true;
         capsEscCtrl = true;
         enterRctrl = true;
         shiftParens = true;
