@@ -57,12 +57,12 @@ let
 
   primaryFontLua =
     let
-      features = lib.optional (termProfile.features != [ ]) (
-        "harfbuzz_features = ${luaList (map luaQuoted termProfile.features)}"
-      );
-      weight = lib.optional (termProfile.weight != null) (
-        "weight = ${luaQuoted (weightToWezterm termProfile.weight)}"
-      );
+      features = lib.optional (
+        termProfile.features != [ ]
+      ) "harfbuzz_features = ${luaList (map luaQuoted termProfile.features)}";
+      weight = lib.optional (
+        termProfile.weight != null
+      ) "weight = ${luaQuoted (weightToWezterm termProfile.weight)}";
       attrs = [ "family = ${luaQuoted termProfile.family.family}" ] ++ features ++ weight;
     in
     "{ ${lib.concatStringsSep ", " attrs} }";

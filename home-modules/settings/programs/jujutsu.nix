@@ -76,26 +76,28 @@ in
       edit-args = [ ];
     };
 
-    fix.tools.gofmt = {
-      enabled = true;
-      command = [ "${pkgs.go}/bin/gofmt" ];
-      patterns = [ "glob:'**/*.go'" ];
-    };
+    fix.tools = {
+      gofmt = {
+        enabled = true;
+        command = [ "${pkgs.go}/bin/gofmt" ];
+        patterns = [ "glob:'**/*.go'" ];
+      };
 
-    fix.tools.rustfmt = {
-      enabled = true;
-      command = [
-        "${pkgs.rustfmt}/bin/rustfmt"
-        "--emit"
-        "stdout"
-      ];
-      patterns = [ "glob:'**/*.rs'" ];
-    };
+      rustfmt = {
+        enabled = true;
+        command = [
+          "${pkgs.rustfmt}/bin/rustfmt"
+          "--emit"
+          "stdout"
+        ];
+        patterns = [ "glob:'**/*.rs'" ];
+      };
 
-    fix.tools.nixfmt = {
-      enabled = true;
-      command = [ "${pkgs.nixfmt}/bin/nixfmt" ];
-      patterns = [ "glob:'**/*.nix'" ];
+      nixfmt = {
+        enabled = true;
+        command = [ "${pkgs.nixfmt}/bin/nixfmt" ];
+        patterns = [ "glob:'**/*.nix'" ];
+      };
     };
 
     git = {
