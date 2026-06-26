@@ -177,6 +177,7 @@ in
     {
       pre-commit.settings.hooks = {
         markdownlint.enable = true;
+        statix.enable = true;
         treefmt.enable = true;
 
         treefmt.settings.formatters = [
@@ -240,6 +241,7 @@ in
 
         packages = with pkgs; [
           nixd # for VSCode integration.
+          statix # nix linter
           age # for secrets encryption
           age-plugin-yubikey # for YubiKey-based age encryption
           sops # for secrets management
