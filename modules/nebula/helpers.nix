@@ -41,7 +41,7 @@ let
         // lib.optionalAttrs (r.name != null || hostname != r.name) {
           inherit hostname;
         }
-        // lib.optionalAttrs (r.user != null) { user = r.user; }
+        // lib.optionalAttrs (r.user != null) { inherit (r) user; }
         // lib.optionalAttrs (r.sshOpts != null) (
           # Merge extraOptions if both sshOpts and NixOS RequestTTY are present
           if remoteIsNixOS && r.sshOpts ? extraOptions then
@@ -67,7 +67,7 @@ let
       resolved = resolveRemote { inherit machine sharedDomain; } r;
     in
     lib.optionalAttrs resolved.remoteIsNixOS {
-      "${resolved.hostAlias}-mux" = { hostname = resolved.hostname; };
+      "${resolved.hostAlias}-mux" = { inherit (resolved) hostname; };
     };
 
   # Find a remote by alias suffix (e.g., "devbox" matches "spectre-devbox")

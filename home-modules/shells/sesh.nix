@@ -44,8 +44,8 @@ in
   config = mkIf cfg.enable {
     programs.sesh.settings = {
       session = map (session: {
-        name = session.name;
-        path = session.path;
+        inherit (session) name;
+        inherit (session) path;
         startup_command = pkgs.writeShellScript "sesh-${session.name}-startup.sh" session.startupScript;
       }) cfg.sessions;
     };
@@ -57,7 +57,7 @@ in
           path = ws.start_directory;
           startupScript = "${config.programs.tmux.tmuxp.package}/bin/tmuxp load -a ${name}; ${config.programs.tmux.package}/bin/tmux kill-window";
         };
-        workspaces = config.programs.tmux.tmuxp.workspaces;
+        inherit (config.programs.tmux.tmuxp) workspaces;
       in
       mkIf cfg.enableTmuxpWorkspaces (builtins.attrValues (builtins.mapAttrs tmuxpWorkspace workspaces));
   };

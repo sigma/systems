@@ -1,6 +1,4 @@
-{
-  ...
-}:
+_:
 {
   config = {
     # enable everything except vscode

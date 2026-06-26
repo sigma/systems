@@ -9,7 +9,7 @@ let
   cfg = config.programs.tmux.tmuxp;
 
   cplxCmd = types.submodule (
-    { ... }:
+    _:
     {
       options = {
         cmd = mkOption {
@@ -18,19 +18,19 @@ let
         };
 
         enter = mkOption {
-          type = types.nullOr (types.bool);
+          type = types.nullOr types.bool;
           default = null;
           description = "Whether to run the command";
         };
 
         sleep_before = mkOption {
-          type = types.nullOr (types.ints.unsigned);
+          type = types.nullOr types.ints.unsigned;
           default = null;
           description = "How long to sleep before the command";
         };
 
         sleep_after = mkOption {
-          type = types.nullOr (types.ints.unsigned);
+          type = types.nullOr types.ints.unsigned;
           default = null;
           description = "How long to sleep after the command";
         };
@@ -46,11 +46,11 @@ let
     ]
   );
   pane = types.submodule (
-    { ... }:
+    _:
     {
       options = {
         focus = mkOption {
-          type = types.nullOr (types.bool);
+          type = types.nullOr types.bool;
           default = null;
           description = "Whether to focus this pane";
         };
@@ -82,7 +82,7 @@ let
     }
   );
   window = types.submodule (
-    { ... }:
+    _:
     {
       options = {
         window_name = mkOption {
@@ -150,7 +150,7 @@ let
     }
   );
   workspace = types.submodule (
-    { ... }:
+    _:
     {
       options = {
         session_name = mkOption {

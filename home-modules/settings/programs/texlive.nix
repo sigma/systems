@@ -1,9 +1,8 @@
-{ ... }:
+_:
 {
   enable = true;
 
-  extraPackages = (
-    texpkgs: {
+  extraPackages = texpkgs: {
       inherit (texpkgs)
         scheme-basic
         dvisvgm
@@ -14,6 +13,5 @@
         hyperref
         capt-of
         ;
-    }
-  );
+    };
 }

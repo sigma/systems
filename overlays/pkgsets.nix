@@ -5,7 +5,7 @@
 }:
 final: prev:
 let
-  system = final.stdenv.system;
+  inherit (final.stdenv) system;
   nixpkgs-stable = if final.stdenv.isDarwin then inputs.darwin-stable else inputs.nixos-stable;
   extra86 =
     pkgset:
@@ -73,7 +73,7 @@ in
   # put determinate nix in a separate package set so we can decide which
   # version to use depending on the machine.
   determinate = {
-    nix = inputs.nix.packages.${system}.nix;
+    inherit (inputs.nix.packages.${system}) nix;
   };
 }
 // inputs.nixpkgs.lib.optionalAttrs (prev.stdenv.system == "aarch64-darwin") {

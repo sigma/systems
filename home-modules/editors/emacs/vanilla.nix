@@ -13,8 +13,8 @@ let
     inherit user;
     emacs = cfg.package;
     fonts = {
-      family = editorProfile.family.family;
-      size = editorProfile.size;
+      inherit (editorProfile.family) family;
+      inherit (editorProfile) size;
     };
   };
   # Relative path from $HOME to the chemacs vanilla profile directory

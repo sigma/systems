@@ -133,9 +133,9 @@ in
         provider = "open_ai_compatible_api";
         open_ai_compatible_api = {
           api_url = "${apiUrl}/v1/completions";
-          model = ep.model.model;
+          inherit (ep.model) model;
           prompt_format = ep.model.promptFormat;
-          max_output_tokens = ep.max_output_tokens;
+          inherit (ep) max_output_tokens;
         };
       };
   };

@@ -78,7 +78,7 @@ in
       in
       [
         {
-          control = control;
+          inherit control;
           module = "${cfg.package}/lib/security/pam_u2f.so";
           arguments = [
             "authfile=/etc/u2f_mappings"

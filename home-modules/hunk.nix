@@ -80,7 +80,7 @@ in
     };
 
     settings = mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       description = ''
         Free-form config written verbatim to ~/.config/hunk/config.toml.

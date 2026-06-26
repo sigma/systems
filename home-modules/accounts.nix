@@ -6,6 +6,6 @@
     notmuch.enable = config.programs.notmuch.enable;
     realName = user.name;
     address = user.email;
-    aliases = user.aliases;
+    inherit (user) aliases;
   };
 }

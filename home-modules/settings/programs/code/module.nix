@@ -18,12 +18,12 @@ let
         };
 
         when = mkOption {
-          type = types.nullOr (types.str);
+          type = types.nullOr types.str;
           default = null;
         };
 
         args = mkOption {
-          type = types.nullOr (jsonFormat.type);
+          type = types.nullOr jsonFormat.type;
           default = null;
         };
       };
@@ -33,12 +33,12 @@ in
 {
   options = {
     userSettings = mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
       default = { };
     };
 
     userTasks = mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
       default = { };
     };
 
@@ -53,12 +53,12 @@ in
     };
 
     languageSnippets = mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
       default = { };
     };
 
     globalSnippets = mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
       default = { };
     };
   };

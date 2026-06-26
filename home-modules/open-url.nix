@@ -11,8 +11,7 @@ let
   launchBrowser =
     browser: if hasSuffix ".app" "${browser}" then "open -n -a '${browser}' --args" else "${browser}";
 
-  pkg = (
-    pkgs.writeShellScriptBin "open-url" ''
+  pkg = pkgs.writeShellScriptBin "open-url" ''
       URL="$1"
       PROFILE_NAME=""
 
@@ -40,8 +39,7 @@ let
       else
         ${launchBrowser cfg.browser} --profile-directory="Default" "$URL"
       fi
-    ''
-  );
+    '';
 in
 {
   options.programs.open-url = {

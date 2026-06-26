@@ -24,7 +24,7 @@ let
         users.${user.login} = inputs.nixpkgs-stable.lib.mkMerge (cfg.homeModules ++ machine.homeModules);
         extraSpecialArgs = {
           inherit user machine stateVersion;
-          nixConfig = cfg.nixConfig;
+          inherit (cfg) nixConfig;
         };
       };
     };
@@ -45,7 +45,7 @@ let
 
   # Common sops configuration builder
   sopsConfigFor = { isHome ? false, user ? null, isDarwin ? false }: {
-    defaultSopsFile = secretsCfg.defaultSopsFile;
+    inherit (secretsCfg) defaultSopsFile;
     age = {
       sshKeyPaths =
         let
@@ -124,7 +124,7 @@ let
     in
     # Wrap to match homeManagerConfiguration's output structure
     {
-      activationPackage = hmUserConfig.home.activationPackage;
+      inherit (hmUserConfig.home) activationPackage;
       config = hmUserConfig;
       # Include other commonly used attributes
       inherit (hmUserConfig) news newsDisplay newsEntries;
@@ -155,7 +155,7 @@ let
       hmUserConfig = nixosSystem.config.home-manager.users.${user.login};
     in
     {
-      activationPackage = hmUserConfig.home.activationPackage;
+      inherit (hmUserConfig.home) activationPackage;
       config = hmUserConfig;
       inherit (hmUserConfig) news newsDisplay newsEntries;
     };
@@ -168,7 +168,7 @@ in
       specialArgs = {
         inherit user machine stateVersion;
         inherit (machine) system;
-        nixConfig = cfg.nixConfig;
+        inherit (cfg) nixConfig;
       };
     in
     inputs.darwin.lib.darwinSystem {
@@ -223,7 +223,7 @@ in
       user = userFor machine;
       specialArgs = {
         inherit user machine stateVersion;
-        nixConfig = cfg.nixConfig;
+        inherit (cfg) nixConfig;
       };
       sharedModules =
         cfg.nixosModules
@@ -243,7 +243,7 @@ in
         nixpkgs = inputs.nixpkgs-stable;
         inherit (machine) system;
         inherit specialArgs;
-        hypervisor = machine.devbox.hypervisor;
+        inherit (machine.devbox) hypervisor;
         vm = {
           nested = machine.devbox.nested or false;
           memoryMB = machine.devbox.memoryMB or null;

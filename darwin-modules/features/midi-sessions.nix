@@ -61,7 +61,7 @@ let
 
   configJSON = pkgs.writeText "midi-session-manager.json" (builtins.toJSON {
     inherit hostname;
-    pollInterval = cfg.pollInterval;
+    inherit (cfg) pollInterval;
     sessions = mapAttrsToList (_: session: {
       inherit (session) localName networkName port;
       devices = map (d: {

@@ -19,13 +19,13 @@ let
   buildMachines = mapAttrsToList (name: b: {
     hostName = if b.alias != null then b.alias else b.name;
     systems = [ b.system ];
-    maxJobs = b.maxJobs;
-    speedFactor = b.speedFactor;
-    supportedFeatures = b.supportedFeatures;
-    sshUser = b.sshUser;
+    inherit (b) maxJobs;
+    inherit (b) speedFactor;
+    inherit (b) supportedFeatures;
+    inherit (b) sshUser;
     sshKey = config.sops.secrets."builder-keys/${name}".path;
   } // optionalAttrs (b.publicHostKey != null) {
-    publicHostKey = b.publicHostKey;
+    inherit (b) publicHostKey;
   }) otherBuilders;
 
   # Generate substituters list (ssh-ng:// URLs)

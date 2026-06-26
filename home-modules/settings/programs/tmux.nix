@@ -69,7 +69,7 @@
   tmuxp = {
     enable = true;
 
-    workspaces = lib.optionalAttrs (config.programs.gh.enable) {
+    workspaces = lib.optionalAttrs config.programs.gh.enable {
       "prs" = {
         session_name = "Pull Requests 🔄";
         start_directory = "~/";

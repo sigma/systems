@@ -19,7 +19,7 @@ in
     }:
     let
       masterPkgs = inputs.nixpkgs-master.legacyPackages.${system};
-      isDarwin = pkgs.stdenvNoCC.isDarwin;
+      inherit (pkgs.stdenvNoCC) isDarwin;
       nixFlags = "--extra-experimental-features 'nix-command flakes'";
 
       systemSetup =
@@ -195,7 +195,7 @@ in
         };
 
         sops-keys = {
-          enable = secretsCfg.enable;
+          inherit (secretsCfg) enable;
           name = "SOPS age keys in sync";
           description = "Check that .sops.yaml contains the same age keys as modules/secrets.nix";
           files = "\\.(nix|yaml)$";

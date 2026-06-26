@@ -12,7 +12,7 @@
 #
 # Local models reference an `api` (not a backend) so the same model entry
 # works on any host whose active backend speaks that protocol.
-{ ... }:
+_:
 {
   plans = {
     # Personal subscriptions

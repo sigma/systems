@@ -22,7 +22,7 @@
   # for packages from inputs that don't come with an overlay
   # example: pkg = inputs.FOO.packages.${final.stdenv.system}.default;
   (final: prev: {
-    home-manager = inputs.home-manager.packages.${final.stdenv.system}.home-manager;
+    inherit (inputs.home-manager.packages.${final.stdenv.system}) home-manager;
     zed-editor = inputs.zed.packages.${final.stdenv.system}.default;
   })
 

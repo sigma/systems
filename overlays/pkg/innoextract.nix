@@ -7,6 +7,6 @@ final: prev: {
     )).override
       {
         withGog = true;
-        unar = final.unar;
+        inherit (final) unar;
       };
 }

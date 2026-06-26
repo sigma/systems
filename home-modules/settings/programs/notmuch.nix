@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  enable = config.programs.mailsetup.enable;
+  inherit (config.programs.mailsetup) enable;
   new = {
     tags = [ "new" ];
   };

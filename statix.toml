@@ -1,0 +1,10 @@
+# statix configuration.
+#
+# repeated_keys (W20) flags assigning the same top-level key more than
+# once with different nested paths, e.g.
+#   user.programs.neovim = { ... };
+#   user.programs.claude-code = { ... };
+# That split-assignment form is idiomatic here and underpins the
+# settings-module architecture, so the lint is disabled rather than
+# fought across the tree.
+disabled = ["repeated_keys"]

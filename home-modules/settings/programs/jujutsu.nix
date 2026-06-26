@@ -20,7 +20,7 @@ in
 
   settings = {
     user = {
-      name = user.name;
+      inherit (user) name;
       email = "${profileEmail "perso"}";
     };
 

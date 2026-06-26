@@ -35,7 +35,7 @@ mkIf machine.features.interactive {
     # Use enhanced-h264ify extension for hardware video decode via VA-API
     (stdenv.mkDerivation {
       pname = "chromium-wrapped";
-      version = chromium.version;
+      inherit (chromium) version;
 
       buildInputs = [
         chromium

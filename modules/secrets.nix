@@ -1,6 +1,4 @@
-{
-  ...
-}:
+_:
 {
   # Default secrets configuration
   # Keys and structure ready, secrets file at secrets/secrets.yaml

@@ -2,7 +2,7 @@
 with lib;
 rec {
   profile = types.submodule (
-    { ... }:
+    _:
     {
       options = {
         name = mkOption {
@@ -19,7 +19,7 @@ rec {
   );
 
   user = types.submodule (
-    { ... }:
+    _:
     {
       options = {
         name = mkOption {
@@ -47,7 +47,7 @@ rec {
   );
 
   host = types.submodule (
-    { ... }:
+    _:
     {
       options = {
         name = mkOption {

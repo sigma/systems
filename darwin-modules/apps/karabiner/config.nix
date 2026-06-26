@@ -31,7 +31,7 @@ in
       inherit virtual_hid_keyboard;
       devices =
         # on a laptop, remap modifiers for the internal keyboard.
-        lib.optionals (machine.features.laptop) [
+        lib.optionals machine.features.laptop [
           {
             identifiers = internalKeyboardID;
             simple_modifications = [
@@ -80,7 +80,7 @@ in
         {
           # on a laptop, make control a hyper key.
           # Also setup some tap keys.
-          rules = lib.optionals (machine.features.laptop) [
+          rules = lib.optionals machine.features.laptop [
             {
               description = "Make control a hyper key";
               manipulators = [

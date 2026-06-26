@@ -17,7 +17,7 @@ let
 
   kanataConfig = (import ../../modules/kanata/config.nix { inherit lib; }).mkConfig {
     platform = "macos";
-    devices = cfg.devices;
+    inherit (cfg) devices;
     inherit (cfg.mods)
       swapAltCmd
       fnDndHack
@@ -31,7 +31,7 @@ let
       stockToggle
       ;
     inherit (cfg.timing) tapMs holdMs chordMs;
-    pedal = cfg.pedal;
+    inherit (cfg) pedal;
   };
 
   # The config lives in the nix store so its path is a content hash.

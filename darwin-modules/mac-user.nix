@@ -1,6 +1,6 @@
 { user, ... }:
 let
-  login = user.login;
+  inherit (user) login;
   homeDir = "/Users/${login}";
 in
 {

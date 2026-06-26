@@ -3,7 +3,7 @@
   lib,
 }:
 let
-  shtab = python3.pkgs.shtab;
+  inherit (python3.pkgs) shtab;
 in
 python3.pkgs.buildPythonApplication {
   pname = "m3ugen";

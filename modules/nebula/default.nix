@@ -135,7 +135,7 @@ in
 
   config =
     let
-        hosts = config.nebula.hosts;
+        inherit (config.nebula) hosts;
         allMachines = builtins.mapAttrs (name: host: helpers.hostMachine name host) hosts;
         machines = lib.filterAttrs (name: machine: machine.features.managed) allMachines;
 
@@ -187,7 +187,7 @@ in
           # Generate configurations for machines with a specific feature
           gen =
             feature: builder:
-            builtins.mapAttrs (name: machine: builder machine) (
+            builtins.mapAttrs (name: builder) (
               lib.filterAttrs (name: machine: machine.features.${feature}) machines
             );
 
@@ -207,7 +207,7 @@ in
                 }
               ) filteredMachines;
               # Generate $machine aliases (pointing to same config)
-              machineAliases = builtins.mapAttrs (name: machine: builder machine) filteredMachines;
+              machineAliases = builtins.mapAttrs (name: builder) filteredMachines;
             in
             perUserConfigs // machineAliases;
         in
