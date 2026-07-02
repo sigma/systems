@@ -19,6 +19,13 @@ with lib;
         windowTitleRegexSubstring = ".*- Work$";
         workspace = "W";
       }
+      {
+        # Chrome suffixes the "Work" profile's window title with "(Work)".
+        appId = "com.google.Chrome";
+        layout = "tiling";
+        windowTitleRegexSubstring = ".*\\(Work\\)$";
+        workspace = "W";
+      }
     ];
   };
 }
