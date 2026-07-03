@@ -173,7 +173,18 @@ in
     })
 
     (mkIf cfg.claudeSkill.enable {
-      programs.claude-code.skills.hunk-review = "${finalPackage}/skills/hunk-review";
+      # Symlink the shipped skill directory (which holds SKILL.md) to
+      # ~/.claude/skills/hunk-review so Claude Code discovers it.
+      #
+      # We can't use home-manager's `programs.claude-code.skills`: it
+      # only symlinks when the value is a genuine Nix `path`, but every
+      # way to point a path at a *package output* fails under pure/flake
+      # eval — keeping the store-path context errors with "cannot append
+      # to a path", and discarding it errors with "access to absolute
+      # path is forbidden in pure evaluation mode". A `"${finalPackage}/…"`
+      # string (which that option would instead write as file *text*)
+      # works fine as a home.file source, linking the directory reliably.
+      home.file.".claude/skills/hunk-review".source = "${finalPackage}/skills/hunk-review";
     })
 
     # Catppuccin integration: when catppuccin is globally enabled,
