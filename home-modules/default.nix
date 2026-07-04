@@ -25,6 +25,7 @@
       ./policy # gates internally on machine.features.<x>
       ./settings
       ./shells
+      ./television.nix # Ctrl+R hand-off to atuin; gates on programs.television.enable
       ./tmuxp.nix # referenced from settings/programs/tmux.nix
     ]
     ++ lib.optionals (!machine.features.devbox) [
@@ -108,7 +109,6 @@
       rm-improved
       safe-rm
       silver-searcher
-      skim
       soft-serve
       tealdeer
 

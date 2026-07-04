@@ -10,9 +10,9 @@ with lib;
     # - main monitor is Dell
     # - secondary monitor is LG
     # - built-in monitor is the laptop screen
-    # Office config (laptop always open):
-    # - main monitor is Apple
-    # - secondary monitor is the laptop screen
+    # Nook config (laptop always open):
+    # - main monitor is the laptop screen
+    # - secondary monitor is the Thunderbolt display
     # Travel config (laptop + zenscreen):
     # - main monitor is the laptop screen
     # - secondary monitor is the zenscreen
@@ -22,7 +22,9 @@ with lib;
       let
         zenscreen = "ASUS MB16AC";
         lg = "LG SDQHD";
+        apple = "Thunderbolt Display";
         force_side = [
+          apple
           zenscreen
           "built-in"
           "secondary"
