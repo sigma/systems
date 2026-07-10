@@ -102,7 +102,11 @@ let
     machine:
     let
       user = userFor machine;
-      # Build the full darwin system to get the complete home-manager config
+      # Build the full darwin system to get the complete home-manager config.
+      # Mirror `mac`'s module list exactly, including sopsDarwinModules: darwin
+      # modules like darwin-modules/nix.nix reference the `sops` option on
+      # builders, so omitting it here breaks the standalone home extraction
+      # even though the full `nh darwin switch` (via `mac`) succeeds.
       darwinSystem = inputs.darwin.lib.darwinSystem {
         inherit (machine) system;
         specialArgs = {
@@ -117,7 +121,8 @@ let
             inputs.home-manager.darwinModules.home-manager
             (homeManagerConfig { inherit user machine; })
             nixModule
-          ];
+          ]
+          ++ (sopsDarwinModules user);
       };
       # The home-manager user config from darwin
       hmUserConfig = darwinSystem.config.home-manager.users.${user.login};
