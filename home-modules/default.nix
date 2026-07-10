@@ -79,6 +79,9 @@
       # work management
       toolbox.beadwork
 
+      # vcs management
+      toolbox.entire
+
       # Useful nix related tools
       cachix
       nixfmt
