@@ -160,7 +160,11 @@ in
     };
 
     revset-aliases = {
-      "immutable_heads()" = ''builtin_immutable_heads() | author(exact:"beadwork")'';
+      # Treat beadwork commits and the `entire` tool's bookmarks as immutable.
+      # This keeps them out of the default log (which shows the mutable set,
+      # immutable_heads()..): marking an entire/* bookmark tip immutable
+      # propagates to its ancestors, hiding the whole checkpoint chain.
+      "immutable_heads()" = ''builtin_immutable_heads() | author(exact:"beadwork") | bookmarks(glob:"entire/*")'';
       "last_change()" = "latest(ancestors(@) & ~empty())";
       # Everything reachable from @ that isn't already on a remote —
       # i.e., the changes that haven't been pushed yet.
