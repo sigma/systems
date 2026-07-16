@@ -956,3 +956,17 @@ This project tracks work with `bw` (beadwork), which persists to git plans, prog
 ALWAYS run `bw prime` before starting work. Without it, you're missing workflow context, current state, and repo hygiene warnings. Work done without priming often conflicts with in-progress changes.
 
 Committing, closing issues, and syncing are part of completing a task  not separate actions requiring additional permission.
+
+## Agent skills
+
+### Issue tracker
+
+Issues are tracked with **beadwork** (`bw` CLI) on the `beadwork` branch; IDs like `nix-XYZ`. No pull-request triage surface. Parallel work uses sibling `jj` changes reconciled by a mega-merge commit, with `jj-hunk` (in the devshell) dispatching hunks — no worktrees. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Canonical defaults (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`), applied via `bw label`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.

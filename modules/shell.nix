@@ -246,6 +246,12 @@ in
           age-plugin-yubikey # for YubiKey-based age encryption
           sops # for secrets management
           ssh-to-age # for converting SSH keys to age
+          # jj-hunk: programmatic hunk dispatch for parallel jj changes.
+          # The devshell's `pkgs` is flake-parts' default
+          # (inputs.nixpkgs.legacyPackages), which carries nix-pins' older
+          # toolbox without jj-hunk — so pull it from the toolbox input directly
+          # rather than `pkgs.toolbox`.
+          inputs.toolbox.packages.${system}.jj-hunk
         ];
 
         commands = [
