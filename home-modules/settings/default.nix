@@ -47,6 +47,10 @@ let
   devboxPrograms = [
     "bat"
     "carapace"
+    # AI setups belong on devboxes too (claude-code is enabled there via
+    # nixos-modules/dev.nix); both self-gate on programs.claude-code.enable.
+    "claude-code"
+    "claude-skills"
     "direnv"
     "eza"
     "fish"
@@ -63,10 +67,7 @@ let
   ];
 
   allFiles =
-    dir:
-    builtins.filter
-      (f: lib.hasSuffix ".nix" f)
-      (builtins.attrNames (builtins.readDir ./${dir}));
+    dir: builtins.filter (f: lib.hasSuffix ".nix" f) (builtins.attrNames (builtins.readDir ./${dir}));
 
   loader =
     dir:

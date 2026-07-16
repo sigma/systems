@@ -8,52 +8,57 @@
 {
   home.stateVersion = stateVersion;
 
-  imports =
-    [
-      # Always included — these declare options that other (always-loaded)
-      # modules reference. Their config blocks are gated on cfg.enable, which
-      # defaults to false on devbox (the corresponding settings file isn't
-      # loaded), so promotion costs only the option declaration.
-      ./antigravity.nix
-      ./aspell.nix
-      ./builder-access.nix
-      ./catppuccin.nix
-      ./cursor.nix # referenced from settings/programs/jujutsu.nix
-      ./editors
-      ./hunk.nix
-      ./jujutsu.nix
-      ./policy # gates internally on machine.features.<x>
-      ./settings
-      ./shells
-      ./television.nix # Ctrl+R hand-off to atuin; gates on programs.television.enable
-      ./tmuxp.nix # referenced from settings/programs/tmux.nix
-    ]
-    ++ lib.optionals (!machine.features.devbox) [
-      # Full workstation modules (skip on devboxes)
-      ./accounts.nix
-      ./ai
-      ./claude-firefly.nix
-      ./claude-glm.nix
-      ./cloud-shell.nix
-      ./dosbox.nix
-      ./darwin-apps.nix
-      ./fonts
-      ./gcloud.nix
-      ./just.nix
-      ./kew.nix
-      ./kubeswitch.nix
-      ./mailsetup.nix
-      ./open-url.nix
-      ./opencode-firefly.nix
-      ./yt-dlp.nix
-    ];
+  imports = [
+    # Always included — these declare options that other (always-loaded)
+    # modules reference. Their config blocks are gated on cfg.enable, which
+    # defaults to false on devbox (the corresponding settings file isn't
+    # loaded), so promotion costs only the option declaration.
+    ./antigravity.nix
+    ./aspell.nix
+    ./builder-access.nix
+    ./catppuccin.nix
+    # Claude Code skill mechanism — always imported so its option is declared;
+    # self-gates on config.programs.claude-code.enable (true on devboxes too,
+    # via nixos-modules/dev.nix). Configured in
+    # ./settings/programs/{claude-code,claude-skills}.nix.
+    ./claude-skills.nix
+    ./cursor.nix # referenced from settings/programs/jujutsu.nix
+    ./editors
+    ./hunk.nix
+    ./jujutsu.nix
+    ./policy # gates internally on machine.features.<x>
+    ./settings
+    ./shells
+    ./television.nix # Ctrl+R hand-off to atuin; gates on programs.television.enable
+    ./tmuxp.nix # referenced from settings/programs/tmux.nix
+  ]
+  ++ lib.optionals (!machine.features.devbox) [
+    # Full workstation modules (skip on devboxes)
+    ./accounts.nix
+    ./ai
+    ./claude-firefly.nix
+    ./claude-glm.nix
+    ./cloud-shell.nix
+    ./dosbox.nix
+    ./darwin-apps.nix
+    ./fonts
+    ./gcloud.nix
+    ./just.nix
+    ./kew.nix
+    ./kubeswitch.nix
+    ./mailsetup.nix
+    ./open-url.nix
+    ./opencode-firefly.nix
+    ./yt-dlp.nix
+  ];
 
   programs = {
     fd.enable = true;
     jq.enable = true;
 
     neovim-ide.enable = true;
-  } // lib.optionalAttrs (!machine.features.devbox) {
+  }
+  // lib.optionalAttrs (!machine.features.devbox) {
     cloudshell.enable = true;
     gh-dash.enable = true;
   };
