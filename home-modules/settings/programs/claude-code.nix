@@ -19,5 +19,19 @@
     disableRemoteControl = true;
     disableClaudeAiConnectors = true;
     disableArtifact = true;
+
+    # Official LSP plugins for the languages we work in.
+    enabledPlugins = {
+      "gopls-lsp@claude-plugins-official" = true;
+      "clangd-lsp@claude-plugins-official" = true;
+      "pyright-lsp@claude-plugins-official" = true;
+      "rust-analyzer-lsp@claude-plugins-official" = true;
+    };
+
+    # Keep extended thinking on by default.
+    alwaysThinkingEnabled = true;
+
+    # Don't prompt when entering dangerous (bypass-permissions) mode.
+    skipDangerousModePermissionPrompt = true;
   };
 }
