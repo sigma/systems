@@ -5,7 +5,9 @@
     "nix-d00.4",
     "nix-d00.5"
   ],
-  "blocks": [],
+  "blocks": [
+    "nix-d00.7"
+  ],
   "created": "2026-07-17T09:55:38Z",
   "description": "home-modules/policy/devbox.nix: define base allow-set; mkForce false the content-feature registry complement so new features fail-safe-off on devboxes.",
   "id": "nix-d00.6",
