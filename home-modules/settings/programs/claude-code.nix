@@ -52,6 +52,10 @@ in
     # Keep extended thinking on by default.
     alwaysThinkingEnabled = true;
 
+    # Default adaptive reasoning effort (low | medium | high | xhigh);
+    # `max`/`ultracode` are session-only. Persisted across sessions.
+    effortLevel = "medium";
+
     # Don't prompt when entering dangerous (bypass-permissions) mode.
     skipDangerousModePermissionPrompt = true;
 
