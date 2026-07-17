@@ -8,14 +8,15 @@
     "nix-d00.4",
     "nix-d00.5"
   ],
+  "closed_at": "2026-07-17T10:02:37Z",
   "created": "2026-07-17T09:55:38Z",
   "description": "hostMachine emits a home module setting features.\u003cn\u003e.enable = mkDefault true for each declared name in the registry, threaded into homeModules like bridgeModule. Add dev/shell/ai/writing/media/network/keyboard/music/gaming to workstation host feature lists in hosts.nix; move dosbox to gaming.",
   "id": "nix-d00.2",
   "labels": [],
   "parent": "nix-d00",
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "hostMachine generates home features module; declare content features on hosts",
   "type": "task",
-  "updated_at": "2026-07-17T09:58:24Z"
+  "updated_at": "2026-07-17T10:02:37Z"
 }
