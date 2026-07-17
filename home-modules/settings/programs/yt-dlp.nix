@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 {
-  enable = config.features.media.enable;
+  inherit (config.features.media) enable;
   package = pkgs.master.yt-dlp;
 
   settings = {

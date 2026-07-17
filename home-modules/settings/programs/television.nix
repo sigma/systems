@@ -11,7 +11,7 @@
 # there too (this HM version's module only supports fish/bash/zsh).
 { config, pkgs, ... }:
 {
-  enable = config.features.shell.enable;
+  inherit (config.features.shell) enable;
 
   # Default/stable nixpkgs pin tv 0.13.10, which is too old to parse the
   # current config schema and shell-init format. Track master for a recent

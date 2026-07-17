@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  enable = config.features.dev.enable;
+  inherit (config.features.dev) enable;
   enableGitIntegration = true;
 
   options = {

@@ -1,5 +1,5 @@
 { config, ... }:
 {
-  enable = config.features.shell.enable;
+  inherit (config.features.shell) enable;
   enableFishIntegration = true;
 }

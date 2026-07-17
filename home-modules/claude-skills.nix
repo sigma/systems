@@ -71,7 +71,7 @@ in
 
   config = mkIf cfg.enable {
     home.file = listToAttrs (
-      map (e: nameValuePair ".claude/skills/${e.name}" { source = e.source; }) allSkills
+      map (e: nameValuePair ".claude/skills/${e.name}" { inherit (e) source; }) allSkills
     );
   };
 }
