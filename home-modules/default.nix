@@ -24,6 +24,7 @@
     ./claude-skills.nix
     ./cursor.nix # referenced from settings/programs/jujutsu.nix
     ./editors
+    ./features.nix # declares options.features.<n>.enable (content-feature seam)
     ./hunk.nix
     ./jujutsu.nix
     ./policy # gates internally on machine.features.<x>
