@@ -1,5 +1,5 @@
 {
-  "assignee": "",
+  "assignee": "unknown",
   "blocked_by": [
     "nix-d00.6"
   ],
@@ -10,8 +10,8 @@
   "labels": [],
   "parent": "nix-d00",
   "priority": 2,
-  "status": "open",
+  "status": "in_progress",
   "title": "Verify: build all configs + darwin/home parity",
   "type": "task",
-  "updated_at": "2026-07-17T09:55:55Z"
+  "updated_at": "2026-07-17T13:07:29Z"
 }
