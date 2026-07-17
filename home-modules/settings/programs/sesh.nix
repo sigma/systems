@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
-  enable = true;
+  enable = config.features.shell.enable;
   enableAlias = false; # alias definition is broken in nushell
   enableTmuxpWorkspaces = true;
 

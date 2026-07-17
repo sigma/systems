@@ -73,7 +73,7 @@ let
   fontWithFallbackLua = luaList ([ primaryFontLua ] ++ fallbackFontLua);
 in
 {
-  enable = true;
+  enable = config.features.graphical.enable;
 
   # Use headless variant on non-interactive machines (just the mux server)
   package = if interactive then pkgs.wezterm else pkgs.wezterm-headless;

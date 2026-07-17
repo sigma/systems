@@ -43,29 +43,10 @@
   ...
 }:
 let
-  # Programs to include on devboxes (minimal set)
-  devboxPrograms = [
-    "bat"
-    "carapace"
-    # AI setups belong on devboxes too (claude-code is enabled there via
-    # nixos-modules/dev.nix); both self-gate on programs.claude-code.enable.
-    "claude-code"
-    "claude-skills"
-    "direnv"
-    "eza"
-    "fish"
-    "fzf"
-    "git"
-    "hunk"
-    "jujutsu"
-    "ripgrep"
-    "ssh"
-    "starship"
-    "tmux"
-    "zile"
-    "zoxide"
-  ];
-
+  # Every settings file loads on every machine; each file decides whether its
+  # program is enabled (enable = true for base programs, or
+  # enable = config.features.<x>.enable for content-gated ones). The devbox
+  # contract lives in the content-feature seam, not in a program allowlist here.
   allFiles =
     dir: builtins.filter (f: lib.hasSuffix ".nix" f) (builtins.attrNames (builtins.readDir ./${dir}));
 
@@ -87,15 +68,7 @@ let
               ;
           };
         })
-        (
-          let
-            files = allFiles dir;
-          in
-          if machine.features.devbox && dir == "programs" then
-            builtins.filter (f: builtins.elem (lib.removeSuffix ".nix" f) devboxPrograms) files
-          else
-            files
-        )
+        (allFiles dir)
     );
 in
 {

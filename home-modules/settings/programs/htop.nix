@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  enable = true;
+  enable = config.features.shell.enable;
   settings = {
     color_scheme = 5;
     cpu_count_from_one = 0;

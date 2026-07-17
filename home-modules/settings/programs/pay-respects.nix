@@ -1,6 +1,6 @@
-_:
+{ config, ... }:
 {
-  enable = true;
+  enable = config.features.shell.enable;
   options = [
     "--alias"
     "f"

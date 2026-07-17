@@ -1,5 +1,5 @@
-_:
+{ config, ... }:
 {
-  enable = true;
+  enable = config.features.shell.enable;
   enableFishIntegration = true;
 }

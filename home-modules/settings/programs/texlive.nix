@@ -1,6 +1,6 @@
-_:
+{ config, ... }:
 {
-  enable = true;
+  enable = config.features.writing.enable;
 
   extraPackages = texpkgs: {
       inherit (texpkgs)

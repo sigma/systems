@@ -1,5 +1,5 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
-  enable = true;
+  enable = config.features.dev.enable;
   settings.pager = "${pkgs.delta}/bin/delta";
 }

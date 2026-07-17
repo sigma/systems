@@ -9,7 +9,7 @@ let
   ownColor = "red";
 in
 {
-  enable = true;
+  enable = config.features.dev.enable;
   settings = {
     git = {
       log = {

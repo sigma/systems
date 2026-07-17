@@ -4,7 +4,7 @@ let
   vanillaDir = "${parentDir}/vanilla";
 in
 {
-  enable = true;
+  enable = config.features.graphical.enable;
 
   vanilla.enable = true;
 

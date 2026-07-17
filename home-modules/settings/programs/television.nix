@@ -9,9 +9,9 @@
 # to its own history, but atuin owns Ctrl+R here, so home-modules/television.nix
 # hands Ctrl+R back to atuin after tv loads. nushell integration is wired
 # there too (this HM version's module only supports fish/bash/zsh).
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
-  enable = true;
+  enable = config.features.shell.enable;
 
   # Default/stable nixpkgs pin tv 0.13.10, which is too old to parse the
   # current config schema and shell-init format. Track master for a recent
