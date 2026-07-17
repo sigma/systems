@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-07-17T09:55:38Z",
+  "description": "Build darwinConfigurations, nixosConfigurations, homeConfigurations for workstations and devboxes. Confirm devbox content unchanged-or-intended and workstation content preserved.",
+  "id": "nix-d00.7",
+  "labels": [],
+  "parent": "nix-d00",
+  "priority": 2,
+  "status": "open",
+  "title": "Verify: build all configs + darwin/home parity",
+  "type": "task",
+  "updated_at": "2026-07-17T09:55:38Z"
+}
