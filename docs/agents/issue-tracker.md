@@ -58,13 +58,11 @@ development is done with sibling `jj` changes reconciled by a single
 "mega-merge" commit at the top, using `jj-hunk` (from the toolbox, available in
 this repo's devshell) to dispatch hunks into the right change.
 
-**git worktrees (allowed, and preferred for subagents).** A subagent or a
-parallel job may instead take its own git worktree and work there. **jj is not
-required for subagents** — a worktree on a plain git branch is fine. Each
-worktree still claims its ticket (`bw start <id>`), references the ticket ID in
-its commit messages, and lands via `bw close <id>` → `bw sync`. This keeps
-independent agents from colliding in a shared working copy without forcing the
-jj sibling-change model on them.
+**Isolated worktrees (allowed, and preferred for subagents).** A subagent or a
+parallel job may instead take its own worktree and work there, keeping
+independent agents from colliding in a shared working copy. Each worktree still
+claims its ticket (`bw start <id>`), references the ticket ID in its commit
+messages, and lands via `bw close <id>` → `bw sync`.
 
 The jj-specific steps below apply when using the jj workflow.
 

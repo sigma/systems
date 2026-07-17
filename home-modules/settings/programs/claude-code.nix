@@ -24,6 +24,106 @@ let
       ' <<<"$input"
     '';
   };
+
+  # WorktreeCreate / WorktreeRemove hooks. Claude Code fires these when a
+  # session or subagent asks for worktree isolation (`--worktree` or
+  # `isolation: "worktree"`). In a jj repo we back the "worktree" with a jj
+  # *workspace* (`jj workspace add/forget`) instead of a git worktree; in a
+  # plain git repo we fall back to `git worktree add`. Both hooks detect jj via
+  # `jj root` on the session cwd. See
+  # docs/adr/0004-jj-workspaces-for-claude-code-worktrees.md.
+  #
+  # WorktreeCreate *replaces* the default behaviour and chooses where the
+  # worktree lives: the payload carries only a `name` slug, so we create the
+  # worktree at <repo-root>/.claude/worktrees/<name> and print that path as the
+  # last stdout line (non-zero exit or no path fails creation). Every diagnostic
+  # goes to stderr. Because the last path component is the slug, WorktreeRemove
+  # can recover the jj workspace name from basename(worktree_path).
+  worktreeCreate = pkgs.writeShellApplication {
+    name = "claude-worktree-create";
+    runtimeInputs = [
+      pkgs.jq
+      pkgs.jujutsu
+      pkgs.git
+    ];
+    text = ''
+      input=$(cat)
+      name=$(jq -r '.name // empty' <<<"$input")
+      cwd=$(jq -r '.cwd // empty' <<<"$input")
+
+      if [ -z "$name" ]; then
+        echo "claude-worktree-create: missing name in payload" >&2
+        exit 1
+      fi
+
+      # Resolve the repo root from the session cwd so the worktree lands beside
+      # the repo regardless of which subdirectory the session started in. A
+      # single `jj root` both detects jj and yields the root (git otherwise).
+      [ -n "$cwd" ] && cd "$cwd"
+
+      if root=$(jj --ignore-working-copy root 2>/dev/null); then
+        is_jj=1
+      else
+        is_jj=0
+        root=$(git rev-parse --show-toplevel)
+      fi
+
+      dir="$root/.claude/worktrees/$name"
+      mkdir -p "$(dirname "$dir")"
+
+      if [ "$is_jj" = 1 ]; then
+        # jj repo → jj workspace. No -r: branch from the current base, matching
+        # git-worktree-at-HEAD semantics without carrying uncommitted changes.
+        jj workspace add --name "$name" "$dir" >&2
+      else
+        # Plain git repo → new branch at HEAD, detached on name collision.
+        if ! git worktree add -b "$name" "$dir" HEAD >&2; then
+          git worktree add --detach "$dir" HEAD >&2
+        fi
+      fi
+
+      # Last stdout line must be exactly the worktree path.
+      printf '%s\n' "$dir"
+    '';
+  };
+
+  # WorktreeRemove performs the actual teardown. Claude Code only auto-removes
+  # *its own* git worktrees; a hook-created worktree is left on disk unless this
+  # hook removes it. The payload carries `worktree_path` (absolute) but no name,
+  # so we recover the jj workspace name as its basename. In a jj repo:
+  # `jj workspace forget` (idempotent) drops the workspace metadata, then we
+  # delete the directory. Elsewhere we tear down any git worktree at that path
+  # and delete it. Exit code is ignored by Claude Code either way.
+  worktreeRemove = pkgs.writeShellApplication {
+    name = "claude-worktree-remove";
+    runtimeInputs = [
+      pkgs.jq
+      pkgs.jujutsu
+      pkgs.git
+    ];
+    text = ''
+      input=$(cat)
+      worktree_path=$(jq -r '.worktree_path // empty' <<<"$input")
+      cwd=$(jq -r '.cwd // empty' <<<"$input")
+
+      if [ -z "$worktree_path" ]; then
+        exit 0
+      fi
+      name=$(basename "$worktree_path")
+
+      [ -n "$cwd" ] && cd "$cwd"
+
+      if jj --ignore-working-copy root >/dev/null 2>&1; then
+        jj workspace forget "$name" >&2 || true
+        rm -rf "$worktree_path"
+      else
+        git -C "''${cwd:-.}" worktree remove --force "$worktree_path" >&2 2>&1 || true
+        rm -rf "$worktree_path"
+        git -C "''${cwd:-.}" worktree prune >&2 2>&1 || true
+      fi
+      exit 0
+    '';
+  };
 in
 {
   # Gate on enable so hosts without claude-code don't emit a stray settings.json.
@@ -64,6 +164,34 @@ in
       type = "command";
       command = lib.getExe statusline;
       padding = 0;
+    };
+
+    # Back worktree isolation with jj workspaces in jj repos (git-worktree
+    # fallback elsewhere). These events take no matcher. Create can block
+    # (generous timeout guards against a cold FS, though jj workspace add is
+    # sub-second); remove is fire-and-forget cleanup.
+    hooks = {
+      WorktreeCreate = [
+        {
+          hooks = [
+            {
+              type = "command";
+              command = lib.getExe worktreeCreate;
+              timeout = 120;
+            }
+          ];
+        }
+      ];
+      WorktreeRemove = [
+        {
+          hooks = [
+            {
+              type = "command";
+              command = lib.getExe worktreeRemove;
+            }
+          ];
+        }
+      ];
     };
   };
 }
