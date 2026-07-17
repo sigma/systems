@@ -22,21 +22,33 @@ let
         storePublicKey
         ;
     };
+
+  # Content features come from the registry (modules/content-features.nix) so the
+  # taxonomy lives in exactly one place — same list helpers.nix projects onto the
+  # home seam. music/gaming are per-machine opt-ins; every graphical workstation
+  # carries the rest, so `sharedContent` is spliced into each workstation below.
+  contentFeatures = import ./content-features.nix;
+  optInContent = [
+    "music"
+    "gaming"
+  ];
+  sharedContent = builtins.filter (f: !(builtins.elem f optInContent)) contentFeatures;
 in
 {
+  # Structural features (read before config / outside home scope) listed here;
+  # content features come from the registry.
   nebula.features = [
     "work" # generic work feature
     "firefly" # specifically for firefly engineering
-    "music" # music production
     "devbox" # for VM-based devboxes (any hypervisor)
     "tart" # for Tart hypervisor (macOS hosts)
     "kvm" # for KVM hypervisor (NixOS hosts)
     "determinate" # for Determinate Nix
-    "gaming" # for gaming
     "tailscale" # for Tailscale VPN
     "llm" # for local LLM inference (provider chosen per-platform)
     "nehalem" # CPU is pre-Haswell x86_64 (lacks AVX2)
-  ];
+  ]
+  ++ contentFeatures;
 
   nebula.sharedDomain = "van-scylla.ts.net";
 
@@ -69,7 +81,8 @@ in
           "firefly"
           "gaming"
           "tailscale"
-        ];
+        ]
+        ++ sharedContent;
         u2fKeys = portableU2fKeys ++ [
           # desktop titan
           "7fZp73vnETk6Nen9OqNu49XEnQvlpqIIYYeNJDM4p/w1DprKpyqw8kvRCalbqMNwfLaElmbhHYKN4nKvMvoTPg==,yxC16UIBA7Ajkr/2uVVGx5DUCPLJOEYXHi8bs0KrTlFSL4SH+eF9rChm6V13jcldqSfL/d66REtrbRYqg5/0xQ==,es256,+presence"
@@ -102,7 +115,8 @@ in
           "gaming"
           "llm"
           "tailscale"
-        ];
+        ]
+        ++ sharedContent;
         u2fKeys = portableU2fKeys ++ [
           # home dock yubikey
           "QKdeeNCt3nfvAUwc2bx4A/Lamg+dtCdU5Mdsq+L+GxBkbr0eO6oWsVwE7NmzMMVhbljYDs3CDwh34zWem9pqwQ==,NYMKNF72hkXSTZCWU4sQXdy0oGbmT6B0WSuuEabso5YzRM//ZU5EEOr9TJBP64tc6mliCAIBFBdoQPi6Mcdw0g==,es256,+presence"
@@ -136,7 +150,8 @@ in
           "firefly"
           "tailscale"
           "nehalem" # Ivy Bridge CPU (Xeon E5 v2) lacks AVX2
-        ];
+        ]
+        ++ sharedContent;
         enableSwap = false;
         bootLabel = "boot";
         builder = mkBuilder {

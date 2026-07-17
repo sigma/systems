@@ -4,6 +4,10 @@
   ...
 }:
 let
+  # Canonical content-feature registry (see CONTEXT.md). Used to project a
+  # host's declared features onto the resolved home feature seam.
+  contentFeatures = import ../content-features.nix;
+
   # Check if a remote host (raw feature list) has a given feature
   remoteHasFeature = feature: r: builtins.elem feature (r.features or [ ]);
 
@@ -34,27 +38,31 @@ let
     in
     {
       name = if builtins.isNull r.alias then r.name else r.alias;
-      value =
-        {
-          sendEnv = [ "WINDOW" ];
-        }
-        // lib.optionalAttrs (r.name != null || hostname != r.name) {
-          inherit hostname;
-        }
-        // lib.optionalAttrs (r.user != null) { inherit (r) user; }
-        // lib.optionalAttrs (r.sshOpts != null) (
-          # Merge extraOptions if both sshOpts and NixOS RequestTTY are present
-          if remoteIsNixOS && r.sshOpts ? extraOptions then
-            r.sshOpts // {
-              extraOptions = r.sshOpts.extraOptions // { RequestTTY = "force"; };
-            }
-          else
-            r.sshOpts
-        )
-        # NixOS hosts need forced TTY because fish hangs without one (ssh -T)
-        // lib.optionalAttrs (remoteIsNixOS && (r.sshOpts == null || !(r.sshOpts ? extraOptions))) {
-          extraOptions = { RequestTTY = "force"; };
+      value = {
+        sendEnv = [ "WINDOW" ];
+      }
+      // lib.optionalAttrs (r.name != null || hostname != r.name) {
+        inherit hostname;
+      }
+      // lib.optionalAttrs (r.user != null) { inherit (r) user; }
+      // lib.optionalAttrs (r.sshOpts != null) (
+        # Merge extraOptions if both sshOpts and NixOS RequestTTY are present
+        if remoteIsNixOS && r.sshOpts ? extraOptions then
+          r.sshOpts
+          // {
+            extraOptions = r.sshOpts.extraOptions // {
+              RequestTTY = "force";
+            };
+          }
+        else
+          r.sshOpts
+      )
+      # NixOS hosts need forced TTY because fish hangs without one (ssh -T)
+      // lib.optionalAttrs (remoteIsNixOS && (r.sshOpts == null || !(r.sshOpts ? extraOptions))) {
+        extraOptions = {
+          RequestTTY = "force";
         };
+      };
     };
 
   # Create -mux SSH alias for NixOS hosts (used by WezTerm multiplexing)
@@ -72,8 +80,7 @@ let
 
   # Find a remote by alias suffix (e.g., "devbox" matches "spectre-devbox")
   findRemoteByAliasSuffix =
-    remotes: suffix:
-    lib.findFirst (r: r.alias != null && lib.hasSuffix suffix r.alias) null remotes;
+    remotes: suffix: lib.findFirst (r: r.alias != null && lib.hasSuffix suffix r.alias) null remotes;
 
   # Create an alias matchBlock that points to an existing remote
   mkRemoteAlias =
@@ -124,6 +131,17 @@ in
         else
           [ ];
       features = (mapFeatures cfg.features false) // (mapFeatures (host.features ++ devboxFeatures) true);
+      # Content features this host declared, projected onto the resolved home
+      # seam as features.<n>.enable = mkDefault true. mkDefault so the devbox
+      # policy can mkForce them off (see home-modules/policy/devbox.nix).
+      declaredContentFeatures = builtins.filter (f: builtins.elem f contentFeatures) (
+        host.features ++ devboxFeatures
+      );
+      contentFeaturesModule = {
+        features = lib.genAttrs declaredContentFeatures (_: {
+          enable = lib.mkDefault true;
+        });
+      };
       # Create a partial machine object for sshHost context
       machineContext = { inherit features; };
       # Create sshHost function with context
@@ -158,6 +176,7 @@ in
       ];
       darwinModules = [ bridgeModule ];
       homeModules = [
+        contentFeaturesModule
         {
           programs.ssh.matchBlocks =
             builtins.listToAttrs (builtins.map sshHostFn host.remotes)
