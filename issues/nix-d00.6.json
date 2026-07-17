@@ -1,5 +1,5 @@
 {
-  "assignee": "",
+  "assignee": "unknown",
   "blocked_by": [
     "nix-d00.3",
     "nix-d00.4",
@@ -14,8 +14,8 @@
   "labels": [],
   "parent": "nix-d00",
   "priority": 2,
-  "status": "open",
+  "status": "in_progress",
   "title": "Devbox policy enforces registry-complement off",
   "type": "task",
-  "updated_at": "2026-07-17T09:55:55Z"
+  "updated_at": "2026-07-17T13:06:30Z"
 }
