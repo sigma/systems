@@ -1,5 +1,5 @@
 {
-  "assignee": "",
+  "assignee": "unknown",
   "blocked_by": [],
   "blocks": [
     "nix-d00.2"
@@ -10,8 +10,8 @@
   "labels": [],
   "parent": "nix-d00",
   "priority": 2,
-  "status": "open",
+  "status": "in_progress",
   "title": "Content-feature registry + home features.* options",
   "type": "task",
-  "updated_at": "2026-07-17T09:55:55Z"
+  "updated_at": "2026-07-17T09:56:15Z"
 }
