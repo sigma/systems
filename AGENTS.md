@@ -961,7 +961,7 @@ Committing, closing issues, and syncing are part of completing a task  not separ
 
 ### Issue tracker
 
-Issues are tracked with **beadwork** (`bw` CLI) on the `beadwork` branch; IDs like `nix-XYZ`. No pull-request triage surface. Parallel work uses sibling `jj` changes reconciled by a mega-merge commit, with `jj-hunk` (in the devshell) dispatching hunks — no worktrees. See `docs/agents/issue-tracker.md`.
+Issues are tracked with **beadwork** (`bw` CLI) on the `beadwork` branch; IDs like `nix-XYZ`. No pull-request triage surface. Parallel work has two supported modes: sibling `jj` changes reconciled by a mega-merge commit (with `jj-hunk` in the devshell dispatching hunks) — the default for the interactive session — or a git-worktree workflow, which subagents may use without jj. See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 

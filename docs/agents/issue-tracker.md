@@ -49,12 +49,24 @@ For multi-step work, create an epic (`-t epic`) with child tasks
 
 Run `bw show <id>` (the user will normally pass the `nix-XYZ` ID).
 
-## Workflow — parallel jj changes, no worktrees
+## Workflow — parallel changes
 
-This repo does **not** use git worktrees. Parallel development is done with
-sibling `jj` changes reconciled by a single "mega-merge" commit at the top,
-using `jj-hunk` (from the toolbox, available in this repo's devshell) to
-dispatch hunks into the right change.
+There are two supported ways to run parallel work; pick whichever fits.
+
+**jj sibling changes (default for the interactive session).** Parallel
+development is done with sibling `jj` changes reconciled by a single
+"mega-merge" commit at the top, using `jj-hunk` (from the toolbox, available in
+this repo's devshell) to dispatch hunks into the right change.
+
+**git worktrees (allowed, and preferred for subagents).** A subagent or a
+parallel job may instead take its own git worktree and work there. **jj is not
+required for subagents** — a worktree on a plain git branch is fine. Each
+worktree still claims its ticket (`bw start <id>`), references the ticket ID in
+its commit messages, and lands via `bw close <id>` → `bw sync`. This keeps
+independent agents from colliding in a shared working copy without forcing the
+jj sibling-change model on them.
+
+The jj-specific steps below apply when using the jj workflow.
 
 - **One change per ticket**: give each ticket its own jj change, described with
   the ticket ID (`jj describe -m "…  (nix-XYZ)"`), based off a shared parent so
