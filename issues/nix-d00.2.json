@@ -1,6 +1,8 @@
 {
   "assignee": "",
-  "blocked_by": [],
+  "blocked_by": [
+    "nix-d00.1"
+  ],
   "blocks": [],
   "created": "2026-07-17T09:55:38Z",
   "description": "hostMachine emits a home module setting features.\u003cn\u003e.enable = mkDefault true for each declared name in the registry, threaded into homeModules like bridgeModule. Add dev/shell/ai/writing/media/network/keyboard/music/gaming to workstation host feature lists in hosts.nix; move dosbox to gaming.",
@@ -11,5 +13,5 @@
   "status": "open",
   "title": "hostMachine generates home features module; declare content features on hosts",
   "type": "task",
-  "updated_at": "2026-07-17T09:55:38Z"
+  "updated_at": "2026-07-17T09:55:55Z"
 }

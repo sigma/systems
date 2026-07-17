@@ -1,7 +1,9 @@
 {
   "assignee": "",
   "blocked_by": [],
-  "blocks": [],
+  "blocks": [
+    "nix-d00.2"
+  ],
   "created": "2026-07-17T09:55:38Z",
   "description": "Add canonical content-feature registry list and declare home options.features.\u003cn\u003e.enable for each (mirror darwin-modules/features/default.nix). Expose registry to home scope (via machine or shared import) for the options module and devbox policy.",
   "id": "nix-d00.1",
@@ -11,5 +13,5 @@
   "status": "open",
   "title": "Content-feature registry + home features.* options",
   "type": "task",
-  "updated_at": "2026-07-17T09:55:38Z"
+  "updated_at": "2026-07-17T09:55:55Z"
 }
