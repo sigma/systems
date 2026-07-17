@@ -3,7 +3,9 @@
   "blocked_by": [
     "nix-d00.2"
   ],
-  "blocks": [],
+  "blocks": [
+    "nix-d00.6"
+  ],
   "created": "2026-07-17T09:55:38Z",
   "description": "home-modules/default.nix: split the !devbox package blob into lib.optionals config.features.\u003cf\u003e.enable buckets. Remove the four !machine.features.devbox negations.",
   "id": "nix-d00.3",

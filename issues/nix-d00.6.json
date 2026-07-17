@@ -1,6 +1,8 @@
 {
   "assignee": "",
-  "blocked_by": [],
+  "blocked_by": [
+    "nix-d00.3"
+  ],
   "blocks": [],
   "created": "2026-07-17T09:55:38Z",
   "description": "home-modules/policy/devbox.nix: define base allow-set; mkForce false the content-feature registry complement so new features fail-safe-off on devboxes.",
@@ -11,5 +13,5 @@
   "status": "open",
   "title": "Devbox policy enforces registry-complement off",
   "type": "task",
-  "updated_at": "2026-07-17T09:55:38Z"
+  "updated_at": "2026-07-17T09:55:55Z"
 }
