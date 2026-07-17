@@ -268,9 +268,15 @@ in
               '') nixKeys;
             in
             ''
+              # .sops.yaml is an optional, uncommitted convenience file: the
+              # rebuild workflow drives sops from the in-store config instead
+              # (see preRebuildHook above). When it is absent there is nothing
+              # on disk to drift from modules/secrets.nix, so skip rather than
+              # fail — otherwise every commit from a fresh clone or worktree
+              # (which has no generated .sops.yaml) would be blocked.
               if [ ! -f .sops.yaml ]; then
-                echo "WARNING: .sops.yaml does not exist. Run: sops-config > .sops.yaml"
-                exit 1
+                echo "sops-keys: no .sops.yaml on disk; skipping drift check."
+                exit 0
               fi
             ''
             + builtins.concatStringsSep "" checkCommands
