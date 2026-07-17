@@ -1,6 +1,8 @@
 {
   "assignee": "",
-  "blocked_by": [],
+  "blocked_by": [
+    "nix-d00.2"
+  ],
   "blocks": [],
   "created": "2026-07-17T09:55:38Z",
   "description": "home-modules/default.nix: split the !devbox package blob into lib.optionals config.features.\u003cf\u003e.enable buckets. Remove the four !machine.features.devbox negations.",
@@ -11,5 +13,5 @@
   "status": "open",
   "title": "Re-gate package blob on content features",
   "type": "task",
-  "updated_at": "2026-07-17T09:55:38Z"
+  "updated_at": "2026-07-17T09:55:55Z"
 }

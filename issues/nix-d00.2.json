@@ -3,7 +3,9 @@
   "blocked_by": [
     "nix-d00.1"
   ],
-  "blocks": [],
+  "blocks": [
+    "nix-d00.3"
+  ],
   "created": "2026-07-17T09:55:38Z",
   "description": "hostMachine emits a home module setting features.\u003cn\u003e.enable = mkDefault true for each declared name in the registry, threaded into homeModules like bridgeModule. Add dev/shell/ai/writing/media/network/keyboard/music/gaming to workstation host feature lists in hosts.nix; move dosbox to gaming.",
   "id": "nix-d00.2",
