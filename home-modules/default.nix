@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   machine,
@@ -32,18 +33,18 @@
     ./shells
     ./television.nix # Ctrl+R hand-off to atuin; gates on programs.television.enable
     ./tmuxp.nix # referenced from settings/programs/tmux.nix
-  ]
-  ++ lib.optionals (!machine.features.devbox) [
-    # Full workstation modules (skip on devboxes)
+    # Content-gated modules — always imported so their options are declared;
+    # each self-gates its config on config.features.<x>.enable or on its own
+    # programs.<name>.enable (set by a policy/feature), so the devbox policy's
+    # mkForce on the content-feature seam is what keeps them off devboxes.
     ./accounts.nix
-    ./ai
-    ./claude-firefly.nix
+    ./ai # self-gates config on config.features.ai.enable
+    ./claude-firefly.nix # enabled by policy/firefly.nix (machine.features.firefly)
     ./claude-glm.nix
     ./cloud-shell.nix
     ./dosbox.nix
-    ./darwin-apps.nix
     ./fonts
-    ./gcloud.nix
+    ./gcloud.nix # enabled by policy/firefly.nix
     ./just.nix
     ./kew.nix
     ./kubeswitch.nix
@@ -51,6 +52,9 @@
     ./open-url.nix
     ./opencode-firefly.nix
     ./yt-dlp.nix
+  ]
+  ++ lib.optionals machine.features.mac [
+    ./darwin-apps.nix # references darwin apps; mac is structural (import-time)
   ];
 
   programs = {
@@ -59,7 +63,7 @@
 
     neovim-ide.enable = true;
   }
-  // lib.optionalAttrs (!machine.features.devbox) {
+  // lib.optionalAttrs config.features.dev.enable {
     cloudshell.enable = true;
     gh-dash.enable = true;
   };
@@ -94,7 +98,7 @@
       home-manager
       nix-output-monitor
     ]
-    ++ lib.optionals (!machine.features.devbox) [
+    ++ lib.optionals config.features.dev.enable [
       # build tools
       circleci-cli
       goreleaser
@@ -103,28 +107,6 @@
       bump2version
       mprocs
       parallel
-
-      # console tools
-      ast-grep
-      broot
-      btop
-      chafa
-      d2
-      glow
-      gum
-      hexyl
-      pinfo
-      procs
-      rm-improved
-      safe-rm
-      silver-searcher
-      soft-serve
-      tealdeer
-
-      # writing tools
-      hugo
-      mdbook
-      mdbook-mermaid
 
       # git
       git-review
@@ -146,35 +128,58 @@
       ])
       rust-analyzer-nightly
 
-      # json/yaml helpers
-      jsonnet
-      jsonnet-bundler
-
-      # network tools
-      autossh
-      lftp
-      nmap
-      prettyping
-
-      # more nix tools
+      # nix tools
       statix
       comma
       master.devenv
       fh
       master.nix-inspect
       nh
+    ]
+    ++ lib.optionals config.features.shell.enable [
+      # console tools
+      ast-grep
+      broot
+      btop
+      chafa
+      d2
+      glow
+      gum
+      hexyl
+      pinfo
+      procs
+      rm-improved
+      safe-rm
+      silver-searcher
+      soft-serve
+      tealdeer
 
-      # keyboard QMK tools
-      local.mdloader
-
-      # media tools
+      # json/yaml helpers
+      jsonnet
+      jsonnet-bundler
+    ]
+    ++ lib.optionals config.features.writing.enable [
+      hugo
+      mdbook
+      mdbook-mermaid
+    ]
+    ++ lib.optionals config.features.network.enable [
+      autossh
+      lftp
+      nmap
+      prettyping
+    ]
+    ++ lib.optionals config.features.keyboard.enable [
+      local.mdloader # QMK
+    ]
+    ++ lib.optionals config.features.media.enable [
       ffmpeg
       local.m3ugen
     ]
     ++ lib.optionals machine.features.mac [
       m-cli # useful macOS CLI commands
     ]
-    ++ lib.optionals (!machine.features.mac && !machine.features.devbox) (
+    ++ lib.optionals (config.features.ai.enable && !machine.features.mac) (
       let
         bun = if machine.features.nehalem then pkgs.toolbox.bun-baseline else pkgs.toolbox.bun;
       in
@@ -184,10 +189,10 @@
         (pkgs.master.opencode.override { inherit bun; })
       ]
     )
-    ++ lib.optionals machine.features.music [
+    ++ lib.optionals config.features.music.enable [
       maschine-hacks
     ]
-    ++ lib.optionals machine.features.gaming [
+    ++ lib.optionals config.features.gaming.enable [
       local.myrient-downloader
     ];
 }

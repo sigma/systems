@@ -155,7 +155,7 @@ in
     '';
   };
 
-  config = {
+  config = mkIf config.features.ai.enable {
     home.packages =
       concatMap (p: p.packages or [ ]) cfg.agents
       ++ optionals (activeBackend != null) (activeBackend.packages or [ ]);
@@ -190,7 +190,7 @@ in
           || secret == null
           || knownInSystem
           || knownInHome;
-        message = "AI plan with sops auth references sops.secrets.${secret or "?"} which is not declared.";
+        message = "AI plan with sops auth references sops.secrets.${secret} which is not declared.";
       }
     ) cfg.agents;
   };

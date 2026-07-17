@@ -63,10 +63,14 @@ in
     description = "Named font profiles consumable by editors, terminals, etc.";
   };
 
-  config.home.packages = unique (
-    filter (p: p != null) (
-      concatMap (p: [ p.family.package ] ++ map fbPackage p.fallbacks) (
-        attrValues config.programs.fontProfiles
+  # Fonts belong to the graphical content feature: a headless devbox has no GUI
+  # consumer for them (see CONTEXT.md).
+  config.home.packages = mkIf config.features.graphical.enable (
+    unique (
+      filter (p: p != null) (
+        concatMap (p: [ p.family.package ] ++ map fbPackage p.fallbacks) (
+          attrValues config.programs.fontProfiles
+        )
       )
     )
   );
