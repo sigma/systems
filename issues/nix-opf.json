@@ -2,13 +2,14 @@
   "assignee": "unknown",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-07-17T21:32:06Z",
   "created": "2026-07-17T21:10:10Z",
   "description": "Implement global WorktreeCreate/WorktreeRemove Claude Code hooks that translate to jj workspace add/forget when the session repo is a jj repo, with a git-worktree fallback otherwise.\n\nDesign (grilled):\n- Two writeShellApplication scripts in home-modules/settings/programs/claude-code.nix (jq/jj/git runtime inputs), wired into global settings.json WorktreeCreate/WorktreeRemove (no matchers).\n- create: parse stdin JSON via jq; detect jj via 'jj --ignore-working-copy root' on cwd; jj -\u003e mkdir -p parent + 'jj workspace add --name $worktree_name $worktree_path' (no -r) + echo path; non-jj -\u003e 'git worktree add -b $worktree_name $path HEAD' with --detach fallback + echo path.\n- remove: guarded on jj-detection; jj -\u003e 'jj workspace forget $worktree_name' (idempotent) + defensive rm -rf; non-jj -\u003e no-op.\n- Accepted consequence: secondary jj workspaces have no own .git; raw git toplevel resolves to main repo; agents go jj-native.\n- Docs: new docs/adr/0004-*, revise docs/agents/issue-tracker.md subagent-worktree section; no CONTEXT.md change.\n- Reverses the documented 'subagents use git worktrees' convention; jj workspaces become the isolation primitive.",
   "id": "nix-opf",
   "labels": [],
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "jj-workspace-backed Claude Code worktree hooks",
   "type": "task",
-  "updated_at": "2026-07-17T21:10:28Z"
+  "updated_at": "2026-07-17T21:32:06Z"
 }
