@@ -1,5 +1,5 @@
 {
-  "assignee": "",
+  "assignee": "unknown",
   "blocked_by": [
     "nix-d00.2"
   ],
@@ -12,8 +12,8 @@
   "labels": [],
   "parent": "nix-d00",
   "priority": 2,
-  "status": "open",
+  "status": "in_progress",
   "title": "Re-gate package blob on content features",
   "type": "task",
-  "updated_at": "2026-07-17T09:55:55Z"
+  "updated_at": "2026-07-17T10:02:37Z"
 }
