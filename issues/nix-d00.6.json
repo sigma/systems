@@ -2,7 +2,8 @@
   "assignee": "",
   "blocked_by": [
     "nix-d00.3",
-    "nix-d00.4"
+    "nix-d00.4",
+    "nix-d00.5"
   ],
   "blocks": [],
   "created": "2026-07-17T09:55:38Z",
