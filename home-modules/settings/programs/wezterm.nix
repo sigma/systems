@@ -11,20 +11,16 @@ let
 
   weztermConfig = pkgs.local.wezterm-config;
 
-  # Generate SSH domains from machine remotes
-  # For NixOS hosts, use -mux suffix for remote_address to avoid RequestTTY force
-  # which breaks WezTerm's multiplexing protocol
+  # Generate SSH domains from the machine's resolved remotes (see CONTEXT.md).
+  # `muxAddress` is the address that bypasses forced TTY (which breaks WezTerm's
+  # multiplexing protocol); topology resolution owns that convention, so we just
+  # read it here rather than re-deriving the `-mux` suffix.
   remoteToDomain =
     remote:
-    let
-      domainName = if remote.alias != null then remote.alias else remote.name;
-      isNixOS = builtins.elem "nixos" (remote.features or [ ]);
-      remoteAddress = if isNixOS then "${domainName}-mux" else domainName;
-    in
     ''
       {
-              name = "${domainName}",
-              remote_address = "${remoteAddress}",
+              name = "${remote.name}",
+              remote_address = "${remote.muxAddress}",
               multiplexing = "WezTerm",
             }'';
 

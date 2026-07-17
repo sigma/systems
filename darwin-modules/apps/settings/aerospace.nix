@@ -160,18 +160,6 @@ in
           appId = "com.apple.systempreferences";
           layout = "floating";
         }
-      ]
-      ++ lib.optionals machine.features.music [
-        {
-          appId = "com.native-instruments.Maschine 2";
-          layout = "tiling";
-          workspace = "M";
-        }
-        {
-          appId = "com.native-instruments.Traktor";
-          layout = "tiling";
-          workspace = "M";
-        }
       ];
     };
   };

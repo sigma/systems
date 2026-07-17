@@ -14,7 +14,7 @@ user. The raw input.
 _Avoid_: node, box (except in _devbox_, a distinct term).
 
 **Machine**:
-A _host_ after resolution — features expanded, remotes turned into SSH topology, modules
+A _host_ after resolution — features expanded, remotes turned into _topology_, modules
 threaded in. What modules actually see. The resolved form of a _host_.
 
 **Devbox**:
@@ -24,6 +24,28 @@ floor_. A devbox is defined by what it deliberately *lacks*, not by a size label
 call it "minimal."
 _Avoid_: minimal machine, lite host, VM (a devbox happens to be a VM, but the term names
 the content contract, not the virtualization).
+
+### Topology
+
+**Topology**:
+The directed graph of _machines_. An edge `source → target` means the source has some
+level of _knowledge_ of the target. Today only one edge kind is _resolved_ — SSH
+reachability, declared as a host's _remotes_ — but the graph is broader: parentage
+(`devbox.parentHost`), login-trust (`userSshPublicKey`), and build-delegation (`builder`)
+are latent edges carried in host data but not yet resolved as topology.
+_Avoid_: mesh (implies maintained many-to-many peer connectivity; this is a per-host star
+of declared arrows, re-derived for each host, not a shared mesh).
+
+**Remote**:
+An edge a _host_ declares: another _machine_ it reaches. Raw, host-declared input
+(`host.remotes`) — the SSH-reachability edges of the _topology_.
+
+**Resolved remote**:
+A _remote_ after topology resolution — its address computed (shared-domain aware when both
+ends allow it) and the reachability quirks each consumer needs already baked in. The unit
+consumers read: they render it (SSH config, terminal-multiplexer domains) without
+re-deriving any address convention. The per-remote analogue of how a _machine_ is a
+resolved _host_.
 
 ### Features and content
 
@@ -38,9 +60,17 @@ time, in darwin/NixOS system config, or in host resolution (e.g. `mac`, `nixos`,
 data.
 
 **Content feature**:
-A _feature_ that selects a bucket of home-manager content and nothing else (e.g. `dev`,
-`shell`, `ai`, `writing`, `media`, `network`, `keyboard`, `music`, `gaming`). Read only
-through the resolved _feature seam_, so a policy can enforce it.
+A named axis of *what a machine is equipped to do for its user* (e.g. `dev`, `shell`,
+`ai`, `writing`, `media`, `network`, `keyboard`, `music`, `gaming`) — as opposed to a
+_structural feature_, which changes module wiring or system identity. A content feature
+never alters imports or system identity; it only adds user-facing content. Most of that
+content is delivered as home-manager Nix packages/config and read through the resolved
+_feature seam_ so a policy can enforce it; but a piece may be delivered through whatever
+channel it requires — a homebrew cask, a `launchd` agent, a native app setting — when the
+capability is not available in Nix/home scope. The delivery channel is implementation; the
+feature names the capability.
+_Avoid_: treating "content" as "home-manager content" — that conflates the abstraction
+with its most common delivery channel.
 
 **Content-feature registry**:
 The canonical list of every _content feature_. The single place the taxonomy is defined;
