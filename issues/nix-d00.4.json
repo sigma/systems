@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-07-17T09:55:38Z",
+  "description": "home-modules/settings/default.nix: delete devboxPrograms and the devbox filter; loader loads all files. Each program settings file sets enable from its content feature (most stay base=true).",
+  "id": "nix-d00.4",
+  "labels": [],
+  "parent": "nix-d00",
+  "priority": 2,
+  "status": "open",
+  "title": "Re-gate settings loader; delete devboxPrograms allowlist",
+  "type": "task",
+  "updated_at": "2026-07-17T09:55:38Z"
+}
