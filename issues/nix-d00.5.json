@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-07-17T09:55:38Z",
+  "description": "home-modules/default.nix: move !devbox workstation imports to unconditional; each module self-gates config on config.features.\u003cf\u003e.enable via mkIf. Keep specialArgs platform guards (mac) only where a module references platform-only options.",
+  "id": "nix-d00.5",
+  "labels": [],
+  "parent": "nix-d00",
+  "priority": 2,
+  "status": "open",
+  "title": "Re-gate imports: unconditional + self-gate (wrinkle A)",
+  "type": "task",
+  "updated_at": "2026-07-17T09:55:38Z"
+}
