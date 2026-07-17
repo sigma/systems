@@ -11,7 +11,6 @@
 
   features = {
     k8s.enable = machine.features.work;
-    midi-sessions.enable = machine.features.music;
     music.enable = machine.features.music;
     ipfs.enable = true;
     llm.enable = machine.features.llm;

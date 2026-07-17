@@ -38,9 +38,17 @@ time, in darwin/NixOS system config, or in host resolution (e.g. `mac`, `nixos`,
 data.
 
 **Content feature**:
-A _feature_ that selects a bucket of home-manager content and nothing else (e.g. `dev`,
-`shell`, `ai`, `writing`, `media`, `network`, `keyboard`, `music`, `gaming`). Read only
-through the resolved _feature seam_, so a policy can enforce it.
+A named axis of *what a machine is equipped to do for its user* (e.g. `dev`, `shell`,
+`ai`, `writing`, `media`, `network`, `keyboard`, `music`, `gaming`) — as opposed to a
+_structural feature_, which changes module wiring or system identity. A content feature
+never alters imports or system identity; it only adds user-facing content. Most of that
+content is delivered as home-manager Nix packages/config and read through the resolved
+_feature seam_ so a policy can enforce it; but a piece may be delivered through whatever
+channel it requires — a homebrew cask, a `launchd` agent, a native app setting — when the
+capability is not available in Nix/home scope. The delivery channel is implementation; the
+feature names the capability.
+_Avoid_: treating "content" as "home-manager content" — that conflates the abstraction
+with its most common delivery channel.
 
 **Content-feature registry**:
 The canonical list of every _content feature_. The single place the taxonomy is defined;

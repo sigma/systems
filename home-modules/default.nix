@@ -189,9 +189,6 @@
         (pkgs.master.opencode.override { inherit bun; })
       ]
     )
-    ++ lib.optionals config.features.music.enable [
-      maschine-hacks
-    ]
     ++ lib.optionals config.features.gaming.enable [
       local.myrient-downloader
     ];
