@@ -6,14 +6,15 @@
   "blocks": [
     "nix-d00.6"
   ],
+  "closed_at": "2026-07-17T10:04:19Z",
   "created": "2026-07-17T09:55:38Z",
   "description": "home-modules/default.nix: split the !devbox package blob into lib.optionals config.features.\u003cf\u003e.enable buckets. Remove the four !machine.features.devbox negations.",
   "id": "nix-d00.3",
   "labels": [],
   "parent": "nix-d00",
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Re-gate package blob on content features",
   "type": "task",
-  "updated_at": "2026-07-17T10:02:37Z"
+  "updated_at": "2026-07-17T10:04:19Z"
 }
