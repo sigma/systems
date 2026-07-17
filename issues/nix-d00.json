@@ -2,13 +2,14 @@
   "assignee": "",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-07-17T13:39:52Z",
   "created": "2026-07-17T09:55:19Z",
   "description": "Replace the devbox content contract (18-name devboxPrograms allowlist + four !machine.features.devbox denylists + workstation import gating) with a content-feature seam. Content features (dev, shell, ai, writing, media, network, keyboard, music, gaming) become resolved home options; the host list stays the concise input; hostMachine generates a home features module from the content-feature registry; devbox policy mkForces the registry-complement off. machine.features.devbox then gates only VM structure. Domain recorded in CONTEXT.md. Wrinkle A: workstation imports become unconditional + self-gate via mkIf on config.features.\u003cf\u003e.enable.",
   "id": "nix-d00",
   "labels": [],
   "priority": 2,
-  "status": "open",
+  "status": "closed",
   "title": "Collapse devbox↔workstation split into a content-feature seam",
   "type": "epic",
-  "updated_at": "2026-07-17T09:55:19Z"
+  "updated_at": "2026-07-17T13:39:52Z"
 }
