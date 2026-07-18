@@ -72,9 +72,20 @@ let
       mkdir -p "$(dirname "$dir")"
 
       if [ "$is_jj" = 1 ]; then
-        # jj repo → jj workspace. No -r: branch from the current base, matching
-        # git-worktree-at-HEAD semantics without carrying uncommitted changes.
+        # jj repo → jj workspace. No -r: the new working copy shares the current
+        # workspace's parent(s), matching git-worktree-at-HEAD semantics without
+        # carrying uncommitted changes.
         jj workspace add --name "$name" "$dir" >&2
+        # Give the workspace branch identity: a bookmark named after the slug at
+        # the workspace @ (parity with the git fallback's `-b "$name"`). Unlike a
+        # git worktree, a jj workspace shares the one commit graph, so without a
+        # bookmark the agent's commits read as anonymous heads hanging off main
+        # and WorktreeRemove has no handle to reconcile them. The bookmark rides
+        # a subsequent `jj describe` in place (same commit), so typical work
+        # stays on it. A pre-existing bookmark of that name is left untouched —
+        # silently moving someone else's bookmark is worse than no bookmark.
+        jj -R "$dir" bookmark create "$name" -r @ >&2 \
+          || echo "claude-worktree-create: bookmark '$name' exists; workspace left unbookmarked" >&2
       else
         # Plain git repo → new branch at HEAD, detached on name collision.
         if ! git worktree add -b "$name" "$dir" HEAD >&2; then
@@ -92,8 +103,11 @@ let
   # hook removes it. The payload carries `worktree_path` (absolute) but no name,
   # so we recover the jj workspace name as its basename. In a jj repo:
   # `jj workspace forget` (idempotent) drops the workspace metadata, then we
-  # delete the directory. Elsewhere we tear down any git worktree at that path
-  # and delete it. Exit code is ignored by Claude Code either way.
+  # reconcile the slug-named bookmark WorktreeCreate left behind — deleting it
+  # when the work merged into trunk(), abandoning it when it's an empty leftover,
+  # and keeping it (with a warning) when it's unmerged work — before deleting the
+  # directory. Elsewhere we tear down any git worktree at that path and delete
+  # it. Exit code is ignored by Claude Code either way.
   worktreeRemove = pkgs.writeShellApplication {
     name = "claude-worktree-remove";
     runtimeInputs = [
@@ -114,7 +128,31 @@ let
       [ -n "$cwd" ] && cd "$cwd"
 
       if jj --ignore-working-copy root >/dev/null 2>&1; then
-        jj workspace forget "$name" >&2 || true
+        # Drop the workspace metadata (and its own trailing empty @, if eligible).
+        jj --ignore-working-copy workspace forget "$name" >&2 || true
+
+        # Reconcile the workspace's branch — the bookmark WorktreeCreate set to
+        # the slug. `jj workspace forget` never touches the commits a workspace
+        # produced, so without this they accumulate as anonymous heads. Every
+        # query is guarded: a missing bookmark makes the revset error out, and we
+        # must read that as "nothing to reconcile", never as a failure. All work
+        # is off the main working copy, hence --ignore-working-copy throughout.
+        if [ -n "$(jj --ignore-working-copy log --no-graph -r "$name" -T change_id 2>/dev/null)" ]; then
+          if [ -n "$(jj --ignore-working-copy log --no-graph -r "$name & ::trunk()" -T change_id 2>/dev/null)" ]; then
+            # Fast-forward / rebase-merged: the commit is now trunk history, so
+            # the bookmark is redundant. Drop the bookmark, keep the commit.
+            jj --ignore-working-copy bookmark delete "$name" >&2 || true
+          elif [ -z "$(jj --ignore-working-copy log --no-graph -r "$name & ~empty()" -T change_id 2>/dev/null)" ]; then
+            # Divergent but empty (e.g. the change drained into a mega-merge):
+            # safe to abandon, which also removes the bookmark.
+            jj --ignore-working-copy abandon "$name" >&2 || true
+          else
+            # Divergent, non-empty: possibly unmerged work — refuse to drop it,
+            # leaving the bookmark so it stays findable. Squash-merged work also
+            # lands here; `bw sync` / `jj git fetch --prune` reconciles that.
+            echo "claude-worktree-remove: '$name' has unmerged work; leaving it in place" >&2
+          fi
+        fi
         rm -rf "$worktree_path"
       else
         git -C "''${cwd:-.}" worktree remove --force "$worktree_path" >&2 2>&1 || true
