@@ -198,6 +198,10 @@ in
       "rust-analyzer-lsp@claude-plugins-official" = true;
     };
 
+    # Don't append the "Co-Authored-By: Claude" trailer or the "🤖 Generated
+    # with Claude Code" line to commit messages and PR descriptions.
+    includeCoAuthoredBy = false;
+
     # Keep extended thinking on by default.
     alwaysThinkingEnabled = true;
 
