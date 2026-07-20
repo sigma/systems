@@ -37,6 +37,13 @@ in
     # disable nix management as we're using determinate nix.
     nix.enable = mkForce false;
 
+    # Disable Determinate Nix's Sentry crash reporter. Empty endpoint = opt out.
+    # Otherwise, when `nh` elevates to run the activation and nix crashes, the
+    # reporter writes to a *relative* `${XDG_CACHE_HOME:-$HOME/.cache}/nix/sentry`
+    # (the elevated child loses a sane cache path), landing a root-owned `.cache/`
+    # in the current repo and breaking jj's working-copy snapshot.
+    user.home.sessionVariables.NIX_SENTRY_ENDPOINT = "";
+
     # determinate nix config. Only nix.custom.conf can be used to override
     # options.
     environment.etc."nix/nix.custom.conf".text = ''
