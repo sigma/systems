@@ -35,10 +35,15 @@ let
   #
   # WorktreeCreate *replaces* the default behaviour and chooses where the
   # worktree lives: the payload carries only a `name` slug, so we create the
-  # worktree at <repo-root>/.claude/worktrees/<name> and print that path as the
-  # last stdout line (non-zero exit or no path fails creation). Every diagnostic
-  # goes to stderr. Because the last path component is the slug, WorktreeRemove
-  # can recover the jj workspace name from basename(worktree_path).
+  # worktree *outside* the main repo's git tree (under a per-repo cache dir) and
+  # print that path as the last stdout line (non-zero exit or no path fails
+  # creation). The location is load-bearing: a jj workspace has no own `.git`, so
+  # nested under the repo `git rev-parse --show-toplevel` from inside it silently
+  # resolves to the *main* repo and git-native tooling corrupts main. Outside the
+  # tree, git fails loudly ("not a git repository") while `jj root` still points
+  # at the workspace. Every diagnostic goes to stderr. Because the last path
+  # component is the slug, WorktreeRemove recovers the name from
+  # basename(worktree_path). See ADR 0004.
   worktreeCreate = pkgs.writeShellApplication {
     name = "claude-worktree-create";
     runtimeInputs = [
@@ -56,9 +61,9 @@ let
         exit 1
       fi
 
-      # Resolve the repo root from the session cwd so the worktree lands beside
-      # the repo regardless of which subdirectory the session started in. A
-      # single `jj root` both detects jj and yields the root (git otherwise).
+      # Resolve the repo root from the session cwd, regardless of which
+      # subdirectory the session started in. A single `jj root` both detects jj
+      # and yields the root (git otherwise).
       [ -n "$cwd" ] && cd "$cwd"
 
       if root=$(jj --ignore-working-copy root 2>/dev/null); then
@@ -68,7 +73,13 @@ let
         root=$(git rev-parse --show-toplevel)
       fi
 
-      dir="$root/.claude/worktrees/$name"
+      # Place the worktree outside the git tree so a nested jj workspace can't
+      # make git-native tooling silently escape to the main repo (see the header
+      # comment and ADR 0004). The per-repo subdir encodes the absolute root path
+      # (/ → %) so identically-slugged worktrees from different repos never
+      # collide; the encoding uses a bash expansion to avoid extra tooling.
+      base="''${XDG_CACHE_HOME:-$HOME/.cache}/claude-code-workspaces"
+      dir="$base/''${root//\//%}/$name"
       mkdir -p "$(dirname "$dir")"
 
       if [ "$is_jj" = 1 ]; then

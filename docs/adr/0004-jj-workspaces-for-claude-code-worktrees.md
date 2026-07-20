@@ -26,12 +26,25 @@ commit graph — it isolates only `@` and the files on disk, not the branch — 
 anonymous heads that read as loose descendants of main and gave the remove hook
 nothing to reconcile. The create hook therefore also runs `jj bookmark create
 "$name" -r @` in the new workspace, matching the git fallback's `-b "$name"`; a
-pre-existing bookmark of that name is left untouched rather than moved. For the
-worktree location we chose
-`<repo-root>/.claude/worktrees/<name>` (mirroring Claude Code's own default git
-location) over a path under `$HOME`; a nested jj workspace never pollutes the
-main *jj* status (jj excludes its own workspaces), and `/.claude` is gitignored
-here so the *raw-git* view stays clean too.
+pre-existing bookmark of that name is left untouched rather than moved.
+
+For the worktree **location** we originally nested it at
+`<repo-root>/.claude/worktrees/<name>` (mirroring Claude Code's default git
+location). That was wrong and is the root of two observed corruptions: a jj
+workspace has no own `.git`, so nested *inside* the colocated main repo,
+`git rev-parse --show-toplevel` (and any git-native command) run from within it
+walks up and silently resolves to the **main** repo. Agents then commit their
+work into main while the workspace sits empty. The hook now places the worktree
+*outside* the git tree, at
+`${XDG_CACHE_HOME:-$HOME/.cache}/claude-code-workspaces/<encoded-root>/<name>`
+(the repo's absolute root path with `/` → `%`, so identical slugs from different
+repos don't collide). Outside the tree, git-native tooling fails **loudly**
+(`fatal: not a git repository`) instead of silently escaping, while `jj root`
+still resolves to the workspace. The `.claude`-is-gitignored tidiness argument
+for nesting is moot once outside the repo, and jj excludes its workspaces from
+the main *jj* status regardless of where they live. This is the same shape any
+foreign VCS (the docs mention SVN) would take: an isolated checkout that isn't
+sitting inside a git repo.
 
 ## Consequences
 
@@ -61,7 +74,12 @@ here so the *raw-git* view stays clean too.
   and are reconciled by `bw sync` / `jj git fetch --prune` instead. Where
   `trunk()` cannot resolve (no conventional remote) the merged branch simply
   degrades to "kept".
-- **Secondary jj workspaces have no own `.git`.** Raw `git rev-parse
-  --show-toplevel` from inside such a workspace resolves to the *main* repo, not
-  the isolated workspace. jj commands are correctly isolated; git-native tooling
-  is not. Agents working in these workspaces must be jj-native.
+- **Secondary jj workspaces have no own `.git`.** jj commands are correctly
+  isolated; git-native tooling is not — `git` inside the workspace operates on
+  the shared main `.git`. Placing the worktree outside the repo tree (above)
+  turns the dangerous case (silent escape to main) into a loud failure, but it
+  cannot make `git commit`/`git push`/`gh` behave like a real git worktree.
+  Agents working in these workspaces must be **jj-native** (e.g. `jj git push`,
+  not `git push`); the anchoring rule in `~/.claude/CLAUDE.md` uses `jj root`
+  rather than `git rev-parse --show-toplevel` for exactly this reason, and the
+  isolation guidance in `docs/agents/issue-tracker.md` should steer agents to jj.
