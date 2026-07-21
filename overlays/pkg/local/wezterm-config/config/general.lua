@@ -51,9 +51,14 @@ M.apply_to_config = function(options, _opts)
          format = '$1',
          highlight = 1,
       },
-      -- Then handle URLs not wrapped in brackets
+      -- Then handle URLs not wrapped in brackets. The final char class
+      -- deliberately excludes ')' so a trailing paren isn't swallowed
+      -- (e.g. "(http://example.com)" links to the URL, not "...com)").
+      -- Parens *inside* a URL are still fine, since \S* keeps them as long
+      -- as the URL doesn't end on one — we favour the common "(url)" case
+      -- over the rare URL that genuinely ends in ')'.
       {
-         regex = '\\b\\w+://\\S+[)/a-zA-Z0-9-]+',
+         regex = '\\b\\w+://\\S*[a-zA-Z0-9/-]',
          format = '$0',
       },
       -- implicit mailto link
