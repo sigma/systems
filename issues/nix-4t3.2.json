@@ -1,5 +1,5 @@
 {
-  "assignee": "",
+  "assignee": "unknown",
   "blocked_by": [],
   "blocks": [
     "nix-4t3.3"
@@ -12,8 +12,8 @@
   ],
   "parent": "nix-4t3",
   "priority": 2,
-  "status": "open",
+  "status": "in_progress",
   "title": "Model the voice feature: structural vs content, and how Macs get it",
   "type": "task",
-  "updated_at": "2026-07-23T17:08:35Z"
+  "updated_at": "2026-07-23T18:54:32Z"
 }
