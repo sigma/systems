@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-07-23T17:08:28Z",
+  "description": "## Question\n\nImplement the locked design and land it.\n\n- Create darwin-modules/features/voice.nix + wire in features/default.nix; add `voice` to the feature seam and to all Macs (per ticket 2).\n- Add the superwhisper cask; port the hooks, toggle skill, and statusline indicator per tickets 3/4/5.\n- git add new files (flakes only see tracked files), build (home-test / system-test), activate, verify on a Mac.\n- Handle/notualize TCC (mic + accessibility) grants — likely a manual note per the map's Not-yet-specified.\n\nThis is the destination endpoint: execution carried into the map.",
+  "id": "nix-4t3.6",
+  "labels": [],
+  "parent": "nix-4t3",
+  "priority": 2,
+  "status": "open",
+  "title": "Build and activate the voice integration",
+  "type": "task",
+  "updated_at": "2026-07-23T17:08:28Z"
+}
