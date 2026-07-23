@@ -14,9 +14,15 @@
     "wayfinder:prototype"
   ],
   "parent": "nix-4t3",
+  "comments": [
+    {
+      "text": "RESOLVED (prototype/design). Artifact: home-modules/skills/superwhisper/SKILL.md (committed nix-4t3.4). Wired into voice.nix at build time (nix-4t3.6).\n\nDESIGN:\n- WORTH PORTING (settled by nix-4t3.1): the binary honors /tmp/superwhisper-agent/disabled-\u003cmd5(cwd)\u003e ('Exiting: superwhisper disabled for cwd='), so the flag gates REAL hook behavior, not just display.\n- FLAG CONVENTION is DICTATED by the binary, not our choice: /tmp/superwhisper-agent/disabled-\u003cmd5($PWD)\u003e, hash = md5 of the session cwd (NOT git root). Both this skill and the nix-4t3.5 statusline MUST match it exactly. (Note: this is a case where matching the external tool overrides the repo's usual 'anchor to repo root' preference — documented in the SKILL.md.)\n- AUTHORING: real repo file home-modules/skills/superwhisper/SKILL.md — faithful port of the reference one-liner (on=rm, off=touch, empty=toggle). Swapped 'echo -n' -\u003e 'printf %s' for shell portability; identical hash.\n- PLACEMENT: voice.nix sets user.home.file.'.claude/skills/superwhisper/SKILL.md'.source = the repo file, under mkIf voice.enable. Extends 'one module owns the integration' (cask+hooks+statusline+skill). Independence: gated on voice.enable alone; a stray skill file where claude-code is off is harmless.\n- NAME: 'superwhisper' -\u003e slash command /superwhisper [on|off]. Coexists with claude-skills.nix (same home.file mechanism, distinct name; no collision).",
+      "timestamp": "2026-07-23T19:15:26Z"
+    }
+  ],
   "priority": 2,
   "status": "in_progress",
   "title": "Design the per-project SuperWhisper toggle skill port",
   "type": "task",
-  "updated_at": "2026-07-23T19:10:40Z"
+  "updated_at": "2026-07-23T19:15:26Z"
 }
