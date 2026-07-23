@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-07-23T17:08:05Z",
+  "description": "## Question\n\nDoes the cask-installed SuperWhisper ship the hook binary the reference relies on, and how do we invoke it from a Nix-generated hook command?\n\nConfirm:\n- Exact path (reference hardcodes /Applications/superwhisper.app/Contents/Resources/claude-hook) and whether the cask installs to /Applications.\n- What it reads from stdin (the Claude Code hook JSON payload) and what it does (fires superwhisper://agent-update deeplink? opens the app?).\n- Minimum SuperWhisper version (README says 2.13+).\n- Whether the binary honors the per-project disable flag (/tmp/superwhisper-agent/disabled-\u003cmd5(pwd)\u003e) and/or SUPERWHISPER_AGENT=0, or whether those are display-only in the reference statusline. This determines whether the toggle skill actually gates behavior.\n- Any TCC/permission prerequisites (mic, accessibility).\n\nInspect the locally-installed app if present. AFK research; produce a linked markdown summary.",
+  "id": "nix-4t3.1",
+  "labels": [],
+  "parent": "nix-4t3",
+  "priority": 2,
+  "status": "open",
+  "title": "Verify SuperWhisper's claude-hook binary and its interface",
+  "type": "task",
+  "updated_at": "2026-07-23T17:08:05Z"
+}
