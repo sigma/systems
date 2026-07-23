@@ -14,9 +14,15 @@
     "wayfinder:prototype"
   ],
   "parent": "nix-4t3",
+  "comments": [
+    {
+      "text": "RESOLVED (prototype/design). Full blueprint: docs/research/voice-darwin-module-design.md (committed nix-4t3.3). The real module lands in nix-4t3.6.\n\nDESIGN:\n1. Hook target = DIRECT /Applications path: command = '/Applications/superwhisper.app/Contents/Resources/claude-hook'. Cask guarantees the app there; no nix wrapper (a GUI-shipped shim can't be lib.getExe'd; existence guard is moot since hooks only exist where voice is on).\n2. Port ALL FIVE reference hooks: Stop, Notification, PreToolUse(matcher=AskUserQuestion), PermissionRequest, UserPromptSubmit. All fire the same command; the binary dispatches by hook_event_name, so including all is free + faithful.\n3. .claude/settings.local.json always-allow write: ACCEPT, no handling. It's Claude Code's standard per-project runtime local-override file, never written into this nix tree by the build; gitignoring is a per-project concern. (Map 'Not yet specified' item closed.)\n\nMERGE (verified): upstream programs.claude-code.settings uses pkgs.formats.json {} (modules/programs/claude-code.nix:26-27) — freeform recursive-merge type. So voice.nix's settings.hooks MERGES by key with the existing WorktreeCreate/WorktreeRemove block in home-modules/settings/programs/claude-code.nix. No clobber.\n\nCOMPOSITION: voice.nix (darwin feature module, mirrors music/llm) — options.features.voice.enable + config = mkIf cfg.enable { homebrew.casks=[\"superwhisper\"]; user.programs.claude-code.settings.hooks = {...}; }. Contributes hooks unconditionally w.r.t. claude-code and NEVER sets claude-code.enable -\u003e inert where claude-code off (settings.json write is enable-gated). Wire in darwin-modules/features/default.nix: import ./voice.nix + voice.enable = machine.features.voice. Register 'voice' in nebula.features + spectre/ash host lists (per nix-4t3.2).\n\nStatusline SuperWhisper indicator is OUT OF SCOPE here -\u003e nix-4t3.5 (lands in voice.nix at build time).",
+      "timestamp": "2026-07-23T19:09:06Z"
+    }
+  ],
   "priority": 2,
   "status": "in_progress",
   "title": "Design the voice darwin module: cask install + Claude Code hook wiring",
   "type": "task",
-  "updated_at": "2026-07-23T19:02:54Z"
+  "updated_at": "2026-07-23T19:09:06Z"
 }
