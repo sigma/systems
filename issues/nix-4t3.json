@@ -1,0 +1,14 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-07-23T17:07:47Z",
+  "description": "## Destination\n\nClaude Code is wired to SuperWhisper on all my Macs, declaratively in Nix: SuperWhisper installed via a Homebrew cask gated behind a new `voice` feature; the reference integration's attention/completion hooks, the per-project toggle skill, and a statusline on/off indicator all ported into the Nix-managed Claude Code config; then built and activated. Reference: github.com/superultrainc/superwhisper-claude-code.\n\n## Notes\n\n- **Execution IS carried into this map** (user chose 'decisions locked, then build'): the map ends with a real build+activate task, not just a handoff.\n- **Scope (all in):** core attention/completion hooks + per-project toggle skill + statusline indicator.\n- **Coupling = Independent:** `voice` installs the cask on all Macs; the Claude Code hooks only take effect where claude-code is already enabled (today: firefly/work Macs, via darwin-modules/policy/firefly.nix). Do NOT broaden claude-code to non-firefly Macs.\n- **No plugin marketplace.** The reference installs via `claude plugin install`; this repo manages settings declaratively (home-modules/settings/programs/claude-code.nix, disableBundledSkills=true). Port hooks into settings.hooks instead.\n- Skills to consult per session: /grilling, /domain-modeling, /prototype, /research. Repo conventions: CLAUDE.md (structural vs content features), CONTEXT.md, docs/adr/.\n- Relevant files: darwin-modules/features/{default,music,llm,tailscale}.nix, darwin-modules/apps/default.nix (casks), home-modules/settings/programs/claude-code.nix (settings.hooks + statusline), home-modules/claude-skills.nix, modules/hosts.nix + modules/content-features.nix (feature seam).\n- Memory: TCC-gated macOS tools (mic/accessibility) go via Homebrew, not nix — aligns with the cask choice.\n\n## Decisions so far\n\n\u003c!-- one line per closed ticket, linking it --\u003e\n\n## Not yet specified\n\n- TCC permissions: SuperWhisper needs Microphone + Accessibility grants; these are manual and may need a note/checklist rather than config. Revisit during the build.\n- Optional reference niceties (e.g. superwhisper://agent-installed deeplink on install) — decide if worth mirroring once the core lands.\n\n## Out of scope\n\n- Broadening the claude-code darwin module to non-firefly Macs (coupling chosen: Independent).\n- Installing via the Claude Code plugin marketplace (`claude plugin install`) — replaced by declarative Nix wiring.",
+  "id": "nix-4t3",
+  "labels": [],
+  "priority": 2,
+  "status": "open",
+  "title": "Voice: wire Claude Code to SuperWhisper on all Macs",
+  "type": "epic",
+  "updated_at": "2026-07-23T17:07:47Z"
+}
