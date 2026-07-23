@@ -1,5 +1,5 @@
 {
-  "assignee": "",
+  "assignee": "unknown",
   "blocked_by": [
     "nix-4t3.3",
     "nix-4t3.4",
@@ -14,8 +14,8 @@
   ],
   "parent": "nix-4t3",
   "priority": 2,
-  "status": "open",
+  "status": "in_progress",
   "title": "Build and activate the voice integration",
   "type": "task",
-  "updated_at": "2026-07-23T17:08:35Z"
+  "updated_at": "2026-07-23T19:24:25Z"
 }
