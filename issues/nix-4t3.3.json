@@ -1,7 +1,8 @@
 {
   "assignee": "",
   "blocked_by": [
-    "nix-4t3.1"
+    "nix-4t3.1",
+    "nix-4t3.2"
   ],
   "blocks": [],
   "created": "2026-07-23T17:08:27Z",
@@ -15,5 +16,5 @@
   "status": "open",
   "title": "Design the voice darwin module: cask install + Claude Code hook wiring",
   "type": "task",
-  "updated_at": "2026-07-23T17:08:34Z"
+  "updated_at": "2026-07-23T17:08:35Z"
 }
