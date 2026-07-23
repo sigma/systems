@@ -37,12 +37,35 @@ in
     # disable nix management as we're using determinate nix.
     nix.enable = mkForce false;
 
-    # Disable Determinate Nix's Sentry crash reporter. Empty endpoint = opt out.
-    # Otherwise, when `nh` elevates to run the activation and nix crashes, the
-    # reporter writes to a *relative* `${XDG_CACHE_HOME:-$HOME/.cache}/nix/sentry`
-    # (the elevated child loses a sane cache path), landing a root-owned `.cache/`
-    # in the current repo and breaking jj's working-copy snapshot.
-    user.home.sessionVariables.NIX_SENTRY_ENDPOINT = "";
+    # Disable Determinate Nix's Sentry crash reporter at the daemon level.
+    #
+    # The bundled nix client (sentry-native + crashpad) buffers crash data to a
+    # *relative* `${XDG_CACHE_HOME:-$HOME/.cache}/nix/sentry`. When `nh` elevates
+    # the activation, sudo clears HOME/XDG for the root child, so that path
+    # resolves against the cwd — dropping a root-owned `.cache/` into the current
+    # repo and breaking jj's working-copy snapshot.
+    #
+    # Reporting is gated solely by the file `/etc/nix/sentry-endpoint`, which
+    # determinate-nixd derives from this config. A null endpoint makes it remove
+    # that file, so the client opts out for *every* invocation, root included.
+    # A user-scoped `NIX_SENTRY_ENDPOINT` (the previous approach) can't cross the
+    # sudo boundary into the root activation, and `sentry-endpoint` is not a
+    # nix.conf setting — so neither of the "obvious" levers works.
+    # Docs: https://docs.determinate.systems/guides/telemetry/
+    environment.etc."determinate/config.json".text = builtins.toJSON {
+      telemetry.sentry.endpoint = null;
+    };
+
+    # determinate-nixd only re-reads /etc/determinate/config.json on (re)start,
+    # so nudge it once to purge a stale /etc/nix/sentry-endpoint. Gated on the
+    # file still carrying a value, so steady-state rebuilds don't churn the
+    # daemon.
+    system.activationScripts.postActivation.text = mkAfter ''
+      if [ -s /etc/nix/sentry-endpoint ]; then
+        echo "determinate: disabling Sentry crash reporter (restarting daemon)…" >&2
+        launchctl kickstart -k system/systems.determinate.nix-daemon || true
+      fi
+    '';
 
     # determinate nix config. Only nix.custom.conf can be used to override
     # options.
