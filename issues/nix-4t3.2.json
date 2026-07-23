@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-07-23T17:08:05Z",
+  "description": "## Question\n\nHow is the `voice` feature declared in the feature seam, and how does every Mac end up carrying it?\n\nDecide:\n- Structural feature (nebula.features list in modules/hosts.nix, read outside home scope like mac/llm/tailscale) vs content-feature (modules/content-features.nix registry). It gates a darwin homebrew cask (outside home scope) → strongly indicates structural per CLAUDE.md.\n- 'Active on all Macs': add an explicit `voice` to each Mac host's features list, or derive it from machine.features.mac so no host edits are needed? Weigh explicitness vs DRY against how other cross-Mac features are done.\n- Where the feature's enable is wired (darwin-modules/features/default.nix, mirroring music/llm/tailscale).\n\nHITL grilling / domain-modeling.",
+  "id": "nix-4t3.2",
+  "labels": [],
+  "parent": "nix-4t3",
+  "priority": 2,
+  "status": "open",
+  "title": "Model the voice feature: structural vs content, and how Macs get it",
+  "type": "task",
+  "updated_at": "2026-07-23T17:08:05Z"
+}
