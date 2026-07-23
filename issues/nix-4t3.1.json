@@ -12,9 +12,15 @@
     "wayfinder:research"
   ],
   "parent": "nix-4t3",
+  "comments": [
+    {
+      "text": "RESOLVED (research). Full findings: docs/research/superwhisper-claude-hook.md (committed nix-4t3.1).\n\nKey answers:\n- Path CONFIRMED: /Applications/superwhisper.app/Contents/Resources/claude-hook. Homebrew cask 'superwhisper' installs superwhisper.app as an App artifact -\u003e /Applications. (Cask auto_updates=true; path stable, version drifts.)\n- claude-hook is a 56-byte shim: 'exec $(dirname $0)/agent-hook claude $@'. Real logic = agent-hook Mach-O binary.\n- stdin = Claude Code hook JSON (hook_event_name, session_id, transcript_path, stop_hook_active, notification_type, permission_*). Multi-event dispatcher; reference wires 5 hooks to the same command: Stop, Notification, PreToolUse(AskUserQuestion), PermissionRequest, UserPromptSubmit. On Stop fires superwhisper://agent-update deeplink. Side effect: writes always-allow rules to per-project .claude/settings.local.json.\n- Version: installed 2.16.5, cask 2.16.6 \u003e= 2.13 required. OK.\n- GATING (decides toggle skill): the /tmp/superwhisper-agent/disabled-\u003cmd5(cwd)\u003e file gates the BINARY (strings: 'Exiting: superwhisper disabled for cwd=' / 'for session='). REAL, not display-only. md5 is over $PWD (cwd, not git root). SUPERWHISPER_AGENT=0 is DISPLAY-ONLY (only in statusline.sh, not in agent-hook) -\u003e toggle skill (nix-4t3.4) must write the /tmp file, not the env var. Reference skill does exactly this.\n- TCC: Microphone + Accessibility, granted manually to the app (not hook-level, not Nix-configurable). Feeds map's 'Not yet specified' TCC note.",
+      "timestamp": "2026-07-23T18:52:55Z"
+    }
+  ],
   "priority": 2,
   "status": "in_progress",
   "title": "Verify SuperWhisper's claude-hook binary and its interface",
   "type": "task",
-  "updated_at": "2026-07-23T18:50:45Z"
+  "updated_at": "2026-07-23T18:52:55Z"
 }
