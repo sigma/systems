@@ -11,9 +11,15 @@
     "wayfinder:grilling"
   ],
   "parent": "nix-4t3",
+  "comments": [
+    {
+      "text": "RESOLVED (grilling). Feature-seam model for the 'voice' feature:\n\n1. STRUCTURAL feature (not content): it gates a Homebrew cask (outside home scope); modules/content-features.nix explicitly excludes this class. Register 'voice' in nebula.features (modules/hosts.nix) alongside llm/tailscale.\n\n2. PER-HOST, EXPLICIT opt-in: add 'voice' to each Mac host's features list (spectre, ash) — greppable, per-host opt-out, mirrors llm/tailscale. NOT derived from machine.features.mac, so a Mac can decline it.\n\n3. ENABLE WIRING: new module darwin-modules/features/voice.nix (mirroring music.nix/llm.nix), imported + wired in darwin-modules/features/default.nix as 'voice.enable = machine.features.voice;'.\n\n4. MODULE OWNERSHIP: voice.nix owns the ENTIRE integration — the superwhisper cask AND the Claude Code hook + statusline settings — all under mkIf cfg.enable (gated on voice.enable alone).\n\n5. INDEPENDENCE CONTRACT (honors map's locked Independent coupling): voice.nix contributes claude-code settings unconditionally w.r.t. claude-code and NEVER sets claude-code.enable. The contribution is inert wherever claude-code is disabled, because the settings.json write is gated by programs.claude-code.enable (verified: home-modules/settings/programs/claude-code.nix:179 gates the settings value; the upstream program module writes settings.json only when enabled; enable is set by firefly policy / claude-glm / ai). Net: cask -\u003e all Macs; hooks -\u003e materialize only where claude-code already lives (firefly Macs today: spectre, ash).\n\nNote for nix-4t3.3: voice.nix must merge into programs.claude-code.settings.hooks (existing block at claude-code.nix:226) via the darwin 'user.*' alias, and add the SuperWhisper statusline. No cross-scope gating needed — voice.enable is the only condition.",
+      "timestamp": "2026-07-23T19:02:04Z"
+    }
+  ],
   "priority": 2,
   "status": "in_progress",
   "title": "Model the voice feature: structural vs content, and how Macs get it",
   "type": "task",
-  "updated_at": "2026-07-23T18:54:32Z"
+  "updated_at": "2026-07-23T19:02:04Z"
 }
