@@ -4,7 +4,8 @@
     "nix-4t3.1"
   ],
   "blocks": [
-    "nix-4t3.5"
+    "nix-4t3.5",
+    "nix-4t3.6"
   ],
   "created": "2026-07-23T17:08:27Z",
   "description": "## Question\n\nHow is the reference's /superwhisper on|off|toggle skill expressed in this repo's declarative skill system?\n\nThe reference skill writes /tmp/superwhisper-agent/disabled-\u003cmd5(pwd)\u003e to disable per-project. Decide:\n- Where it lives: home-modules/claude-skills.nix (this repo's curated skillset; note disableBundledSkills=true).\n- Whether the flag actually gates hook behavior (depends on ticket 1's finding) or is purely a statusline display toggle — and whether that changes whether the skill is worth porting.\n- The exact flag path/convention to standardize on, since the statusline indicator (ticket 5) must read the same convention.\n\nHITL prototype/grilling.",
