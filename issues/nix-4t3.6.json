@@ -13,9 +13,15 @@
     "wayfinder:task"
   ],
   "parent": "nix-4t3",
+  "comments": [
+    {
+      "text": "BUILT + VALIDATED (activation handed off to user per their choice). jj change d35b5d78.\n\nCHANGES (6 files):\n- NEW darwin-modules/features/voice.nix — options.features.voice.enable; mkIf cfg.enable { homebrew.casks=[superwhisper]; user.programs.claude-code.settings.hooks (all 5 events -\u003e claude-hook); user.home.file '.claude/skills/superwhisper/SKILL.md'.source; user.programs.claudeStatusline.segments (SW indicator, priority 90) }.\n- NEW home-modules/claude-statusline.nix — composable statusline: options.programs.claudeStatusline.{enable,segments}; generator writeShellApplication joins segments by ' · ' in priority order; base model+ctx segment (priority 10); sets programs.claude-code.settings.statusLine.command.\n- home-modules/settings/programs/claude-code.nix — removed the old statusline let-binding + statusLine setting (moved into claude-statusline.nix).\n- home-modules/default.nix — import ./claude-statusline.nix (always-loaded, declares option).\n- darwin-modules/features/default.nix — import ./voice.nix + voice.enable = machine.features.voice.\n- modules/hosts.nix — 'voice' added to nebula.features + spectre + ash.\n(SKILL.md already committed in nix-4t3.4.)\n\nVALIDATION on ash: nix build .#darwinConfigurations.ash.system succeeded (shellcheck passed on the generator). features.voice.enable=true; superwhisper cask present in homebrew.casks; settings.json hooks = all 5 SuperWhisper events + WorktreeCreate/Remove merged (freeform-json merge confirmed). Statusline live run: 'Opus 4.8 · 45k/200k ctx (22%) · ✓ superwhisper'; touching /tmp/superwhisper-agent/disabled-\u003cmd5(cwd)\u003e flips it to '✗ superwhisper' — gating confirmed, hashing .workspace.current_dir matches the skill/binary convention.\n\nACTIVATION (user-driven, pending):\n- User-space (no sudo): home-manager switch --flake .#ash-yann  (hooks + /superwhisper skill + statusline). Functional immediately since superwhisper.app is already installed.\n- Full darwin (sudo): darwin-rebuild switch --flake .#ash  — brings the superwhisper cask under declarative management (brew bundle adopts the already-installed app).\n\nTCC (manual, from map Not-yet-specified): grant SuperWhisper.app Microphone + Accessibility in System Settings \u003e Privacy \u0026 Security. Not Nix-configurable.",
+      "timestamp": "2026-07-23T19:32:20Z"
+    }
+  ],
   "priority": 2,
   "status": "in_progress",
   "title": "Build and activate the voice integration",
   "type": "task",
-  "updated_at": "2026-07-23T19:24:25Z"
+  "updated_at": "2026-07-23T19:32:20Z"
 }
