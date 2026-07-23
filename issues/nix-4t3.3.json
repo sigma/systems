@@ -5,7 +5,9 @@
   "created": "2026-07-23T17:08:27Z",
   "description": "## Question\n\nWhat does darwin-modules/features/voice.nix look like, and how do the SuperWhisper hooks merge into the Nix-managed Claude Code settings?\n\nDesign:\n- The feature module (options.features.voice.enable + config): homebrew.casks = [ \"superwhisper\" ] when enabled, mirroring the music/llm/tailscale pattern; wired in darwin-modules/features/default.nix.\n- Hook translation: port the reference's Stop / Notification / PreToolUse(AskUserQuestion) / PermissionRequest / UserPromptSubmit hooks (each invoking the claude-hook binary from ticket 1) into settings.hooks, which already carries WorktreeCreate/WorktreeRemove in home-modules/settings/programs/claude-code.nix.\n- Composition: those settings are gated on config.programs.claude-code.enable; voice hooks must ALSO gate on the voice feature. Decide where the merge lives (extend the existing settings block vs a separate mkIf) so it degrades cleanly on Macs where claude-code is off (coupling = Independent).\n- Whether the hook command references the app binary path directly or a nix wrapper.\n\nHITL prototype (may stub the nix module).",
   "id": "nix-4t3.3",
-  "labels": [],
+  "labels": [
+    "wayfinder:prototype"
+  ],
   "parent": "nix-4t3",
   "priority": 2,
   "status": "open",
