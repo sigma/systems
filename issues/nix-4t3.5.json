@@ -6,6 +6,7 @@
   "blocks": [
     "nix-4t3.6"
   ],
+  "closed_at": "2026-07-23T19:23:28Z",
   "created": "2026-07-23T17:08:28Z",
   "description": "## Question\n\nHow is the superwhisper on/off indicator added to this repo's existing statusline?\n\nThe repo's statusline is a pkgs.writeShellApplication in home-modules/settings/programs/claude-code.nix (jq over the Claude Code JSON blob). The reference statusline appends a ✓/✗ superwhisper segment by reading the per-project /tmp flag. Design:\n- Merge the indicator into the existing statusline script (must read the same flag convention settled in ticket 4), or keep it minimal.\n- Gate the segment on the voice feature so non-voice Macs don't show it.\n\nHITL prototype.",
   "id": "nix-4t3.5",
@@ -20,7 +21,7 @@
     }
   ],
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Design the statusline SuperWhisper on/off indicator",
   "type": "task",
   "updated_at": "2026-07-23T19:23:28Z"
