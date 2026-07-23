@@ -23,6 +23,10 @@
     # via nixos-modules/dev.nix). Configured in
     # ./settings/programs/{claude-code,claude-skills}.nix.
     ./claude-skills.nix
+    # Composable Claude Code statusline — always imported so
+    # programs.claudeStatusline is declared (voice.nix contributes a segment via
+    # user.*). Self-gates on config.programs.claude-code.enable.
+    ./claude-statusline.nix
     ./cursor.nix # referenced from settings/programs/jujutsu.nix
     ./editors
     ./features.nix # declares options.features.<n>.enable (content-feature seam)

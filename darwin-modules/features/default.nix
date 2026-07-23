@@ -7,6 +7,7 @@
     ./midi-sessions.nix
     ./music.nix
     ./tailscale.nix
+    ./voice.nix
   ];
 
   features = {
@@ -15,5 +16,6 @@
     ipfs.enable = true;
     llm.enable = machine.features.llm;
     tailscale.enable = machine.features.tailscale;
+    voice.enable = machine.features.voice;
   };
 }

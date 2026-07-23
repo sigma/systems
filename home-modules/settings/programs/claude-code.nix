@@ -6,24 +6,10 @@
   ...
 }:
 let
-  # Statusline script. Claude Code pipes a JSON blob on stdin; the
-  # `context_window` object carries live token usage for the focused session
-  # (no transcript parsing needed). See
-  # https://code.claude.com/docs/en/statusline.md
-  statusline = pkgs.writeShellApplication {
-    name = "claude-statusline";
-    runtimeInputs = [ pkgs.jq ];
-    text = ''
-      input=$(cat)
-      jq -r '
-        (.model.display_name // "?")               as $model
-        | (.context_window.total_input_tokens // 0)  as $used
-        | (.context_window.context_window_size // 200000) as $total
-        | (.context_window.used_percentage // 0)     as $pct
-        | "\($model) · \(($used / 1000) | floor)k/\(($total / 1000) | floor)k ctx (\($pct | floor)%)"
-      ' <<<"$input"
-    '';
-  };
+  # Statusline is assembled from composable segments (base model+context here,
+  # SuperWhisper indicator from the voice feature) — see
+  # home-modules/claude-statusline.nix, which owns the base segment and wires
+  # programs.claude-code.settings.statusLine.
 
   # WorktreeCreate / WorktreeRemove hooks. Claude Code fires these when a
   # session or subagent asks for worktree isolation (`--worktree` or
@@ -212,12 +198,8 @@ in
     # Don't prompt when entering dangerous (bypass-permissions) mode.
     skipDangerousModePermissionPrompt = true;
 
-    # Show the focused session's model and live context-window token usage.
-    statusLine = {
-      type = "command";
-      command = lib.getExe statusline;
-      padding = 0;
-    };
+    # Statusline (model + context, plus the SuperWhisper indicator on voice
+    # Macs) is wired by home-modules/claude-statusline.nix from segments.
 
     # Back worktree isolation with jj workspaces in jj repos (git-worktree
     # fallback elsewhere). These events take no matcher. Create can block

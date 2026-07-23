@@ -46,6 +46,7 @@ in
     "determinate" # for Determinate Nix
     "tailscale" # for Tailscale VPN
     "llm" # for local LLM inference (provider chosen per-platform)
+    "voice" # SuperWhisper voice integration for Claude Code (Mac-only)
     "nehalem" # CPU is pre-Haswell x86_64 (lacks AVX2)
   ]
   ++ contentFeatures;
@@ -81,6 +82,7 @@ in
           "firefly"
           "gaming"
           "tailscale"
+          "voice"
         ]
         ++ sharedContent;
         u2fKeys = portableU2fKeys ++ [
@@ -115,6 +117,7 @@ in
           "gaming"
           "llm"
           "tailscale"
+          "voice"
         ]
         ++ sharedContent;
         u2fKeys = portableU2fKeys ++ [
