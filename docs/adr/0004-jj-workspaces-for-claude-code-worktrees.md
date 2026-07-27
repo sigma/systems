@@ -35,10 +35,13 @@ workspace has no own `.git`, so nested *inside* the colocated main repo,
 `git rev-parse --show-toplevel` (and any git-native command) run from within it
 walks up and silently resolves to the **main** repo. Agents then commit their
 work into main while the workspace sits empty. The hook now places the worktree
-*outside* the git tree, at
-`${XDG_CACHE_HOME:-$HOME/.cache}/claude-code-workspaces/<encoded-root>/<name>`
-(the repo's absolute root path with `/` → `%`, so identical slugs from different
-repos don't collide). Outside the tree, git-native tooling fails **loudly**
+*outside* the git tree, at `~/.claude/worktrees/<mirrored-root>/<name>`, where
+`<mirrored-root>` is the repo's absolute root reproduced as a real subdir tree
+with the leading `$HOME/` (or leading `/` for roots outside `$HOME`) stripped, so
+identical slugs from different repos don't collide. An earlier version flattened
+the root into a single component by replacing `/` with `%`, but `%` reads as a
+percent-escape to some URL-parsing libraries that later encounter the path, so we
+keep real `/` separators instead. Outside the tree, git-native tooling fails **loudly**
 (`fatal: not a git repository`) instead of silently escaping, while `jj root`
 still resolves to the workspace. The `.claude`-is-gitignored tidiness argument
 for nesting is moot once outside the repo, and jj excludes its workspaces from

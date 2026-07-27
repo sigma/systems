@@ -21,7 +21,8 @@ let
   #
   # WorktreeCreate *replaces* the default behaviour and chooses where the
   # worktree lives: the payload carries only a `name` slug, so we create the
-  # worktree *outside* the main repo's git tree (under a per-repo cache dir) and
+  # worktree *outside* the main repo's git tree (mirrored under
+  # ~/.claude/worktrees) and
   # print that path as the last stdout line (non-zero exit or no path fails
   # creation). The location is load-bearing: a jj workspace has no own `.git`, so
   # nested under the repo `git rev-parse --show-toplevel` from inside it silently
@@ -61,11 +62,20 @@ let
 
       # Place the worktree outside the git tree so a nested jj workspace can't
       # make git-native tooling silently escape to the main repo (see the header
-      # comment and ADR 0004). The per-repo subdir encodes the absolute root path
-      # (/ → %) so identically-slugged worktrees from different repos never
-      # collide; the encoding uses a bash expansion to avoid extra tooling.
-      base="''${XDG_CACHE_HOME:-$HOME/.cache}/claude-code-workspaces"
-      dir="$base/''${root//\//%}/$name"
+      # comment and ADR 0004). We mirror the repo root's path as a subdir tree
+      # under ~/.claude/worktrees so identically-slugged worktrees from different
+      # repos never collide. An earlier version flattened the root into one
+      # component by replacing "/" with "%", but "%" reads as a percent-escape to
+      # some URL parsers that later see the path — so we keep real "/" separators
+      # and just strip the leading $HOME (or the leading "/" for roots outside
+      # it) to root the mirror under the cache dir.
+      base="$HOME/.claude/worktrees"
+      case "$root" in
+        "$HOME"/*) rel="''${root#"$HOME"/}" ;;
+        /*)        rel="''${root#/}" ;;
+        *)         rel="$root" ;;
+      esac
+      dir="$base/$rel/$name"
       mkdir -p "$(dirname "$dir")"
 
       if [ "$is_jj" = 1 ]; then
