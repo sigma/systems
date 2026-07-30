@@ -22,6 +22,10 @@ in
           appdir = "/Applications";
         };
       }
+      # The `op` CLI is a separate distribution from the desktop app; the app
+      # bundle contains no `op` binary. This cask puts a real, functional `op`
+      # in PATH and integrates with the desktop app for biometric unlock.
+      "1password-cli"
     ];
   };
 }
