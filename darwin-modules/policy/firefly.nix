@@ -26,6 +26,7 @@ with lib;
     homebrew.casks = [
       "linear"
       "notion"
+      "notion-cli" # official Notion CLI, provides the `ntn` binary
       "notion-calendar"
       "slack"
     ];
