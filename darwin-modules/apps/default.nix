@@ -7,6 +7,7 @@
   imports = [
     ./1password.nix
     ./aerospace.nix
+    ./ai.nix
     ./alfred.nix
     ./antigravity.nix
     ./chrome.nix
@@ -44,6 +45,7 @@
   homebrew.casks = [
     "calibre"
     "elgato-stream-deck"
+    "ghostty"
     "iina"
     "jordanbaird-ice"
     "localsend"
