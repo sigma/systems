@@ -99,6 +99,11 @@ in
         }
         # Editors
         {
+          appId = "com.mitchellh.ghostty";
+          layout = "tiling";
+          workspace = "E";
+        }
+        {
           appNameRegexSubstring = "Cursor";
           layout = "tiling";
           workspace = "E";

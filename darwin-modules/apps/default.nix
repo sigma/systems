@@ -31,31 +31,30 @@
     "oven-sh/bun"
   ];
 
-  homebrew.brews =
-    [
-      "cirruslabs/cli/tart"
-      "jj"
-      "libusb"
-      "opencode"
-      "oven-sh/bun/bun"
-    ]
-    ++ lib.optionals machine.features.work [
-      "container"
-    ];
+  homebrew.brews = [
+    "cirruslabs/cli/tart"
+    "jj"
+    "libusb"
+    "opencode"
+    "oven-sh/bun/bun"
+  ]
+  ++ lib.optionals machine.features.work [
+    "container"
+  ];
 
-  homebrew.casks =
-    [
-      "calibre"
-      "elgato-stream-deck"
-      "iina"
-      "jordanbaird-ice"
-      "localsend"
-      "obsidian"
-      "openusage"
-      "soundsource"
-      "transnomino"
-      "whatsapp"
-      "yubico-authenticator"
-      "fuse-t"
-    ];
+  homebrew.casks = [
+    "calibre"
+    "elgato-stream-deck"
+    "ghostty"
+    "iina"
+    "jordanbaird-ice"
+    "localsend"
+    "obsidian"
+    "openusage"
+    "soundsource"
+    "transnomino"
+    "whatsapp"
+    "yubico-authenticator"
+    "fuse-t"
+  ];
 }
