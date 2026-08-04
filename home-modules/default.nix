@@ -97,6 +97,9 @@
       # vcs management
       toolbox.entire
 
+      # code review (AI review TUI, sibling to hunk)
+      toolbox.tuicr
+
       # Useful nix related tools
       cachix
       nixfmt
