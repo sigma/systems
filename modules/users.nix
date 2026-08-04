@@ -19,6 +19,10 @@ in
         name = "firefly";
         emails = [ "yann@firefly.engineering" ];
       };
+      arboraProfile = {
+        name = "arbora";
+        emails = [ "yann@arbora.partners" ];
+      };
     in
     {
       personalUser = {
@@ -31,9 +35,9 @@ in
 
       workUser = {
         inherit name githubHandle login;
-        # TODO: add profiles for new work contexts as needed
         profiles = [
           fireflyProfile
+          arboraProfile
           persoProfile
         ];
       };

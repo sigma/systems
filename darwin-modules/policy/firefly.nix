@@ -18,6 +18,13 @@ with lib;
         layout = "tiling";
         workspace = "P";
       }
+      {
+        # Chrome suffixes the "firefly" profile's window title with "(firefly)".
+        appId = "com.google.Chrome";
+        layout = "tiling";
+        windowTitleRegexSubstring = ".*\\(firefly\\)$";
+        workspace = "W";
+      }
     ];
 
     # Enable darwin-level claude-code module (installs via homebrew, provides wrapper)

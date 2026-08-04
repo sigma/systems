@@ -16,7 +16,6 @@ in
 
     persistent-apps = [
       (systemApp "Google Chrome")
-      (systemApp "Brave Browser")
       (userApp "WezTerm")
       (systemApp "Antigravity")
       (userApp "Emacs")

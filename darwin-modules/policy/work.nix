@@ -6,25 +6,12 @@ with lib;
 
     programs.onepassword.enable = mkForce true;
 
+    # Shared "Work" workspace; each work policy routes its own Chrome profile
+    # window here (see firefly.nix / arbora.nix).
     programs.aerospace.workspaces = mkBefore [
       {
         name = "W"; # Work
         display = "main";
-      }
-    ];
-    programs.aerospace.windowRules = mkBefore [
-      {
-        appId = "com.brave.Browser";
-        layout = "tiling";
-        windowTitleRegexSubstring = ".*- Work$";
-        workspace = "W";
-      }
-      {
-        # Chrome suffixes the "Work" profile's window title with "(Work)".
-        appId = "com.google.Chrome";
-        layout = "tiling";
-        windowTitleRegexSubstring = ".*\\(Work\\)$";
-        workspace = "W";
       }
     ];
   };

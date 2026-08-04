@@ -92,11 +92,6 @@ in
           layout = "tiling";
           workspace = "B";
         }
-        {
-          appId = "com.brave.Browser";
-          layout = "tiling";
-          workspace = "B";
-        }
         # Editors
         {
           appNameRegexSubstring = "Cursor";

@@ -40,6 +40,7 @@ in
   nebula.features = [
     "work" # generic work feature
     "firefly" # specifically for firefly engineering
+    "arbora" # specifically for arbora partners
     "devbox" # for VM-based devboxes (any hypervisor)
     "tart" # for Tart hypervisor (macOS hosts)
     "kvm" # for KVM hypervisor (NixOS hosts)
@@ -113,6 +114,7 @@ in
           "work"
           "music"
           "firefly"
+          "arbora"
           "determinate"
           "gaming"
           "llm"

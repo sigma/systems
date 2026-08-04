@@ -6,6 +6,7 @@
   #   - workstation-only: references options from modules gated behind
   #     !machine.features.devbox
   imports = [
+    ./arbora.nix # gates internally on machine.features.arbora; deps always-loaded
     ./devbox.nix # gates internally on machine.features.devbox
   ]
   ++ lib.optionals (!machine.features.devbox) [
