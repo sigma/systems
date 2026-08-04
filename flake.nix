@@ -67,8 +67,7 @@
     vscode-extensions.url = "github:nix-community/nix-vscode-extensions";
     vscode-extensions.inputs.nixpkgs.follows = "nixpkgs";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
-    vscode-server.inputs.nixpkgs.follows = "nixpkgs";
-    vscode-server.inputs.flake-utils.follows = "flake-utils";
+    vscode-server.inputs.flake-parts.follows = "flake-parts";
 
     # Theme
     catppuccin.url = "github:catppuccin/nix/release-25.11";
@@ -78,8 +77,6 @@
     nvf.url = "github:notashelf/nvf";
     nvf.inputs.nixpkgs.follows = "nixpkgs";
     nvf.inputs.flake-compat.follows = "flake-compat";
-    nvf.inputs.flake-parts.follows = "flake-parts";
-    nvf.inputs.systems.follows = "systems";
 
     # Flakehub
     nix.url = "https://flakehub.com/f/DeterminateSystems/nix-src/*";
