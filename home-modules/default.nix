@@ -38,6 +38,7 @@
     ./shells
     ./television.nix # Ctrl+R hand-off to atuin; gates on programs.television.enable
     ./tmuxp.nix # referenced from settings/programs/tmux.nix
+    ./tuicr.nix # renders ~/.config/tuicr/config.toml; gates on programs.tuicr.enable
     # Content-gated modules — always imported so their options are declared;
     # each self-gates its config on config.features.<x>.enable or on its own
     # programs.<name>.enable (set by a policy/feature), so the devbox policy's
