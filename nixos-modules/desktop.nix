@@ -25,7 +25,6 @@ mkIf machine.features.interactive {
   environment.systemPackages = with pkgs; [
     alacritty
     fuzzel
-    noctalia-shell
     local.noctalia-ipc
     waybar
     wl-clipboard # Wayland clipboard for nvim, etc.
@@ -64,7 +63,7 @@ mkIf machine.features.interactive {
     };
   };
 
-  user.programs.noctalia-shell = {
+  user.programs.noctalia = {
     enable = true;
   };
 

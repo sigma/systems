@@ -49,10 +49,7 @@ in
             mimir
             yq-go
 
-            # pkgs.docker-client still tracks docker_28, which nixpkgs marks
-            # insecure (unmaintained since Nov 2025). OrbStack provides the
-            # engine here, so we only need the CLI.
-            (docker_29.override { clientOnly = true; })
+            docker-client
             kubectl
           ]
           ++ lib.optionals cfg.useJsonnet [

@@ -7,9 +7,6 @@
 }:
 {
   virtualisation.docker.enable = true;
-  # The module default is pkgs.docker == docker_28, which nixpkgs marks insecure
-  # (unmaintained since Nov 2025).
-  virtualisation.docker.package = pkgs.docker_29;
   virtualisation.docker.listenOptions = [
     "/run/docker.sock"
     "localhost:2376"
