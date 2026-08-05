@@ -1,6 +1,9 @@
-_:
+{ config, ... }:
 {
-  enable = true;
+  # afew pulls in notmuch, which has no aarch64-darwin binary cache and takes
+  # very long to build from source. Only enable it where mail is actually set
+  # up, matching programs.notmuch.
+  inherit (config.programs.mailsetup) enable;
   # This config is designed to work with --all
   extraConfig = ''
     [NewKillThreadsFilter]
