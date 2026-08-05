@@ -35,7 +35,6 @@
     "cirruslabs/cli/tart"
     "jj"
     "libusb"
-    "opencode"
     "oven-sh/bun/bun"
   ]
   ++ lib.optionals machine.features.work [

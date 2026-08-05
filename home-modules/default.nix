@@ -56,7 +56,6 @@
     ./kubeswitch.nix
     ./mailsetup.nix
     ./open-url.nix
-    ./opencode-firefly.nix
     ./yt-dlp.nix
   ]
   ++ lib.optionals machine.features.mac [
@@ -188,16 +187,6 @@
     ++ lib.optionals machine.features.mac [
       m-cli # useful macOS CLI commands
     ]
-    ++ lib.optionals (config.features.ai.enable && !machine.features.mac) (
-      let
-        bun = if machine.features.nehalem then pkgs.toolbox.bun-baseline else pkgs.toolbox.bun;
-      in
-      [
-        bun
-        # Use bun-baseline on CPUs without AVX2 (pre-Haswell)
-        (pkgs.master.opencode.override { inherit bun; })
-      ]
-    )
     ++ lib.optionals config.features.gaming.enable [
       local.myrient-downloader
     ];

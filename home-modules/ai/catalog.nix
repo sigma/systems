@@ -3,7 +3,7 @@
 # Plans pair a vendor with the bits each consumer needs to wire up: ACP server
 # name (for Zed's external-agent registry), CLI packages, optional auth source,
 # and an optional reference to an existing wrapper module that already knows
-# how to provision the plan (claude-firefly, claude-glm, opencode-firefly).
+# how to provision the plan (claude-firefly, claude-glm).
 #
 # Backends are local LLM inference servers. Each declares the API protocol it
 # speaks (e.g. "openai-compatible") and the endpoint it serves on. A host
@@ -55,15 +55,7 @@ _:
         type = "static";
       };
     };
-    firefly-opencode = {
-      vendor = "openai-proxy";
-      acp = null;
-      enableModule = "opencode-firefly";
-      auth = {
-        type = "static";
-      };
-    };
-  };
+};
 
   backends = {
     # GUI-driven local server (Homebrew cask `lm-studio`). Default server

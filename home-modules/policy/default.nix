@@ -10,6 +10,6 @@
     ./devbox.nix # gates internally on machine.features.devbox
   ]
   ++ lib.optionals (!machine.features.devbox) [
-    ./firefly.nix # depends on claude-firefly, claude-glm, gcloud, opencode-firefly
+    ./firefly.nix # depends on claude-firefly, claude-glm, gcloud
   ];
 }

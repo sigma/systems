@@ -1,6 +1,6 @@
 # Centralized AI agent / model preferences.
 #
-# Consumers (Zed, claude wrappers, opencode, etc.) read
+# Consumers (Zed, claude wrappers, etc.) read
 # `programs.aiProfiles.{agents,editPredictions}` and translate the resolved
 # profile to their own settings shape. Each entry references catalog plans
 # from `programs.aiCatalog` so vendor identifiers, ACP names, and required
@@ -170,7 +170,6 @@ in
     programs.claude-code.enable = mkIf (elem "claude-code" enableModules) true;
     programs.claude-firefly.enable = mkIf (elem "claude-firefly" enableModules) true;
     programs.claude-glm.enable = mkIf (elem "claude-glm" enableModules) true;
-    programs.opencode-firefly.enable = mkIf (elem "opencode-firefly" enableModules) true;
 
     # sops secrets live in the system (darwin/nixos) config; in integrated
     # home-manager `osConfig` is exposed for that. In standalone home-manager

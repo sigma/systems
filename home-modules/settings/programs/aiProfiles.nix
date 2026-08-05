@@ -15,8 +15,7 @@ in
   ]
   ++ lib.optionals machine.features.firefly [
     c.plans.firefly-claude
-    c.plans.firefly-opencode
-  ];
+];
 
   # Edit predictions need a local backend; only configure them on hosts that
   # run one. Without this guard, hosts without `features.llm` would advertise
