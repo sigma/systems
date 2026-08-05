@@ -62,7 +62,7 @@ in
           # Use prettier for formatting
           format = {
             enable = true;
-            type = [ "prettierd" ];
+            type = [ "prettier" ];
           };
           # ESLint configured via nvim-lint in lint.nix
         };
