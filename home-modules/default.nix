@@ -14,7 +14,6 @@
     # modules reference. Their config blocks are gated on cfg.enable, which
     # defaults to false on devbox (the corresponding settings file isn't
     # loaded), so promotion costs only the option declaration.
-    ./antigravity.nix
     ./aspell.nix
     ./builder-access.nix
     ./catppuccin.nix
@@ -27,7 +26,6 @@
     # programs.claudeStatusline is declared (voice.nix contributes a segment via
     # user.*). Self-gates on config.programs.claude-code.enable.
     ./claude-statusline.nix
-    ./cursor.nix # referenced from settings/programs/jujutsu.nix
     ./editors
     ./features.nix # declares options.features.<n>.enable (content-feature seam)
     ./herdr.nix # renders ~/.config/herdr/config.toml; gates on programs.herdr.enable

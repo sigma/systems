@@ -70,7 +70,7 @@
     vscode-server.inputs.flake-parts.follows = "flake-parts";
 
     # Theme
-    catppuccin.url = "github:catppuccin/nix/release-25.11";
+    catppuccin.url = "github:catppuccin/nix/release-26.05";
     catppuccin.inputs.nixpkgs.follows = "nixpkgs-stable";
 
     # Neovim
