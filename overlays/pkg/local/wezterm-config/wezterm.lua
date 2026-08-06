@@ -1,0 +1,17 @@
+local wezterm = require('wezterm')
+local Config = require('config')
+
+return Config:init()
+   :apply(require('config.bindings'))
+   :apply(function(config, _opts)
+      config.leader = { key = 'z', mods = 'CTRL' }
+      local tmux = require('tmux')
+      tmux.apply_to_config(config, _opts)
+   end)
+   :apply(require('config.tabline'))
+   :apply(require('config.smart_workspace_switcher'))
+   :apply(require('config.appearance'))
+   :apply(require('config.domains'))
+   :apply(require('config.fonts'))
+   :apply(require('config.general'))
+   :apply(require('config.launch'))

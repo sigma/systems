@@ -1,0 +1,122 @@
+# nvf-based Neovim configuration
+# Aims to replicate LazyVim experience
+#
+# See docs/nvf-lazyvim-roadmap.md for the full plan
+{
+  config,
+  lib,
+  ...
+}:
+with lib;
+let
+  cfg = config.programs.neovim-ide;
+
+  # Concatenate all Lua config snippets in order
+  concatLuaSnippets = snippets: concatStringsSep "\n\n" (filter (s: s != "") (attrValues snippets));
+
+  # Create a filtered source containing only the lua directory
+  # See: https://www.tweag.io/blog/2023-11-28-file-sets/
+  luaRuntime = fileset.toSource {
+    root = ./.;
+    fileset = ./lua;
+  };
+in
+{
+  imports = [
+    ./core.nix
+    ./theme.nix
+    ./keymaps.nix
+    ./ui
+    ./lsp
+    ./navigation
+    ./editing
+    ./utility
+  ];
+
+  options.programs.neovim-ide = {
+    enable = mkEnableOption "LazyVim-like Neovim configuration via nvf";
+
+    # Modular Lua config options - allows multiple modules to contribute snippets
+    luaConfigPre = mkOption {
+      type = types.attrsOf types.lines;
+      default = { };
+      description = ''
+        Attribute set of Lua code snippets to run before plugin setup.
+        Each key is a descriptive name, value is the Lua code.
+        All snippets are concatenated in alphabetical order by key.
+      '';
+      example = literalExpression ''
+        {
+          "00-suppress-warnings" = '''
+            -- Suppress deprecation warnings
+            vim.notify = function() end
+          ''';
+          "10-globals" = '''
+            vim.g.some_global = true
+          ''';
+        }
+      '';
+    };
+
+    luaConfigPost = mkOption {
+      type = types.attrsOf types.lines;
+      default = { };
+      description = ''
+        Attribute set of Lua code snippets to run after plugin setup.
+        Each key is a descriptive name, value is the Lua code.
+        All snippets are concatenated in alphabetical order by key.
+      '';
+      example = literalExpression ''
+        {
+          "00-borders" = '''
+            -- Configure floating window borders
+            vim.diagnostic.config({ float = { border = "rounded" } })
+          ''';
+          "10-format-on-save" = '''
+            -- Format on save autocmd
+            vim.api.nvim_create_autocmd("BufWritePre", { ... })
+          ''';
+        }
+      '';
+    };
+  };
+
+  config = mkIf cfg.enable {
+    programs.nvf = {
+      enable = true;
+
+      settings.vim = {
+        # Use vi/vim aliases
+        viAlias = true;
+        vimAlias = true;
+
+        # Enable lazy loading for plugins
+        lazy.enable = true;
+
+        # Add user lua modules to runtime path using nvf's pure runtime approach
+        # See: https://nvf.notashelf.dev/tips.html#sec-pure-nvf-runtime
+        # The path must contain a lua/ subdirectory - Neovim looks for modules in <rtp>/lua/
+        additionalRuntimePaths = [ "${luaRuntime}" ];
+
+        # Pre-plugin Lua configuration
+        luaConfigPre = concatLuaSnippets cfg.luaConfigPre;
+
+        # Concatenate all luaConfigPost snippets
+        luaConfigPost = concatLuaSnippets cfg.luaConfigPost;
+
+        # Enable visual features
+        visuals = {
+          nvim-scrollbar.enable = true;
+          nvim-cursorline.enable = true;
+        };
+
+        # Enable treesitter for syntax highlighting
+        treesitter = {
+          enable = true;
+          indent.enable = true;
+          highlight.enable = true;
+        };
+      };
+    };
+  };
+}

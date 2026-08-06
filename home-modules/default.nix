@@ -1,0 +1,162 @@
+{
+  pkgs,
+  lib,
+  machine,
+  stateVersion,
+  ...
+}:
+{
+  home.stateVersion = stateVersion;
+
+  imports = [
+    ./accounts.nix
+    ./aspell.nix
+    ./antigravity.nix
+    ./builder-access.nix
+    ./catppuccin.nix
+    ./claude-glm.nix
+    ./cloud-shell.nix
+    ./cursor.nix
+    ./dosbox.nix
+    ./darwin-apps.nix
+    ./editors
+    ./gcloud.nix
+    ./jujutsu.nix
+    ./just.nix
+    ./kew.nix
+    ./kubeswitch.nix
+    ./mailsetup.nix
+    ./open-url.nix
+    ./policy
+    ./settings
+    ./shells
+    ./tmuxp.nix
+    ./yt-dlp.nix
+  ];
+
+  programs = {
+    cloudshell.enable = true;
+    fd.enable = true;
+    jq.enable = true;
+
+    gh-dash.enable = true;
+
+    neovim-ide.enable = true;
+  };
+
+  home.packages =
+    with pkgs;
+    [
+      # Some basics
+      bash
+      coreutils
+      curl
+      wget
+
+      # build tools
+      circleci-cli
+      gnumake
+      goreleaser
+      ninja
+      master.buck2
+      bump2version
+      mprocs
+      parallel
+
+      # console tools
+      ast-grep
+      broot
+      btop
+      chafa
+      d2
+      glow
+      gum
+      gnutar
+      hexyl
+      htop
+      less
+      pinfo
+      procs
+      rm-improved
+      safe-rm
+      silver-searcher
+      skim
+      soft-serve
+      tealdeer
+      tree
+
+      # writing tools
+      hugo
+      mdbook
+      mdbook-mermaid
+
+      # git
+      git-review
+      pre-commit
+      local.prs
+      tig
+
+      # languages
+      go
+      python3
+      poetry
+      black
+      (fenix.complete.withComponents [
+        "cargo"
+        "clippy"
+        "rust-src"
+        "rustc"
+        "rustfmt"
+      ])
+      rust-analyzer-nightly
+
+      # json/yaml helpers
+      jaq
+      jsonnet
+      jsonnet-bundler
+      yq-go
+
+      # network tools
+      autossh
+      lftp
+      nmap
+      prettyping
+
+      # Useful nix related tools
+      cachix
+      statix
+      nixfmt
+      comma
+      master.devenv
+      fh
+      master.nix-inspect
+      home-manager
+      nh
+      nix-output-monitor
+
+      # keyboard QMK tools
+      local.mdloader
+
+      # for voice generation
+      ffmpeg
+    ]
+    ++ lib.optionals machine.features.mac [
+      m-cli # useful macOS CLI commands
+    ]
+    ++ lib.optionals (!machine.features.mac) (
+      let
+        bun = if machine.features.nehalem then pkgs.master.bun-baseline else pkgs.master.bun;
+      in
+      [
+        bun
+        # Use bun-baseline on CPUs without AVX2 (pre-Haswell)
+        (pkgs.master.opencode.override { inherit bun; })
+      ]
+    )
+    ++ lib.optionals machine.features.music [
+      maschine-hacks
+    ]
+    ++ lib.optionals machine.features.gaming [
+      local.myrient-downloader
+    ];
+}

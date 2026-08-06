@@ -1,0 +1,15 @@
+{
+  "assignee": "unknown",
+  "blocked_by": [],
+  "blocks": [],
+  "closed_at": "2026-08-06T13:24:16Z",
+  "created": "2026-08-06T13:22:58Z",
+  "description": "hunk ships as a Bun single-file executable; Bun's default x64 build targets x86-64-v3 and faults on `shlx` (BMI2) on pre-Haswell CPUs. shirka is a Xeon E5-2697 v2 (Ivy Bridge): AVX/SSE4.2 but no AVX2/BMI2/FMA, so the binary SIGILLs on every invocation.\n\nThat failure is silent in a pager seat: the pager dies and takes the output with it, so `git diff` and `jj log` came back completely blank (hunk was wired to both core.pager and jj ui.pager).\n\nUpstream (modem-dev/hunk) publishes no -baseline artifact - only hunkdiff-linux-x64.tar.gz - so there is no drop-in fix. Verified a baseline build IS possible from source (pristine bun-linux-x64-baseline + FHS shim so /proc/self/exe resolves, then patchelf the output), but that needs bwrap at build time which the nix sandbox does not allow.\n\nFix: gate programs.hunk.enable on the already-declared-but-unused `nehalem` machine feature. Falls back to delta, which keeps git [pager] diff/show/log/blame and the jj delta scope; jj ui.pager returns to :builtin.",
+  "id": "nix-km2",
+  "labels": [],
+  "priority": 2,
+  "status": "closed",
+  "title": "Disable hunk on pre-Haswell CPUs (nehalem)",
+  "type": "task",
+  "updated_at": "2026-08-06T13:24:16Z"
+}

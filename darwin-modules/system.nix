@@ -1,0 +1,42 @@
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
+  services.ssh.enable = true;
+  # zsh is enabled by default in nix-darwin
+  programs.zsh.enable = lib.mkForce false;
+
+  programs.fish.enable = true;
+  programs.fish.useBabelfish = true;
+
+  environment = with pkgs; {
+    systemPackages = [
+      coreutils-full
+      htop
+      vim
+    ];
+
+    shells = [
+      # I don't normally use bash, but when I do I want it to be recent !
+      bash
+      fish
+    ];
+  };
+
+  homebrew = {
+    enable = true;
+    onActivation.cleanup = "zap";
+  };
+
+  user.programs.fish.interactiveShellInit = ''
+    fish_add_path ${config.homebrew.brewPrefix}
+  '';
+
+  security.pam.touchid.enable = true;
+  security.pam.reattach.package = pkgs.stable.pam-reattach;
+
+  system.stateVersion = 5;
+}
