@@ -23,7 +23,8 @@ in
       pagers = [
         {
           colorArg = "always";
-          pager = "${pkgs.delta}/bin/delta --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format='lazygit-edit://{path}:{line}'";
+          # delta from the vcs-toolchain bundle, so the closure carries one.
+          pager = "${pkgs.toolbox.vcs-toolchain}/bin/delta --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format='lazygit-edit://{path}:{line}'";
           useConfig = false;
         }
       ];

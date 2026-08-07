@@ -92,11 +92,13 @@
       # work management
       toolbox.beadwork
 
-      # vcs management
-      toolbox.entire
-
-      # code review (AI review TUI, sibling to hunk)
-      toolbox.tuicr
+      # vcs management — one bundle instead of a pile of per-tool installs.
+      # vcs-toolchain ships git, git-lfs, jj, jjui, jj-hunk, gh, gh-aw,
+      # gh-stack, delta, difftastic, entire, hunk and tuicr, all pinned
+      # together by the toolbox. Taking the bundle means the individual
+      # installs it subsumes have to be switched off or they collide on the
+      # same `bin/` names — see the notes at each site.
+      toolbox.vcs-toolchain
 
       # Useful nix related tools
       cachix

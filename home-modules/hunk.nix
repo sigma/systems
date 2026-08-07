@@ -136,7 +136,11 @@ in
     {
       programs.hunk.finalPackage = finalPackage;
 
-      home.packages = [ finalPackage ];
+      # The toolbox's vcs-toolchain bundle (home-modules/default.nix) also
+      # ships `bin/hunk`, unwrapped. Take priority over it so the copy on PATH
+      # is the one carrying HUNK_TEXT_PAGER/EDITOR; without the hiPrio the two
+      # just collide and buildEnv refuses to build the profile.
+      home.packages = [ (hiPrio finalPackage) ];
 
       # Baseline written to ~/.config/hunk/config.toml. These match
       # hunk's own internal defaults but having them in the file
@@ -149,8 +153,7 @@ in
         hunk_headers = mkDefault true;
       };
 
-      xdg.configFile."hunk/config.toml".source =
-        tomlFormat.generate "hunk-config.toml" cfg.settings;
+      xdg.configFile."hunk/config.toml".source = tomlFormat.generate "hunk-config.toml" cfg.settings;
     }
 
     (mkIf cfg.git.enable {

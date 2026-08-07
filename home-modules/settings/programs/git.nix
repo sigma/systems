@@ -6,6 +6,12 @@
 {
   enable = true;
 
+  # The git binary comes from the toolbox's vcs-toolchain bundle
+  # (home-modules/default.nix); this module is here for the config it
+  # generates, so it must not install a second git or the two collide on
+  # `bin/git` in the home profile.
+  package = null;
+
   settings.alias = {
     ldiff = "difftool -t latex";
     ci = "commit";
@@ -23,7 +29,12 @@
     whatis = "show -s --pretty='tformat:%h (%s, %ad)' --date=short";
   };
 
-  lfs.enable = true;
+  # Same story as `package` above: git-lfs ships in vcs-toolchain, so enable
+  # the filter config without installing a competing copy.
+  lfs = {
+    enable = true;
+    package = null;
+  };
 
   includes = [
     # defaults
