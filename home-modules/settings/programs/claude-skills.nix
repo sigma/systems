@@ -9,7 +9,12 @@
 {
   # Matt Pocock's skill collection, shipped by the toolbox. Add more skillsets
   # by appending plugin packages here.
-  plugins = lib.mkIf config.programs.claude-skills.enable [
-    pkgs.toolbox.mattpocock-skills
-  ];
+  plugins = lib.mkIf config.programs.claude-skills.enable (
+    [
+      pkgs.toolbox.mattpocock-skills
+    ]
+    # tuicr's own skills teach Claude to drive the review TUI, so they are only
+    # worth shipping where tuicr itself is configured (see ../../tuicr.nix).
+    ++ lib.optional config.programs.tuicr.enable pkgs.toolbox.tuicr-skills
+  );
 }
