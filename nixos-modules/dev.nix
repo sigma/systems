@@ -26,10 +26,6 @@
     };
   };
 
-  user.programs.jujutsu = {
-    package = pkgs.master.jujutsu;
-  };
-
   user.home.packages = with pkgs; [
     # gcc
   ];
