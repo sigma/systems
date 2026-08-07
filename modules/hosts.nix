@@ -194,10 +194,8 @@ in
           diskGB = 150;
         };
         sshOpts = {
-          forwardAgent = true;
-          extraOptions = {
-            AddKeysToAgent = "yes";
-          };
+          ForwardAgent = true;
+          AddKeysToAgent = "yes";
         };
         bootLabel = "boot";
         enableSwap = false; # devbox-installer only creates ESP + nixos partitions
@@ -232,10 +230,8 @@ in
           parentHost = "spectre";
         };
         sshOpts = {
-          forwardAgent = true;
-          extraOptions = {
-            AddKeysToAgent = "yes";
-          };
+          ForwardAgent = true;
+          AddKeysToAgent = "yes";
         };
         bootLabel = "boot";
         enableSwap = false;
@@ -256,15 +252,13 @@ in
         user = "yann_hodique";
         system = "x86_64-linux";
         sshOpts = {
-          identitiesOnly = true;
-          identityFile = "~/.ssh/google_compute_engine";
-          proxyCommand = "~/.ssh/cloudshell_proxy perso";
-          extraOptions = {
-            RemoteCommand = cloudshellCmd "personal-projects-179500";
-            RequestTTY = "yes";
-            StrictHostKeyChecking = "no";
-            UserKnownHostsFile = "/dev/null";
-          };
+          IdentitiesOnly = true;
+          IdentityFile = "~/.ssh/google_compute_engine";
+          ProxyCommand = "~/.ssh/cloudshell_proxy perso";
+          RemoteCommand = cloudshellCmd "personal-projects-179500";
+          RequestTTY = "yes";
+          StrictHostKeyChecking = "no";
+          UserKnownHostsFile = "/dev/null";
         };
       };
     };

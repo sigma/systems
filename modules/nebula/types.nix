@@ -1,141 +1,144 @@
 { lib }:
 with lib;
 rec {
-  profile = types.submodule (
-    _:
-    {
-      options = {
-        name = mkOption {
-          type = types.str;
-          description = "The name of the profile";
-        };
-
-        emails = mkOption {
-          type = types.listOf types.str;
-          description = "The emails of the profile";
-        };
+  profile = types.submodule (_: {
+    options = {
+      name = mkOption {
+        type = types.str;
+        description = "The name of the profile";
       };
-    }
-  );
 
-  user = types.submodule (
-    _:
-    {
-      options = {
-        name = mkOption {
-          type = types.str;
-          description = "The name of the user";
-        };
-
-        githubHandle = mkOption {
-          type = types.str;
-          description = "The github handle of the user";
-        };
-
-        login = mkOption {
-          type = types.str;
-          description = "The login of the user";
-        };
-
-        profiles = mkOption {
-          type = types.listOf profile;
-          default = [ ];
-          description = "The profiles of the user";
-        };
+      emails = mkOption {
+        type = types.listOf types.str;
+        description = "The emails of the profile";
       };
-    }
-  );
+    };
+  });
 
-  host = types.submodule (
-    _:
-    {
-      options = {
-        name = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = "The name of the host";
-        };
+  user = types.submodule (_: {
+    options = {
+      name = mkOption {
+        type = types.str;
+        description = "The name of the user";
+      };
 
-        system = mkOption {
-          type = types.str;
-          description = "The system of the host";
-        };
+      githubHandle = mkOption {
+        type = types.str;
+        description = "The github handle of the user";
+      };
 
-        alias = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = "The alias of the host";
-        };
+      login = mkOption {
+        type = types.str;
+        description = "The login of the user";
+      };
 
-        features = mkOption {
-          type = types.listOf types.str;
-          default = [ ];
-          description = "The features of the host";
-        };
+      profiles = mkOption {
+        type = types.listOf profile;
+        default = [ ];
+        description = "The profiles of the user";
+      };
+    };
+  });
 
-        user = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = "The user of the host";
-        };
+  host = types.submodule (_: {
+    options = {
+      name = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "The name of the host";
+      };
 
-        homeRoot = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = "The home root of the host";
-        };
+      system = mkOption {
+        type = types.str;
+        description = "The system of the host";
+      };
 
-        sshOpts = mkOption {
-          type = types.nullOr types.attrs;
-          default = null;
-          description = "The ssh options of the host";
-        };
+      alias = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "The alias of the host";
+      };
 
-        u2fKeys = mkOption {
-          type = types.listOf types.str;
-          default = [ ];
-          description = "The U2F authorization keys for PAM authentication";
-        };
+      features = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = "The features of the host";
+      };
 
-        signingKey = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = "The SSH signing key for git commits";
-        };
+      user = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "The user of the host";
+      };
 
-        userSshPublicKey = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = "The host's primary user SSH public key, used to authorize logins from this host into devboxes it parents";
-        };
+      homeRoot = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "The home root of the host";
+      };
 
-        remotes = mkOption {
-          type = types.listOf host;
-          default = [ ];
-          description = "The remotes of the host";
-        };
+      sshOpts = mkOption {
+        type = types.nullOr types.attrs;
+        default = null;
+        description = ''
+          Extra ssh_config directives for this host, keyed by upstream
+          OpenSSH directive name (e.g. `ForwardAgent`, `IdentityFile`), as
+          consumed by `programs.ssh.settings`.
+        '';
+      };
 
-        enableSwap = mkOption {
-          type = types.bool;
-          default = true;
-          description = "Whether to enable swap on the host";
-        };
+      u2fKeys = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = "The U2F authorization keys for PAM authentication";
+      };
 
-        bootLabel = mkOption {
-          type = types.str;
-          default = "ESP";
-          description = "The label of the boot partition";
-        };
+      signingKey = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "The SSH signing key for git commits";
+      };
 
-        devbox = mkOption {
-          type = types.nullOr (types.submodule {
+      userSshPublicKey = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "The host's primary user SSH public key, used to authorize logins from this host into devboxes it parents";
+      };
+
+      remotes = mkOption {
+        type = types.listOf host;
+        default = [ ];
+        description = "The remotes of the host";
+      };
+
+      enableSwap = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether to enable swap on the host";
+      };
+
+      bootLabel = mkOption {
+        type = types.str;
+        default = "ESP";
+        description = "The label of the boot partition";
+      };
+
+      devbox = mkOption {
+        type = types.nullOr (
+          types.submodule {
             options = {
               hypervisor = mkOption {
-                type = types.enum [ "tart" "kvm" ];
+                type = types.enum [
+                  "tart"
+                  "kvm"
+                ];
                 description = "Hypervisor used to run this devbox";
               };
               guest = mkOption {
-                type = types.enum [ "linux" "macos" ];
+                type = types.enum [
+                  "linux"
+                  "macos"
+                ];
                 default = "linux";
                 description = "Guest OS type";
               };
@@ -160,13 +163,15 @@ rec {
                 description = "VM disk size in GB at creation time";
               };
             };
-          });
-          default = null;
-          description = "Devbox VM configuration (null means this host is not a devbox)";
-        };
+          }
+        );
+        default = null;
+        description = "Devbox VM configuration (null means this host is not a devbox)";
+      };
 
-        builder = mkOption {
-          type = types.nullOr (types.submodule {
+      builder = mkOption {
+        type = types.nullOr (
+          types.submodule {
             options = {
               enable = mkEnableOption "this host as a remote builder";
               maxJobs = mkOption {
@@ -181,7 +186,10 @@ rec {
               };
               supportedFeatures = mkOption {
                 type = types.listOf types.str;
-                default = [ "nixos-test" "big-parallel" ];
+                default = [
+                  "nixos-test"
+                  "big-parallel"
+                ];
                 description = "Supported build features";
               };
               publicHostKey = mkOption {
@@ -205,12 +213,12 @@ rec {
                 description = "Store signing public key for this builder";
               };
             };
-          });
-          default = null;
-          description = "Remote builder configuration for this host";
-        };
+          }
+        );
+        default = null;
+        description = "Remote builder configuration for this host";
       };
-    }
-  );
+    };
+  });
 }
 // types
