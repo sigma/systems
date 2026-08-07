@@ -126,7 +126,7 @@ in
         workspaces
         windowRules
         ;
-      bordersBinary = "${config.homebrew.brewPrefix}/borders";
+      bordersBinary = "${config.homebrew.prefix}/bin/borders";
     };
   };
 }

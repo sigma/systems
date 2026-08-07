@@ -22,7 +22,7 @@ in
       enable = true;
       # Create a wrapper that delegates to homebrew-installed claude
       package = pkgs.writeShellScriptBin "claude" ''
-        exec ${config.homebrew.brewPrefix}/claude "$@"
+        exec ${config.homebrew.prefix}/bin/claude "$@"
       '';
     };
 

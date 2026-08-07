@@ -24,7 +24,7 @@ in
         buildCommand = ''
           mkdir -p $out/bin
           # Assuming standard homebrew location for now
-          ln -sf ${config.homebrew.brewPrefix}/antigravity $out/bin/antigravity
+          ln -sf ${config.homebrew.prefix}/bin/antigravity $out/bin/antigravity
           ln -sf $out/bin/antigravity $out/bin/code
 
           # Create dummy product.json to satisfy Home Manager

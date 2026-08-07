@@ -44,7 +44,7 @@ in
   };
 
   user.programs.fish.interactiveShellInit = ''
-    fish_add_path ${config.homebrew.brewPrefix}
+    fish_add_path ${config.homebrew.prefix}/bin
   '';
 
   security.pam.touchid.enable = true;
