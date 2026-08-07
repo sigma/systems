@@ -31,7 +31,8 @@ let
       modules = [
         ./code/module.nix
         fontsModule
-      ] ++ modules;
+      ]
+      ++ modules;
       specialArgs = args // {
         marketplace = pkgs.vscode-marketplace;
         extSet = pkgs.forVSCodeVersion pkgs.vscode.version;
@@ -43,8 +44,6 @@ in
   mutableExtensionsDir = true;
 
   profiles.default = makeProfile [
-    ./code/antigravity.nix
-    ./code/cursor.nix
     ./code/custom.nix
     ./code/emacs.nix
     ./code/format.nix
