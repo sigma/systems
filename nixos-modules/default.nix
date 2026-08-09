@@ -9,6 +9,7 @@
     ./hardware-configuration.nix
     ./nix.nix
     ./nixos-user.nix
+    ./removable-mounts.nix
     ./tailscale.nix
     ./vscode-server.nix
   ];
