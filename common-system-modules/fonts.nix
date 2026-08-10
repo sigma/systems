@@ -5,6 +5,7 @@
     [
       fira-code
       fira-code-symbols
+      lato
       recursive
       source-code-pro
     ]
