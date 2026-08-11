@@ -1,0 +1,15 @@
+{
+  "assignee": "unknown",
+  "blocked_by": [],
+  "blocks": [],
+  "closed_at": "2026-08-11T19:11:30Z",
+  "created": "2026-08-11T19:08:54Z",
+  "description": "tuicr-wrapper-herdr.sh builds a bash-syntax completion-sentinel command and hands it to 'herdr pane run', which injects it into the pane's interactive shell. Under fish this fails: fish has no $? and no VAR=value assignment. Wrap the payload in 'bash -c' so the pane shell only sees a quoted argument. Local overlay over pkgs.toolbox.tuicr-skills pending upstream PR to agavra/tuicr.",
+  "id": "nix-6a0",
+  "labels": [],
+  "priority": 2,
+  "status": "closed",
+  "title": "Patch tuicr herdr wrapper for non-bash interactive shells",
+  "type": "task",
+  "updated_at": "2026-08-11T19:11:30Z"
+}
