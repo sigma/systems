@@ -27,7 +27,14 @@
   homebrew.global.brewfile = true;
 
   homebrew.taps = [
-    "cirruslabs/cli"
+    {
+      # Trust the whole tap, not just `tart`: `brew bundle cleanup --force`
+      # rewrites the trust store to exactly the Brewfile's `trusted: true`
+      # entries, so tart's dependency `cirruslabs/cli/softnet` loses any trust
+      # granted out-of-band by `brew trust` on every activation.
+      name = "cirruslabs/cli";
+      trusted = true;
+    }
     "oven-sh/bun"
   ];
 
