@@ -234,6 +234,19 @@
     ".ccls-cache/"
     ".sass-cache/"
     "__pycache__/"
+    # Nix build/dev artifacts. Every Nix repo produces these and almost none
+    # ignore them consistently, so they surface as untracked noise in
+    # `git status` and in agent-driven search. `result*` are symlinks into
+    # /nix/store; `.direnv/` holds a GC-rooted profile.
+    #
+    # Deliberately *not* listed: "/nix/" and "/nix/store/". Global excludes are
+    # matched relative to the top of each working tree, not as filesystem
+    # paths, so those would ignore a repo-root `nix/` source directory (we have
+    # one in ~/src/agents/turnkey) while having no effect whatsoever on the
+    # real store.
+    ".direnv/"
+    "result"
+    "result-*"
     # Compiled things
     "*.class"
     "*.exe"
