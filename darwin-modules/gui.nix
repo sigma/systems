@@ -1,4 +1,9 @@
-{ config, user, ... }:
+{
+  config,
+  lib,
+  user,
+  ...
+}:
 let
   homeDir = config.users.users.${user.login}.home;
   userDir = name: "${homeDir}/${name}";
@@ -17,7 +22,9 @@ in
     persistent-apps = [
       (systemApp "Google Chrome")
       (userApp "WezTerm")
-      (systemApp "Antigravity")
+    ]
+    ++ lib.optional config.programs.antigravity.enable (systemApp "Antigravity")
+    ++ [
       (userApp "Emacs")
       (systemApp "Notion")
       (systemApp "Slack")
