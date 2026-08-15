@@ -22,6 +22,10 @@
     # via nixos-modules/dev.nix). Configured in
     # ./settings/programs/{claude-code,claude-skills}.nix.
     ./claude-skills.nix
+    # Nests ~/.claude/settings.json inside a store *directory* so Claude does
+    # not end up watching /nix/store itself. Self-gates on
+    # config.programs.claude-code.enable.
+    ./claude-settings-file.nix
     # Composable Claude Code statusline — always imported so
     # programs.claudeStatusline is declared (voice.nix contributes a segment via
     # user.*). Self-gates on config.programs.claude-code.enable.
