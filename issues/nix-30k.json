@@ -8,9 +8,15 @@
   "labels": [
     "beadwork-upgrade"
   ],
+  "comments": [
+    {
+      "text": "Investigated 2026-08-15 (Fizz).\n\n**Current state is 0.13.0, not 0.12.3** — this ticket's premise is the correct one; nix-9nf's is not (see below).\n\n- Nix-managed `bw` (via `toolbox.beadwork`, home-modules/default.nix:93): **0.13.0**\n- Latest upstream release: **v0.13.2** (2026-06-19)\n- `github:firefly-engineering/toolbox#packages.aarch64-darwin.beadwork.version` at HEAD: **0.13.0**\n\n**Blocked on upstream.** Bumping the `toolbox` flake input does not deliver 0.13.2 — toolbox HEAD still packages 0.13.0. This needs either (a) toolbox to bump beadwork, or (b) a local override overlay in this repo, matching the pattern already used for tuicr-skills in nix-6a0 (`overlays/pkgsets.nix`). Option (b) is actionable here without waiting on toolbox.",
+      "timestamp": "2026-08-15T11:53:08Z"
+    }
+  ],
   "priority": 1,
   "status": "open",
   "title": "Upgrade bw to 0.13.2",
   "type": "task",
-  "updated_at": "2026-08-06T10:35:19Z"
+  "updated_at": "2026-08-15T11:53:08Z"
 }
