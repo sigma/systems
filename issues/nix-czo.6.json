@@ -1,5 +1,5 @@
 {
-  "assignee": "",
+  "assignee": "unknown",
   "blocked_by": [
     "nix-czo.14"
   ],
@@ -20,8 +20,8 @@
     }
   ],
   "priority": 2,
-  "status": "open",
+  "status": "in_progress",
   "title": "Add treesitter-textobjects",
   "type": "task",
-  "updated_at": "2026-04-21T03:57:06Z"
+  "updated_at": "2026-08-15T11:54:49Z"
 }
