@@ -1,7 +1,9 @@
 {
   "assignee": "",
   "blocked_by": [],
-  "blocks": [],
+  "blocks": [
+    "nix-30k"
+  ],
   "created": "2026-08-15T11:53:27Z",
   "description": "`/Users/yann/bin/bw` symlinks to `/Users/yann/src/github.com/jallum/beadwork/bw`, a Mach-O binary built 2026-04-13 reporting **0.12.3**. `/Users/yann/bin` precedes `/etc/profiles/per-user/yann/bin` on PATH (positions 6 and 8), so this stale dev build shadows the nix-managed **0.13.0** from `toolbox.beadwork` for every interactive shell.\n\nConsequences:\n- `which bw` / `bw --version` misreport the installed version, which is what caused the duplicate upgrade tickets nix-9nf and nix-30k to be filed with different baselines.\n- The repo declares beadwork in home-modules/default.nix:93, but that declaration is silently defeated on this machine.\n\nOptions: delete the symlink (the dev checkout can be run by path when needed), rebuild it from a current checkout, or reorder PATH so nix profiles win. Deleting is the cheapest and restores the declared state.\n\nNote this is unmanaged machine state, not repo state — the fix is a one-off action unless the repo should be asserting PATH precedence for nix profiles.",
   "id": "nix-bsf",
@@ -10,5 +12,5 @@
   "status": "open",
   "title": "Stale ~/bin/bw dev symlink shadows the nix-managed beadwork",
   "type": "task",
-  "updated_at": "2026-08-15T11:53:27Z"
+  "updated_at": "2026-08-15T11:53:30Z"
 }
