@@ -8,9 +8,15 @@
   "labels": [
     "beadwork-upgrade"
   ],
+  "comments": [
+    {
+      "text": "Closing as duplicate of nix-30k (Fizz, 2026-08-15).\n\nSame target version, but this ticket's stated starting point (0.12.3) was a **PATH-shadowing artifact**, not the real installed version:\n\n- `/Users/yann/bin/bw` -\u003e `/Users/yann/src/github.com/jallum/beadwork/bw` — a stale Mach-O binary built 2026-04-13, reports **0.12.3**\n- `/etc/profiles/per-user/yann/bin/bw` — the nix-managed build, reports **0.13.0**\n- `/Users/yann/bin` sits at PATH position 6; `/etc/profiles/per-user/yann/bin` at position 8, so the stale dev binary wins `which bw`\n\nWhatever files these upgrade tickets read `bw --version` off PATH, so it saw 0.12.3 here and 0.13.0 when it filed nix-30k — which is why the same upgrade got filed twice with different starting points. Deleting or rebuilding the stale symlink target stops this recurring; filed separately.",
+      "timestamp": "2026-08-15T11:53:16Z"
+    }
+  ],
   "priority": 1,
   "status": "open",
   "title": "Upgrade bw to 0.13.2",
   "type": "task",
-  "updated_at": "2026-06-25T20:55:49Z"
+  "updated_at": "2026-08-15T11:53:16Z"
 }
