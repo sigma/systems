@@ -91,13 +91,26 @@ in
       "grep" = "rg -uuu";
     };
 
-  # On Linux, Fish 4.x binds Alt+Delete/Backspace to token operations by default.
-  # Override to use word operations (like macOS) for consistent cross-platform behavior.
-  # See: https://github.com/fish-shell/fish-shell/issues/10926
-  interactiveShellInit = lib.optionalString (machine.features.linux || machine.features.nixos) ''
-    bind alt-backspace backward-kill-word
-    bind alt-delete kill-word
-  '';
+  interactiveShellInit =
+    # Fish 4.3 moved `fish_key_bindings` out of universal scope and no longer
+    # sets it at all when the default bindings are in use, so it reads as empty.
+    # Tide's character item tests `$fish_key_bindings = fish_default_key_bindings`
+    # and, on failure, falls through to its vi-mode branch — where `$fish_bind_mode`
+    # is "default", printing the vi normal-mode glyph ❮ instead of ❯.
+    #
+    # It must be *exported*: tide renders the prompt in a background `fish -c`
+    # child, which used to see the variable because it was universal. That child
+    # only inherits exported variables now, so a plain `set -g` is invisible to it.
+    ''
+      set -gx fish_key_bindings fish_default_key_bindings
+    ''
+    # On Linux, Fish 4.x binds Alt+Delete/Backspace to token operations by default.
+    # Override to use word operations (like macOS) for consistent cross-platform behavior.
+    # See: https://github.com/fish-shell/fish-shell/issues/10926
+    + lib.optionalString (machine.features.linux || machine.features.nixos) ''
+      bind alt-backspace backward-kill-word
+      bind alt-delete kill-word
+    '';
 
   functions = {
     "fish_greeting" = "";
