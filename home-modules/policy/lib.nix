@@ -23,6 +23,10 @@ with lib;
     in
     mkMerge [
       {
+        # `mkAfter` is load-bearing: git resolves includes in file order and the
+        # last value wins, so these conditional overrides must be emitted *after*
+        # the unconditional `id` include that sets the personal `user.email`.
+        # At default merge order they land before it and are silently shadowed.
         programs.git.includes =
           let
             workOrg = org: {
@@ -34,7 +38,7 @@ with lib;
               contentSuffix = org;
             };
           in
-          map workOrg githubOrgs;
+          mkAfter (map workOrg githubOrgs);
 
         programs.jujutsu.scopes.${name} = {
           repositories = map (org: "~/src/github.com/${org}") githubOrgs;
