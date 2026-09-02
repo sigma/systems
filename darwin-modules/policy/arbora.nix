@@ -17,6 +17,7 @@ with lib;
     ];
 
     homebrew.casks = [
+      "brave-browser" # needed for the Google Cloud Console to work
       "notion"
       "notion-cli" # official Notion CLI, provides the `ntn` binary
       "notion-calendar"
