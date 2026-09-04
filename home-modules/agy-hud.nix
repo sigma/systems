@@ -12,10 +12,24 @@ with lib;
 let
   cfg = config.programs.agy-hud;
   pluginDir = ".gemini/config/plugins/agy-hud";
+  jsonFormat = pkgs.formats.json { };
 in
 {
   options.programs.agy-hud = {
     enable = mkEnableOption "agy-hud status line for the Antigravity CLI";
+
+    settings = mkOption {
+      type = types.attrsOf jsonFormat.type;
+      default = { };
+      example = literalExpression "'{ multiline = false; show_icons = false; }";
+      description = ''
+        Contents of ~/.config/agy-hud/config.json. Keys are agy-hud's own
+        snake_case names — see the "Config" section of
+        https://github.com/franksde/agy-hud. agy-hud reads the *first* config
+        file it finds rather than merging them, so this file is the whole
+        configuration.
+      '';
+    };
 
     package = mkOption {
       type = types.package;
@@ -35,6 +49,16 @@ in
     # `agy-hud version` / `agy-hud quota refresh`, which upstream leaves to a
     # bare `node <plugin-root>/dist/agy-hud.js`.
     home.packages = [ cfg.package ];
+
+    # Show quota as consumed rather than remaining: "Usage 82%" is what has
+    # been spent, and the bar fills as the window is used up. mkDefault so a
+    # host or policy can flip it back to upstream's "18% left".
+    programs.agy-hud.settings.usage_value = mkDefault "percent";
+
+    # agy-hud checks $HOME/.config/agy-hud/config.json after two paths inside
+    # the plugin root; we ship no config.json there, so this file wins.
+    xdg.configFile."agy-hud/config.json".source =
+      jsonFormat.generate "agy-hud-config.json" cfg.settings;
 
     # Wiring the hook is a separate step from installing the plugin: agy keeps
     # `statusLine.command` in its own settings.json, a file the CLI rewrites at
