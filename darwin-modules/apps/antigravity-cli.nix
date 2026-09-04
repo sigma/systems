@@ -2,8 +2,8 @@
 #
 # The cask drops a single binary at $HOMEBREW_PREFIX/bin/agy, so unlike the
 # Antigravity IDE (./antigravity.nix) there is nothing to wrap — the module's
-# only other job is pointing the shared agent-skills registry at agy's skill
-# directory.
+# remaining jobs are pointing the shared agent-skills registry at agy's skill
+# directory, and turning on the agy-hud status line.
 {
   config,
   lib,
@@ -28,6 +28,11 @@ in
     # counterpart is <workspace>/.agents/skills, which we deliberately leave
     # alone.
     user.programs.agentSkills.roots = [ ".gemini/config/skills" ];
+
+    # agy-hud, the status-line HUD (home-modules/agy-hud.nix): installs the
+    # plugin under ~/.gemini/config/plugins and points agy's
+    # `statusLine.command` at its hook.
+    user.programs.agy-hud.enable = true;
 
     homebrew.casks = [ "antigravity-cli" ];
   };

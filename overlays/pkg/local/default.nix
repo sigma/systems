@@ -7,6 +7,7 @@
     emacs-vanilla-config = pkgs.callPackage ./emacs-vanilla-config.nix { };
     wezterm-config = pkgs.callPackage ./wezterm-config.nix { };
 
+    agy-hud = pkgs.callPackage ./agy-hud.nix { };
     jaeger = pkgs.callPackage ./jaeger.nix { };
     mdloader = pkgs.callPackage ./mdloader.nix { };
     myrient-downloader = pkgs.callPackage ./myrient-downloader.nix { };

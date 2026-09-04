@@ -45,6 +45,7 @@
     # programs.<name>.enable (set by a policy/feature), so the devbox policy's
     # mkForce on the content-feature seam is what keeps them off devboxes.
     ./accounts.nix
+    ./agy-hud.nix # enabled by darwin-modules/apps/antigravity-cli.nix
     ./ai # self-gates config on config.features.ai.enable
     ./claude-firefly.nix # enabled by policy/firefly.nix (machine.features.firefly)
     ./claude-glm.nix
