@@ -26,6 +26,9 @@ in
       '';
     };
 
-    homebrew.casks = [ "claude-code" ];
+    # The `claude-code` cask pins a specific released version; `claude-code@latest`
+    # tracks the rolling "latest" channel, so brew upgrades follow upstream releases.
+    # https://formulae.brew.sh/cask/claude-code@latest
+    homebrew.casks = [ "claude-code@latest" ];
   };
 }
