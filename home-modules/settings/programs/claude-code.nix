@@ -173,7 +173,7 @@ in
 {
   # Gate on enable so hosts without claude-code don't emit a stray settings.json.
   settings = lib.mkIf config.programs.claude-code.enable {
-    # Prefer our own curated skillsets (see ./claude-skills.nix) over the CLI's
+    # Prefer our own curated skillsets (see ./agentSkills.nix) over the CLI's
     # bundled ones; bundled built-ins stay typable as slash commands but are
     # hidden from the model, avoiding name clashes with our skills (e.g.
     # code-review).

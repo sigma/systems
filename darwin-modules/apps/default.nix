@@ -9,6 +9,7 @@
     ./aerospace.nix
     ./ai.nix
     ./alfred.nix
+    ./antigravity-cli.nix
     ./antigravity.nix
     ./chrome.nix
     ./claude-code.nix

@@ -30,6 +30,10 @@ with lib;
     # Enable darwin-level claude-code module (installs via homebrew, provides wrapper)
     programs.claude-code.enable = true;
 
+    # Antigravity CLI (`agy`), which shares Claude Code's skills — see
+    # ../apps/antigravity-cli.nix.
+    programs.antigravity-cli.enable = true;
+
     homebrew.casks = [
       "linear"
       "notion"

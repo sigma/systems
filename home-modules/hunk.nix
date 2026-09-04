@@ -119,14 +119,14 @@ in
       '';
     };
 
-    claudeSkill.enable = mkOption {
+    agentSkill.enable = mkOption {
       type = types.bool;
       default = cfg.enable;
       defaultText = literalExpression "config.programs.hunk.enable";
       description = ''
-        Symlink the hunk-shipped SKILL.md into
-        ~/.claude/skills/hunk-review so Claude Code picks it up.
-        Directory name matches the upstream skill id (the path
+        Register the hunk-shipped SKILL.md with
+        {option}`programs.agentSkills`, so every agent on the machine picks
+        it up. Directory name matches the upstream skill id (the path
         `hunk skill path` prints).
       '';
     };
@@ -175,19 +175,20 @@ in
       };
     })
 
-    (mkIf cfg.claudeSkill.enable {
-      # Symlink the shipped skill directory (which holds SKILL.md) to
-      # ~/.claude/skills/hunk-review so Claude Code discovers it.
+    (mkIf cfg.agentSkill.enable {
+      # Register the shipped skill directory (which holds SKILL.md) rather
+      # than symlinking it ourselves, so it lands under every agent's skill
+      # root (programs.agentSkills.roots), not just Claude's.
       #
-      # We can't use home-manager's `programs.claude-code.skills`: it
-      # only symlinks when the value is a genuine Nix `path`, but every
+      # Either way we can't use home-manager's `programs.claude-code.skills`:
+      # it only symlinks when the value is a genuine Nix `path`, but every
       # way to point a path at a *package output* fails under pure/flake
       # eval — keeping the store-path context errors with "cannot append
       # to a path", and discarding it errors with "access to absolute
       # path is forbidden in pure evaluation mode". A `"${finalPackage}/…"`
       # string (which that option would instead write as file *text*)
       # works fine as a home.file source, linking the directory reliably.
-      home.file.".claude/skills/hunk-review".source = "${finalPackage}/skills/hunk-review";
+      programs.agentSkills.skills.hunk-review = "${finalPackage}/skills/hunk-review";
     })
 
     # Catppuccin integration: when catppuccin is globally enabled,

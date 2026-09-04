@@ -22,8 +22,7 @@ in
   options.features.voice = {
     enable = mkEnableOption "Voice (SuperWhisper cask)";
 
-    claudeCode.enable = mkEnableOption
-      "the SuperWhisper integration into Claude Code (voice hooks, /superwhisper toggle skill, statusline indicator)";
+    claudeCode.enable = mkEnableOption "the SuperWhisper integration into Claude Code (voice hooks, /superwhisper toggle skill, statusline indicator)";
   };
 
   # SuperWhisper is a TCC-gated GUI app (Microphone + Accessibility, granted
@@ -59,8 +58,7 @@ in
 
       # Per-project toggle skill (/superwhisper on|off). Writes the same disable
       # flag the binary honors; see the skill file for the convention.
-      home.file.".claude/skills/superwhisper/SKILL.md".source =
-        ../../home-modules/skills/superwhisper/SKILL.md;
+      programs.agentSkills.skills.superwhisper = ../../home-modules/skills/superwhisper;
 
       # Statusline SuperWhisper on/off indicator. Reads the same per-project
       # disable flag (/tmp/superwhisper-agent/disabled-<md5(cwd)>), hashing the

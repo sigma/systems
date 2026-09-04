@@ -17,11 +17,10 @@
     ./aspell.nix
     ./builder-access.nix
     ./catppuccin.nix
-    # Claude Code skill mechanism — always imported so its option is declared;
-    # self-gates on config.programs.claude-code.enable (true on devboxes too,
-    # via nixos-modules/dev.nix). Configured in
-    # ./settings/programs/{claude-code,claude-skills}.nix.
-    ./claude-skills.nix
+    # Shared agent-skill registry — always imported so its options are
+    # declared; inert until some agent registers a skill root. Configured in
+    # ./settings/programs/agentSkills.nix.
+    ./agent-skills.nix
     # Nests ~/.claude/settings.json inside a store *directory* so Claude does
     # not end up watching /nix/store itself. Self-gates on
     # config.programs.claude-code.enable.
