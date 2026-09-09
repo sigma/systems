@@ -2,13 +2,14 @@
   "assignee": "unknown",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-09-09T21:53:33Z",
   "created": "2026-09-09T21:52:39Z",
   "description": "The pinned toolbox has no herdr-skills; upstream HEAD ships herdr-skills 0.9.0. Update the toolbox flake input and register the skillset in programs.agentSkills.plugins, gated on programs.herdr.enable — mirroring the existing tuicr-skills line.",
   "id": "nix-i8i",
   "labels": [],
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Install herdr-skills from the toolbox when herdr is enabled",
   "type": "task",
-  "updated_at": "2026-09-09T21:52:43Z"
+  "updated_at": "2026-09-09T21:53:33Z"
 }
