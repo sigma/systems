@@ -8,6 +8,7 @@
     wezterm-config = pkgs.callPackage ./wezterm-config.nix { };
 
     agy-hud = pkgs.callPackage ./agy-hud.nix { };
+    claude-code-statusline = pkgs.callPackage ./claude-code-statusline.nix { };
     jaeger = pkgs.callPackage ./jaeger.nix { };
     mdloader = pkgs.callPackage ./mdloader.nix { };
     myrient-downloader = pkgs.callPackage ./myrient-downloader.nix { };
