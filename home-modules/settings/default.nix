@@ -7,6 +7,7 @@
 #   settings/programs/foo.nix     → programs.foo.*
 #   settings/programs/bar/baz.nix → programs.bar.baz.*
 #   settings/targets/foo.nix      → targets.foo.*
+#   settings/manual/foo.nix       → manual.foo.*
 #
 # ## Pattern
 # Each settings file (e.g., settings/programs/bat.nix) exports the configuration
@@ -74,4 +75,5 @@ in
 {
   programs = loader "programs";
   targets = loader "targets";
+  manual = loader "manual";
 }
