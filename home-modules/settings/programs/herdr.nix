@@ -7,6 +7,10 @@
   enable = machine.features.mac;
 
   settings = {
+    # Skip herdr's first-run notification-setup prompt: notification handling
+    # is a choice already made here, and a fresh checkout shouldn't stop on it.
+    onboarding = false;
+
     # Keybindings kept consistent with the tmux config
     # (home-modules/settings/programs/tmux.nix uses `shortcut = "z"`, i.e. a
     # C-z prefix). Many herdr defaults already match tmux (prefix+c new tab,
