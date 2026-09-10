@@ -69,12 +69,36 @@
       };
     };
 
-    # Have herdr draw its own cursor (a steady block) instead of delegating to
-    # the outer terminal. The default "auto"/"native" policy renders a blinking
-    # beam for the focused pane; "drawn" gives a solid, non-blinking block.
-    # Note: in every mode herdr renders no cursor for *inactive* panes — there
-    # is no config option for a hollow/unfocused-pane cursor.
-    ui.host_cursor = "drawn";
+    ui = {
+      # Have herdr draw its own cursor (a steady block) instead of delegating
+      # to the outer terminal. The default "auto"/"native" policy renders a
+      # blinking beam for the focused pane; "drawn" gives a solid, non-blinking
+      # block. Note: in every mode herdr renders no cursor for *inactive*
+      # panes — there is no config option for a hollow/unfocused-pane cursor.
+      host_cursor = "drawn";
+
+      # Tab row along the bottom edge, tmux-style, and out of the way entirely
+      # while a workspace only has the one tab.
+      tab_bar_position = "bottom";
+      hide_tab_bar_when_single_tab = true;
+
+      # Right-aligned status segments, in order.
+      tab_bar_right = [
+        { type = "zoom"; }
+        { type = "hostname"; }
+        {
+          type = "datetime";
+          format = "%H:%M";
+        }
+      ];
+
+      # Order the agent sidebar by attention priority rather than by workspace.
+      agent_panel_sort = "priority";
+
+      # Distinct static symbols for agent state instead of the default colour
+      # dots, which only differ by hue.
+      status_indicators = "symbols";
+    };
 
     # Reveal a hardware cursor anchor on focused agent panes (claude/pi/codex)
     # that hide it, so native IME candidate windows can follow the pane. Doesn't
