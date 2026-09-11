@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "closed_at": "2026-09-11T17:03:13Z",
+  "created": "2026-09-11T16:55:16Z",
+  "description": "Replace the tuicr skill's herdr wrapper (split pane + pane wait-output) with one that opens tuicr in a herdr popup. herdr exposes popups to the CLI only through plugin panes (placement = popup), so: ship a local herdr plugin (manifest + popup-side script), add programs.herdr.plugins to link plugin roots at activation (herdr keeps its registry in plugins.json, not config.toml), and patch the toolbox tuicr-skills bundle so SKILL.md and tuicr-wrapper-herdr.sh use the popup.",
+  "id": "nix-fw5",
+  "labels": [],
+  "priority": 2,
+  "status": "closed",
+  "title": "tuicr in a herdr popup via a nix-managed herdr plugin",
+  "type": "task",
+  "updated_at": "2026-09-11T17:03:13Z"
+}
