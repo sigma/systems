@@ -36,6 +36,7 @@
     ./features.nix # declares options.features.<n>.enable (content-feature seam)
     ./herdr.nix # renders ~/.config/herdr/config.toml; gates on programs.herdr.enable
     ./hunk.nix
+    ./jjui.nix # adds programs.jjui.themes on top of home-manager's module
     ./jujutsu.nix
     ./policy # gates internally on machine.features.<x>
     ./settings

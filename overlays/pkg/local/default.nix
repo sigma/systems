@@ -18,5 +18,6 @@
     prs = pkgs.callPackage ./prs.nix { };
     mt32-roms = pkgs.callPackage ./mt32-roms.nix { };
     midi-session-manager = pkgs.callPackage ./midi-session-manager.nix { };
+    tinted-jjui = pkgs.callPackage ./tinted-jjui.nix { };
   };
 }
