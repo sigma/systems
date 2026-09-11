@@ -107,8 +107,8 @@ in
           type = "popup";
           description = "scratch terminal (per-workspace tmux; C-z d to hide)";
           command = lib.getExe scratch;
-          width = "80%";
-          height = "80%";
+          width = "90%";
+          height = "90%";
         }
       ];
     };
