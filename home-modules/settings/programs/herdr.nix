@@ -1,10 +1,14 @@
 # herdr configuration (see home-modules/herdr.nix for the module).
 #
-# herdr is a Mac-only Homebrew install here, so gate on that feature; the
-# module writes nothing when disabled.
-{ machine, ... }:
+# On macs herdr comes from Homebrew (darwin-modules/apps/ai.nix), so only the
+# config is managed there. On NixOS it is installed from the herdr flake input
+# (see overlays/default.nix), which tracks releases more closely than
+# nixpkgs-master does. The module writes nothing when disabled.
+{ machine, pkgs, ... }:
 {
-  enable = machine.features.mac;
+  enable = machine.features.mac || machine.features.nixos;
+
+  package = if machine.features.nixos then pkgs.herdr else null;
 
   settings = {
     # Skip herdr's first-run notification-setup prompt: notification handling

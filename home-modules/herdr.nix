@@ -1,9 +1,10 @@
 # herdr — terminal agent multiplexer (https://herdr.dev).
 #
-# herdr itself is installed via Homebrew (darwin-modules/apps/ai.nix). This
-# home-manager module only renders its TOML configuration to
-# ~/.config/herdr/config.toml. The actual values live in the settings loader
-# (home-modules/settings/programs/herdr.nix).
+# On darwin, herdr itself is installed via Homebrew (darwin-modules/apps/ai.nix),
+# so `package` is null there and this module only renders herdr's TOML
+# configuration to ~/.config/herdr/config.toml. Elsewhere (NixOS) `package` is
+# set and herdr lands in home.packages too. The actual values live in the
+# settings loader (home-modules/settings/programs/herdr.nix).
 {
   config,
   lib,
@@ -18,6 +19,16 @@ in
 {
   options.programs.herdr = {
     enable = mkEnableOption "herdr configuration";
+
+    package = mkOption {
+      type = types.nullOr types.package;
+      default = null;
+      example = literalExpression "pkgs.master.herdr";
+      description = ''
+        The herdr package to install, or `null` to only manage the
+        configuration (used on darwin, where herdr comes from Homebrew).
+      '';
+    };
 
     settings = mkOption {
       type = tomlFormat.type;
@@ -37,6 +48,8 @@ in
   };
 
   config = mkIf cfg.enable {
+    home.packages = optional (cfg.package != null) cfg.package;
+
     xdg.configFile."herdr/config.toml".source = tomlFormat.generate "herdr-config.toml" cfg.settings;
   };
 }
