@@ -1,0 +1,17 @@
+# herdr plugin exposing tuicr as a popup. herdr has no CLI route to the popups
+# bound under [[keys.command]]; plugin panes with `placement = "popup"` are
+# the only way to open one from a script. See default.nix.
+id = "tuicr"
+name = "tuicr"
+version = "0.1.0"
+min_herdr_version = "0.9.0"
+description = "Open tuicr in a popup (used by the tuicr agent skill)"
+platforms = ["linux", "macos"]
+
+[[panes]]
+id = "review"
+title = "tuicr"
+placement = "popup"
+width = "90%"
+height = "90%"
+command = ["@popup@"]

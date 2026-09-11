@@ -9,6 +9,7 @@
 
     agy-hud = pkgs.callPackage ./agy-hud.nix { };
     claude-code-statusline = pkgs.callPackage ./claude-code-statusline.nix { };
+    herdr-tuicr-plugin = pkgs.callPackage ./herdr-tuicr-plugin { };
     jaeger = pkgs.callPackage ./jaeger.nix { };
     mdloader = pkgs.callPackage ./mdloader.nix { };
     myrient-downloader = pkgs.callPackage ./myrient-downloader.nix { };

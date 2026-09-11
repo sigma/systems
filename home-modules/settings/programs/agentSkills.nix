@@ -20,7 +20,14 @@
     ]
     # tuicr's own skills teach agents to drive the review TUI, so they are only
     # worth shipping where tuicr itself is configured (see ../../tuicr.nix).
-    ++ lib.optional config.programs.tuicr.enable pkgs.toolbox.tuicr-skills
+    # Under herdr the bundle's herdr wrapper is swapped for one that opens
+    # tuicr in a popup, provided by the herdr plugin linked in ./herdr.nix.
+    ++ lib.optional config.programs.tuicr.enable (
+      if config.programs.herdr.enable then
+        pkgs.local.herdr-tuicr-plugin.skills
+      else
+        pkgs.toolbox.tuicr-skills
+    )
     # Likewise herdr's: they teach agents to drive the multiplexer's panes and
     # sessions, which is only useful where herdr is configured (see
     # ../../herdr.nix).

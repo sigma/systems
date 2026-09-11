@@ -48,6 +48,14 @@ in
 
   package = if machine.features.nixos then pkgs.herdr else null;
 
+  # tuicr's agent skill opens the review TUI in a herdr popup, which herdr
+  # only exposes to scripts as a plugin pane (see
+  # overlays/pkg/local/herdr-tuicr-plugin). The matching skill patch lives in
+  # ./agentSkills.nix.
+  plugins = lib.optionalAttrs config.programs.tuicr.enable {
+    tuicr = pkgs.local.herdr-tuicr-plugin;
+  };
+
   settings = {
     # Skip herdr's first-run notification-setup prompt: notification handling
     # is a choice already made here, and a fresh checkout shouldn't stop on it.
