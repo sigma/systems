@@ -29,6 +29,9 @@
     # programs.claudeStatusline is declared (voice.nix contributes a segment via
     # user.*). Self-gates on config.programs.claude-code.enable.
     ./claude-statusline.nix
+    # Agent-agnostic env (interactive-editor lockout) shared by every coding
+    # agent; declares programs.agentEnv and hooks fish/bash on agent markers.
+    ./agent-env.nix
     ./editors
     ./features.nix # declares options.features.<n>.enable (content-feature seam)
     ./herdr.nix # renders ~/.config/herdr/config.toml; gates on programs.herdr.enable

@@ -201,6 +201,13 @@ in
     # Keep extended thinking on by default.
     alwaysThinkingEnabled = true;
 
+    # The agent-agnostic environment (interactive-editor lockout, cat pagers)
+    # from home-modules/agent-env.nix, which owns the map and the rationale for
+    # each variable. Claude Code is the one agent here with a declarative env
+    # seat, so it gets the map directly rather than only via the shell hook —
+    # that keeps it in force for tool calls that never source a shell profile.
+    env = config.programs.agentEnv.variables;
+
     # Default adaptive reasoning effort (low | medium | high | xhigh);
     # `max`/`ultracode` are session-only. Persisted across sessions.
     effortLevel = "medium";

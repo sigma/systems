@@ -12,6 +12,7 @@
     jaeger = pkgs.callPackage ./jaeger.nix { };
     mdloader = pkgs.callPackage ./mdloader.nix { };
     myrient-downloader = pkgs.callPackage ./myrient-downloader.nix { };
+    no-editor = pkgs.callPackage ./no-editor.nix { };
     noctalia-ipc = pkgs.callPackage ./noctalia-ipc.nix { };
     m3ugen = pkgs.callPackage ./m3ugen.nix { };
     prs = pkgs.callPackage ./prs.nix { };
