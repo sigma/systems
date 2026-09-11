@@ -2,13 +2,14 @@
   "assignee": "unknown",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-09-11T07:47:07Z",
   "created": "2026-09-11T07:46:56Z",
   "description": "Agent-triggered interactive git/jj operations left a rogue zile spinning on a core until killed. Two layers: (1) unconditional tty guard on the zile package itself (overlays/pkg/zile.nix), covering every pkgs.zile consumer; (2) local.no-editor shim wired into programs.claude-code.settings.env for EDITOR/VISUAL/GIT_EDITOR/GIT_SEQUENCE_EDITOR/JJ_EDITOR/SUDO_EDITOR plus cat pagers, so the failure is immediate and actionable.",
   "id": "nix-gll",
   "labels": [],
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Make interactive editors impossible in agent sessions",
   "type": "task",
-  "updated_at": "2026-09-11T07:47:05Z"
+  "updated_at": "2026-09-11T07:47:07Z"
 }
