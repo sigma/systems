@@ -43,6 +43,26 @@
         "prefix+l"
         "prefix+right"
       ];
+
+      # Custom commands. `prefix+shift+j` ("J" for jj) is unbound in herdr's
+      # defaults and above, and mirrors herdr's own `prefix+alt+g` lazygit
+      # example without depending on Option-key handling on macOS. Popups run
+      # via `/bin/sh -c` and don't inherit the pane's cwd, so hop into it via
+      # HERDR_ACTIVE_PANE_CWD. jjui normally ships with the vcs-toolchain
+      # bundle (home-modules/default.nix), but guard anyway so a host without
+      # it gets a message instead of a popup that flashes and vanishes.
+      command = [
+        {
+          key = "prefix+shift+j";
+          type = "popup";
+          description = "jjui (jj TUI)";
+          command = ''
+            cd "''${HERDR_ACTIVE_PANE_CWD:-.}" && if command -v jjui >/dev/null 2>&1; then exec jjui; else echo "jjui is not installed"; read -r _; fi
+          '';
+          width = "90%";
+          height = "90%";
+        }
+      ];
     };
 
     # catppuccin frappe, to match the rest of the config. herdr ships a single
