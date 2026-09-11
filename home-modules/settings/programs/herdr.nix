@@ -4,7 +4,45 @@
 # config is managed there. On NixOS it is installed from the herdr flake input
 # (see overlays/default.nix), which tracks releases more closely than
 # nixpkgs-master does. The module writes nothing when disabled.
-{ machine, pkgs, ... }:
+{
+  config,
+  lib,
+  machine,
+  pkgs,
+  ...
+}:
+let
+  # Persistent scratch terminal for the `prefix+t` popup. herdr popups only
+  # live until their command exits and every herdr terminal has to sit in a
+  # tab, so there is no native hide/re-show; the state is kept in a tmux
+  # session instead. `new-session -A` attaches when the session exists and
+  # creates it otherwise, so detaching (C-z d) closes the popup while the
+  # shell, jobs and scrollback keep running — and outlive herdr restarts.
+  # Sessions are keyed on the workspace label (nix, trunk, ...), which is
+  # meaningful and stable across restarts unlike the w0-style IDs; the ID is
+  # the fallback when the label can't be read. herdr hands its own binary over
+  # as HERDR_BIN_PATH, which keeps this working on macOS where herdr is not a
+  # nix package.
+  scratch = pkgs.writeShellApplication {
+    name = "herdr-scratch";
+    runtimeInputs = [
+      config.programs.tmux.package
+      pkgs.jq
+    ];
+    text = ''
+      label=""
+      if [ -n "''${HERDR_BIN_PATH:-}" ] && [ -n "''${HERDR_ACTIVE_WORKSPACE_ID:-}" ]; then
+        label=$("$HERDR_BIN_PATH" workspace get "$HERDR_ACTIVE_WORKSPACE_ID" 2>/dev/null \
+          | jq -r '.result.workspace.label // empty' || true)
+      fi
+      name="scratch-''${label:-''${HERDR_ACTIVE_WORKSPACE_ID:-default}}"
+      # tmux session names can't contain `.` or `:`.
+      name=$(printf '%s' "$name" | tr '.:' '__')
+      cd "''${HERDR_ACTIVE_PANE_CWD:-$HOME}" || true
+      exec tmux new-session -A -s "$name"
+    '';
+  };
+in
 {
   enable = machine.features.mac || machine.features.nixos;
 
@@ -61,6 +99,16 @@
           '';
           width = "90%";
           height = "90%";
+        }
+        # `prefix+t` is the key herdr's own scratch-terminal example uses and is
+        # unbound in the defaults (tmux binds it to a clock, nothing lost).
+        {
+          key = "prefix+t";
+          type = "popup";
+          description = "scratch terminal (per-workspace tmux; C-z d to hide)";
+          command = lib.getExe scratch;
+          width = "80%";
+          height = "80%";
         }
       ];
     };
