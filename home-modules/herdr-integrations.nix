@@ -76,12 +76,9 @@ let
   selectedFiles = concatMap (t: knownTargets.${t}) selected;
   wantsClaude = elem "claude" selected;
 
-  # Prefer the herdr we install, so the integration version always matches the
-  # binary that consumes it. On darwin cfg.package is null (herdr comes from
-  # Homebrew) and there is nothing to match against, so fall back to the flake
-  # build — the one case where an integration can drift from the running herdr.
-  # Pointing programs.herdr.package at pkgs.herdr on darwin too would close it.
-  generator = if cfg.package != null then cfg.package else pkgs.herdr;
+  # Generate with the herdr we install, so the integration version always
+  # matches the binary that consumes it.
+  generator = cfg.package;
 
   # The SessionStart registration herdr asks for. Parameterised by command
   # because the drift check and the real setting disagree on exactly that

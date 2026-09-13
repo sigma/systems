@@ -1,9 +1,8 @@
 # herdr configuration (see home-modules/herdr.nix for the module).
 #
-# On macs herdr comes from Homebrew (darwin-modules/apps/ai.nix), so only the
-# config is managed there. On NixOS it is installed from the herdr flake input
-# (see overlays/default.nix), which tracks releases more closely than
-# nixpkgs-master does. The module writes nothing when disabled.
+# herdr is installed from its upstream flake input (see overlays/default.nix),
+# which tracks releases more closely than nixpkgs-master does. The module
+# writes nothing when disabled.
 {
   config,
   lib,
@@ -21,8 +20,7 @@ let
   # Sessions are keyed on the workspace label (nix, trunk, ...), which is
   # meaningful and stable across restarts unlike the w0-style IDs; the ID is
   # the fallback when the label can't be read. herdr hands its own binary over
-  # as HERDR_BIN_PATH, which keeps this working on macOS where herdr is not a
-  # nix package.
+  # as HERDR_BIN_PATH, so the popup talks to the herdr that spawned it.
   scratch = pkgs.writeShellApplication {
     name = "herdr-scratch";
     runtimeInputs = [
@@ -45,8 +43,6 @@ let
 in
 {
   enable = machine.features.mac || machine.features.nixos;
-
-  package = if machine.features.nixos then pkgs.herdr else null;
 
   # tuicr's agent skill opens the review TUI in a herdr popup, which herdr
   # only exposes to scripts as a plugin pane (see

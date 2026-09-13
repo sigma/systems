@@ -6,7 +6,6 @@
 { ... }:
 {
   homebrew.brews = [
-    "herdr" # terminal agent multiplexer (herdr.dev)
     "pi-coding-agent" # pi AI agent toolkit (pi.dev)
   ];
 }
