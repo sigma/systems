@@ -44,6 +44,9 @@
     ./policy # gates internally on machine.features.<x>
     ./settings
     ./shells
+    # Fails activation on unmanaged files at home.file targets instead of
+    # letting home-manager skip identical ones silently.
+    ./strict-link-targets.nix
     ./television.nix # Ctrl+R hand-off to atuin; gates on programs.television.enable
     ./tmuxp.nix # referenced from settings/programs/tmux.nix
     ./tuicr.nix # renders ~/.config/tuicr/config.toml; gates on programs.tuicr.enable
