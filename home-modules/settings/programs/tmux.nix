@@ -20,7 +20,6 @@
   terminal = "screen-256color";
 
   extraConfig = ''
-    set -g detach-on-destroy off
     set -g renumber-windows on
     set -g set-clipboard on
     set -g pane-active-border-style 'fg=magenta,bg=default'
@@ -35,12 +34,10 @@
     yank
     resurrect
 
-    {
-      plugin = continuum;
-      extraConfig = ''
-        set -g @continuum-restore 'on'
-      '';
-    }
+    # Periodic autosave only; auto-restore is deliberately off so a fresh
+    # server starts with one session rather than every session that was
+    # alive at the last save. `prefix + C-r` still restores on demand.
+    continuum
 
     {
       plugin = tmux-thumbs;
