@@ -1,0 +1,14 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-09-13T17:01:47Z",
+  "description": "darwin still gets herdr from homebrew.brews (darwin-modules/apps/ai.nix) while NixOS uses the pinned flake input. Point programs.herdr.package at pkgs.herdr everywhere, drop the brew, and fix the comments that describe the split.",
+  "id": "nix-yve",
+  "labels": [],
+  "priority": 2,
+  "status": "open",
+  "title": "install herdr from nix on darwin instead of Homebrew",
+  "type": "task",
+  "updated_at": "2026-09-13T17:01:47Z"
+}
