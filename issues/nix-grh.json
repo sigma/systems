@@ -2,13 +2,14 @@
   "assignee": "",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-09-13T13:22:44Z",
   "created": "2026-09-13T13:22:03Z",
   "description": "Add macos-non-native-fullscreen=padded-notch plus wezterm-parity settings (padding, no close confirm, unfocused split dim, bell, hidden titlebar, option-as-alt), cmd+arrow split keybinds, and window-save-state/mouse-hide/cursor-click-to-move to home-modules/settings/programs/ghostty.nix",
   "id": "nix-grh",
   "labels": [],
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Port wezterm window/split/bell settings to ghostty and enable padded-notch fullscreen",
   "type": "task",
-  "updated_at": "2026-09-13T13:22:16Z"
+  "updated_at": "2026-09-13T13:22:44Z"
 }
