@@ -35,6 +35,9 @@
     ./editors
     ./features.nix # declares options.features.<n>.enable (content-feature seam)
     ./herdr.nix # renders ~/.config/herdr/config.toml; gates on programs.herdr.enable
+    # Declarative agent integrations for herdr (generated in a build sandbox).
+    # Declares programs.herdr.integrations; inert until a target is listed.
+    ./herdr-integrations.nix
     ./hunk.nix
     ./jjui.nix # adds programs.jjui.themes on top of home-manager's module
     ./jujutsu.nix
