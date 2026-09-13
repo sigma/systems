@@ -1,0 +1,14 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-09-13T13:40:21Z",
+  "description": "continuum-restore=on resurrects every saved session at server start; detach-on-destroy off attaches to another session instead of detaching. Drop both from home-modules/settings/programs/tmux.nix.",
+  "id": "nix-dub",
+  "labels": [],
+  "priority": 2,
+  "status": "open",
+  "title": "tmux: stop auto-restoring sessions on start and stop hopping sessions on last-window close",
+  "type": "task",
+  "updated_at": "2026-09-13T13:40:21Z"
+}
