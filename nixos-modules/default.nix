@@ -1,5 +1,6 @@
 {
   imports = [
+    ./ai.nix
     ./builder-user.nix
     ./configuration.nix
     ./desktop.nix
