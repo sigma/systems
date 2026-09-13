@@ -50,6 +50,49 @@ in
     cursor-style = "block";
     cursor-style-blink = false;
     shell-integration-features = "no-cursor";
+
+    # Fullscreen without the macOS animation/space dance, keeping the window
+    # clear of the notch. Native tabs don't work in this mode — splits and
+    # herdr do the multiplexing here, so that's not a loss.
+    macos-non-native-fullscreen = "padded-notch";
+
+    # Window chrome mirrored from wezterm (appearance.lua): same asymmetric
+    # padding (left,right / top,bottom), no titlebar, no close prompt.
+    window-padding-x = "12,10";
+    window-padding-y = "12,7";
+    window-padding-balance = true;
+    macos-titlebar-style = "hidden";
+    confirm-close-surface = false;
+    window-save-state = "always";
+
+    # Dim unfocused splits like wezterm's inactive_pane_hsb brightness.
+    unfocused-split-opacity = 0.65;
+
+    # No audible bell; keep the dock-bounce when unfocused (wezterm used a
+    # visual-only bell).
+    bell-features = "no-system,attention";
+
+    # Left option is Alt for shell/editor bindings, right option still
+    # composes accented characters (wezterm's
+    # send_composed_key_when_right_alt_is_pressed).
+    macos-option-as-alt = "left";
+
+    mouse-hide-while-typing = true;
+    cursor-click-to-move = true;
+
+    # Split navigation on the same chords as wezterm (bindings.lua):
+    # cmd+arrows move, cmd+shift+arrows resize, cmd+enter zoom.
+    keybind = [
+      "super+up=goto_split:up"
+      "super+down=goto_split:down"
+      "super+left=goto_split:left"
+      "super+right=goto_split:right"
+      "super+shift+up=resize_split:up,3"
+      "super+shift+down=resize_split:down,3"
+      "super+shift+left=resize_split:left,3"
+      "super+shift+right=resize_split:right,3"
+      "super+enter=toggle_split_zoom"
+    ];
   }
   // lib.optionalAttrs (term.weight != null) {
     font-style = weightToStyle term.weight;
