@@ -1,0 +1,14 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-09-13T17:11:35Z",
+  "description": "home-manager silently skips pre-existing files whose content equals the nix source (check-link-targets.sh + linkGeneration cmp -s), leaving hand-installed strays in place forever. Add a guard before checkLinkTargets that fails on any non-HM-owned file at a managed path.",
+  "id": "nix-p2o",
+  "labels": [],
+  "priority": 2,
+  "status": "open",
+  "title": "fail activation on unmanaged files at home.file targets",
+  "type": "task",
+  "updated_at": "2026-09-13T17:11:35Z"
+}
