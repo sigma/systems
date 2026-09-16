@@ -59,10 +59,19 @@ let
     opencode = [
       ".config/opencode/plugins/herdr-agent-state.js"
       ".config/opencode/herdr-tui-session.js"
-      # Owned outright, not merged: herdr "ensures" this file, so a hand-added
-      # plugin entry here would be lost on rebuild. It holds only herdr's own
-      # `{"plugin": ["./herdr-tui-session.js"]}` today.
+      # Since herdr 0.9.1 the TUI plugin is also exposed in opencode's "v2"
+      # directory form: cli.json points at the herdr-opencode/ directory, whose
+      # tui.js is a one-line re-export of ../herdr-tui-session.js. The relative
+      # import survives the store: the two files keep the same layout under
+      # $out/files as they do under $HOME, so it resolves either side of the
+      # symlink.
+      ".config/opencode/herdr-opencode/tui.js"
+      # Owned outright, not merged: herdr "ensures" these files, so a hand-added
+      # plugin entry here would be lost on rebuild. They hold only herdr's own
+      # `{"plugin": ["./herdr-tui-session.js"]}` and
+      # `{"plugins": ["./herdr-opencode"]}` today.
       ".config/opencode/tui.jsonc"
+      ".config/opencode/cli.json"
     ];
     pi = [ ".pi/agent/extensions/herdr-agent-state.ts" ];
     omp = [ ".omp/agent/extensions/herdr-omp-agent-state.ts" ];
