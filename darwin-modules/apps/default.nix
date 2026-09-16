@@ -1,6 +1,7 @@
 {
   lib,
   machine,
+  pkgs,
   ...
 }:
 {
@@ -27,20 +28,16 @@
 
   homebrew.global.brewfile = true;
 
+  # Tart (devbox hypervisor) comes from nixpkgs: the cirruslabs/cli formula
+  # broke on a Homebrew DSL change (`depends_on macos:` outside `on_macos`),
+  # and nixpkgs repackages the same signed upstream release binary.
+  environment.systemPackages = [ pkgs.tart ];
+
   homebrew.taps = [
-    {
-      # Trust the whole tap, not just `tart`: `brew bundle cleanup --force`
-      # rewrites the trust store to exactly the Brewfile's `trusted: true`
-      # entries, so tart's dependency `cirruslabs/cli/softnet` loses any trust
-      # granted out-of-band by `brew trust` on every activation.
-      name = "cirruslabs/cli";
-      trusted = true;
-    }
     "oven-sh/bun"
   ];
 
   homebrew.brews = [
-    "cirruslabs/cli/tart"
     "jj"
     "libusb"
     "oven-sh/bun/bun"
