@@ -87,7 +87,7 @@ let
   mkClaudeRegistration = command: {
     SessionStart = [
       {
-        matcher = "*";
+        matcher = "^(startup|resume|clear|compact|fork)$";
         hooks = [
           {
             type = "command";
