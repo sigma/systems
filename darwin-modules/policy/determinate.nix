@@ -33,6 +33,21 @@ let
   );
 in
 {
+  options.determinate.additionalNetrcSources = mkOption {
+    type = types.listOf types.str;
+    default = [ ];
+    example = [ "/etc/nix/netrc" ];
+    description = ''
+      Extra netrc files determinate-nixd merges into the netrc it generates
+      (/nix/var/determinate/netrc). Determinate Nix pins `netrc-file` to that
+      file *after* the nix.custom.conf include, so it cannot be overridden from
+      here; merging is the supported way to add credentials for other hosts.
+      Paths must live outside the Nix store (they hold secrets), and entries
+      for FlakeHub hosts are ignored.
+      Docs: https://dtr.mn/custom-netrc
+    '';
+  };
+
   config = mkIf machine.features.determinate {
     # disable nix management as we're using determinate nix.
     nix.enable = mkForce false;
@@ -52,9 +67,14 @@ in
     # sudo boundary into the root activation, and `sentry-endpoint` is not a
     # nix.conf setting — so neither of the "obvious" levers works.
     # Docs: https://docs.determinate.systems/guides/telemetry/
-    environment.etc."determinate/config.json".text = builtins.toJSON {
-      telemetry.sentry.endpoint = null;
-    };
+    environment.etc."determinate/config.json".text = builtins.toJSON (
+      {
+        telemetry.sentry.endpoint = null;
+      }
+      // optionalAttrs (config.determinate.additionalNetrcSources != [ ]) {
+        authentication.additionalNetrcSources = config.determinate.additionalNetrcSources;
+      }
+    );
 
     # determinate-nixd only re-reads /etc/determinate/config.json on (re)start,
     # so nudge it once to purge a stale /etc/nix/sentry-endpoint. Gated on the
