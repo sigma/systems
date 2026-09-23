@@ -16,7 +16,8 @@ let
 
   # Format a builder for the nix.conf `builders =` line.
   # Layout: uri systems sshKey maxJobs speedFactor supportedFeatures mandatoryFeatures publicHostKey
-  formatBuilder = name: b:
+  formatBuilder =
+    name: b:
     let
       host = if b.alias != null then b.alias else b.name;
       sshKeyPath = config.sops.secrets."builder-keys/${name}".path;
@@ -28,9 +29,7 @@ let
   buildersLine = concatStringsSep " ; " (mapAttrsToList formatBuilder myDevboxes);
 
   # Devbox store signing keys to trust (so signed paths from the devbox are accepted)
-  myDevboxStoreKeys = filter (k: k != null) (
-    mapAttrsToList (_: b: b.storePublicKey) myDevboxes
-  );
+  myDevboxStoreKeys = filter (k: k != null) (mapAttrsToList (_: b: b.storePublicKey) myDevboxes);
 in
 {
   options.determinate.additionalNetrcSources = mkOption {
