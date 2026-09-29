@@ -10,6 +10,7 @@ let
       storePublicKey,
       supportedFeatures ? [ "big-parallel" ],
       speedFactor ? 10,
+      publicHostKey ? null,
     }:
     {
       enable = true;
@@ -20,6 +21,7 @@ let
         supportedFeatures
         sshPublicKey
         storePublicKey
+        publicHostKey
         ;
     };
 
@@ -169,6 +171,9 @@ in
           ];
           sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA6RaKDYN9eLKKmk2M7y+m5HBQ3WI0h8Y/FgNR9i9P7v shirka-builder";
           storePublicKey = "shirka-builder:ljFu1tbLM+lH2DNlKfGRZJyrdrWNnTlbKC82qQFJB8g=";
+          # base64 of shirka's ssh-ed25519 host key, so the root-run daemon on
+          # client hosts can verify it without a known_hosts entry.
+          publicHostKey = "c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUZlY0RQQzVhNFg4U1pkWGtIeEFSM2JsNXNTRFQ2OGhrcFlRWWc1bC8rZC8=";
         };
       };
 

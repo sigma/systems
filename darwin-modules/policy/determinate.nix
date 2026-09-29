@@ -12,7 +12,16 @@ let
 
   # Devboxes whose parent is this host — exposed as remote builders.
   myDevboxes = filterAttrs (name: b: b.parentHost == machine.hostKey) nixConfig.builders;
-  hasMyDevboxes = myDevboxes != { };
+
+  # Standalone (non-devbox) Linux builders, e.g. shirka for x86_64-linux.
+  # Other hosts' devboxes are excluded: they live on another laptop and are
+  # usually offline.
+  standaloneLinuxBuilders = filterAttrs (
+    name: b: b.parentHost == null && hasSuffix "-linux" b.system
+  ) nixConfig.builders;
+
+  remoteBuilders = myDevboxes // standaloneLinuxBuilders;
+  hasRemoteBuilders = remoteBuilders != { };
 
   # Format a builder for the nix.conf `builders =` line.
   # Layout: uri systems sshKey maxJobs speedFactor supportedFeatures mandatoryFeatures publicHostKey
@@ -26,10 +35,12 @@ let
     in
     "ssh-ng://${b.sshUser}@${host} ${b.system} ${sshKeyPath} ${toString b.maxJobs} ${toString b.speedFactor} ${features} - ${pubKey}";
 
-  buildersLine = concatStringsSep " ; " (mapAttrsToList formatBuilder myDevboxes);
+  buildersLine = concatStringsSep " ; " (mapAttrsToList formatBuilder remoteBuilders);
 
-  # Devbox store signing keys to trust (so signed paths from the devbox are accepted)
-  myDevboxStoreKeys = filter (k: k != null) (mapAttrsToList (_: b: b.storePublicKey) myDevboxes);
+  # Builder store signing keys to trust (so signed paths from them are accepted)
+  remoteBuilderStoreKeys = filter (k: k != null) (
+    mapAttrsToList (_: b: b.storePublicKey) remoteBuilders
+  );
 in
 {
   options.determinate.additionalNetrcSources = mkOption {
@@ -98,12 +109,12 @@ in
         external-builders = [{"systems":["aarch64-linux","x86_64-linux"],"program":"/usr/local/bin/determinate-nixd","args":["builder"]}]
       ''}
 
-      ${lib.optionalString hasMyDevboxes ''
-        # Distributed builds via this host's devbox(es)
+      ${lib.optionalString hasRemoteBuilders ''
+        # Distributed builds via this host's devbox(es) and standalone Linux builders
         builders = ${buildersLine}
         builders-use-substitutes = true
-        ${lib.optionalString (myDevboxStoreKeys != [ ]) ''
-          extra-trusted-public-keys = ${concatStringsSep " " myDevboxStoreKeys}
+        ${lib.optionalString (remoteBuilderStoreKeys != [ ]) ''
+          extra-trusted-public-keys = ${concatStringsSep " " remoteBuilderStoreKeys}
         ''}
       ''}
 
