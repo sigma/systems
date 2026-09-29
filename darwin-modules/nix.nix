@@ -29,6 +29,8 @@ in
       download-attempts = 10
       connect-timeout = 10
 
+      extra-experimental-features = ca-derivations
+
       substituters = ${substituters}
       trusted-public-keys = ${publicKeys}
     ''

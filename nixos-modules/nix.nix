@@ -24,7 +24,7 @@
       download-attempts = 10
       connect-timeout = 10
 
-      extra-experimental-features = nix-command flakes
+      extra-experimental-features = nix-command flakes ca-derivations
 
       substituters = ${substituters}
       trusted-public-keys = ${publicKeys}
