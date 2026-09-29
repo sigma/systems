@@ -148,10 +148,13 @@ in
         builderEntries = lib.mapAttrs (name: m: {
           inherit (m) name system alias;
           parentHost = if m.devbox != null then m.devbox.parentHost else null;
+          # Every managed daemon enables ca-derivations (darwin-modules/nix.nix,
+          # nixos-modules/nix.nix), and Nix only dispatches floating CA
+          # derivations to builders advertising the matching system feature.
+          supportedFeatures = m.builder.supportedFeatures ++ [ "ca-derivations" ];
           inherit (m.builder)
             maxJobs
             speedFactor
-            supportedFeatures
             publicHostKey
             sshUser
             sshPublicKey
