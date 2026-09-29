@@ -155,6 +155,7 @@ in
           "interactive"
           "work"
           "firefly"
+          "arbora"
           "tailscale"
           "nehalem" # Ivy Bridge CPU (Xeon E5 v2) lacks AVX2
         ]

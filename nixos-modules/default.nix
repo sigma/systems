@@ -10,6 +10,7 @@
     ./hardware-configuration.nix
     ./nix.nix
     ./nixos-user.nix
+    ./policy
     ./removable-mounts.nix
     ./tailscale.nix
     ./vscode-server.nix
