@@ -56,8 +56,9 @@ a _structural feature_ or a _content feature_.
 **Structural feature**:
 A _feature_ read *before* configuration exists or *outside* home scope — at module-import
 time, in darwin/NixOS system config, or in host resolution (e.g. `mac`, `nixos`, `laptop`,
-`devbox`, `tailscale`, `determinate`, `work`, `firefly`). Carried as plain host-declared
-data.
+`interactive`, `devbox`, `tailscale`, `determinate`, `work`, `firefly`). Carried as plain
+host-declared data. `interactive` wires a NixOS desktop session into system config; it is
+not the GUI-content axis — home content reads _graphical_ instead.
 
 **Content feature**:
 A named axis of *what a machine is equipped to do for its user* (e.g. `dev`, `shell`,
@@ -79,14 +80,32 @@ everything that generates, enforces, or gates on content features derives from i
 **Base floor**:
 The home-manager content every machine carries unconditionally, _devbox_ included — the
 around-the-toolchain layer: shells, terminal editors, `git`/`jj`, `direnv`, review tools,
-a single always-available AI agent, mail identity + tooling, core CLI. Not a _feature_; it
-is never gated.
+a single always-available AI agent (the _floor agent_), mail identity + tooling, core CLI.
+Not a _feature_; it is never gated.
 _Avoid_: core profile, minimal set.
+
+**Agent roster**:
+The canonical list of AI coding agents a _machine_ may carry. Each entry records the agent's
+delivery channel per platform, its skill directory, its herdr integration id, its ACP id
+(for editors that host external agents), and its default gate: _floor_ (always on — the
+_floor agent_, `claude-code`), `ai` (on when the resolved `ai` _content feature_ is), or
+off (enabled only by a policy). Everything that installs an agent, registers its skills,
+or integrates it with another tool derives from the roster rather than re-deriving which
+agents a machine has.
+_Avoid_: agent list, agent profile, plan.
+
+**Endpoint variant**:
+An agent entry re-pointed at another API endpoint (e.g. `claude-glm`, `claude-firefly`,
+`claude-cave` — `claude-code` against GLM, the Aperture gateway, the caveman proxy). A
+variant of a _roster_ entry, not an entry of its own: declared as an endpoint on that
+entry, which generates the wrapper.
+_Avoid_: wrapper (names the delivery, not the concept), plan.
 
 **Graphical**:
 The _content feature_ for the headless-vs-graphical axis: fonts and GUI applications
 (terminal, GUI editor) a _devbox_ omits because it is a headless VM. A _devbox_ leaves
-`graphical` off; a workstation declares it.
+`graphical` off; a workstation declares it. Every piece of GUI content gates on it (a
+platform guard such as `mac` may be added alongside, never substituted).
 
 ### The seam
 
