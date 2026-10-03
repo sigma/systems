@@ -15,29 +15,24 @@ let
   # silently re-breaking the daemon each time.
   kanataBin = "/opt/homebrew/bin/kanata";
 
-  kanataConfig = (import ../../modules/kanata/config.nix { inherit lib; }).mkConfig {
-    platform = "macos";
-    inherit (cfg) devices;
-    inherit (cfg.mods)
-      swapAltCmd
-      fnDndHack
-      hyperFromLctl
-      rOptHyper
-      capsEscCtrl
-      enterRctrl
-      shiftParens
-      bracketChords
-      mediaKeys
-      stockToggle
-      ;
-    inherit (cfg.timing) tapMs holdMs chordMs;
-    inherit (cfg) pedal;
-  };
-
   # The config lives in the nix store so its path is a content hash.
   # Referencing this path from the plist makes plist regen → daemon
   # reload happen automatically on config change during activation.
-  kanataConfigFile = pkgs.writeText "kanata-config.kbd" kanataConfig;
+  #
+  # Validated at build time so a malformed S-expression fails the build
+  # rather than crash-looping the launchd daemon. The checker comes from
+  # pkgs.master to track the Homebrew runtime binary's version.
+  kanataConfigFile =
+    pkgs.runCommand "kanata-config.kbd"
+      {
+        text = import ./render.nix { inherit lib; } cfg;
+        passAsFile = [ "text" ];
+        nativeBuildInputs = [ pkgs.master.kanata ];
+      }
+      ''
+        kanata --cfg "$textPath" --check
+        cp "$textPath" "$out"
+      '';
 
   pedalSubmodule = types.submodule {
     options = {
@@ -189,6 +184,17 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = cfg.mods.stockToggle -> cfg.mods.mediaKeys;
+        message = "programs.kanata.mods.stockToggle requires mediaKeys (the Fn+Esc binding lives in the fkeys layer).";
+      }
+    ];
+
+    warnings =
+      optional (cfg.mods.fnDndHack && cfg.mods.mediaKeys)
+        "programs.kanata.mods.fnDndHack has no effect with mediaKeys: F6 already emits the real DND code.";
+
     # Karabiner-Elements ships the DriverKit Virtual HID device that
     # kanata writes to on macOS. We keep the cask installed for the
     # driver only — its own grabber is disabled below.
@@ -258,16 +264,17 @@ in
     # Needed whenever fnDndHack is on so the OS reacts to the F16
     # kanata emits when F6 is pressed.
     system.defaults.CustomUserPreferences."com.apple.symbolichotkeys".AppleSymbolicHotKeys."175" =
-      mkIf cfg.mods.fnDndHack {
-        enabled = true;
-        value = {
-          parameters = [
-            65535
-            106
-            8388608
-          ];
-          type = "standard";
+      mkIf cfg.mods.fnDndHack
+        {
+          enabled = true;
+          value = {
+            parameters = [
+              65535
+              106
+              8388608
+            ];
+            type = "standard";
+          };
         };
-      };
   };
 }

@@ -16,7 +16,7 @@
     ./claude-code.nix
     ./cursor.nix
     ./gemini-cli.nix
-    ./kanata.nix
+    ./kanata
     ./karabiner.nix
     ./kurtosis.nix
     ./secretive.nix
