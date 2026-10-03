@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-10-03T18:04:46Z",
+  "description": "darwin-modules/apps/kanata/{default.nix,render.nix}. Drop platform param and modules/kanata/. Options are the only flag list + defaults (no pass-through, no duplicated pedal defaults); render.nix private, receives cfg whole. Flag rules: stockToggle=\u003emediaKeys as module assertions; fnDndHack+mediaKeys emits a warning. macOS side effects stay in default.nix. Build-time runCommand pkgs.master.kanata --check on the rendered .kbd (matches brew 1.12.0). Karabiner out of scope.",
+  "id": "nix-ltz.2",
+  "labels": [],
+  "parent": "nix-ltz",
+  "priority": 2,
+  "status": "open",
+  "title": "Collapse kanata into one darwin module + build-time --check",
+  "type": "task",
+  "updated_at": "2026-10-03T18:04:46Z"
+}
