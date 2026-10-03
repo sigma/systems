@@ -1,0 +1,15 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-10-03T18:04:47Z",
+  "description": "programs.agents.claude-code.endpoints.\u003cname\u003e = { baseUrl; firstParty; tokenFile?; timeoutMs?; env } generates claude-\u003cname\u003e wrappers. claude-glm, claude-firefly, caveman-proxy (claude-cave) declare endpoints. firefly gains _CLAUDE_CODE_ASSUME_FIRST_PARTY_BASE_URL. Expose machine.sharedDomain; Aperture URL = aperture.\u003csharedDomain\u003e. Drop stale devbox bucket in home-modules/policy/default.nix (import firefly.nix unconditionally).",
+  "id": "nix-ltz.7",
+  "labels": [],
+  "parent": "nix-ltz",
+  "priority": 2,
+  "status": "open",
+  "title": "Endpoint variants: one generator for claude wrappers",
+  "type": "task",
+  "updated_at": "2026-10-03T18:04:47Z"
+}
