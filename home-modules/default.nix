@@ -86,7 +86,11 @@
     gh-dash.enable = true;
   };
 
-  services.caveman-proxy.enable = config.features.dev.enable;
+  services.caveman-proxy = {
+    enable = config.features.dev.enable;
+    # Send Anthropic traffic through the tailnet's Aperture gateway.
+    anthropicUpstream = lib.mkIf machine.features.tailscale "aperture:80";
+  };
 
   home.packages =
     with pkgs;
