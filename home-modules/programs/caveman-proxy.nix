@@ -2,7 +2,7 @@
 # run as a per-user background service: launchd agent on macOS, systemd user
 # unit on Linux.
 #
-# The binary comes from the toolbox's llm-toolchain (home-modules/default.nix
+# The binary comes from the toolbox's llm-toolchain (home-modules/content/dev.nix
 # installs the same bundle), so the service and the `caveman-proxy` on PATH are
 # one pin and `caveman-proxy stats` / `status` read the same state.
 #
@@ -27,6 +27,7 @@
 {
   config,
   lib,
+  machine,
   pkgs,
   ...
 }:
@@ -109,7 +110,10 @@ let
 in
 {
   options.services.caveman-proxy = {
-    enable = mkEnableOption "the Caveman LLM proxy as a user service";
+    enable = mkEnableOption "the Caveman LLM proxy as a user service" // {
+      default = config.features.dev.enable;
+      defaultText = literalExpression "config.features.dev.enable";
+    };
 
     package = mkOption {
       type = types.package;
@@ -160,7 +164,13 @@ in
 
     anthropicUpstream = mkOption {
       type = types.nullOr types.str;
-      default = null;
+      # Tailnet hosts send Anthropic traffic through the Aperture gateway.
+      default =
+        if machine.features.tailscale then
+          (import ../proxy-urls.nix machine.sharedDomain).aperture
+        else
+          null;
+      defaultText = literalExpression "Aperture on tailnet hosts, else null";
       example = "aperture:80";
       description = ''
         Plain-HTTP `host:port` of a tailnet gateway to send Anthropic traffic
@@ -187,7 +197,7 @@ in
   config = mkIf cfg.enable (mkMerge [
     {
       # `claude` routed through the proxy (an endpoint variant, see
-      # ./agents.nix). The `/w/claude` prefix labels the client in
+      # ../agents.nix). The `/w/claude` prefix labels the client in
       # `caveman-proxy stats` and is stripped before forwarding. The proxy
       # (and any tailnet gateway behind it) forwards to Anthropic, so
       # first-party behaviour is the truthful one; ENABLE_TOOL_SEARCH mirrors

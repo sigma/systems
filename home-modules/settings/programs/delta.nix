@@ -3,7 +3,7 @@
   inherit (config.features.dev) enable;
   enableGitIntegration = true;
 
-  # delta ships in the toolbox's vcs-toolchain bundle (home-modules/default.nix),
+  # delta ships in the toolbox's vcs-toolchain bundle (home-modules/content/base.nix),
   # so installing `pkgs.delta` here would collide on `bin/delta` in the home
   # profile. `package` isn't nullable, so point it at the bundle — buildEnv
   # dedups the identical store path. The module resolves the binary with

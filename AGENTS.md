@@ -150,7 +150,21 @@ There are two ways to deploy home-manager changes:
 - `home-install` - Build and activate home-manager only
 - `home-test` - Build home-manager without activating
 
-### 5. Settings Module System
+### 5. Where a tool's home configuration lives
+
+Pick by whether the tool has an options module of our own:
+
+- **Configured purely through an upstream home-manager module** (bat, git,
+  fish, …) → a values file in `home-modules/settings/programs/<tool>.nix`
+  (the settings loader below).
+- **Has a local options module** (declares or extends `programs.<tool>`) →
+  **one file**, `home-modules/programs/<tool>.nix`, holding its options, its
+  values and its own gating (`enable = lib.mkDefault …`). Files there are
+  auto-discovered; do not add a second values file under `settings/`.
+- **Content-feature package lists** → `home-modules/content/<feature>.nix`
+  (base-floor packages in `content/base.nix`), also auto-discovered.
+
+### 5a. Settings Module System
 
 The `home-modules/settings/` directory uses **filesystem hierarchy to define option paths**:
 
@@ -486,7 +500,9 @@ diff /tmp/darwin.txt /tmp/home.txt
 - **Organization policies**: `darwin-modules/policy/`
 - **System settings**: `darwin-modules/` (top-level modules)
 - **Custom packages**: `overlays/pkg/local/`
-- **User programs**: `home-modules/`
+- **User programs**: `home-modules/programs/` (own options module) or
+  `home-modules/settings/programs/` (upstream module only) — see §5
+- **Content-feature packages**: `home-modules/content/<feature>.nix`
 - **Host definitions**: `modules/hosts.nix`
 - **User definitions**: `modules/users.nix`
 

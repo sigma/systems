@@ -7,7 +7,7 @@
   enable = true;
 
   # The git binary comes from the toolbox's vcs-toolchain bundle
-  # (home-modules/default.nix); this module is here for the config it
+  # (home-modules/content/base.nix); this module is here for the config it
   # generates, so it must not install a second git or the two collide on
   # `bin/git` in the home profile.
   package = null;

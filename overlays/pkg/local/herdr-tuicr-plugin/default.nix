@@ -19,7 +19,7 @@
 # herdr keeps its plugin registry in ~/.config/herdr/plugins.json, a file it
 # rewrites itself, so the plugin can't be dropped in as a config file; the
 # home-manager module registers `$out` with `herdr plugin link` at activation
-# (programs.herdr.plugins, home-modules/herdr.nix).
+# (programs.herdr.plugins, set by home-modules/programs/tuicr.nix).
 {
   lib,
   stdenvNoCC,

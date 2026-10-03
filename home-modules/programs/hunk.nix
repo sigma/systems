@@ -1,0 +1,213 @@
+{
+  config,
+  lib,
+  pkgs,
+  machine,
+  ...
+}:
+with lib;
+let
+  cfg = config.programs.hunk;
+  tomlFormat = pkgs.formats.toml { };
+
+  # When any env override (pager / editor) is set, expose hunk via a
+  # thin wrapper that exports the variables before invoking the real
+  # binary. The symlinkJoin keeps the rest of the package layout
+  # (skills, etc.) available at the same relative paths.
+  envOverrides = lib.filterAttrs (_: v: v != null) {
+    HUNK_TEXT_PAGER = cfg.pager;
+    EDITOR = cfg.editor;
+  };
+
+  finalPackage =
+    if envOverrides == { } then
+      cfg.package
+    else
+      pkgs.symlinkJoin {
+        name = "${cfg.package.name}-wrapped";
+        paths = [ cfg.package ];
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/hunk \
+            ${lib.concatStringsSep " \\\n            " (
+              lib.mapAttrsToList (k: v: "--set ${k} ${lib.escapeShellArg (toString v)}") envOverrides
+            )}
+        '';
+      };
+in
+{
+  options.programs.hunk = {
+    enable = mkEnableOption "hunk (review-first terminal diff viewer)";
+
+    package = mkOption {
+      type = types.package;
+      default = pkgs.toolbox.hunk;
+      defaultText = literalExpression "pkgs.toolbox.hunk";
+      description = "The hunk package to install.";
+    };
+
+    finalPackage = mkOption {
+      type = types.package;
+      readOnly = true;
+      description = ''
+        The hunk package after applying any env-override wrapping
+        (pager/editor). External consumers (jj aliases, etc.) should
+        reference this rather than `package` to get the wrapped
+        binary with the right env.
+      '';
+    };
+
+    pager = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      description = ''
+        Text pager hunk uses for its inline text-view (sets the
+        `HUNK_TEXT_PAGER` env var). When set, the hunk binary is
+        wrapped to export this value before exec. Leave null to let
+        hunk pick its own default.
+      '';
+      example = "less -RF";
+    };
+
+    editor = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      description = ''
+        Editor hunk launches for review actions (sets the `EDITOR`
+        env var on the wrapped binary). Use a full nix-store path
+        unless the binary is guaranteed to be on PATH.
+      '';
+      example = literalExpression ''"''${config.programs.nvf.finalPackage}/bin/nvim"'';
+    };
+
+    settings = mkOption {
+      inherit (tomlFormat) type;
+      default = { };
+      description = ''
+        Free-form config written verbatim to ~/.config/hunk/config.toml.
+        See https://github.com/modem-dev/hunk for valid keys. Omit
+        `vcs` to let hunk auto-detect the surrounding checkout.
+      '';
+      example = literalExpression ''
+        {
+          theme = "github-dark-default";
+          mode = "auto";
+          line_numbers = true;
+        }
+      '';
+    };
+
+    git.enable = mkOption {
+      type = types.bool;
+      default = cfg.enable;
+      defaultText = literalExpression "config.programs.hunk.enable";
+      description = ''
+        Wire hunk in as git's pager (`core.pager = "hunk pager"`) and
+        turn off the home-manager delta/git integration so the two
+        don't collide on `core.pager`. Delta itself stays available
+        via `pkgs.delta` for any tool that references it directly.
+      '';
+    };
+
+    jj.enable = mkOption {
+      type = types.bool;
+      default = cfg.enable;
+      defaultText = literalExpression "config.programs.hunk.enable";
+      description = ''
+        Wire hunk in as jj's pager (`ui.pager = ["hunk" "pager"]`) and
+        set `ui.diff-formatter = ":git"` so hunk receives input it can
+        parse.
+      '';
+    };
+
+  };
+
+  config = lib.mkMerge [
+    {
+      programs.hunk = {
+        # hunk ships as a Bun single-file executable, and Bun's default x64 build
+        # targets x86-64-v3 — it faults on `shlx` (BMI2) on pre-Haswell CPUs.
+        # Upstream publishes no `-baseline` artifact, so there the binary SIGILLs on
+        # *every* invocation. That is silent when it sits in a pager seat: the pager
+        # dies and takes the output with it, so `git diff` and `jj log` just come
+        # back blank. Stay off on those hosts and leave the seat to delta.
+        enable = lib.mkDefault (!machine.features.nehalem);
+
+        pager = "${pkgs.less}/bin/less -RF";
+
+        editor = lib.mkIf config.programs.neovim-ide.enable "${config.programs.nvf.finalPackage}/bin/nvim";
+
+        settings = {
+          transparent_background = true;
+        };
+      };
+    }
+
+    (mkIf cfg.enable (mkMerge [
+      {
+        programs.hunk.finalPackage = finalPackage;
+
+        # The toolbox's vcs-toolchain bundle (home-modules/content/base.nix) also
+        # ships `bin/hunk`, unwrapped. Take priority over it so the copy on PATH
+        # is the one carrying HUNK_TEXT_PAGER/EDITOR; without the hiPrio the two
+        # just collide and buildEnv refuses to build the profile.
+        home.packages = [ (hiPrio finalPackage) ];
+
+        # Baseline written to ~/.config/hunk/config.toml. These match
+        # hunk's own internal defaults but having them in the file
+        # makes the resolved config visible and overridable in one
+        # place. User-set programs.hunk.settings.* wins (mkDefault).
+        programs.hunk.settings = {
+          mode = mkDefault "auto";
+          line_numbers = mkDefault true;
+          wrap_lines = mkDefault false;
+          hunk_headers = mkDefault true;
+        };
+
+        xdg.configFile."hunk/config.toml".source = tomlFormat.generate "hunk-config.toml" cfg.settings;
+      }
+
+      (mkIf cfg.git.enable {
+        programs.git.settings.core.pager = "${finalPackage}/bin/hunk pager";
+        # HM's delta module auto-sets core.pager when enabled; disable
+        # its wiring so we don't double-define. `pkgs.delta` is still
+        # in scope for direct references (lazygit, gh, jj's `delta`
+        # scope all use ${pkgs.delta} rather than programs.delta).
+        programs.delta.enable = mkForce false;
+      })
+
+      (mkIf cfg.jj.enable {
+        programs.jujutsu.settings.ui = {
+          pager = mkForce [
+            "${finalPackage}/bin/hunk"
+            "pager"
+          ];
+          diff-formatter = mkForce ":git";
+        };
+      })
+
+      {
+        # Register the shipped skill directory (which holds SKILL.md) rather
+        # than symlinking it ourselves, so it lands under every agent's skill
+        # root (programs.agentSkills.roots), not just Claude's.
+        #
+        # Either way we can't use home-manager's `programs.claude-code.skills`:
+        # it only symlinks when the value is a genuine Nix `path`, but every
+        # way to point a path at a *package output* fails under pure/flake
+        # eval — keeping the store-path context errors with "cannot append
+        # to a path", and discarding it errors with "access to absolute
+        # path is forbidden in pure evaluation mode". A `"${finalPackage}/…"`
+        # string (which that option would instead write as file *text*)
+        # works fine as a home.file source, linking the directory reliably.
+        programs.agentSkills.skills.hunk-review = "${finalPackage}/skills/hunk-review";
+      }
+
+      # Catppuccin integration: when catppuccin is globally enabled,
+      # default the theme to the matching catppuccin-<flavor> variant.
+      # User-provided settings.theme overrides this (it's `mkDefault`).
+      (mkIf config.catppuccin.enable {
+        programs.hunk.settings.theme = mkDefault "catppuccin-${config.catppuccin.flavor}";
+      })
+    ]))
+  ];
+}

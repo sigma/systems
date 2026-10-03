@@ -14,7 +14,7 @@
 # agree on a declarative seat. Claude Code has `settings.env` (wired in
 # ./settings/programs/claude-code.nix). Antigravity's `agy` rewrites its own
 # ~/.gemini/antigravity-cli/settings.json at runtime, so the only way in is the
-# imperative jq patching ./agy-hud.nix already has to do for its status line.
+# imperative jq patching ./programs/agy-hud.nix already has to do for its status line.
 # What every agent *does* share is that it runs commands by spawning a shell,
 # so exporting on a marker covers all of them with one mechanism.
 #

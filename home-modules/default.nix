@@ -1,6 +1,4 @@
 {
-  config,
-  pkgs,
   lib,
   machine,
   stateVersion,
@@ -10,215 +8,36 @@
   home.stateVersion = stateVersion;
 
   imports = [
-    # Always included — these declare options that other (always-loaded)
-    # modules reference. Their config blocks are gated on cfg.enable, which
-    # defaults to false on devbox (the corresponding settings file isn't
-    # loaded), so promotion costs only the option declaration.
-    ./aspell.nix
+    # Tool modules (one per tool, self-gating), auto-discovered.
+    ./programs
+    # Values for tools configured purely through upstream home-manager modules.
+    ./settings
+    # Content-feature package lists, one file per feature (plus the base floor).
+    ./content
+
+    # Infrastructure: options other modules read, and cross-cutting wiring.
+    ./accounts.nix
+    ./agent-env.nix # interactive-editor lockout shared by every coding agent
+    ./agent-skills.nix # skill registry linked into every agent's skill root
+    ./agents.nix # agent roster: skills, herdr and installs derive from it
+    ./ai-apis.nix # local LLM endpoints by protocol (set by the server module)
     ./builder-access.nix
     ./catppuccin.nix
-    # Shared agent-skill registry — always imported so its options are
-    # declared; inert until some agent registers a skill root. Configured in
-    # ./settings/programs/agentSkills.nix.
-    ./agent-skills.nix
-    # Agent roster: which AI agents this machine carries and how each is
-    # delivered; skills, herdr and installs derive from it.
-    ./agents.nix
     # Nests ~/.claude/settings.json inside a store *directory* so Claude does
-    # not end up watching /nix/store itself. Self-gates on
-    # config.programs.claude-code.enable.
+    # not end up watching /nix/store itself.
     ./claude-settings-file.nix
-    # Composable Claude Code statusline — always imported so
-    # programs.claudeStatusline is declared (voice.nix contributes a segment via
-    # user.*). Self-gates on config.programs.claude-code.enable.
-    ./claude-statusline.nix
-    # Agent-agnostic env (interactive-editor lockout) shared by every coding
-    # agent; declares programs.agentEnv and hooks fish/bash on agent markers.
-    ./agent-env.nix
+    ./claude-statusline.nix # composable statusline (voice.nix adds a segment)
     ./editors
     ./features.nix # declares options.features.<n>.enable (content-feature seam)
-    ./herdr.nix # renders ~/.config/herdr/config.toml; gates on programs.herdr.enable
-    # Declarative agent integrations for herdr (generated in a build sandbox).
-    # Declares programs.herdr.integrations; inert until a target is listed.
-    ./herdr-integrations.nix
-    ./hunk.nix
-    ./jjui.nix # adds programs.jjui.themes on top of home-manager's module
-    ./jujutsu.nix
+    ./fonts
+    ./mailsetup.nix
     ./policy # gates internally on machine.features.<x>
-    ./settings
     ./shells
     # Fails activation on unmanaged files at home.file targets instead of
     # letting home-manager skip identical ones silently.
     ./strict-link-targets.nix
-    ./television.nix # Ctrl+R hand-off to atuin; gates on programs.television.enable
-    ./tmuxp.nix # referenced from settings/programs/tmux.nix
-    ./tuicr.nix # renders ~/.config/tuicr/config.toml; gates on programs.tuicr.enable
-    # Content-gated modules — always imported so their options are declared;
-    # each self-gates its config on config.features.<x>.enable or on its own
-    # programs.<name>.enable (set by a policy/feature), so the devbox policy's
-    # mkForce on the content-feature seam is what keeps them off devboxes.
-    ./accounts.nix
-    ./agy-hud.nix # enabled with the antigravity-cli roster entry (./agents.nix)
-    ./ai-apis.nix # local LLM endpoints by protocol (set by the server module)
-    ./caveman-proxy.nix # enabled below on dev hosts
-    ./claude-firefly.nix # enabled by policy/firefly.nix (machine.features.firefly)
-    ./claude-glm.nix
-    ./cloud-shell.nix
-    ./dosbox.nix
-    ./fonts
-    ./gcloud.nix # enabled by policy/firefly.nix
-    ./just.nix
-    ./kew.nix
-    ./kubeswitch.nix
-    ./mailsetup.nix
-    ./open-url.nix
-    ./yt-dlp.nix
   ]
   ++ lib.optionals machine.features.mac [
     ./darwin-apps.nix # references darwin apps; mac is structural (import-time)
   ];
-
-  programs = {
-    fd.enable = true;
-    jq.enable = true;
-
-    neovim-ide.enable = true;
-  }
-  // lib.optionalAttrs config.features.dev.enable {
-    cloudshell.enable = true;
-    gh-dash.enable = true;
-  };
-
-  services.caveman-proxy = {
-    enable = config.features.dev.enable;
-    # Send Anthropic traffic through the tailnet's Aperture gateway.
-    anthropicUpstream = lib.mkIf machine.features.tailscale (
-      (import ./proxy-urls.nix machine.sharedDomain).aperture
-    );
-  };
-
-  home.packages =
-    with pkgs;
-    [
-      # Core (always included)
-      bash
-      coreutils
-      curl
-      wget
-      gnumake
-      gnutar
-      htop
-      less
-      tree
-
-      # json/yaml helpers
-      jaq
-      yq-go
-
-      # work management
-      toolbox.beadwork
-
-      # vcs management — one bundle instead of a pile of per-tool installs.
-      # vcs-toolchain ships git, git-lfs, jj, jjui, jj-hunk, gh, gh-aw,
-      # gh-stack, delta, difftastic, entire, hunk and tuicr, all pinned
-      # together by the toolbox. Taking the bundle means the individual
-      # installs it subsumes have to be switched off or they collide on the
-      # same `bin/` names — see the notes at each site.
-      toolbox.vcs-toolchain
-
-      # Useful nix related tools
-      cachix
-      nixfmt
-      home-manager
-      nix-output-monitor
-    ]
-    ++ lib.optionals config.features.dev.enable [
-      # LLM tooling bundle from the toolbox: qmd, openspec, agentmemory,
-      # aperture and caveman-proxy (run as a service by ./caveman-proxy.nix).
-      # Its skills are linked by settings/programs/agentSkills.nix.
-      toolbox.llm-toolchain
-
-      # build tools
-      circleci-cli
-      goreleaser
-      ninja
-      master.buck2
-      bump2version
-      mprocs
-      parallel
-
-      # git
-      git-review
-      pre-commit
-      local.prs
-      tig
-
-      # languages
-      go
-      python3
-      poetry
-      black
-      (fenix.complete.withComponents [
-        "cargo"
-        "clippy"
-        "rust-src"
-        "rustc"
-        "rustfmt"
-      ])
-      rust-analyzer-nightly
-
-      # nix tools
-      statix
-      comma
-      master.devenv
-      fh
-      master.nix-inspect
-      nh
-    ]
-    ++ lib.optionals config.features.shell.enable [
-      # console tools
-      ast-grep
-      broot
-      btop
-      chafa
-      d2
-      glow
-      gum
-      hexyl
-      pinfo
-      procs
-      rm-improved
-      safe-rm
-      silver-searcher
-      soft-serve
-      tealdeer
-
-      # json/yaml helpers
-      jsonnet
-      jsonnet-bundler
-    ]
-    ++ lib.optionals config.features.writing.enable [
-      hugo
-      mdbook
-      mdbook-mermaid
-    ]
-    ++ lib.optionals config.features.network.enable [
-      autossh
-      lftp
-      nmap
-      prettyping
-    ]
-    ++ lib.optionals config.features.keyboard.enable [
-      local.mdloader # QMK
-    ]
-    ++ lib.optionals config.features.media.enable [
-      ffmpeg
-      local.m3ugen
-    ]
-    ++ lib.optionals machine.features.mac [
-      m-cli # useful macOS CLI commands
-    ]
-    ++ lib.optionals config.features.gaming.enable [
-      local.myrient-downloader
-    ];
 }

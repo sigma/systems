@@ -1,5 +1,5 @@
 # claude-firefly: Claude Code through the tailnet's Aperture gateway, an
-# endpoint variant of the claude-code roster entry (see ./agents.nix).
+# endpoint variant of the claude-code roster entry (see ../agents.nix).
 {
   config,
   lib,
@@ -7,7 +7,7 @@
   ...
 }:
 let
-  urls = import ./proxy-urls.nix machine.sharedDomain;
+  urls = import ../proxy-urls.nix machine.sharedDomain;
 in
 {
   options.programs.claude-firefly.enable = lib.mkEnableOption "Claude Code via the Tailscale AI proxy";

@@ -61,7 +61,12 @@ Linux system-level configuration:
 User-space configuration shared across platforms:
 - **Editors** (`editors/`): Editor configurations
 - **Shells** (`shells/`): Shell environments (Fish, tmux, etc.)
-- **Settings** (`settings/`): User application settings
+- **Programs** (`programs/`): One auto-discovered module per tool that has
+  its own options — options, values and gating in one file
+- **Settings** (`settings/`): Values for tools configured purely through
+  upstream home-manager modules
+- **Content** (`content/`): Package lists per content feature, plus the base
+  floor
 
 ### Configuration Generation
 

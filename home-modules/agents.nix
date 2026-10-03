@@ -8,7 +8,7 @@
 #   - this module installs Linux packages and drives programs.claude-code
 #   - darwin-modules/apps/agents.nix installs the Homebrew formulae/casks
 #   - settings/programs/agentSkills.nix links skills into every skillDir
-#   - settings/programs/herdr.nix integrates every herdrId
+#   - programs/herdr.nix integrates every herdrId
 #   - settings/programs/zed-editor.nix registers every acp id
 #
 # Delivery channels differ per platform on purpose. On darwin, Homebrew tracks

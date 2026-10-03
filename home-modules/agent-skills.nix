@@ -22,7 +22,7 @@
 #
 # Why home.file rather than `programs.claude-code.skills`? That upstream option
 # only symlinks a genuine Nix `path`, and pointing a path at a *package output*
-# fails under pure/flake eval (see the long note in ./hunk.nix). So we take the
+# fails under pure/flake eval (see the long note in ./programs/hunk.nix). So we take the
 # same escape hatch hunk uses: a `"${package}/…"` *string* as a `home.file`
 # source.
 #

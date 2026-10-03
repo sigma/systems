@@ -17,12 +17,7 @@ let
   # Custom INI generator that converts bools to 0/1
   toKewINI = generators.toINI {
     mkKeyValue = generators.mkKeyValueDefault {
-      mkValueString =
-        v:
-        if builtins.isBool v then
-          boolToStr v
-        else
-          generators.mkValueStringDefault { } v;
+      mkValueString = v: if builtins.isBool v then boolToStr v else generators.mkValueStringDefault { } v;
     } "=";
   };
 
@@ -30,7 +25,11 @@ let
   keyBindingsText = concatMapStringsSep "\n" (
     binding:
     let
-      parts = [ binding.key binding.action ] ++ optional (binding.arg != null) binding.arg;
+      parts = [
+        binding.key
+        binding.action
+      ]
+      ++ optional (binding.arg != null) binding.arg;
     in
     "bind = ${concatStringsSep ", " parts}"
   ) cfg.keyBindings;
@@ -113,58 +112,266 @@ let
   };
 
   defaultKeyBindings = [
-    { key = "Space"; action = "playPause"; arg = null; }
-    { key = "Shift+Tab"; action = "prevView"; arg = null; }
-    { key = "Tab"; action = "nextView"; arg = null; }
-    { key = "+"; action = "volUp"; arg = "+5%"; }
-    { key = "="; action = "volUp"; arg = "+5%"; }
-    { key = "-"; action = "volDown"; arg = "-5%"; }
-    { key = "h"; action = "prevSong"; arg = null; }
-    { key = "l"; action = "nextSong"; arg = null; }
-    { key = "k"; action = "scrollUp"; arg = null; }
-    { key = "j"; action = "scrollDown"; arg = null; }
-    { key = "p"; action = "playPause"; arg = null; }
-    { key = "n"; action = "toggleNotifications"; arg = null; }
-    { key = "v"; action = "toggleVisualizer"; arg = null; }
-    { key = "b"; action = "toggleAscii"; arg = null; }
-    { key = "r"; action = "toggleRepeat"; arg = null; }
-    { key = "i"; action = "cycleColorMode"; arg = null; }
-    { key = "t"; action = "cycleThemes"; arg = null; }
-    { key = "c"; action = "cycleVisualization"; arg = null; }
-    { key = "s"; action = "shuffle"; arg = null; }
-    { key = "a"; action = "seekBack"; arg = null; }
-    { key = "d"; action = "seekForward"; arg = null; }
-    { key = "o"; action = "sortLibrary"; arg = null; }
-    { key = "m"; action = "showLyricsPage"; arg = null; }
-    { key = "Shift+s"; action = "stop"; arg = null; }
-    { key = "x"; action = "exportPlaylist"; arg = null; }
-    { key = "."; action = "addToFavorites_playlist"; arg = null; }
-    { key = "u"; action = "updateLibrary"; arg = null; }
-    { key = "f"; action = "moveSongUp"; arg = null; }
-    { key = "g"; action = "moveSongDown"; arg = null; }
-    { key = "Enter"; action = "enqueue"; arg = null; }
-    { key = "Shift+g"; action = "enqueue"; arg = null; }
-    { key = "Backspace"; action = "clearPlaylist"; arg = null; }
-    { key = "Alt+Enter"; action = "enqueueAndPlay"; arg = null; }
-    { key = "Left"; action = "prevSong"; arg = null; }
-    { key = "Right"; action = "nextSong"; arg = null; }
-    { key = "Up"; action = "scrollUp"; arg = null; }
-    { key = "Down"; action = "scrollDown"; arg = null; }
-    { key = "F2"; action = "showPlaylist"; arg = null; }
-    { key = "F3"; action = "showLibrary"; arg = null; }
-    { key = "F4"; action = "showTrack"; arg = null; }
-    { key = "F5"; action = "showSearch"; arg = null; }
-    { key = "F6"; action = "showHelp"; arg = null; }
-    { key = "PgDn"; action = "nextPage"; arg = null; }
-    { key = "PgUp"; action = "prevPage"; arg = null; }
-    { key = "Del"; action = "remove"; arg = null; }
-    { key = "mouseMiddle"; action = "enqueueAndPlay"; arg = null; }
-    { key = "mouseRight"; action = "playPause"; arg = null; }
-    { key = "mouseWheelDown"; action = "scrollDown"; arg = null; }
-    { key = "mouseWheelUp"; action = "scrollUp"; arg = null; }
-    { key = "q"; action = "quit"; arg = null; }
-    { key = "Esc"; action = "quit"; arg = null; }
-    { key = "Unknown"; action = "EVENT_NONE"; arg = null; }
+    {
+      key = "Space";
+      action = "playPause";
+      arg = null;
+    }
+    {
+      key = "Shift+Tab";
+      action = "prevView";
+      arg = null;
+    }
+    {
+      key = "Tab";
+      action = "nextView";
+      arg = null;
+    }
+    {
+      key = "+";
+      action = "volUp";
+      arg = "+5%";
+    }
+    {
+      key = "=";
+      action = "volUp";
+      arg = "+5%";
+    }
+    {
+      key = "-";
+      action = "volDown";
+      arg = "-5%";
+    }
+    {
+      key = "h";
+      action = "prevSong";
+      arg = null;
+    }
+    {
+      key = "l";
+      action = "nextSong";
+      arg = null;
+    }
+    {
+      key = "k";
+      action = "scrollUp";
+      arg = null;
+    }
+    {
+      key = "j";
+      action = "scrollDown";
+      arg = null;
+    }
+    {
+      key = "p";
+      action = "playPause";
+      arg = null;
+    }
+    {
+      key = "n";
+      action = "toggleNotifications";
+      arg = null;
+    }
+    {
+      key = "v";
+      action = "toggleVisualizer";
+      arg = null;
+    }
+    {
+      key = "b";
+      action = "toggleAscii";
+      arg = null;
+    }
+    {
+      key = "r";
+      action = "toggleRepeat";
+      arg = null;
+    }
+    {
+      key = "i";
+      action = "cycleColorMode";
+      arg = null;
+    }
+    {
+      key = "t";
+      action = "cycleThemes";
+      arg = null;
+    }
+    {
+      key = "c";
+      action = "cycleVisualization";
+      arg = null;
+    }
+    {
+      key = "s";
+      action = "shuffle";
+      arg = null;
+    }
+    {
+      key = "a";
+      action = "seekBack";
+      arg = null;
+    }
+    {
+      key = "d";
+      action = "seekForward";
+      arg = null;
+    }
+    {
+      key = "o";
+      action = "sortLibrary";
+      arg = null;
+    }
+    {
+      key = "m";
+      action = "showLyricsPage";
+      arg = null;
+    }
+    {
+      key = "Shift+s";
+      action = "stop";
+      arg = null;
+    }
+    {
+      key = "x";
+      action = "exportPlaylist";
+      arg = null;
+    }
+    {
+      key = ".";
+      action = "addToFavorites_playlist";
+      arg = null;
+    }
+    {
+      key = "u";
+      action = "updateLibrary";
+      arg = null;
+    }
+    {
+      key = "f";
+      action = "moveSongUp";
+      arg = null;
+    }
+    {
+      key = "g";
+      action = "moveSongDown";
+      arg = null;
+    }
+    {
+      key = "Enter";
+      action = "enqueue";
+      arg = null;
+    }
+    {
+      key = "Shift+g";
+      action = "enqueue";
+      arg = null;
+    }
+    {
+      key = "Backspace";
+      action = "clearPlaylist";
+      arg = null;
+    }
+    {
+      key = "Alt+Enter";
+      action = "enqueueAndPlay";
+      arg = null;
+    }
+    {
+      key = "Left";
+      action = "prevSong";
+      arg = null;
+    }
+    {
+      key = "Right";
+      action = "nextSong";
+      arg = null;
+    }
+    {
+      key = "Up";
+      action = "scrollUp";
+      arg = null;
+    }
+    {
+      key = "Down";
+      action = "scrollDown";
+      arg = null;
+    }
+    {
+      key = "F2";
+      action = "showPlaylist";
+      arg = null;
+    }
+    {
+      key = "F3";
+      action = "showLibrary";
+      arg = null;
+    }
+    {
+      key = "F4";
+      action = "showTrack";
+      arg = null;
+    }
+    {
+      key = "F5";
+      action = "showSearch";
+      arg = null;
+    }
+    {
+      key = "F6";
+      action = "showHelp";
+      arg = null;
+    }
+    {
+      key = "PgDn";
+      action = "nextPage";
+      arg = null;
+    }
+    {
+      key = "PgUp";
+      action = "prevPage";
+      arg = null;
+    }
+    {
+      key = "Del";
+      action = "remove";
+      arg = null;
+    }
+    {
+      key = "mouseMiddle";
+      action = "enqueueAndPlay";
+      arg = null;
+    }
+    {
+      key = "mouseRight";
+      action = "playPause";
+      arg = null;
+    }
+    {
+      key = "mouseWheelDown";
+      action = "scrollDown";
+      arg = null;
+    }
+    {
+      key = "mouseWheelUp";
+      action = "scrollUp";
+      arg = null;
+    }
+    {
+      key = "q";
+      action = "quit";
+      arg = null;
+    }
+    {
+      key = "Esc";
+      action = "quit";
+      arg = null;
+    }
+    {
+      key = "Unknown";
+      action = "EVENT_NONE";
+      arg = null;
+    }
   ];
 
 in
@@ -236,7 +443,11 @@ in
       };
 
       replayGainCheckFirst = mkOption {
-        type = types.enum [ 0 1 2 ];
+        type = types.enum [
+          0
+          1
+          2
+        ];
         default = 0;
         description = "Replay gain: 0=track, 1=album, 2=disabled";
       };
@@ -267,7 +478,11 @@ in
 
       # [colors]
       colorMode = mkOption {
-        type = types.enum [ 0 1 2 ];
+        type = types.enum [
+          0
+          1
+          2
+        ];
         default = 0;
         description = "Color mode: 0=16-bit palette, 1=cover-derived, 2=TrueColor theme";
       };
@@ -312,13 +527,22 @@ in
       };
 
       visualizerColorType = mkOption {
-        type = types.enum [ 0 1 2 3 ];
+        type = types.enum [
+          0
+          1
+          2
+          3
+        ];
         default = 2;
         description = "Visualizer color layout: 0=lighten, 1=height-based, 2=reversed, 3=reversed darken";
       };
 
       visualizerBarWidth = mkOption {
-        type = types.enum [ 0 1 2 ];
+        type = types.enum [
+          0
+          1
+          2
+        ];
         default = 2;
         description = "Visualizer bar width: 0=thin, 1=double, 2=auto";
       };
@@ -380,21 +604,32 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+  config = lib.mkMerge [
+    {
+      programs.kew = {
+        enable = lib.mkDefault (config.features.media.enable);
+        musicPath = "~/Music";
+        theme = "catpuccin";
+        settings.colorMode = 2;
+      };
+    }
 
-    # Symlink themes from the package
-    home.file."${configDir}/themes".source = "${cfg.package}/share/kew/themes";
+    (mkIf cfg.enable {
+      home.packages = [ cfg.package ];
 
-    # Generate kewrc
-    home.file."${configDir}/kewrc".text = ''
-      ${toKewINI iniConfig}
+      # Symlink themes from the package
+      home.file."${configDir}/themes".source = "${cfg.package}/share/kew/themes";
 
-      [key bindings]
+      # Generate kewrc
+      home.file."${configDir}/kewrc".text = ''
+        ${toKewINI iniConfig}
 
-      ${keyBindingsText}
+        [key bindings]
 
-      ${cfg.extraConfig}
-    '';
-  };
+        ${keyBindingsText}
+
+        ${cfg.extraConfig}
+      '';
+    })
+  ];
 }

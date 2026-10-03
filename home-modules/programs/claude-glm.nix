@@ -1,5 +1,5 @@
 # claude-glm: Claude Code against Z.AI's GLM API, an endpoint variant of the
-# claude-code roster entry (see ./agents.nix). Part of the multi-provider `ai`
+# claude-code roster entry (see ../agents.nix). Part of the multi-provider `ai`
 # stack (see CONTEXT.md).
 {
   config,

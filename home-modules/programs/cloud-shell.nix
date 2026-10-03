@@ -10,7 +10,10 @@ let
 in
 {
   options.programs.cloudshell = {
-    enable = mkEnableOption "cloudshell utils";
+    enable = mkEnableOption "cloudshell utils" // {
+      default = config.features.dev.enable;
+      defaultText = literalExpression "config.features.dev.enable";
+    };
   };
 
   config = mkIf cfg.enable {

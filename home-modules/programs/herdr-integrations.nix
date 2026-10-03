@@ -25,7 +25,7 @@
 # Claude is the exception and the reason this module exists at all. Its
 # integration is two parts — the hook script, plus a SessionStart registration
 # in ~/.claude/settings.json — and that file is a read-only store path here
-# (see ./claude-settings-file.nix). `herdr integration install claude` writes
+# (see ../claude-settings-file.nix). `herdr integration install claude` writes
 # the script, then dies with "Read-only file system (os error 30)" before
 # registering, leaving a hook that Claude never invokes. `herdr integration
 # status` still calls it "current", because it only stats the script. So the
@@ -152,7 +152,7 @@ let
           | sort > accounted.txt
         if ! ${pkgs.diffutils}/bin/diff -u accounted.txt actual.txt; then
           echo >&2
-          echo "herdr wrote a different set of files than home-modules/herdr-integrations.nix" >&2
+          echo "herdr wrote a different set of files than home-modules/programs/herdr-integrations.nix" >&2
           echo "declares in knownTargets (- missing, + unaccounted). Update it to match." >&2
           exit 1
         fi
@@ -165,7 +165,7 @@ let
           if ! ${pkgs.diffutils}/bin/diff -u wanted.json declared.json; then
             echo >&2
             echo "herdr's Claude hook registration no longer matches mkClaudeRegistration" >&2
-            echo "in home-modules/herdr-integrations.nix. Update it to the 'wanted' side" >&2
+            echo "in home-modules/programs/herdr-integrations.nix. Update it to the 'wanted' side" >&2
             echo "above (the blanked @CMD@ field is ours to choose; nothing else is)." >&2
             exit 1
           fi
