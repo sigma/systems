@@ -5,14 +5,15 @@
     "nix-ltz.7"
   ],
   "blocks": [],
+  "closed_at": "2026-10-03T18:35:11Z",
   "created": "2026-10-03T18:04:46Z",
   "description": "For the 8 paired tools (herdr hunk jjui jujutsu kew television tuicr yt-dlp): fold settings/programs/\u003ctool\u003e.nix into the options module as mkDefault values. Move self-gating tool modules to home-modules/programs/, auto-discovered overlay-style (ADR 0003); infra modules + helpers stay listed. Per-feature package lists move to home-modules/content/\u003cfeature\u003e.nix (+ base.nix). Move caveman/gh-dash/cloudshell wiring out of home-modules/default.nix into their modules. Update CLAUDE.md section 5 + ARCHITECTURE.md with the split rule. No registry guard.",
   "id": "nix-ltz.5",
   "labels": [],
   "parent": "nix-ltz",
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "One module per tool; auto-discover home-modules/programs",
   "type": "task",
-  "updated_at": "2026-10-03T18:24:18Z"
+  "updated_at": "2026-10-03T18:35:11Z"
 }
