@@ -6,14 +6,15 @@
   "blocks": [
     "nix-ltz.7"
   ],
+  "closed_at": "2026-10-03T18:20:40Z",
   "created": "2026-10-03T18:04:46Z",
   "description": "Delete plans/aiProfiles.agents/enableModule/types. ACP ids live on roster entries (claude-acp, gemini) and endpoint variants (claude-glm -\u003e glm-acp-agent); Zed collects ACP ids from active agents. claude-glm defaults on with features.ai inside its own module and owns its sops-secret assertion; claude-firefly enabled only by firefly policy. Keep programs.aiApis; drop aiActiveBackend + backends catalog. Darwin features.llm -\u003e programs.lm-studio (sets user.programs.aiApis.openai-compatible directly). Zed edit-prediction gate reads only aiApis; gemma model + max_output_tokens move into zed-editor settings.",
   "id": "nix-ltz.4",
   "labels": [],
   "parent": "nix-ltz",
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Dissolve the AI catalog/profiles module",
   "type": "task",
-  "updated_at": "2026-10-03T18:11:25Z"
+  "updated_at": "2026-10-03T18:20:40Z"
 }
