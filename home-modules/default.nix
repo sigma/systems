@@ -59,7 +59,7 @@
     # mkForce on the content-feature seam is what keeps them off devboxes.
     ./accounts.nix
     ./agy-hud.nix # enabled with the antigravity-cli roster entry (./agents.nix)
-    ./ai # self-gates config on config.features.ai.enable
+    ./ai-apis.nix # local LLM endpoints by protocol (set by the server module)
     ./caveman-proxy.nix # enabled below on dev hosts
     ./claude-firefly.nix # enabled by policy/firefly.nix (machine.features.firefly)
     ./claude-glm.nix

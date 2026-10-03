@@ -9,6 +9,7 @@
 #   - darwin-modules/apps/agents.nix installs the Homebrew formulae/casks
 #   - settings/programs/agentSkills.nix links skills into every skillDir
 #   - settings/programs/herdr.nix integrates every herdrId
+#   - settings/programs/zed-editor.nix registers every acp id
 #
 # Delivery channels differ per platform on purpose. On darwin, Homebrew tracks
 # these fast-moving agents more closely than nixpkgs; on Linux there is no
@@ -81,6 +82,12 @@ let
           description = "Home-relative directory the agent scans for skills.";
         };
 
+        acp = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          description = "Agent Client Protocol registry id, for editors that host external agents (Zed).";
+        };
+
         herdrId = mkOption {
           type = types.nullOr types.str;
           default = null;
@@ -121,6 +128,7 @@ in
         darwin.cask = "claude-code@latest";
         linux.package = pkgs.master.claude-code;
         skillDir = ".claude/skills";
+        acp = "claude-acp";
         herdrId = "claude";
       };
 
@@ -145,6 +153,7 @@ in
         gate = "ai";
         darwin.brew = "gemini-cli";
         skillDir = ".gemini/skills";
+        acp = "gemini";
       };
 
       # Work-only; enabled by policy (darwin-modules/policy/firefly.nix).

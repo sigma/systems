@@ -36,14 +36,25 @@ let
   fbName = f: if lib.isString f then f else f.family;
   fallbackNames = p: map fbName p.fallbacks;
 
-  ai = config.programs.aiProfiles;
-  zedAgents = lib.filter (p: p.acp != null) ai.agents;
+  # External agents: every enabled roster agent with an ACP id, plus the GLM
+  # endpoint. Zed fetches them from its registry, so they need not be
+  # installed here.
+  acpAgents =
+    lib.pipe config.programs.agents [
+      (lib.filterAttrs (_: a: a.enable && a.acp != null))
+      (lib.mapAttrsToList (_: a: a.acp))
+    ]
+    ++ lib.optional config.programs.claude-glm.enable config.programs.claude-glm.acp;
+
+  # Edit predictions from the local LLM server, when the machine runs one.
+  # The model id is whatever LM Studio's /v1/models reports once loaded
+  # (`curl -s localhost:1234/v1/models | jq`); fetch a GGUF build via its
+  # Discover tab.
+  predictionApi = config.programs.aiApis.openai-compatible or null;
 
   # Devboxes whose parent is this host — surfaced to Zed as ssh_connections
   # so the editor can open remote workspaces against them.
-  myDevboxes = lib.filterAttrs (_: b: b.parentHost == machine.hostKey) (
-    nixConfig.builders or { }
-  );
+  myDevboxes = lib.filterAttrs (_: b: b.parentHost == machine.hostKey) (nixConfig.builders or { });
   devboxSshConnections = lib.mapAttrsToList (name: b: {
     host = if b.alias != null then b.alias else b.name;
     projects = [ ];
@@ -110,33 +121,21 @@ in
       font_weight = profiles.terminal.weight;
     };
 
-    agent_servers = lib.listToAttrs (
-      map (p: {
-        name = p.acp;
-        value = {
-          type = "registry";
-        };
-      }) zedAgents
-    );
+    agent_servers = lib.genAttrs acpAgents (_: {
+      type = "registry";
+    });
 
     ssh_connections = devboxSshConnections;
   }
-  // lib.optionalAttrs (
-    ai.editPredictions != null && config.programs.aiApis ? ${ai.editPredictions.model.api}
-  ) {
-    edit_predictions =
-      let
-        ep = ai.editPredictions;
-        apiUrl = config.programs.aiApis.${ep.model.api};
-      in
-      {
-        provider = "open_ai_compatible_api";
-        open_ai_compatible_api = {
-          api_url = "${apiUrl}/v1/completions";
-          inherit (ep.model) model;
-          prompt_format = ep.model.promptFormat;
-          inherit (ep) max_output_tokens;
-        };
+  // lib.optionalAttrs (predictionApi != null) {
+    edit_predictions = {
+      provider = "open_ai_compatible_api";
+      open_ai_compatible_api = {
+        api_url = "${predictionApi}/v1/completions";
+        model = "google/gemma-4-e4b";
+        prompt_format = "infer";
+        max_output_tokens = 64;
       };
+    };
   };
 }

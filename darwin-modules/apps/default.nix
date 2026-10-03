@@ -16,6 +16,7 @@
     ./kanata
     ./karabiner.nix
     ./kurtosis.nix
+    ./lm-studio.nix
     ./secretive.nix
 
     ./settings

@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  osConfig ? null,
   ...
 }:
 with lib;
@@ -11,7 +12,17 @@ let
 in
 {
   options.programs.claude-glm = {
-    enable = mkEnableOption "Claude Code with GLM API configuration";
+    # Part of the multi-provider `ai` stack (see CONTEXT.md).
+    enable = mkEnableOption "Claude Code with GLM API configuration" // {
+      default = config.features.ai.enable;
+      defaultText = literalExpression "config.features.ai.enable";
+    };
+
+    acp = mkOption {
+      type = types.str;
+      default = "glm-acp-agent";
+      description = "Agent Client Protocol registry id, for editors that host external agents (Zed).";
+    };
 
     secretsDir = mkOption {
       type = types.str;
@@ -45,6 +56,18 @@ in
   };
 
   config = mkIf cfg.enable {
+    # The key is decrypted by sops: in the system config for integrated
+    # home-manager (exposed as osConfig), or by the home sops module in
+    # standalone home-manager.
+    assertions = [
+      {
+        assertion =
+          (osConfig != null && hasAttrByPath [ "sops" "secrets" cfg.secretName ] osConfig)
+          || hasAttrByPath [ "sops" "secrets" cfg.secretName ] config;
+        message = "programs.claude-glm needs sops.secrets.${cfg.secretName}, which is not declared.";
+      }
+    ];
+
     # Ensure claude-code is enabled when claude-glm is enabled
     programs.claude-code.enable = true;
 
