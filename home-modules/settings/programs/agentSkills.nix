@@ -11,13 +11,23 @@
   # add theirs from there (e.g. darwin-modules/apps/antigravity-cli.nix).
   roots = lib.optional config.programs.claude-code.enable ".claude/skills";
 
-  # Matt Pocock's skill collection, shipped by the toolbox. Add more skillsets
-  # by appending plugin packages here. Skipped entirely when no agent is
+  # Skill bundles shipped by the toolbox. Skipped entirely when no agent is
   # installed — reading the manifests is IFD, so it is not free.
   plugins = lib.mkIf (config.programs.agentSkills.roots != [ ]) (
-    [
-      pkgs.toolbox.mattpocock-skills
-    ]
+    # llm-toolchain merges its skill bundles (Matt Pocock's collection,
+    # caveman, ponytail) into one plugin manifest. It only exists where all its
+    # components do (x86_64-linux, aarch64-darwin: qmd constrains it); elsewhere
+    # (aarch64-linux devboxes) take the same bundles individually.
+    (
+      if pkgs.toolbox ? llm-toolchain then
+        [ pkgs.toolbox.llm-toolchain ]
+      else
+        [
+          pkgs.toolbox.mattpocock-skills
+          pkgs.toolbox.caveman-skills
+          pkgs.toolbox.ponytail-skills
+        ]
+    )
     # tuicr's own skills teach agents to drive the review TUI, so they are only
     # worth shipping where tuicr itself is configured (see ../../tuicr.nix).
     # Under herdr the bundle's herdr wrapper is swapped for one that opens

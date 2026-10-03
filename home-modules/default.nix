@@ -55,6 +55,7 @@
     # programs.<name>.enable (set by a policy/feature), so the devbox policy's
     # mkForce on the content-feature seam is what keeps them off devboxes.
     ./accounts.nix
+    ./caveman-proxy.nix # enabled below on dev hosts
     ./agy-hud.nix # enabled by darwin-modules/apps/antigravity-cli.nix
     ./ai # self-gates config on config.features.ai.enable
     ./claude-firefly.nix # enabled by policy/firefly.nix (machine.features.firefly)
@@ -84,6 +85,8 @@
     cloudshell.enable = true;
     gh-dash.enable = true;
   };
+
+  services.caveman-proxy.enable = config.features.dev.enable;
 
   home.packages =
     with pkgs;
@@ -121,6 +124,11 @@
       nix-output-monitor
     ]
     ++ lib.optionals config.features.dev.enable [
+      # LLM tooling bundle from the toolbox: qmd, openspec, agentmemory,
+      # aperture and caveman-proxy (run as a service by ./caveman-proxy.nix).
+      # Its skills are linked by settings/programs/agentSkills.nix.
+      toolbox.llm-toolchain
+
       # build tools
       circleci-cli
       goreleaser
