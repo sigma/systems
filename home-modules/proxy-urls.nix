@@ -2,5 +2,5 @@
 # Centralizes endpoint URLs so they aren't duplicated across
 # claude-firefly.nix, etc.
 {
-  tailscaleProxy = "http://ai.van-scylla.ts.net";
+  tailscaleProxy = "http://aperture";
 }

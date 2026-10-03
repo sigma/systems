@@ -40,7 +40,6 @@ in
       name = "claude-firefly";
       meta.description = "Claude Code via Tailscale AI proxy";
       text = ''
-        export ANTHROPIC_AUTH_TOKEN="sk-tailscale"
         export ANTHROPIC_BASE_URL="${cfg.baseUrl}"
         export API_TIMEOUT_MS="${cfg.timeoutMs}"
 
