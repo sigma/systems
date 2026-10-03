@@ -2,14 +2,15 @@
   "assignee": "unknown",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-10-03T18:08:17Z",
   "created": "2026-10-03T18:04:46Z",
   "description": "vscode gates on features.graphical.enable; ghostty on graphical \u0026\u0026 machine.features.mac. wezterm: delete dead headless/interactive branch, graphical only. interactive stays structural for nixos-modules/desktop.nix only. Keep defaultFeatures (nebula) and hosts.nix structural lists split, comment each pointing at the other. No mechanical GUI check.",
   "id": "nix-ltz.3",
   "labels": [],
   "parent": "nix-ltz",
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Route all GUI content through graphical",
   "type": "task",
-  "updated_at": "2026-10-03T18:06:48Z"
+  "updated_at": "2026-10-03T18:08:17Z"
 }
