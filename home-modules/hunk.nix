@@ -119,17 +119,6 @@ in
       '';
     };
 
-    agentSkill.enable = mkOption {
-      type = types.bool;
-      default = cfg.enable;
-      defaultText = literalExpression "config.programs.hunk.enable";
-      description = ''
-        Register the hunk-shipped SKILL.md with
-        {option}`programs.agentSkills`, so every agent on the machine picks
-        it up. Directory name matches the upstream skill id (the path
-        `hunk skill path` prints).
-      '';
-    };
   };
 
   config = mkIf cfg.enable (mkMerge [
@@ -175,7 +164,7 @@ in
       };
     })
 
-    (mkIf cfg.agentSkill.enable {
+    {
       # Register the shipped skill directory (which holds SKILL.md) rather
       # than symlinking it ourselves, so it lands under every agent's skill
       # root (programs.agentSkills.roots), not just Claude's.
@@ -189,7 +178,7 @@ in
       # string (which that option would instead write as file *text*)
       # works fine as a home.file source, linking the directory reliably.
       programs.agentSkills.skills.hunk-review = "${finalPackage}/skills/hunk-review";
-    })
+    }
 
     # Catppuccin integration: when catppuccin is globally enabled,
     # default the theme to the matching catppuccin-<flavor> variant.

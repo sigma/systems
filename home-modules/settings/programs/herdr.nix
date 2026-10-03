@@ -44,14 +44,6 @@ in
 {
   enable = machine.features.mac || machine.features.nixos;
 
-  # tuicr's agent skill opens the review TUI in a herdr popup, which herdr
-  # only exposes to scripts as a plugin pane (see
-  # overlays/pkg/local/herdr-tuicr-plugin). The matching skill patch lives in
-  # ./agentSkills.nix.
-  plugins = lib.optionalAttrs config.programs.tuicr.enable {
-    tuicr = pkgs.local.herdr-tuicr-plugin;
-  };
-
   # Let each installed roster agent report its state to herdr directly (see
   # home-modules/agents.nix and home-modules/herdr-integrations.nix).
   integrations = lib.pipe config.programs.agents [

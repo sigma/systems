@@ -56,6 +56,9 @@ in
   config = mkIf cfg.enable {
     home.packages = [ cfg.package ];
 
+    # herdr's skills teach agents to drive the multiplexer's panes and sessions.
+    programs.agentSkills.plugins = [ pkgs.toolbox.herdr-skills ];
+
     xdg.configFile."herdr/config.toml".source = tomlFormat.generate "herdr-config.toml" cfg.settings;
 
     # `herdr plugin link` registers a plugin whether or not a server is running
