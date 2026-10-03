@@ -2,13 +2,14 @@
   "assignee": "",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-10-03T18:36:24Z",
   "created": "2026-10-03T18:04:46Z",
   "description": "Seven deepening candidates from the 2026-10-03 architecture review, grilled with the user. Domain terms recorded in CONTEXT.md (Agent roster, floor agent, Endpoint variant, interactive vs graphical).",
   "id": "nix-ltz",
   "labels": [],
   "priority": 2,
-  "status": "open",
+  "status": "closed",
   "title": "Architecture deepening (2026-10-03 review)",
   "type": "epic",
-  "updated_at": "2026-10-03T18:04:46Z"
+  "updated_at": "2026-10-03T18:36:24Z"
 }
