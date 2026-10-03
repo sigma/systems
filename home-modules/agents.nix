@@ -37,6 +37,73 @@ let
     off = false;
   };
 
+  # An endpoint variant (see CONTEXT.md): the agent re-pointed at another API
+  # endpoint, delivered as a `<agent-binary>-<name>` wrapper.
+  endpointType = types.submodule {
+    options = {
+      description = mkOption {
+        type = types.str;
+        description = "One-line description of the wrapper.";
+      };
+      baseUrl = mkOption {
+        type = types.str;
+        description = "API base URL (ANTHROPIC_BASE_URL).";
+      };
+      firstParty = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Whether the endpoint forwards to Anthropic. Claude Code treats any
+          non-Anthropic base URL as third-party, which caps the context window
+          at 200k and inlines every MCP tool schema; set this when first-party
+          behaviour is the truthful one.
+        '';
+      };
+      tokenFile = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "File holding the API token (ANTHROPIC_AUTH_TOKEN), read at launch.";
+      };
+      timeoutMs = mkOption {
+        type = types.nullOr types.ints.positive;
+        default = null;
+        description = "API timeout in milliseconds (API_TIMEOUT_MS).";
+      };
+      env = mkOption {
+        type = types.attrsOf types.str;
+        default = { };
+        description = "Extra variables to export; values are double-quoted shell words, expanded at launch.";
+      };
+      acp = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = "Agent Client Protocol registry id, for editors that host external agents (Zed).";
+      };
+    };
+  };
+
+  mkClaudeEndpoint =
+    name: e:
+    pkgs.writeShellApplication {
+      name = "claude-${name}";
+      meta.description = e.description;
+      text = concatLines (
+        optional (e.tokenFile != null) ''
+          if [[ ! -f "${e.tokenFile}" ]]; then
+            echo "API token not found at: ${e.tokenFile}" >&2
+            echo "Run system-install first to decrypt secrets" >&2
+            exit 1
+          fi
+          export ANTHROPIC_AUTH_TOKEN
+          ANTHROPIC_AUTH_TOKEN=$(cat "${e.tokenFile}")''
+        ++ [ ''export ANTHROPIC_BASE_URL="${e.baseUrl}"'' ]
+        ++ optional e.firstParty "export _CLAUDE_CODE_ASSUME_FIRST_PARTY_BASE_URL=1"
+        ++ optional (e.timeoutMs != null) ''export API_TIMEOUT_MS="${toString e.timeoutMs}"''
+        ++ mapAttrsToList (n: v: ''export ${n}="${v}"'') e.env
+        ++ [ ''exec "${config.programs.claude-code.finalPackage}/bin/claude" "$@"'' ]
+      );
+    };
+
   entryType = types.submodule (
     { config, ... }:
     {
@@ -86,6 +153,12 @@ let
           type = types.nullOr types.str;
           default = null;
           description = "Agent Client Protocol registry id, for editors that host external agents (Zed).";
+        };
+
+        endpoints = mkOption {
+          type = types.attrsOf endpointType;
+          default = { };
+          description = "Endpoint variants of this agent. Only claude-code supports them today.";
         };
 
         herdrId = mkOption {
@@ -173,9 +246,16 @@ in
       package = mkIf (cfg.claude-code.linux.package != null) (mkDefault cfg.claude-code.linux.package);
     };
 
-    home.packages = optionals (!isDarwin) (
-      mapAttrsToList (_: a: a.linux.package) (removeAttrs installed [ "claude-code" ])
-    );
+    home.packages =
+      optionals (!isDarwin) (
+        mapAttrsToList (_: a: a.linux.package) (removeAttrs installed [ "claude-code" ])
+      )
+      ++ optionals cfg.claude-code.enable (mapAttrsToList mkClaudeEndpoint cfg.claude-code.endpoints);
+
+    assertions = mapAttrsToList (n: a: {
+      assertion = n == "claude-code" || a.endpoints == { };
+      message = "programs.agents.${n}.endpoints: endpoint variants are only implemented for claude-code.";
+    }) cfg;
 
     # agy's status-line HUD comes with agy itself.
     programs.agy-hud.enable = mkDefault (installed ? antigravity-cli);

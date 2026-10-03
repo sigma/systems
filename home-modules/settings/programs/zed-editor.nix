@@ -36,15 +36,15 @@ let
   fbName = f: if lib.isString f then f else f.family;
   fallbackNames = p: map fbName p.fallbacks;
 
-  # External agents: every enabled roster agent with an ACP id, plus the GLM
-  # endpoint. Zed fetches them from its registry, so they need not be
-  # installed here.
-  acpAgents =
-    lib.pipe config.programs.agents [
-      (lib.filterAttrs (_: a: a.enable && a.acp != null))
-      (lib.mapAttrsToList (_: a: a.acp))
-    ]
-    ++ lib.optional config.programs.claude-glm.enable config.programs.claude-glm.acp;
+  # External agents: every enabled roster agent, and each of its endpoint
+  # variants, that has an ACP id. Zed fetches them from its registry, so they
+  # need not be installed here.
+  acpAgents = lib.pipe config.programs.agents [
+    (lib.filterAttrs (_: a: a.enable))
+    (lib.mapAttrsToList (_: a: [ a.acp ] ++ lib.mapAttrsToList (_: e: e.acp) a.endpoints))
+    lib.flatten
+    (lib.filter (id: id != null))
+  ];
 
   # Edit predictions from the local LLM server, when the machine runs one.
   # The model id is whatever LM Studio's /v1/models reports once loaded

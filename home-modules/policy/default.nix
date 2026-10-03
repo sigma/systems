@@ -1,15 +1,8 @@
-{ lib, machine, ... }:
+# Policy modules, each gated internally on its machine feature.
 {
-  # Policy modules are gated by machine features. Each entry should be listed
-  # in the bucket whose modules it depends on:
-  #   - unconditional: only references options from always-loaded home-modules
-  #   - workstation-only: references options from modules gated behind
-  #     !machine.features.devbox
   imports = [
-    ./arbora.nix # gates internally on machine.features.arbora; deps always-loaded
-    ./devbox.nix # gates internally on machine.features.devbox
-  ]
-  ++ lib.optionals (!machine.features.devbox) [
-    ./firefly.nix # depends on claude-firefly, claude-glm, gcloud
+    ./arbora.nix # machine.features.arbora
+    ./devbox.nix # machine.features.devbox
+    ./firefly.nix # machine.features.firefly
   ];
 }

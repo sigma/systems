@@ -1,52 +1,24 @@
+# claude-firefly: Claude Code through the tailnet's Aperture gateway, an
+# endpoint variant of the claude-code roster entry (see ./agents.nix).
 {
   config,
-  pkgs,
   lib,
+  machine,
   ...
 }:
-with lib;
 let
-  cfg = config.programs.claude-firefly;
-  claude-code-pkg = config.programs.claude-code.finalPackage;
-  urls = import ./proxy-urls.nix;
+  urls = import ./proxy-urls.nix machine.sharedDomain;
 in
 {
-  options.programs.claude-firefly = {
-    enable = mkEnableOption "Claude Code via Tailscale AI proxy";
+  options.programs.claude-firefly.enable = lib.mkEnableOption "Claude Code via the Tailscale AI proxy";
 
-    baseUrl = mkOption {
-      type = types.str;
-      default = urls.tailscaleProxy;
-      description = "Anthropic API base URL (Tailscale proxy)";
+  config = lib.mkIf config.programs.claude-firefly.enable {
+    programs.agents.claude-code.endpoints.firefly = {
+      description = "Claude Code via Tailscale AI proxy";
+      baseUrl = urls.tailscaleProxy;
+      # Aperture forwards to Anthropic.
+      firstParty = true;
+      timeoutMs = 3000000;
     };
-
-    timeoutMs = mkOption {
-      type = types.str;
-      default = "3000000";
-      description = "API timeout in milliseconds";
-    };
-
-    package = mkOption {
-      type = types.package;
-      readOnly = true;
-      description = "The claude-firefly wrapper package";
-    };
-  };
-
-  config = mkIf cfg.enable {
-    programs.claude-code.enable = true;
-
-    programs.claude-firefly.package = pkgs.writeShellApplication {
-      name = "claude-firefly";
-      meta.description = "Claude Code via Tailscale AI proxy";
-      text = ''
-        export ANTHROPIC_BASE_URL="${cfg.baseUrl}"
-        export API_TIMEOUT_MS="${cfg.timeoutMs}"
-
-        exec "${claude-code-pkg}/bin/claude" "$@"
-      '';
-    };
-
-    home.packages = [ cfg.package ];
   };
 }

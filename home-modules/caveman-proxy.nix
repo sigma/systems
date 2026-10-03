@@ -106,26 +106,6 @@ let
       };
     };
 
-  # `claude` routed through the proxy. The `/w/claude` prefix labels the client
-  # in `caveman-proxy stats` and is stripped before forwarding. The two extra
-  # variables mirror upstream's `caveman wrap claude`: Claude Code treats any
-  # non-Anthropic base URL as third-party, which caps the context window at
-  # 200k and inlines every MCP tool schema; the proxy (and any tailnet gateway
-  # behind it) forwards to Anthropic, so first-party behaviour is the truthful
-  # one.
-  claude-cave = pkgs.writeShellApplication {
-    name = "claude-cave";
-    meta.description = "Claude Code routed through the local caveman-proxy";
-    text = ''
-      export ANTHROPIC_BASE_URL="http://${listen}/w/claude"
-      export _CLAUDE_CODE_ASSUME_FIRST_PARTY_BASE_URL=1
-      export ENABLE_TOOL_SEARCH=auto
-      export NO_PROXY="${cfg.listenHost}''${NO_PROXY:+,$NO_PROXY}"
-      export no_proxy="$NO_PROXY"
-
-      exec "${config.programs.claude-code.finalPackage}/bin/claude" "$@"
-    '';
-  };
 in
 {
   options.services.caveman-proxy = {
@@ -205,9 +185,24 @@ in
   };
 
   config = mkIf cfg.enable (mkMerge [
-    (mkIf config.programs.claude-code.enable {
-      home.packages = [ claude-cave ];
-    })
+    {
+      # `claude` routed through the proxy (an endpoint variant, see
+      # ./agents.nix). The `/w/claude` prefix labels the client in
+      # `caveman-proxy stats` and is stripped before forwarding. The proxy
+      # (and any tailnet gateway behind it) forwards to Anthropic, so
+      # first-party behaviour is the truthful one; ENABLE_TOOL_SEARCH mirrors
+      # upstream's `caveman wrap claude`.
+      programs.agents.claude-code.endpoints.cave = {
+        description = "Claude Code routed through the local caveman-proxy";
+        baseUrl = "http://${listen}/w/claude";
+        firstParty = true;
+        env = {
+          ENABLE_TOOL_SEARCH = "auto";
+          NO_PROXY = "${cfg.listenHost}\${NO_PROXY:+,$NO_PROXY}";
+          no_proxy = "$NO_PROXY";
+        };
+      };
+    }
 
     (mkService {
       name = "caveman-proxy";

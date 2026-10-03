@@ -92,7 +92,9 @@
   services.caveman-proxy = {
     enable = config.features.dev.enable;
     # Send Anthropic traffic through the tailnet's Aperture gateway.
-    anthropicUpstream = lib.mkIf machine.features.tailscale (import ./proxy-urls.nix).aperture;
+    anthropicUpstream = lib.mkIf machine.features.tailscale (
+      (import ./proxy-urls.nix machine.sharedDomain).aperture
+    );
   };
 
   home.packages =

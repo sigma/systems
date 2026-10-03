@@ -82,6 +82,8 @@ in
         builder
         ;
       inherit features;
+      # Domain shared by tailnet hosts (MagicDNS), "" when unset.
+      sharedDomain = cfg.sharedDomain or "";
       # Resolved remotes (see CONTEXT.md) — the raw host.remotes after topology
       # resolution. This is what modules read as `machine.remotes`.
       remotes = resolvedRemotes;
