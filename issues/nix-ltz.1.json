@@ -2,7 +2,8 @@
   "assignee": "",
   "blocked_by": [],
   "blocks": [
-    "nix-ltz.4"
+    "nix-ltz.4",
+    "nix-ltz.6"
   ],
   "created": "2026-10-03T18:04:46Z",
   "description": "Home option tree programs.agents.\u003cname\u003e for the 5 base CLIs: claude-code, pi, opencode, gemini-cli, antigravity-cli. Endpoint wrappers are NOT entries. Each entry: per-platform delivery channel (brew on darwin, pkgs.master on NixOS; keep rationale comments), skillDir, herdr integration id, ACP id, default gate floor|ai|off. claude-code = floor agent (always on; brew cask claude-code@latest on every Mac). Non-floor agents gate on resolved features.ai (devboxes lose pi/opencode). Policy-only agents (agy) default off; firefly policy flips programs.agents.antigravity-cli.enable. darwin/nixos install modules read config.user.programs.agents resolved set. herdr integrations and agentSkills.roots derived from roster; no separate drift guard.",
