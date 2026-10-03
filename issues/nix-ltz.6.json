@@ -3,7 +3,9 @@
   "blocked_by": [
     "nix-ltz.1"
   ],
-  "blocks": [],
+  "blocks": [
+    "nix-ltz.5"
+  ],
   "created": "2026-10-03T18:04:47Z",
   "description": "tuicr module owns the herdr pairing: when tuicr \u0026\u0026 herdr, sets programs.herdr.plugins.tuicr and registers herdr-tuicr-plugin.skills, else tuicr-skills. herdr registers herdr-skills under cfg.enable. Drop hunk agentSkill.enable; skills follow cfg.enable. agentSkills settings shrink to roots (from roster) + llm-toolchain plugin.",
   "id": "nix-ltz.6",
