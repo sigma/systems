@@ -8,14 +8,11 @@
   imports = [
     ./1password.nix
     ./aerospace.nix
-    ./ai.nix
+    ./agents.nix
     ./alfred.nix
-    ./antigravity-cli.nix
     ./antigravity.nix
     ./chrome.nix
-    ./claude-code.nix
     ./cursor.nix
-    ./gemini-cli.nix
     ./kanata
     ./karabiner.nix
     ./kurtosis.nix
@@ -23,8 +20,6 @@
 
     ./settings
   ];
-
-  programs.gemini-cli.enable = true;
 
   homebrew.global.brewfile = true;
 

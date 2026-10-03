@@ -7,7 +7,7 @@ _: {
     # catppuccin.gemini-cli themes home-manager's `programs.gemini-cli`, which
     # upstream renamed to `programs.antigravity-cli` — leaving the module to
     # trip the rename warning on every eval. We install Gemini CLI via Homebrew
-    # (darwin-modules/apps/gemini-cli.nix) and use no home-manager module for
+    # (the gemini-cli roster entry in home-modules/agents.nix) and use no home-manager module for
     # it, so there is nothing to theme here.
     catppuccin.gemini-cli.enable = false;
 

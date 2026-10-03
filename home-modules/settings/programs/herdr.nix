@@ -52,14 +52,12 @@ in
     tuicr = pkgs.local.herdr-tuicr-plugin;
   };
 
-  # Let each agent report its state to herdr directly. List only what this
-  # machine installs: pi comes from Homebrew on darwin and nixpkgs on NixOS
-  # (darwin-modules/apps/ai.nix, nixos-modules/ai.nix), while opencode is
-  # NixOS-only. See home-modules/herdr-integrations.nix.
-  integrations =
-    lib.optional config.programs.claude-code.enable "claude"
-    ++ [ "pi" ]
-    ++ lib.optional machine.features.nixos "opencode";
+  # Let each installed roster agent report its state to herdr directly (see
+  # home-modules/agents.nix and home-modules/herdr-integrations.nix).
+  integrations = lib.pipe config.programs.agents [
+    (lib.filterAttrs (_: a: a.installed && a.herdrId != null))
+    (lib.mapAttrsToList (_: a: a.herdrId))
+  ];
 
   settings = {
     # Skip herdr's first-run notification-setup prompt: notification handling

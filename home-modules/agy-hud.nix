@@ -1,7 +1,7 @@
 # agy-hud — status-line HUD for Google's Antigravity CLI (`agy`).
 #
-# Enabled by darwin-modules/apps/antigravity-cli.nix, which is what installs
-# the CLI itself; the package lives in overlays/pkg/local/agy-hud.nix.
+# Enabled alongside the antigravity-cli roster entry (home-modules/agents.nix),
+# which installs the CLI itself; the package lives in overlays/pkg/local/agy-hud.nix.
 {
   config,
   pkgs,

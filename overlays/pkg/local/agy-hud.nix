@@ -4,7 +4,7 @@
 # a plugin root holding `plugin.json`, `hooks/status-line.sh` and the esbuild
 # bundle `dist/agy-hud.js`. We reproduce that shape under $out/share/agy-hud so
 # the plugin root can be symlinked straight into ~/.gemini/config/plugins (see
-# darwin-modules/apps/antigravity-cli.nix) instead of being copied in with
+# home-modules/agy-hud.nix) instead of being copied in with
 # `agy plugin install`.
 #
 # Two deviations from the archive, both so the plugin works without a global

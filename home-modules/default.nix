@@ -21,6 +21,9 @@
     # declared; inert until some agent registers a skill root. Configured in
     # ./settings/programs/agentSkills.nix.
     ./agent-skills.nix
+    # Agent roster: which AI agents this machine carries and how each is
+    # delivered; skills, herdr and installs derive from it.
+    ./agents.nix
     # Nests ~/.claude/settings.json inside a store *directory* so Claude does
     # not end up watching /nix/store itself. Self-gates on
     # config.programs.claude-code.enable.
@@ -55,7 +58,7 @@
     # programs.<name>.enable (set by a policy/feature), so the devbox policy's
     # mkForce on the content-feature seam is what keeps them off devboxes.
     ./accounts.nix
-    ./agy-hud.nix # enabled by darwin-modules/apps/antigravity-cli.nix
+    ./agy-hud.nix # enabled with the antigravity-cli roster entry (./agents.nix)
     ./ai # self-gates config on config.features.ai.enable
     ./caveman-proxy.nix # enabled below on dev hosts
     ./claude-firefly.nix # enabled by policy/firefly.nix (machine.features.firefly)

@@ -167,7 +167,6 @@ in
     # Static option paths (not `programs.${m}.enable`) — dynamic keys here
     # confuse home-manager's freeformType resolution and trigger an infinite
     # recursion when other modules read aiProfiles.
-    programs.claude-code.enable = mkIf (elem "claude-code" enableModules) true;
     programs.claude-firefly.enable = mkIf (elem "claude-firefly" enableModules) true;
     programs.claude-glm.enable = mkIf (elem "claude-glm" enableModules) true;
 

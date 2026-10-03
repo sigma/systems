@@ -7,9 +7,11 @@
   ...
 }:
 {
-  # Claude Code's own skill directory. Agents installed by a darwin/nixos module
-  # add theirs from there (e.g. darwin-modules/apps/antigravity-cli.nix).
-  roots = lib.optional config.programs.claude-code.enable ".claude/skills";
+  # Every installed roster agent's skill directory (see ../../agents.nix).
+  roots = lib.pipe config.programs.agents [
+    (lib.filterAttrs (_: a: a.installed && a.skillDir != null))
+    (lib.mapAttrsToList (_: a: a.skillDir))
+  ];
 
   # Skill bundles shipped by the toolbox. Skipped entirely when no agent is
   # installed — reading the manifests is IFD, so it is not free.

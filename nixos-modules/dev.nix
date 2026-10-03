@@ -17,15 +17,6 @@
     '';
   };
 
-  user.programs.claude-code = {
-    enable = true;
-    package = pkgs.master.claude-code;
-
-    agents = {
-
-    };
-  };
-
   user.home.packages = with pkgs; [
     # gcc
   ];

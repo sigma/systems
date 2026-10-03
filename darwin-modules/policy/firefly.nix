@@ -27,12 +27,9 @@ with lib;
       }
     ];
 
-    # Enable darwin-level claude-code module (installs via homebrew, provides wrapper)
-    programs.claude-code.enable = true;
-
-    # Antigravity CLI (`agy`), which shares Claude Code's skills — see
-    # ../apps/antigravity-cli.nix.
-    programs.antigravity-cli.enable = true;
+    # Antigravity CLI (`agy`), a policy-gated roster agent (see
+    # home-modules/agents.nix); it shares the same skill set as Claude Code.
+    user.programs.agents.antigravity-cli.enable = true;
 
     homebrew.casks = [
       "linear"
