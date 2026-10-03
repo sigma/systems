@@ -1,0 +1,14 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-10-03T18:36:24Z",
+  "description": "nix eval .#homeConfigurations.shirka.config.programs.vscode.enable (also ash-devbox) fails with: error: The option `sops' does not exist (while evaluating config.home-manager.users.yann). Pre-existing: reproduces at e05299be, before epic nix-ltz. The nixosConfigurations.\u003chost\u003e.config.home-manager.users.yann path evaluates fine, so standalone home-manager on NixOS hosts is broken while the integrated one works. Darwin standalone (homeConfigurations.ash) unaffected.",
+  "id": "nix-g2d",
+  "labels": [],
+  "priority": 2,
+  "status": "open",
+  "title": "Standalone NixOS homeConfigurations fail to evaluate (sops option missing)",
+  "type": "bug",
+  "updated_at": "2026-10-03T18:36:24Z"
+}
