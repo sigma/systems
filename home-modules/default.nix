@@ -55,9 +55,9 @@
     # programs.<name>.enable (set by a policy/feature), so the devbox policy's
     # mkForce on the content-feature seam is what keeps them off devboxes.
     ./accounts.nix
-    ./caveman-proxy.nix # enabled below on dev hosts
     ./agy-hud.nix # enabled by darwin-modules/apps/antigravity-cli.nix
     ./ai # self-gates config on config.features.ai.enable
+    ./caveman-proxy.nix # enabled below on dev hosts
     ./claude-firefly.nix # enabled by policy/firefly.nix (machine.features.firefly)
     ./claude-glm.nix
     ./cloud-shell.nix
@@ -89,7 +89,7 @@
   services.caveman-proxy = {
     enable = config.features.dev.enable;
     # Send Anthropic traffic through the tailnet's Aperture gateway.
-    anthropicUpstream = lib.mkIf machine.features.tailscale "aperture:80";
+    anthropicUpstream = lib.mkIf machine.features.tailscale (import ./proxy-urls.nix).aperture;
   };
 
   home.packages =

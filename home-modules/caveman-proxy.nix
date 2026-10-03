@@ -20,9 +20,10 @@
 # Tailnet upstreams. caveman's outbound SSRF guard refuses 100.64.0.0/10 and
 # ULA addresses with no allowlist escape — i.e. every Tailscale address — but
 # lets an explicitly allowlisted loopback port through. So
-# {option}`anthropicUpstream` runs a socat relay on {option}`relayListen` to the
-# tailnet host and points caveman's Anthropic provider at the relay. The relay
-# dials from this machine, so the gateway still sees this node's identity.
+# {option}`anthropicUpstream` runs a socat relay on
+# {option}`relayHost`:{option}`relayPort` to the tailnet host and points
+# caveman's Anthropic provider at the relay. The relay dials from this machine,
+# so the gateway still sees this node's identity.
 {
   config,
   lib,
@@ -36,18 +37,37 @@ let
 
   logDir = "${config.home.homeDirectory}/Library/Logs";
 
+  # `host:port`, bracketing IPv6 literals.
+  hostPort =
+    host: port: if hasInfix ":" host then "[${host}]:${toString port}" else "${host}:${toString port}";
+
+  listen = hostPort cfg.listenHost cfg.listenPort;
+  relay = hostPort cfg.relayHost cfg.relayPort;
+
+  # socat needs TCP6 and a bracketed bind address for an IPv6 relay host.
+  relayIsV6 = hasInfix ":" cfg.relayHost;
+  relayProto = if relayIsV6 then "TCP6" else "TCP";
+  relayBind = if relayIsV6 then "[${cfg.relayHost}]" else cfg.relayHost;
+
+  # Neither port is authenticated, so both stay on loopback.
+  loopbackHost =
+    types.addCheck types.str (h: h == "localhost" || h == "::1" || hasPrefix "127." h)
+    // {
+      description = "loopback host (localhost, ::1 or 127.0.0.0/8)";
+    };
+
   # launchd agents get no reliable $HOME, so the state dir is always explicit.
   # The listen address is passed too, so the service and the wrapper below
   # cannot disagree on it.
   environment = {
     CAVEMAN_HOME = cfg.stateDir;
-    CAVEMAN_LISTEN = cfg.listen;
+    CAVEMAN_LISTEN = listen;
   }
   // optionalAttrs (cfg.settings != { }) {
     CAVEMAN_CONFIG = toString (yamlFormat.generate "caveman.yaml" cfg.settings);
   }
   // optionalAttrs (cfg.anthropicUpstream != null) {
-    CAVE_SSRF_ALLOWLIST = cfg.relayListen;
+    CAVE_SSRF_ALLOWLIST = relay;
   };
 
   # One long-running user service, on whichever init system this host has.
@@ -86,9 +106,6 @@ let
       };
     };
 
-  relayPort = last (splitString ":" cfg.relayListen);
-  relayHost = head (splitString ":" cfg.relayListen);
-
   # `claude` routed through the proxy. The `/w/claude` prefix labels the client
   # in `caveman-proxy stats` and is stripped before forwarding. The two extra
   # variables mirror upstream's `caveman wrap claude`: Claude Code treats any
@@ -100,17 +117,15 @@ let
     name = "claude-cave";
     meta.description = "Claude Code routed through the local caveman-proxy";
     text = ''
-      export ANTHROPIC_BASE_URL="http://${cfg.listen}/w/claude"
+      export ANTHROPIC_BASE_URL="http://${listen}/w/claude"
       export _CLAUDE_CODE_ASSUME_FIRST_PARTY_BASE_URL=1
       export ENABLE_TOOL_SEARCH=auto
-      export NO_PROXY="${listenHost}''${NO_PROXY:+,$NO_PROXY}"
+      export NO_PROXY="${cfg.listenHost}''${NO_PROXY:+,$NO_PROXY}"
       export no_proxy="$NO_PROXY"
 
       exec "${config.programs.claude-code.finalPackage}/bin/claude" "$@"
     '';
   };
-
-  listenHost = head (splitString ":" cfg.listen);
 in
 {
   options.services.caveman-proxy = {
@@ -123,14 +138,20 @@ in
       description = "Package providing {command}`bin/caveman-proxy`.";
     };
 
-    listen = mkOption {
-      type = types.str;
-      default = "127.0.0.1:8787";
+    listenHost = mkOption {
+      type = loopbackHost;
+      default = "127.0.0.1";
       description = ''
-        Loopback `host:port` the proxy listens on ({env}`CAVEMAN_LISTEN`) and
-        `claude-cave` connects to. A non-loopback address additionally needs
-        {env}`CAVEMAN_AUTH_TOKEN`, which this module does not provision.
+        Loopback host the proxy listens on ({env}`CAVEMAN_LISTEN`) and
+        `claude-cave` connects to. Restricted to loopback: a reachable proxy
+        needs {env}`CAVEMAN_AUTH_TOKEN`, which this module does not provision.
       '';
+    };
+
+    listenPort = mkOption {
+      type = types.port;
+      default = 8787;
+      description = "Port the proxy listens on.";
     };
 
     stateDir = mkOption {
@@ -152,6 +173,8 @@ in
       description = ''
         caveman.yaml contents, passed as {env}`CAVEMAN_CONFIG`. When empty,
         caveman reads {file}`caveman.yaml` from {option}`stateDir` if present.
+        Setting {option}`anthropicUpstream` makes this non-empty, so that file
+        is then ignored: put its contents here instead.
       '';
     };
 
@@ -162,14 +185,22 @@ in
       description = ''
         Plain-HTTP `host:port` of a tailnet gateway to send Anthropic traffic
         to instead of api.anthropic.com, reached through a loopback relay on
-        {option}`relayListen` (see the header comment for why).
+        {option}`relayHost`:{option}`relayPort` (see the header comment for
+        why). Sets {option}`settings`, so {file}`caveman.yaml` in
+        {option}`stateDir` is no longer read.
       '';
     };
 
-    relayListen = mkOption {
-      type = types.str;
-      default = "127.0.0.1:8789";
-      description = "Loopback `host:port` for the {option}`anthropicUpstream` relay.";
+    relayHost = mkOption {
+      type = loopbackHost;
+      default = "127.0.0.1";
+      description = "Loopback host for the {option}`anthropicUpstream` relay.";
+    };
+
+    relayPort = mkOption {
+      type = types.port;
+      default = 8789;
+      description = "Port for the {option}`anthropicUpstream` relay.";
     };
   };
 
@@ -187,14 +218,14 @@ in
 
     (mkIf (cfg.anthropicUpstream != null) (mkMerge [
       {
-        services.caveman-proxy.settings.providers.anthropic.base_url = "http://${cfg.relayListen}";
+        services.caveman-proxy.settings.providers.anthropic.base_url = "http://${relay}";
       }
       (mkService {
         name = "caveman-relay";
         description = "Loopback relay from caveman-proxy to ${cfg.anthropicUpstream}";
         args = [
           "${pkgs.socat}/bin/socat"
-          "TCP-LISTEN:${relayPort},bind=${relayHost},reuseaddr,fork"
+          "${relayProto}-LISTEN:${toString cfg.relayPort},bind=${relayBind},reuseaddr,fork"
           "TCP:${cfg.anthropicUpstream}"
         ];
       })
