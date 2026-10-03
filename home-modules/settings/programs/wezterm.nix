@@ -6,9 +6,6 @@
   ...
 }:
 let
-  # Interactive = has a GUI (Mac or NixOS with desktop)
-  interactive = machine.features.mac || machine.features.interactive;
-
   weztermConfig = pkgs.local.wezterm-config;
 
   # Generate SSH domains from the machine's resolved remotes (see CONTEXT.md).
@@ -71,11 +68,7 @@ in
 {
   inherit (config.features.graphical) enable;
 
-  # Use headless variant on non-interactive machines (just the mux server)
-  package = if interactive then pkgs.wezterm else pkgs.wezterm-headless;
-
-  # Only apply full config on interactive machines
-  extraConfig = lib.optionalString interactive ''
+  extraConfig = ''
     local wezterm = require('wezterm')
     package.path = package.path .. ";${weztermConfig}/?.lua;${weztermConfig}/?/init.lua"
 

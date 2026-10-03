@@ -2,13 +2,9 @@ args@{
   config,
   pkgs,
   lib,
-  machine,
   ...
 }:
 let
-  # Only install on machines with a GUI
-  interactive = machine.features.mac || machine.features.interactive;
-
   profiles = config.programs.fontProfiles;
   fbName = f: if lib.isString f then f else f.family;
   joinFamilies = p: lib.concatStringsSep ", " ([ p.family.family ] ++ map fbName p.fallbacks);
@@ -40,7 +36,7 @@ let
     }).config;
 in
 {
-  enable = interactive;
+  inherit (config.features.graphical) enable;
   mutableExtensionsDir = true;
 
   profiles.default = makeProfile [

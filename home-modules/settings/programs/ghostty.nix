@@ -35,7 +35,8 @@ let
     .${toString w} or "Regular";
 in
 {
-  enable = machine.features.mac;
+  # Cask-only, hence the platform guard alongside the GUI axis.
+  enable = config.features.graphical.enable && machine.features.mac;
   package = null; # provided by the Homebrew cask on darwin
 
   settings = {

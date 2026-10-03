@@ -18,6 +18,9 @@ let
       ;
     stateVersion = "25.11";
   };
+  # Framework-intrinsic structural features (platform, management, desktop).
+  # Repo-specific structural features are declared in modules/hosts.nix
+  # (`nebula.features`); content features come from the registry.
   defaultFeatures = [
     "managed"
     "linux"

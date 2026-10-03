@@ -38,7 +38,9 @@ let
 in
 {
   # Structural features (read before config / outside home scope) listed here;
-  # content features come from the registry.
+  # content features come from the registry. Framework-intrinsic structural
+  # features (managed, mac, linux, nixos, interactive, laptop) are declared by
+  # the nebula module itself (modules/nebula/default.nix `defaultFeatures`).
   nebula.features = [
     "work" # generic work feature
     "firefly" # specifically for firefly engineering
