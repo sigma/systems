@@ -6,10 +6,21 @@
 # installs the same bundle), so the service and the `caveman-proxy` on PATH are
 # one pin and `caveman-proxy stats` / `status` read the same state.
 #
-# Defaults are upstream's: listen on 127.0.0.1:8787, record mode (byte-for-byte
-# pass-through; metadata and token counts only, no request bodies on disk),
-# state in ~/.caveman (caveman.db, proxy.log). Configuration comes from
-# {option}`settings` (caveman.yaml schema), e.g. `mode = "compress"`.
+# Listens on 127.0.0.1:8787 with state in ~/.caveman (caveman.db, proxy.log),
+# upstream's defaults. Configuration comes from {option}`settings` (caveman.yaml
+# schema).
+#
+# Compress mode. {option}`settings` defaults `mode` to "compress" (upstream's
+# default is "record": byte-for-byte pass-through, metadata only). The proxy
+# shortens fresh tool results, lossily, and keeps each original in
+# ~/.caveman/ccr.db under a ccr_… handle; it only does so when the model can
+# fetch originals back through the `caveman_retrieve` MCP tool. `claude-cave`
+# therefore registers caveman-mcp (same llm-toolchain bundle, so the proxy and
+# the MCP server share one pin and one ccr.db format) as the `caveman` server.
+# ENABLE_TOOL_SEARCH defers MCP tool schemas, so the request does not always
+# list that tool; CAVEMAN_RECOVERY=mcp asserts it out of band instead. That
+# assertion holds only while every client of the proxy registers caveman-mcp,
+# which today means `claude-cave` alone. Record mode drops both.
 #
 # Running the service routes nothing through it on its own. Agents opt in per
 # invocation: `claude-cave` (installed alongside claude-code) is `claude` pointed
@@ -43,6 +54,19 @@ let
     host: port: if hasInfix ":" host then "[${host}]:${toString port}" else "${host}:${toString port}";
 
   listen = hostPort cfg.listenHost cfg.listenPort;
+
+  compress = cfg.settings.mode or "record" == "compress";
+
+  # The recovery server must open the proxy's ccr.db, so it gets the same
+  # CAVEMAN_HOME.
+  mcpConfig = pkgs.writeText "caveman-mcp.json" (
+    builtins.toJSON {
+      mcpServers.caveman = {
+        command = "${cfg.package}/bin/caveman-mcp";
+        env.CAVEMAN_HOME = cfg.stateDir;
+      };
+    }
+  );
   relay = hostPort cfg.relayHost cfg.relayPort;
 
   # socat needs TCP6 and a bracketed bind address for an IPv6 relay host.
@@ -69,6 +93,9 @@ let
   }
   // optionalAttrs (cfg.anthropicUpstream != null) {
     CAVE_SSRF_ALLOWLIST = relay;
+  }
+  // optionalAttrs compress {
+    CAVEMAN_RECOVERY = "mcp";
   };
 
   # One long-running user service, on whichever init system this host has.
@@ -119,7 +146,7 @@ in
       type = types.package;
       default = pkgs.toolbox.llm-toolchain;
       defaultText = literalExpression "pkgs.toolbox.llm-toolchain";
-      description = "Package providing {command}`bin/caveman-proxy`.";
+      description = "Package providing {command}`bin/caveman-proxy` and {command}`bin/caveman-mcp`.";
     };
 
     listenHost = mkOption {
@@ -152,13 +179,13 @@ in
       inherit (yamlFormat) type;
       default = { };
       example = {
-        mode = "compress";
+        mode = "record";
       };
       description = ''
-        caveman.yaml contents, passed as {env}`CAVEMAN_CONFIG`. When empty,
-        caveman reads {file}`caveman.yaml` from {option}`stateDir` if present.
-        Setting {option}`anthropicUpstream` makes this non-empty, so that file
-        is then ignored: put its contents here instead.
+        caveman.yaml contents, passed as {env}`CAVEMAN_CONFIG`. `mode`
+        defaults to "compress" (see the header comment), so this is never
+        empty and {file}`caveman.yaml` in {option}`stateDir` is not read:
+        put its contents here instead.
       '';
     };
 
@@ -176,8 +203,7 @@ in
         Plain-HTTP `host:port` of a tailnet gateway to send Anthropic traffic
         to instead of api.anthropic.com, reached through a loopback relay on
         {option}`relayHost`:{option}`relayPort` (see the header comment for
-        why). Sets {option}`settings`, so {file}`caveman.yaml` in
-        {option}`stateDir` is no longer read.
+        why). Sets {option}`settings`.providers.anthropic.base_url.
       '';
     };
 
@@ -196,6 +222,8 @@ in
 
   config = mkIf cfg.enable (mkMerge [
     {
+      services.caveman-proxy.settings.mode = mkDefault "compress";
+
       # `claude` routed through the proxy (an endpoint variant, see
       # ../agents.nix). The `/w/claude` prefix labels the client in
       # `caveman-proxy stats` and is stripped before forwarding. The proxy
@@ -211,6 +239,9 @@ in
           NO_PROXY = "${cfg.listenHost}\${NO_PROXY:+,$NO_PROXY}";
           no_proxy = "$NO_PROXY";
         };
+        # `=` form: --mcp-config takes several values and would swallow a
+        # positional prompt.
+        args = optional compress "--mcp-config=${mcpConfig}";
       };
     }
 

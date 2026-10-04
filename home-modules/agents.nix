@@ -74,6 +74,11 @@ let
         default = { };
         description = "Extra variables to export; values are double-quoted shell words, expanded at launch.";
       };
+      args = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = "Arguments passed to the agent ahead of the user's own.";
+      };
       acp = mkOption {
         type = types.nullOr types.str;
         default = null;
@@ -100,7 +105,9 @@ let
         ++ optional e.firstParty "export _CLAUDE_CODE_ASSUME_FIRST_PARTY_BASE_URL=1"
         ++ optional (e.timeoutMs != null) ''export API_TIMEOUT_MS="${toString e.timeoutMs}"''
         ++ mapAttrsToList (n: v: ''export ${n}="${v}"'') e.env
-        ++ [ ''exec "${config.programs.claude-code.finalPackage}/bin/claude" "$@"'' ]
+        ++ [
+          ''exec "${config.programs.claude-code.finalPackage}/bin/claude" ${escapeShellArgs e.args} "$@"''
+        ]
       );
     };
 
