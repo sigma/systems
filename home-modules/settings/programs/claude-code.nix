@@ -173,11 +173,10 @@ in
 {
   # Gate on enable so hosts without claude-code don't emit a stray settings.json.
   settings = lib.mkIf config.programs.claude-code.enable {
-    # Prefer our own curated skillsets (see ./agentSkills.nix) over the CLI's
-    # bundled ones; bundled built-ins stay typable as slash commands but are
-    # hidden from the model, avoiding name clashes with our skills (e.g.
-    # code-review).
-    disableBundledSkills = true;
+    # Keep the CLI's bundled skills and workflows: /doctor prompt-audit needs
+    # the bundled claude-api skill, and skillOverrides cannot re-enable a
+    # single skill while disableBundledSkills is true.
+    disableBundledSkills = false;
 
     # Driven from Nix, not claude.ai — turn off the remote-control channel,
     # claude.ai MCP connectors, and the Artifact tool that publishes session
