@@ -10,6 +10,9 @@ When I correct you or state a preference, classify it before saving:
 
 - **General principle** (would hold in any of my repos) → propose an edit to this
   file, `~/.claude/CLAUDE.md`.
+  It is a symlink into my nix repo (`~/.config/nix/home-modules/claude/context.md`).
+  Make the edit as its own jj change there (`jj new` first, describe it after), so
+  it doesn't land in whatever change that repo currently has open.
 - **Project-specific** (about this codebase's architecture, conventions, or goals) →
   propose an edit to the repo's `./CLAUDE.md`.
 
