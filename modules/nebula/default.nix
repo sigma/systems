@@ -70,6 +70,11 @@ let
         default = { };
         description = "Map of host key -> primary user SSH public key (for cross-host authorization)";
       };
+      signingKeys = mkOption {
+        type = types.attrsOf types.str;
+        default = { };
+        description = "Map of host key -> SSH commit signing public key (for verifying any host's commits)";
+      };
     };
   };
 in
@@ -174,6 +179,12 @@ in
         userPublicKeys = lib.mapAttrs (_: m: m.userSshPublicKey) (
           lib.filterAttrs (_: m: m.userSshPublicKey != null) machines
         );
+
+        # Per-host commit signing public keys (only hosts that declared one), so
+        # every host can verify commits made on any of the others
+        signingKeys = lib.mapAttrs (_: m: m.signingKey) (
+          lib.filterAttrs (_: m: m.signingKey != null) machines
+        );
       in
       {
         # make sure the predefined features are always included
@@ -184,6 +195,9 @@ in
 
         # Per-host user SSH public keys for cross-host authorization
         nebula.nixConfig.userPublicKeys = userPublicKeys;
+
+        # Per-host signing keys, so every host can verify the others' commits
+        nebula.nixConfig.signingKeys = signingKeys;
 
         # Add builder store keys to trusted-public-keys
         nebula.nixConfig.trusted-public-keys = lib.mkAfter builderStoreKeys;

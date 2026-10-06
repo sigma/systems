@@ -27,6 +27,7 @@
     # not end up watching /nix/store itself.
     ./claude-settings-file.nix
     ./claude-statusline.nix # composable statusline (voice.nix adds a segment)
+    ./commit-signing.nix # signing key + allowed-signers shared by git and jj
     ./editors
     ./features.nix # declares options.features.<n>.enable (content-feature seam)
     ./fonts

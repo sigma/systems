@@ -75,6 +75,7 @@ in
         alias
         u2fKeys
         signingKey
+        signingKeyFile
         userSshPublicKey
         enableSwap
         bootLabel

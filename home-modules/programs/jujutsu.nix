@@ -3,7 +3,6 @@
   lib,
   pkgs,
   user,
-  machine,
   ...
 }:
 with lib;
@@ -162,10 +161,13 @@ in
               private-commits = "description(glob:'wip:*') | description(glob:'private:*')";
             };
 
-            signing = lib.optionalAttrs (machine.signingKey != null) {
-              key = machine.signingKey;
+            # Which key signs and which keys verify: see
+            # home-modules/commit-signing.nix.
+            signing = lib.optionalAttrs config.programs.commitSigning.enable {
+              key = config.programs.commitSigning.key;
               behavior = "own";
               backend = "ssh";
+              backends.ssh.allowed-signers = config.programs.commitSigning.allowedSignersFile;
             };
 
             aliases = {

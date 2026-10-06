@@ -96,7 +96,29 @@ rec {
       signingKey = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = "The SSH signing key for git commits";
+        description = ''
+          The host's SSH signing *public* key, in `authorized_keys` form. This is
+          the identity recorded for this host: every managed host's key is
+          collected into `nixConfig.signingKeys` to build the allowed-signers
+          list each host verifies against, so record it even when the host signs
+          through `signingKeyFile`.
+        '';
+      };
+
+      signingKeyFile = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = ''
+          Path to the *private* key this host signs with, enabling agentless
+          signing: `ssh-keygen -Y sign` reads the file directly, so git and jj
+          sign in contexts that never see an `SSH_AUTH_SOCK` (headless shells,
+          devshells, agents). A leading `~/` is expanded against the user's home.
+
+          Leave null when the private half is not a file the host can read — a
+          hardware token, say — in which case signing falls back to handing the
+          `signingKey` literal to `ssh-keygen`, which then needs an ssh-agent
+          holding the match.
+        '';
       };
 
       userSshPublicKey = mkOption {

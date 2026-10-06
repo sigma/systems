@@ -164,6 +164,10 @@ in
         ++ sharedContent;
         enableSwap = false;
         bootLabel = "boot";
+        # Signs from the on-disk key rather than an agent: shirka runs headless
+        # work (devshells, build agents) that never inherits an SSH_AUTH_SOCK.
+        signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILbZS09DanZ4ArNLX+MXF2vh468WWkpPWz4EDkkIWFoJ yann@shirka";
+        signingKeyFile = "~/.ssh/id_ed25519";
         builder = mkBuilder {
           maxJobs = 4;
           sshUser = "nixbuilder";

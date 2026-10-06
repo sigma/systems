@@ -1,8 +1,13 @@
 {
   config,
+  lib,
   user,
   ...
 }:
+let
+  # Which key signs and which keys verify: see home-modules/commit-signing.nix.
+  signing = config.programs.commitSigning;
+in
 {
   enable = true;
 
@@ -193,8 +198,21 @@
           format = "ssh";
         };
         "gpg.ssh" = {
-          defaultKeyCommand = "sh -c 'echo key::$(ssh-add -L)'";
+          # Only consulted when user.signingKey is unset, i.e. on hosts that
+          # declared no signing key of their own. `head -1` is load-bearing:
+          # ssh-add -L prints one line per key and the substitution collapses
+          # the newlines, so an agent holding two keys would otherwise yield a
+          # single malformed `key::<key1> <key2>`.
+          defaultKeyCommand = "sh -c 'echo key::$(ssh-add -L | head -1)'";
+        }
+        // lib.optionalAttrs signing.enable {
+          inherit (signing) allowedSignersFile;
         };
+      }
+      // lib.optionalAttrs signing.enable {
+        user.signingKey = signing.key;
+        commit.gpgsign = true;
+        tag.gpgsign = true;
       };
       contentSuffix = "signing";
     }
