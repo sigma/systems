@@ -1,0 +1,14 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-10-06T16:30:28Z",
+  "description": "Running 'pre-commit run' on any touched files fails regardless of the change:\n- markdownlint: MD013 (80-col line length) fires on existing docs (e.g. 21 hits in AGENTS.md) and on the reflowed-prose style the repo uses; mdformat (treefmt) keeps long lines, so the two hooks disagree.\n- statix: reports pre-existing warnings in unrelated files (jjui.nix, kew.nix, yt-dlp.nix, ssh.nix, jujutsu.nix, television.nix, herdr.nix, tuicr.nix, settings/manual/manpages.nix).\nEither fix the warnings and configure MD013 to match the repo's prose style, or the hooks are noise that hide real failures. Found while adding home-modules/claude-context.md.",
+  "id": "nix-be2",
+  "labels": [],
+  "priority": 2,
+  "status": "open",
+  "title": "pre-commit markdownlint and statix hooks fail on pre-existing files",
+  "type": "bug",
+  "updated_at": "2026-10-06T16:30:28Z"
+}
