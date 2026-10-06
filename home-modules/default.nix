@@ -26,6 +26,7 @@
     # Nests ~/.claude/settings.json inside a store *directory* so Claude does
     # not end up watching /nix/store itself.
     ./claude-settings-file.nix
+    ./claude # ~/.claude/CLAUDE.md, live-editable on nix-checkout hosts
     ./claude-statusline.nix # composable statusline (voice.nix adds a segment)
     ./commit-signing.nix # signing key + allowed-signers shared by git and jj
     ./editors

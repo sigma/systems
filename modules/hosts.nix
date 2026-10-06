@@ -53,6 +53,7 @@ in
     "llm" # for local LLM inference (provider chosen per-platform)
     "voice" # SuperWhisper voice integration for Claude Code (Mac-only)
     "nehalem" # CPU is pre-Haswell x86_64 (lacks AVX2)
+    "nix-checkout" # this repo is checked out at ~/.config/nix (live-editable agent context)
   ]
   ++ contentFeatures;
 
@@ -82,6 +83,7 @@ in
         features = [
           "determinate"
           "managed"
+          "nix-checkout"
           "mac"
           "music"
           "firefly"
@@ -113,6 +115,7 @@ in
         ];
         features = [
           "managed"
+          "nix-checkout"
           "laptop"
           "mac"
           "work"
@@ -153,6 +156,7 @@ in
         ];
         features = [
           "managed"
+          "nix-checkout"
           "nixos"
           "interactive"
           "work"
