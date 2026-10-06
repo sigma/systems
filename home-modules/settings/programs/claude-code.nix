@@ -31,6 +31,24 @@ let
   # at the workspace. Every diagnostic goes to stderr. Because the last path
   # component is the slug, WorktreeRemove recovers the name from
   # basename(worktree_path). See ADR 0004.
+
+  # Skills to ask for at the start of every session. They are wanted, not
+  # guaranteed: each one only ships if the plugin providing it is installed and
+  # `programs.agentSkills.exclude` hasn't dropped it, so we intersect against
+  # the resolved skill set rather than naming them blind. Asking for a skill
+  # that isn't on disk would send the agent hunting for a tool it can't invoke.
+  defaultSkills = [
+    "ponytail"
+    "caveman"
+  ];
+  availableSkills = lib.filter (s: config.programs.agentSkills.skills ? ${s}) defaultSkills;
+
+  sessionSkillPrompt = "Invoke the ${lib.concatStringsSep " and " availableSkills} skill${
+    lib.optionalString (lib.length availableSkills > 1) "s"
+  } before doing anything else, and keep ${
+    if lib.length availableSkills > 1 then "them" else "it"
+  } in force for the rest of this session.";
+
   worktreeCreate = pkgs.writeShellApplication {
     name = "claude-worktree-create";
     runtimeInputs = [
@@ -222,6 +240,25 @@ in
     # (generous timeout guards against a cold FS, though jj workspace add is
     # sub-second); remove is fire-and-forget cleanup.
     hooks = {
+      # Skills that should be in force for every session (`defaultSkills`
+      # above). Injected as fresh context at session start rather than written
+      # into CLAUDE.md, where the instruction would compete with every other
+      # rule in the file. This is still a prompt, not a gate: a hook cannot
+      # invoke the Skill tool, so it asks rather than enforces. No matcher —
+      # fires on startup, resume, clear and compact alike, so the instruction
+      # survives a context reset. Omitted entirely when none of the skills are
+      # installed, so no empty hook reaches settings.json.
+      SessionStart = lib.mkIf (availableSkills != [ ]) [
+        {
+          hooks = [
+            {
+              type = "command";
+              command = "echo ${lib.escapeShellArg sessionSkillPrompt}";
+            }
+          ];
+        }
+      ];
+
       WorktreeCreate = [
         {
           hooks = [
