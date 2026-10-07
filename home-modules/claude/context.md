@@ -86,3 +86,18 @@ the front-end is my choice.
   repo's `CLAUDE.md` may override this for cross-repo refs). `#N` only
   autolinks issues and PRs; Dependabot alerts, GHSAs, advisories, Actions runs
   and Discussions need full URLs.
+
+## Epics on GitHub
+
+- An epic is a **native sub-issue parent**, not a markdown convention. Link each
+  child with `gh api --method POST repos/<o>/<r>/issues/<parent>/sub_issues
+  -F sub_issue_id=<id>`, where `<id>` is the child's **database id**
+  (`gh api repos/<o>/<r>/issues/<n> -q .id`), never its number. A `## Parent`
+  heading in a body is prose: it renders no progress bar and no backlink.
+- Read an existing epic and one of its children before filing a new one. Their
+  shape is the convention; a second parallel one is churn. If the repo has only
+  markdown linkage, add the native link and leave the prose as it reads.
+- Group only issues that share **one decision**, where settling it changes the
+  others' answers. A shared topic is not an epic; say so and leave them loose.
+  Propose the grouping and the bodies for approval before filing — an issue is
+  outward-facing, and so is every label you change.
