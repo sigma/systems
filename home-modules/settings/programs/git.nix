@@ -210,7 +210,11 @@ in
         };
       }
       // lib.optionalAttrs signing.enable {
-        user.signingKey = signing.key;
+        # git reads user.signingKey as a file path unless it starts with
+        # `key::` or `ssh-`, so a bare `ecdsa-sha2-*` literal would be opened
+        # as a file. commitSigning.key is either an absolute path (left alone)
+        # or a public key literal (marked as such). jj takes the bare value.
+        user.signingKey = if lib.hasPrefix "/" signing.key then signing.key else "key::${signing.key}";
         commit.gpgsign = true;
         tag.gpgsign = true;
       };
