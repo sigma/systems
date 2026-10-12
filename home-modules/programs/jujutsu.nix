@@ -68,8 +68,8 @@ in
           #
           # `package` can't be null despite being nullable: home-manager reads its
           # version to pick the config-file path. Pointing it at the bundle keeps that
-          # working (buildEnv dedups the identical store path) and the bundle's "12"
-          # reads as >= 0.29.0, which is the right branch for the jj it ships (0.44).
+          # working (buildEnv dedups the identical store path) and the bundle's "17"
+          # reads as >= 0.29.0, which is the right branch for the jj it ships (0.46).
           package = pkgs.toolbox.vcs-toolchain;
           enableUI = false;
 
@@ -159,6 +159,10 @@ in
               # Same git jj gets on PATH — the vcs-toolchain bundle's, not nixpkgs'.
               executable-path = "${pkgs.toolbox.vcs-toolchain}/bin/git";
               private-commits = "description(glob:'wip:*') | description(glob:'private:*')";
+              # `jj git init` / `jj git clone` create colocated repos (.git next to
+              # .jj). Also jj's default as of 0.46; stated so it survives a
+              # default flip.
+              colocate = true;
             };
 
             # Which key signs and which keys verify: see
