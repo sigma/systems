@@ -922,11 +922,11 @@
         "teller": "teller"
       },
       "locked": {
-        "lastModified": 1791110246,
-        "narHash": "sha256-+fqoB07yqb5OJUvPnYBrcdWL28rZeqpLKEupFAvk6WA=",
+        "lastModified": 1791790968,
+        "narHash": "sha256-Svz64qbHGGp8UsJHFtC4iUWLgMcNXJvbAvmmUwekH2E=",
         "owner": "firefly-engineering",
         "repo": "toolbox",
-        "rev": "f5514c607add231324455082f75df4226117b473",
+        "rev": "bf1e492bcfdc23d428b4b8042cd7afaa2e7bfa08",
         "type": "github"
       },
       "original": {
