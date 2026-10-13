@@ -76,6 +76,8 @@ the front-end is my choice.
   checks included. Clean build and tests don't imply formatted.
 - Never leave a found issue only in a summary: fix it if cheap and in scope, else
   file a ticket linked from the work (or comment on an existing one it constrains).
+- An issue's scope includes every check its body or comments name. If one is
+  cheap now (hardware at hand, read-only), do it; don't defer it to a caveat.
 - Clean up everything you created (scratch files, temp dirs, images, volumes,
   processes, throwaway changes) and restore files you mutated. Check for strays
   (`pgrep`, `docker volume ls`, `ls /tmp`); leave pre-existing things alone.
