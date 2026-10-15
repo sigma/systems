@@ -67,6 +67,9 @@ the front-end is my choice.
   `jj restore -c @ <path>`, and `jj bookmark` (git-created branches aren't
   tracked). Recover a clobbered file with
   `jj file show --at-op <op> <path> > <path>`.
+- Fix forward (`jj restore`, `jj squash`, recreate the bookmark): the op log is
+  shared with every workspace, so `jj undo` and `jj op restore` act on other
+  sessions' operations.
 - Push bookmark deletions by name (`jj git push -b <name>`), never
   `--deleted`: it pushes every pending deletion, including other sessions'.
 

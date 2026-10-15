@@ -123,6 +123,70 @@ let
     '';
   };
 
+  # PreToolUse guard on Bash: refuse jj commands that rewind the operation log
+  # (`jj undo`/`redo`, `jj op restore`/`revert`) while the repo has more than
+  # one workspace. The op log is shared by every workspace, so these act on
+  # whatever operation came last, possibly another session's (a sub-agent's
+  # `jj undo` once reverted a parallel session's push record). The command is
+  # parsed with shfmt into a shell AST rather than pattern-matched, so `jj` in
+  # a string or a heredoc doesn't trip it. Exit 2 blocks the call and feeds
+  # stderr back to the agent; anything we can't parse is let through.
+  jjOplogRewindFilter = pkgs.writeText "jj-oplog-rewind.jq" ''
+    # A word's literal text, or null when it holds an expansion.
+    def lit:
+      [ .Parts[]
+        | if .Type == "Lit" or .Type == "SglQuoted" then .Value
+          elif .Type == "DblQuoted" and all(.Parts[]?; .Type == "Lit")
+          then [ .Parts[]?.Value ] | join("")
+          else null end ]
+      | if any(. == null) then null else join("") end;
+
+    # jj's positional arguments, skipping global options and their values.
+    def positionals:
+      reduce .[1:][] as $a ({ out: [], skip: false };
+        if .skip then .skip = false
+        elif ($a | IN("-R", "--repository", "--at-op", "--at-operation",
+                      "--color", "--config", "--config-file")) then .skip = true
+        elif ($a | startswith("-")) then .
+        else .out += [ $a ] end)
+      | .out;
+
+    .. | objects | select(.Type == "CallExpr") | [ .Args[]? | lit ]
+    | select(length > 0 and (.[0] // "" | split("/") | last) == "jj")
+    | map(. // "") | positionals
+    | select((.[0] | IN("undo", "redo"))
+        or ((.[0] | IN("op", "operation")) and (.[1] | IN("restore", "revert"))))
+    | "jj " + join(" ")
+  '';
+
+  jjOplogGuard = pkgs.writeShellApplication {
+    name = "claude-jj-oplog-guard";
+    runtimeInputs = [
+      pkgs.jq
+      pkgs.jujutsu
+      pkgs.shfmt
+    ];
+    text = ''
+      input=$(cat)
+      cmd=$(jq -r '.tool_input.command // empty' <<<"$input")
+      cwd=$(jq -r '.cwd // empty' <<<"$input")
+
+      hits=$(shfmt --to-json <<<"$cmd" 2>/dev/null | jq -r -f ${jjOplogRewindFilter}) || exit 0
+      [ -n "$hits" ] || exit 0
+
+      [ -n "$cwd" ] && cd "$cwd"
+      workspaces=$(jj --ignore-working-copy workspace list -T 'name ++ "\n"' 2>/dev/null | wc -l) || exit 0
+      if [ "$workspaces" -gt 1 ]; then
+        {
+          echo "Refused: $(head -n1 <<<"$hits")"
+          echo "This repo has $workspaces jj workspaces sharing one operation log, so this would act on other sessions' operations."
+          echo "Fix forward instead: jj restore, jj squash, or recreate the bookmark."
+        } >&2
+        exit 2
+      fi
+    '';
+  };
+
   # WorktreeRemove performs the actual teardown. Claude Code only auto-removes
   # *its own* git worktrees; a hook-created worktree is left on disk unless this
   # hook removes it. The payload carries `worktree_path` (absolute) but no name,
@@ -254,6 +318,18 @@ in
             {
               type = "command";
               command = "echo ${lib.escapeShellArg sessionSkillPrompt}";
+            }
+          ];
+        }
+      ];
+
+      PreToolUse = [
+        {
+          matcher = "Bash";
+          hooks = [
+            {
+              type = "command";
+              command = lib.getExe jjOplogGuard;
             }
           ];
         }
