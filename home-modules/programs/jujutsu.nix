@@ -180,10 +180,13 @@ in
                 "-r"
                 "(trunk()..@):: | (trunk()..@)-"
               ];
+              # Leave other workspaces' working copies (and their ancestors)
+              # alone: rebasing them from here leaves those workspaces stale
+              # and conflicted under whoever is working in them.
               rebase-all = [
                 "rebase"
                 "-s"
-                "roots(present(@) | ancestors(immutable_heads().., 1))"
+                "roots((present(@) | ancestors(immutable_heads().., 1)) ~ ::(working_copies() ~ @))"
                 "-d"
                 "trunk()"
               ];
