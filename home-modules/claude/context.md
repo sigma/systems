@@ -96,6 +96,10 @@ the front-end is my choice.
   -F sub_issue_id=<id>`, where `<id>` is the child's **database id**
   (`gh api repos/<o>/<r>/issues/<n> -q .id`), never its number. A `## Parent`
   heading in a body is prose: it renders no progress bar and no backlink.
+- A blocker is a **native dependency** too. Every "Blocked by" in a body gets
+  `gh api --method POST repos/<o>/<r>/issues/<n>/dependencies/blocked_by
+  -F issue_id=<id>` (database id again; it works across repos). The prose may stay,
+  but it is not the link.
 - Read an existing epic and one of its children before filing a new one. Their
   shape is the convention; a second parallel one is churn. If the repo has only
   markdown linkage, add the native link and leave the prose as it reads.
