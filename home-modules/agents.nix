@@ -226,6 +226,7 @@ in
         # omp ignores ~/.claude/skills unless skills.enableClaudeUser is set
         # (default false), so link the set into its native user directory.
         skillDir = ".omp/agent/skills";
+        herdrId = "omp";
       };
 
       opencode = {
