@@ -220,6 +220,14 @@ in
         herdrId = "pi";
       };
 
+      oh-my-pi = {
+        gate = "ai";
+        darwin.brew = "can1357/tap/omp";
+        # omp ignores ~/.claude/skills unless skills.enableClaudeUser is set
+        # (default false), so link the set into its native user directory.
+        skillDir = ".omp/agent/skills";
+      };
+
       opencode = {
         gate = "ai";
         linux.package = pkgs.master.opencode;
