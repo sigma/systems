@@ -273,6 +273,14 @@ in
       message = "programs.agents.${n}.endpoints: endpoint variants are only implemented for claude-code.";
     }) cfg;
 
+    # omp reads the same mcpServers JSON as Claude Code, so it gets Claude's
+    # servers: one source, no drift between the two harnesses.
+    home.file.".omp/agent/mcp.json" =
+      mkIf (installed ? oh-my-pi && config.programs.claude-code.mcpServers != { })
+        {
+          text = builtins.toJSON { inherit (config.programs.claude-code) mcpServers; };
+        };
+
     # agy's status-line HUD comes with agy itself.
     programs.agy-hud.enable = mkDefault (installed ? antigravity-cli);
   };
