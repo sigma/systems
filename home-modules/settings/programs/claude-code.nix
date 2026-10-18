@@ -253,6 +253,11 @@ let
   };
 in
 {
+  mcpServers.worklog = lib.mkIf config.programs.quartermaster.worklog.enable {
+    command = lib.getExe config.programs.quartermaster.worklog.package;
+    args = [ "serve" ];
+  };
+
   # Gate on enable so hosts without claude-code don't emit a stray settings.json.
   settings = lib.mkIf config.programs.claude-code.enable {
     # Keep the CLI's bundled skills and workflows: /doctor prompt-audit needs

@@ -16,5 +16,9 @@
 
   # llm-toolchain merges the toolbox's general skill bundles (Matt Pocock's
   # collection, caveman, ponytail) into one plugin manifest.
-  plugins = [ pkgs.toolbox.llm-toolchain ];
+  # quartermaster's bundle carries the worklog skill.
+  plugins = [
+    pkgs.toolbox.llm-toolchain
+  ]
+  ++ lib.optional config.programs.quartermaster.worklog.enable pkgs.quartermaster-skills;
 }

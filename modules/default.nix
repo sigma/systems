@@ -24,6 +24,7 @@
     inputs.catppuccin.homeModules.catppuccin
     inputs.noctalia.homeModules.default
     inputs.nvf.homeManagerModules.default
+    inputs.quartermaster.homeManagerModules.default
   ];
 
   nebula.nixosModules = [

@@ -101,6 +101,11 @@
     herdr.url = "github:herdrdev/herdr/v0.9.5";
     herdr.inputs.nixpkgs.follows = "nixpkgs";
 
+    # quartermaster: the worklog tool (binary, MCP server, skill bundle).
+    quartermaster.url = "github:firefly-engineering/quartermaster";
+    quartermaster.inputs.nix-pins.follows = "nix-pins";
+    quartermaster.inputs.toolbox.follows = "toolbox";
+
     # Niri
     noctalia.url = "github:noctalia-dev/noctalia-shell";
     noctalia.inputs.nixpkgs.follows = "nixpkgs";
