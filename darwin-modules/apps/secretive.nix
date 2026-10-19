@@ -51,16 +51,15 @@ with lib;
 
     # GUI apps started from the Dock get only launchd's environment, so set
     # the socket there too: Obsidian's worklog buttons sign their commits.
+    # macOS's own ssh-agent injects its socket into every launchd-spawned
+    # process (SecureSocketWithKey), overriding setenv. Disabling it stops
+    # that; SIP refuses a bootout, so it keeps running until logout.
     launchd.user.agents.secretive-ssh-auth-sock = mkIf cfg.launchdIntegration {
-      serviceConfig = {
-        ProgramArguments = [
-          "/bin/launchctl"
-          "setenv"
-          "SSH_AUTH_SOCK"
-          secretiveSocket
-        ];
-        RunAtLoad = true;
-      };
+      script = ''
+        /bin/launchctl disable "gui/$(/usr/bin/id -u)/com.openssh.ssh-agent"
+        /bin/launchctl setenv SSH_AUTH_SOCK "${secretiveSocket}"
+      '';
+      serviceConfig.RunAtLoad = true;
     };
 
     user = {
