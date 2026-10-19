@@ -281,6 +281,14 @@ in
           text = builtins.toJSON { inherit (config.programs.claude-code) mcpServers; };
         };
 
+    # agy takes the same mcpServers schema (command/args/env, url) at its
+    # global path, which the Antigravity IDE's mcp_config.json also links to.
+    home.file.".gemini/config/mcp_config.json" =
+      mkIf (installed ? antigravity-cli && config.programs.claude-code.mcpServers != { })
+        {
+          text = builtins.toJSON { inherit (config.programs.claude-code) mcpServers; };
+        };
+
     # agy's status-line HUD comes with agy itself.
     programs.agy-hud.enable = mkDefault (installed ? antigravity-cli);
   };
