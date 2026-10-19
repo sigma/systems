@@ -18,6 +18,11 @@
         ];
       };
     };
+    # This checkout is off the <root>/<owner>/<repo> convention; `to=nix` sends land here.
+    settings.projects."sigma/systems" = {
+      path = "~/.config/nix";
+      workspace = "nix";
+    };
     settings.tiers = {
       default = "claude";
       basic-implementation = "glm";
