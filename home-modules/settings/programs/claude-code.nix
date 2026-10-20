@@ -258,6 +258,14 @@ in
     args = [ "serve" ];
   };
 
+  # Same llm-toolchain as the code-review-graph skills (./agentSkills.nix), so
+  # skills and server share one pin. No hooks, no crg-daemon, and never
+  # `code-review-graph install`, which rewrites agent configs Nix owns.
+  mcpServers.code-review-graph = {
+    command = "${pkgs.toolbox.llm-toolchain}/bin/code-review-graph";
+    args = [ "serve" ];
+  };
+
   # Gate on enable so hosts without claude-code don't emit a stray settings.json.
   settings = lib.mkIf config.programs.claude-code.enable {
     # Keep the CLI's bundled skills and workflows: /doctor prompt-audit needs

@@ -269,6 +269,8 @@ in
     ".direnv/"
     "result"
     "result-*"
+    # code-review-graph's per-repo graph database.
+    ".code-review-graph/"
     # Compiled things
     "*.class"
     "*.exe"
