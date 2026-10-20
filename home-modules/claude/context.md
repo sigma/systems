@@ -79,6 +79,9 @@ the front-end is my choice.
   checks included. Clean build and tests don't imply formatted.
 - Never leave a found issue only in a summary: fix it if cheap and in scope, else
   file a ticket linked from the work (or comment on an existing one it constrains).
+- Do unambiguous cleanup without asking (a stale status line, a box already
+  done, a leftover scratch file), then say what you did. Ask only when the
+  fix is a judgement call or outward-facing.
 - An issue's scope includes every check its body or comments name. If one is
   cheap now (hardware at hand, read-only), do it; don't defer it to a caveat.
 - Clean up everything you created (scratch files, temp dirs, images, volumes,
