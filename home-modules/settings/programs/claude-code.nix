@@ -266,6 +266,11 @@ in
     args = [ "serve" ];
   };
 
+  # Whole plugins, loaded via the wrapper's --plugin-dir. EGM's skills read
+  # agents/, resources/ and docs/ relative to the plugin root at runtime, so it
+  # must not go through programs.agentSkills, which links skill leaves flat.
+  plugins = [ pkgs.toolbox.elephant-goldfish-model ];
+
   # Gate on enable so hosts without claude-code don't emit a stray settings.json.
   settings = lib.mkIf config.programs.claude-code.enable {
     # Keep the CLI's bundled skills and workflows: /doctor prompt-audit needs
