@@ -1,0 +1,14 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-10-29T10:38:42Z",
+  "description": "Extend ontology/ with the agent roster (home-modules/agents.nix): Agent, EndpointVariant, Gate, DeliveryChannel per platform, skillDir/herdrId/acpId. Invariants: exactly one floor agent; variants hang off a roster entry; flag agents with no channel on a machine's platform; firstParty variants point at Anthropic.",
+  "id": "nix-p9t",
+  "labels": [],
+  "priority": 2,
+  "status": "open",
+  "title": "Agent roster ontology (open-ontologies)",
+  "type": "task",
+  "updated_at": "2026-10-29T10:38:42Z"
+}
