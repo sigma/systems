@@ -2,13 +2,14 @@
   "assignee": "unknown",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-10-29T10:38:42Z",
   "created": "2026-10-29T10:33:54Z",
   "description": "Hand-authored OWL schema + SHACL shapes for the CONTEXT.md machine/feature vocabulary (Host, Machine, StructuralFeature, ContentFeature, base floor, devbox policy). Facts (ABox) generated from flake eval, never hand-written. Devshell command runs SHACL over them. Follow-ups: topology ontology, agent-roster ontology.",
   "id": "nix-whk",
   "labels": [],
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Machine/feature ontology (open-ontologies)",
   "type": "task",
-  "updated_at": "2026-10-29T10:33:59Z"
+  "updated_at": "2026-10-29T10:38:42Z"
 }
