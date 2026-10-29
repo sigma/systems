@@ -1,0 +1,91 @@
+# Machine/feature ontology: the schema (TBox) of the vocabulary in CONTEXT.md.
+#
+# Only the schema lives here. The facts (which machines exist, what they
+# declare and resolve) are generated from the flake by facts.nix and never
+# written by hand, so hosts.nix stays the single source of truth.
+
+@prefix nx: <https://github.com/sigma/systems/ontology/nebula#> .
+@prefix feat: <https://github.com/sigma/systems/ontology/feature/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://github.com/sigma/systems/ontology/nebula> a owl:Ontology ;
+    rdfs:label "Nebula machine/feature ontology" ;
+    rdfs:comment "Machines, features and the feature seam, as named in CONTEXT.md." .
+
+# --- Machines -------------------------------------------------------------
+
+# A host is the raw declaration in hosts.nix, a machine its resolved form.
+# Facts are read from resolved machines, so the input/resolved split is carried
+# by the two seam properties (declares / enables), not by a separate Host node.
+nx:Machine a owl:Class ;
+    rdfs:label "Machine" ;
+    skos:definition "A host after resolution: features expanded, remotes turned into topology, modules threaded in." .
+
+nx:Devbox a owl:Class ;
+    rdfs:label "Devbox" ;
+    rdfs:subClassOf nx:Machine ;
+    skos:definition "A thin shell around per-project Nix devshells, defined by what it deliberately lacks." ;
+    skos:hiddenLabel "minimal machine", "lite host" ;
+    owl:equivalentClass [
+        a owl:Restriction ;
+        owl:onProperty nx:declares ;
+        owl:hasValue feat:devbox
+    ] .
+
+nx:hostKey a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "host key" ;
+    rdfs:comment "The machine's attribute name in hosts.nix." ;
+    rdfs:domain nx:Machine ;
+    rdfs:range xsd:string .
+
+nx:system a owl:DatatypeProperty, owl:FunctionalProperty ;
+    rdfs:label "system" ;
+    rdfs:comment "The Nix system double, e.g. aarch64-darwin." ;
+    rdfs:domain nx:Machine ;
+    rdfs:range xsd:string .
+
+# --- Features -------------------------------------------------------------
+
+nx:Feature a owl:Class ;
+    rdfs:label "Feature" ;
+    skos:definition "A named axis of machine specialization." ;
+    skos:hiddenLabel "feature flag" .
+
+nx:StructuralFeature a owl:Class ;
+    rdfs:label "Structural feature" ;
+    rdfs:subClassOf nx:Feature ;
+    skos:definition "A feature read before configuration exists or outside home scope." .
+
+nx:ContentFeature a owl:Class ;
+    rdfs:label "Content feature" ;
+    rdfs:subClassOf nx:Feature ;
+    owl:disjointWith nx:StructuralFeature ;
+    skos:definition "A named axis of what a machine is equipped to do for its user; never alters imports or system identity." .
+
+nx:Platform a owl:Class ;
+    rdfs:label "Platform" ;
+    rdfs:subClassOf nx:StructuralFeature ;
+    skos:definition "The structural feature naming a machine's OS family; every machine carries exactly one." .
+
+# Framework-intrinsic platform features (modules/nebula/default.nix defaultFeatures).
+feat:mac a nx:Platform .
+feat:nixos a nx:Platform .
+feat:linux a nx:Platform .
+
+# --- The feature seam -----------------------------------------------------
+
+nx:declares a owl:ObjectProperty ;
+    rdfs:label "declares" ;
+    rdfs:comment "Input layer of the feature seam: a feature the host declares (machine.features)." ;
+    rdfs:domain nx:Machine ;
+    rdfs:range nx:Feature .
+
+nx:enables a owl:ObjectProperty ;
+    rdfs:label "enables" ;
+    rdfs:comment "Resolved layer of the feature seam: a content feature whose home option features.<n>.enable is true after policy." ;
+    rdfs:domain nx:Machine ;
+    rdfs:range nx:ContentFeature .

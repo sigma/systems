@@ -103,6 +103,38 @@ in
       bootstrapGithub = pkgs.callPackage ../overlays/pkg/local/bootstrap-github.nix { };
       bootstrapCachix = pkgs.callPackage ../overlays/pkg/local/bootstrap-cachix.nix { };
 
+      # Checks the machine/feature ontology (ontology/) against facts generated
+      # from the flake. Same open-ontologies as the MCP server (toolbox llm-toolchain).
+      ontologyCheck = pkgs.writeShellApplication {
+        name = "ontology-check";
+        runtimeInputs = [
+          inputs.toolbox.packages.${system}.llm-toolchain
+          pkgs.jq
+        ];
+        text = ''
+          ${findNix}
+          root="''${PRJ_ROOT:-$PWD}"
+          work=$(mktemp -d)
+          trap 'rm -rf "$work"' EXIT
+          $NIX_BIN ${nixFlags} eval --quiet --raw --impure \
+            --expr "import $root/ontology/facts.nix (builtins.getFlake \"$root\")" \
+            > "$work/facts.ttl"
+          printf '%s\n' \
+            "load $root/ontology/nebula.ttl" \
+            "load $work/facts.ttl" \
+            "reason --profile owl-rl-ext" \
+            "shacl $root/ontology/shapes.ttl" |
+            open-ontologies batch --data-dir "$work/store" --no-connect --bail - |
+            tail -n 1 > "$work/report.json"
+          if jq -e '.result.conforms == true' "$work/report.json" > /dev/null; then
+            echo "ontology: conforms"
+          else
+            jq '.result | {conforms, violations, skipped_constraints}' "$work/report.json"
+            exit 1
+          fi
+        '';
+      };
+
       # Devbox tools (key generation; install/rebuild are inline below)
       devboxTools = pkgs.callPackage ../overlays/pkg/local/devbox-tools.nix {
         inherit sopsConfigFile;
@@ -397,6 +429,12 @@ in
             category = "bootstrap";
             help = "Configure cachix authentication using decrypted tokens";
             command = ''exec ${bootstrapCachix}/bin/bootstrap-cachix "$@"'';
+          }
+          {
+            name = "ontology-check";
+            category = "ontology";
+            help = "Check machine/feature invariants (ontology/shapes.ttl) against the flake";
+            command = ''exec ${ontologyCheck}/bin/ontology-check "$@"'';
           }
           {
             name = "devbox-keygen";

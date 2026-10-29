@@ -461,6 +461,15 @@ darwin-rebuild check --flake .#hostname
 home-manager switch --flake .#hostname-user --dry-run
 ```
 
+### Ontology Invariants
+
+`ontology/` models the machine/feature vocabulary of `CONTEXT.md` for
+open-ontologies: `nebula.ttl` is the schema, `shapes.ttl` the SHACL invariants
+(devbox resolves no content feature, one platform per machine, music is
+mac-only, …). Facts are generated from the flake by `ontology/facts.nix`, never
+hand-written. Run `ontology-check` (devshell) after changing hosts, features or
+policies; it exits non-zero on any violation.
+
 ### Verifying Config Parity
 To verify that standalone home-manager produces identical config to full system:
 ```bash

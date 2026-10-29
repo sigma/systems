@@ -1,0 +1,104 @@
+# Machine/feature invariants, checked over the facts facts.nix generates.
+# Run after `reason --profile owl-rl-ext`, which infers nx:Devbox membership.
+
+@prefix nx: <https://github.com/sigma/systems/ontology/nebula#> .
+@prefix feat: <https://github.com/sigma/systems/ontology/feature/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+nx:MachineShape a sh:NodeShape ;
+    sh:targetClass nx:Machine ;
+    sh:property [
+        sh:path nx:hostKey ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string
+    ] , [
+        sh:path nx:system ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string
+    ] , [
+        sh:path nx:declares ;
+        sh:qualifiedValueShape [ sh:class nx:Platform ] ;
+        sh:qualifiedMinCount 1 ;
+        sh:qualifiedMaxCount 1 ;
+        sh:message "A machine carries exactly one platform feature (mac, nixos or linux)."
+    ] , [
+        sh:path nx:enables ;
+        sh:class nx:ContentFeature
+    ] .
+
+# The devbox policy forces every content feature off (home-modules/policy/devbox.nix).
+nx:DevboxShape a sh:NodeShape ;
+    sh:targetClass nx:Devbox ;
+    sh:property [
+        sh:path nx:enables ;
+        sh:maxCount 0 ;
+        sh:message "A devbox resolves no content feature: the devbox policy forces them all off."
+    ] .
+
+# Music content is macOS-only (docs/adr/0002-music-mac-only-content-bypasses-seam.md).
+nx:MusicShape a sh:NodeShape ;
+    sh:targetClass nx:Machine ;
+    # SPARQL, not sh:or/sh:not: the default evaluator passes those without
+    # reporting a violation.
+    sh:sparql [
+        sh:message "Only a mac machine may declare music." ;
+        sh:select """
+            PREFIX nx: <https://github.com/sigma/systems/ontology/nebula#>
+            PREFIX feat: <https://github.com/sigma/systems/ontology/feature/>
+            SELECT $this WHERE {
+                $this nx:declares feat:music .
+                FILTER NOT EXISTS { $this nx:declares feat:mac }
+            }
+        """
+    ] .
+
+nx:FeatureShape a sh:NodeShape ;
+    sh:targetClass nx:Feature ;
+    # SPARQL, not sh:xone: the default evaluator skips sh:xone.
+    sh:sparql [
+        sh:message "A feature is exactly one of structural or content." ;
+        sh:select """
+            PREFIX nx: <https://github.com/sigma/systems/ontology/nebula#>
+            SELECT $this WHERE {
+                OPTIONAL { $this a nx:StructuralFeature . BIND (1 AS ?s) }
+                OPTIONAL { $this a nx:ContentFeature . BIND (1 AS ?c) }
+                FILTER (COALESCE(?s, 0) + COALESCE(?c, 0) != 1)
+            }
+        """
+    ] .
+
+# Outside a devbox, nothing overrides the host's mkDefault: every declared
+# content feature resolves on (modules/nebula/helpers.nix).
+nx:SeamShape a sh:NodeShape ;
+    sh:targetClass nx:Machine ;
+    sh:sparql [
+        sh:message "Declared content feature {?f} does not resolve on outside a devbox." ;
+        sh:select """
+            PREFIX nx: <https://github.com/sigma/systems/ontology/nebula#>
+            SELECT $this ?f WHERE {
+                $this nx:declares ?f .
+                ?f a nx:ContentFeature .
+                FILTER NOT EXISTS { $this a nx:Devbox }
+                FILTER NOT EXISTS { $this nx:enables ?f }
+            }
+        """
+    ] .
+
+# The platform feature agrees with the Nix system double.
+nx:PlatformSystemShape a sh:NodeShape ;
+    sh:targetClass nx:Machine ;
+    sh:sparql [
+        sh:message "Platform {?p} disagrees with system {?s}." ;
+        sh:select """
+            PREFIX nx: <https://github.com/sigma/systems/ontology/nebula#>
+            PREFIX feat: <https://github.com/sigma/systems/ontology/feature/>
+            SELECT $this ?p ?s WHERE {
+                $this nx:declares ?p ; nx:system ?s .
+                ?p a nx:Platform .
+                FILTER ((?p = feat:mac) != STRENDS(?s, "-darwin"))
+            }
+        """
+    ] .
