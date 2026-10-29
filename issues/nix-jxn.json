@@ -1,0 +1,14 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-10-29T10:38:42Z",
+  "description": "toolbox llm-toolchain open-ontologies 2.1.0: shacl without --verified reports no violation for sh:not [ sh:path p ; sh:hasValue v ] (alone or inside sh:or) on data that violates it, while conforms comes back null/true. sh:xone is listed under skipped_constraints. ontology/shapes.ttl works around both with sh:sparql. Repro: ontology shapes before the workaround in nix-whk. Upstream report not filed yet.",
+  "id": "nix-jxn",
+  "labels": [],
+  "priority": 2,
+  "status": "open",
+  "title": "open-ontologies default SHACL evaluator passes sh:or/sh:not silently",
+  "type": "bug",
+  "updated_at": "2026-10-29T10:38:42Z"
+}
