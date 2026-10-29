@@ -1,5 +1,5 @@
 {
-  "assignee": "",
+  "assignee": "unknown",
   "blocked_by": [],
   "blocks": [],
   "created": "2026-10-29T10:33:54Z",
@@ -7,8 +7,8 @@
   "id": "nix-whk",
   "labels": [],
   "priority": 2,
-  "status": "open",
+  "status": "in_progress",
   "title": "Machine/feature ontology (open-ontologies)",
   "type": "task",
-  "updated_at": "2026-10-29T10:33:54Z"
+  "updated_at": "2026-10-29T10:33:59Z"
 }
