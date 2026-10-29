@@ -1,0 +1,14 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-10-29T10:38:42Z",
+  "description": "Extend ontology/ with the topology edges CONTEXT.md names: reaches (resolved remotes), parentOf (devbox.parentHost), trustsLogin (userSshPublicKey), buildsFor (builder). Invariants: devbox parent reaches it; shared domain only when both ends tailscale; builders reachable from delegators. Builds on nix-whk's Machine.",
+  "id": "nix-szz",
+  "labels": [],
+  "priority": 2,
+  "status": "open",
+  "title": "Topology ontology (open-ontologies)",
+  "type": "task",
+  "updated_at": "2026-10-29T10:38:42Z"
+}
