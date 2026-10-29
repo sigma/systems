@@ -266,6 +266,21 @@ in
     args = [ "serve" ];
   };
 
+  # Same llm-toolchain again (its ontology-engineering skill comes through
+  # ./agentSkills.nix). Certified commands find the oo-* checkers on $PATH, and
+  # hosts without the dev feature don't install the toolchain, so the wrapper
+  # puts its bin/ on PATH wherever the server runs.
+  mcpServers.open-ontologies = {
+    command = lib.getExe (
+      pkgs.writeShellApplication {
+        name = "open-ontologies-mcp";
+        runtimeInputs = [ pkgs.toolbox.llm-toolchain ];
+        text = ''exec open-ontologies "$@"'';
+      }
+    );
+    args = [ "serve" ];
+  };
+
   # Whole plugins, loaded via the wrapper's --plugin-dir. EGM's skills read
   # agents/, resources/ and docs/ relative to the plugin root at runtime, so it
   # must not go through programs.agentSkills, which links skill leaves flat.
