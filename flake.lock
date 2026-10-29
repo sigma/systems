@@ -1004,11 +1004,11 @@
         "uv2nix": "uv2nix"
       },
       "locked": {
-        "lastModified": 1792957419,
-        "narHash": "sha256-A/C6fOEy2Vj0ueRpuXAwp2bzLuv+GekGIIrkM9im3F8=",
+        "lastModified": 1793267877,
+        "narHash": "sha256-jw0ZHzz8lAuhiUnbgBMVCtQZ3E2tR3MhTpkJQwAJFOA=",
         "owner": "firefly-engineering",
         "repo": "toolbox",
-        "rev": "72636ab9da85466fbbbb1064269adb669b6cd13a",
+        "rev": "7285e5ef2d8f478f09c342db4cae3cbee45eb40e",
         "type": "github"
       },
       "original": {
