@@ -16,6 +16,8 @@ belongs in that repo's `./CLAUDE.md`.
 - When my preference conflicts with a constraint you introduced (in a
   recommendation, spec or decision), name the constraint and ask whether it still
   stands. Don't quietly work around me.
+- Judge a tool or product from its repo and docs, not its marketing page. A
+  claim that it lacks an API, self-hosting or a license needs the source read.
 
 ## Code
 
