@@ -18,6 +18,9 @@ belongs in that repo's `./CLAUDE.md`.
   stands. Don't quietly work around me.
 - Judge a tool or product from its repo and docs, not its marketing page. A
   claim that it lacks an API, self-hosting or a license needs the source read.
+- When spawning a subagent, pick the most specific type whose description fits
+  the task (`debugger`, `code-reviewer`, `golang-pro`, …). Fall back to
+  `general-purpose` only when none does.
 
 ## Code
 
