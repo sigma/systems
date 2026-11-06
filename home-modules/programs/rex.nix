@@ -65,6 +65,15 @@ let
       exec tmux new-session -A -s "$name"
     '';
   };
+  # Names sessions after their first pane's directory; see
+  # ./rex/session-autoname.lua. Handlers only run under `rex do`, hence a
+  # service. --autostart=false: never start a server, wait for one instead.
+  autonameDir = "${config.xdg.stateHome}/rex";
+  autoname = pkgs.writeShellScript "rex-session-autoname" ''
+    mkdir -p "${autonameDir}"
+    exec "${rex}" do --all --autostart=false ${./rex/session-autoname.lua} \
+      state="${autonameDir}/session-autoname.json"
+  '';
 in
 {
   options.programs.rex = {
@@ -246,6 +255,37 @@ in
 
     (mkIf cfg.enable {
       home.sessionPath = mkIf (cfg.package == null) [ appBin ];
+
+      # Exits while no server is up; KeepAlive retries until the app starts.
+      # launchd gives no reliable $HOME, which rex needs to find the server.
+      launchd.agents.rex-session-autoname = mkIf pkgs.stdenv.isDarwin {
+        enable = true;
+        config = {
+          ProgramArguments = [ "${autoname}" ];
+          EnvironmentVariables.HOME = config.home.homeDirectory;
+          RunAtLoad = true;
+          KeepAlive = true;
+          ThrottleInterval = 30;
+          ProcessType = "Background";
+          StandardOutPath = "${config.home.homeDirectory}/Library/Logs/rex-session-autoname.log";
+          StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/rex-session-autoname.log";
+        };
+      };
+      systemd.user.services.rex-session-autoname =
+        mkIf (pkgs.stdenv.isLinux && config.services.rex.enable)
+          {
+            Unit = {
+              Description = "Name Rex sessions after their first pane's directory";
+              After = [ "rex.service" ];
+              BindsTo = [ "rex.service" ];
+            };
+            Service = {
+              ExecStart = "${autoname}";
+              Restart = "on-failure";
+              RestartSec = 5;
+            };
+            Install.WantedBy = [ "rex.service" ];
+          };
 
       # init.lua is generated: custom actions first, then the bindings.
       programs.rex.config = mkMerge [
