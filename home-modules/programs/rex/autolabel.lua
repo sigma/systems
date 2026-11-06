@@ -88,6 +88,8 @@ local function label_agent(sid, bid, fg)
   if label == nil then return end
 
   local agent = fg ~= nil and fg.name or nil
+  -- Nix wraps programs: claude runs as `.claude-wrapped`.
+  if agent ~= nil then agent = agent:match("^%.(.+)%-wrapped$") or agent end
   local want
   if agents[agent] then
     if label ~= default_label then return end
