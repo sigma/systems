@@ -210,6 +210,12 @@ in
                 command = [ "jjui" ];
               };
             };
+            # herdr's agent list and jump-to-attention. The app's View Activity
+            # picker lists every pane reporting a state (Claude Code does, via
+            # OSC 7501), most urgent first; pick one to go there. The jump goes
+            # straight to the most urgent one; see ./rex/agent-jump.lua.
+            "prefix>a" = "pane.view_activity";
+            "prefix>shift+a" = "agent_jump";
           }
           (genAttrs' (genList (i: i + 1) 9) (i: {
             name = "prefix>${toString i}";
@@ -287,7 +293,7 @@ in
 
       # init.lua is generated: custom actions first, then the bindings.
       programs.rex.config = mkMerge [
-        (mkBefore (builtins.readFile ./rex/float-toggle.lua))
+        (mkBefore (builtins.readFile ./rex/float-toggle.lua + builtins.readFile ./rex/agent-jump.lua))
         (concatLines (
           mapAttrsToList (
             key: b:
