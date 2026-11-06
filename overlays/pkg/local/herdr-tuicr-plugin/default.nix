@@ -8,7 +8,7 @@
 # a plugin pane declared with `placement = "popup"`, which `herdr plugin pane
 # open --plugin tuicr --entrypoint review --cwd … --env …` opens from any
 # script. So the popup is packaged as a herdr plugin, and the skill's wrapper
-# is swapped for one that opens it (see `skills` below).
+# is swapped for one that opens it (../tuicr-skills).
 #
 # A popup is not a herdr pane: no pane ID, no `pane wait-output`, and the
 # manifest command is a shell-less argv array. Hence the split into two
@@ -23,9 +23,7 @@
 {
   lib,
   stdenvNoCC,
-  runCommand,
   writeShellApplication,
-  toolbox,
 }:
 let
   popup = writeShellApplication {
@@ -50,10 +48,7 @@ let
       runHook postInstall
     '';
 
-    passthru = {
-      inherit skills;
-      pluginId = "tuicr";
-    };
+    passthru.pluginId = "tuicr";
 
     meta = {
       description = "herdr plugin opening tuicr in a popup";
@@ -62,29 +57,5 @@ let
     };
   };
 
-  # The toolbox's tuicr-skills bundle with the herdr wrapper replaced by the
-  # popup one, and SKILL.md's Herdr notes adjusted to match: nothing else in
-  # the skill changes, so the agent-facing contract (`tuicr-wrapper-herdr.sh
-  # /path -- <scope>`, blocking until exit) is untouched.
-  skills =
-    runCommand "${toolbox.tuicr-skills.name}-herdr-popup"
-      {
-        inherit (toolbox.tuicr-skills) meta;
-      }
-      ''
-        cp -r ${toolbox.tuicr-skills} $out
-        chmod -R u+w $out
-        skill=$out/skills/tuicr
-        [ -f "$skill/tuicr-wrapper-herdr.sh" ] || {
-          echo "tuicr-skills no longer ships tuicr-wrapper-herdr.sh; update this package" >&2
-          exit 1
-        }
-        install -m755 ${./tuicr-wrapper-herdr.sh} "$skill/tuicr-wrapper-herdr.sh"
-        sed -i -E -f ${./SKILL.md.sed} "$skill/SKILL.md"
-        grep -q 'Herdr popup' "$skill/SKILL.md" || {
-          echo "SKILL.md patch did not apply; upstream text changed" >&2
-          exit 1
-        }
-      '';
 in
 plugin

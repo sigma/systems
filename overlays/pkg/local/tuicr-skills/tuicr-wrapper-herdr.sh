@@ -2,7 +2,7 @@
 # Drop-in replacement for tuicr's own skills/tuicr/tuicr-wrapper-herdr.sh.
 # Upstream splits the agent's pane and drives tuicr through `pane run` /
 # `pane wait-output`; this one opens tuicr in a herdr *popup* instead, via the
-# `tuicr` herdr plugin (herdr-plugin.toml next to this file), so the review
+# `tuicr` herdr plugin (../herdr-tuicr-plugin/herdr-plugin.toml), so the review
 # floats over the layout rather than squeezing the agent's pane.
 #
 # Same CLI contract as upstream: `[directory] [-- tuicr-args...]`, blocks until
