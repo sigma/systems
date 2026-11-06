@@ -212,8 +212,11 @@ in
             };
             # herdr's agent list and jump-to-attention. The app's View Activity
             # picker lists every pane reporting a state (Claude Code does, via
-            # OSC 7501), most urgent first; pick one to go there. The jump goes
-            # straight to the most urgent one; see ./rex/agent-jump.lua.
+            # OSC 7501), most urgent first; pick one to go there. It is part of
+            # the app's experimental quick switcher (Settings > Developer >
+            # Developer Mode, then Experimental > New quick switcher); without
+            # it the action is unavailable and the keys reach the terminal. The
+            # jump goes straight to the most urgent one; see ./rex/agent-jump.lua.
             "prefix>a" = "pane.view_activity";
             "prefix>shift+a" = "agent_jump";
           }
