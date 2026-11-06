@@ -10,11 +10,15 @@
     {
       "text": "Implemented in lorxtqoxkvqy; shirka/ash-devbox/spectre-devbox eval OK, x86_64 package built and runs on shirka (api rev 11). Pending: nixos-rebuild switch on the hosts.",
       "timestamp": "2026-11-06T08:57:46Z"
+    },
+    {
+      "text": "shirka switched: personal server up (0.0.1793910724-g2e71f8, api 11), built-in Tailscale enrolled as shirka-rex.van-scylla.ts.net, HTTPS cert issued. Pending: ash-devbox/spectre-devbox switch (+ their llm-toolchain eval failure, unchecked).",
+      "timestamp": "2026-11-06T09:32:05Z"
     }
   ],
   "priority": 2,
   "status": "in_progress",
   "title": "Install Rex on NixOS hosts via its flake (personal server)",
   "type": "task",
-  "updated_at": "2026-11-06T08:57:46Z"
+  "updated_at": "2026-11-06T09:32:05Z"
 }
