@@ -1,5 +1,5 @@
 {
-  "assignee": "",
+  "assignee": "unknown",
   "blocked_by": [],
   "blocks": [],
   "created": "2026-11-06T08:54:04Z",
@@ -7,8 +7,8 @@
   "id": "nix-qy4",
   "labels": [],
   "priority": 2,
-  "status": "open",
+  "status": "in_progress",
   "title": "Install Rex on NixOS hosts via its flake (personal server)",
   "type": "task",
-  "updated_at": "2026-11-06T08:54:04Z"
+  "updated_at": "2026-11-06T08:54:07Z"
 }
