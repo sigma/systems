@@ -101,6 +101,13 @@
     herdr.url = "github:herdrdev/herdr/v0.9.5";
     herdr.inputs.nixpkgs.follows = "nixpkgs";
 
+    # Rex (terminal multiplexer): the prebuilt release binary and its
+    # home-manager module (see home-modules/programs/rex.nix). Snapshot channel,
+    # the line the Mac app ships from; flake.lock pins the exact build, and
+    # `nix flake update rex` moves to the newest.
+    rex.url = "https://pkgs.superlogical.com/rex/nix/snapshot.tar.gz";
+    rex.inputs.nixpkgs.follows = "nixpkgs";
+
     # quartermaster: the worklog tool (binary, MCP server, skill bundle).
     quartermaster.url = "github:firefly-engineering/quartermaster";
     quartermaster.inputs.nix-pins.follows = "nix-pins";

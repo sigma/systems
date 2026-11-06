@@ -25,6 +25,7 @@
     inputs.noctalia.homeModules.default
     inputs.nvf.homeManagerModules.default
     inputs.quartermaster.homeManagerModules.default
+    inputs.rex.homeManagerModules.default
   ];
 
   nebula.nixosModules = [
