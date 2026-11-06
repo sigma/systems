@@ -2,6 +2,7 @@
   "assignee": "unknown",
   "blocked_by": [],
   "blocks": [],
+  "closed_at": "2026-11-06T09:33:29Z",
   "created": "2026-11-06T08:28:29Z",
   "description": "Replace the hand-run `rex skill setup --agent claude` with a home module: stub rex skill linked into ~/.claude/skills, SessionStart hook in Nix-owned settings.json, Rex CLI dir on PATH, app path as an option (Rex Beta today). Session naming on. Pattern: darwin-modules/features/voice.nix (runtime /Applications path, nothing in the sandbox).",
   "id": "nix-w9u",
@@ -13,8 +14,8 @@
     }
   ],
   "priority": 2,
-  "status": "in_progress",
+  "status": "closed",
   "title": "Declare Rex skill and SessionStart hook for Claude",
   "type": "task",
-  "updated_at": "2026-11-06T08:30:09Z"
+  "updated_at": "2026-11-06T09:33:29Z"
 }
