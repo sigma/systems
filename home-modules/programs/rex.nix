@@ -295,7 +295,14 @@ in
           Restart = "on-failure";
           RestartSec = 5;
         };
-        Install.WantedBy = [ "rex.service" ];
+        # default.target: home-manager's switch starts a new unit only if an
+        # active target wants it, and rex.service is not restarted by every
+        # switch. rex.service: back up after the server restarts (BindsTo
+        # stops this with it).
+        Install.WantedBy = [
+          "default.target"
+          "rex.service"
+        ];
       };
 
       # init.lua is generated: custom actions first, then the bindings.
