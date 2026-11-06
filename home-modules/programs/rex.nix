@@ -33,6 +33,7 @@
   config,
   lib,
   machine,
+  pkgs,
   ...
 }:
 with lib;
@@ -43,6 +44,27 @@ let
   appBin = "${cfg.app}/Contents/Helpers/Rex Server.rex/Contents/MacOS";
   # May have spaces (the app bundle): quote it wherever it is used.
   rex = if cfg.package != null then getExe cfg.package else "${appBin}/rex";
+  # The `prefix>t` float runs tmux, like herdr's scratch popup (./herdr.nix):
+  # the shell, jobs and scrollback then outlive the pane and Rex restarts.
+  # Keyed on the Rex session label, falling back to its ID.
+  scratch = pkgs.writeShellApplication {
+    name = "rex-scratch";
+    runtimeInputs = [
+      config.programs.tmux.package
+      pkgs.jq
+    ];
+    text = ''
+      label=""
+      if [ -n "''${REX_SESSION:-}" ]; then
+        label=$("${rex}" session ls --json 2>/dev/null \
+          | jq -r --arg id "$REX_SESSION" '.sessions[] | select(.session_id == $id) | .label // empty' || true)
+      fi
+      name="scratch-''${label:-''${REX_SESSION:-default}}"
+      # tmux session names can't contain `.` or `:`.
+      name=$(printf '%s' "$name" | tr '.:' '__')
+      exec tmux new-session -A -s "$name"
+    '';
+  };
 in
 {
   options.programs.rex = {
@@ -167,7 +189,10 @@ in
             # hides and re-shows them; see ./rex/float-toggle.lua.
             "prefix>t" = {
               action = "float_toggle";
-              args.label = "scratch";
+              args = {
+                label = "scratch";
+                command = [ (getExe scratch) ];
+              };
             };
             "prefix>shift+j" = {
               action = "float_toggle";
