@@ -1,0 +1,14 @@
+{
+  "assignee": "",
+  "blocked_by": [],
+  "blocks": [],
+  "created": "2026-11-06T08:54:04Z",
+  "description": "Follow https://www.superlogical.com/rex/docs/linux/installation#nix-and-nixos: add the rex flake input (snapshot), import its home-manager module everywhere, run a personal server (HM services.rex) with linger on every NixOS host (shirka, ash-devbox, spectre-devbox). Macs keep the app's CLI (programs.rex.package = null). Rework home-modules/programs/rex.nix to extend upstream's programs.rex instead of declaring it.",
+  "id": "nix-qy4",
+  "labels": [],
+  "priority": 2,
+  "status": "open",
+  "title": "Install Rex on NixOS hosts via its flake (personal server)",
+  "type": "task",
+  "updated_at": "2026-11-06T08:54:04Z"
+}
