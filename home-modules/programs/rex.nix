@@ -10,8 +10,8 @@
 #     terminfo/sshGuard default off). The app bundle's CLI dir goes on PATH.
 #   - NixOS: the flake's prebuilt package, plus a personal server
 #     (services.rex, a systemd user service). nixos-modules/nixos-user.nix
-#     turns on linger for it, so it runs from boot and survives logout. The Mac
-#     app reaches it over SSH.
+#     turns on linger for it, so it runs from boot and survives logout. On
+#     tailscale hosts it is reachable as <host>-rex on the tailnet (below).
 #
 # It also wires Rex into Claude Code declaratively instead of via
 # `rex skill setup --agent claude`. That command writes two things: a stub
@@ -73,6 +73,16 @@ in
         package = mkIf machine.features.mac (mkDefault null);
       };
       services.rex.enable = mkDefault machine.features.nixos;
+
+      # The server joins the tailnet as its own device (Rex embeds Tailscale;
+      # the host's tailscaled is not involved), e.g. shirka-rex.<tailnet>.ts.net.
+      # Enrolled once by hand: open the sign-in link `rex server status` prints
+      # after the first start. The identity then persists in Rex's state dir.
+      # Only the enrolling account may connect (allowTailnetMembers stays off).
+      services.rex.tailscale = mkIf (machine.features.nixos && machine.features.tailscale) {
+        enable = mkDefault true;
+        hostname = mkDefault "${machine.alias or machine.name}-rex";
+      };
     }
 
     (mkIf cfg.enable {
