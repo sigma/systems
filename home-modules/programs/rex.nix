@@ -200,7 +200,9 @@ in
               action = "float_toggle";
               args = {
                 label = "scratch";
-                command = [ (getExe scratch) ];
+                # By name, not store path: init.lua is generated on the client's
+                # machine, but a remote session's float runs on its host.
+                command = [ "rex-scratch" ];
               };
             };
             "prefix>shift+j" = {
@@ -264,6 +266,8 @@ in
 
     (mkIf cfg.enable {
       home.sessionPath = mkIf (cfg.package == null) [ appBin ];
+      # On PATH on every host, for the `prefix>t` float to find by name.
+      home.packages = [ scratch ];
 
       # Exits while no server is up; KeepAlive retries until the app starts.
       # launchd gives no reliable $HOME, which rex needs to find the server.
