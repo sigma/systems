@@ -65,14 +65,14 @@ let
       exec tmux new-session -A -s "$name"
     '';
   };
-  # Names sessions after their first pane's directory; see
-  # ./rex/session-autoname.lua. Handlers only run under `rex do`, hence a
-  # service. --autostart=false: never start a server, wait for one instead.
-  autonameDir = "${config.xdg.stateHome}/rex";
-  autoname = pkgs.writeShellScript "rex-session-autoname" ''
-    mkdir -p "${autonameDir}"
-    exec "${rex}" do --all --autostart=false ${./rex/session-autoname.lua} \
-      state="${autonameDir}/session-autoname.json"
+  # Names sessions after their first pane's directory and agent panes after
+  # their agent; see ./rex/autolabel.lua. Handlers only run under `rex do`,
+  # hence a service. --autostart=false: never start a server, wait for one.
+  autolabelDir = "${config.xdg.stateHome}/rex";
+  autolabel = pkgs.writeShellScript "rex-autolabel" ''
+    mkdir -p "${autolabelDir}"
+    exec "${rex}" do --all --autostart=false ${./rex/autolabel.lua} \
+      state="${autolabelDir}/autolabel.json"
   '';
 in
 {
@@ -258,34 +258,32 @@ in
 
       # Exits while no server is up; KeepAlive retries until the app starts.
       # launchd gives no reliable $HOME, which rex needs to find the server.
-      launchd.agents.rex-session-autoname = mkIf pkgs.stdenv.isDarwin {
+      launchd.agents.rex-autolabel = mkIf pkgs.stdenv.isDarwin {
         enable = true;
         config = {
-          ProgramArguments = [ "${autoname}" ];
+          ProgramArguments = [ "${autolabel}" ];
           EnvironmentVariables.HOME = config.home.homeDirectory;
           RunAtLoad = true;
           KeepAlive = true;
           ThrottleInterval = 30;
           ProcessType = "Background";
-          StandardOutPath = "${config.home.homeDirectory}/Library/Logs/rex-session-autoname.log";
-          StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/rex-session-autoname.log";
+          StandardOutPath = "${config.home.homeDirectory}/Library/Logs/rex-autolabel.log";
+          StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/rex-autolabel.log";
         };
       };
-      systemd.user.services.rex-session-autoname =
-        mkIf (pkgs.stdenv.isLinux && config.services.rex.enable)
-          {
-            Unit = {
-              Description = "Name Rex sessions after their first pane's directory";
-              After = [ "rex.service" ];
-              BindsTo = [ "rex.service" ];
-            };
-            Service = {
-              ExecStart = "${autoname}";
-              Restart = "on-failure";
-              RestartSec = 5;
-            };
-            Install.WantedBy = [ "rex.service" ];
-          };
+      systemd.user.services.rex-autolabel = mkIf (pkgs.stdenv.isLinux && config.services.rex.enable) {
+        Unit = {
+          Description = "Label Rex sessions by directory and agent panes by agent";
+          After = [ "rex.service" ];
+          BindsTo = [ "rex.service" ];
+        };
+        Service = {
+          ExecStart = "${autolabel}";
+          Restart = "on-failure";
+          RestartSec = 5;
+        };
+        Install.WantedBy = [ "rex.service" ];
+      };
 
       # init.lua is generated: custom actions first, then the bindings.
       programs.rex.config = mkMerge [
