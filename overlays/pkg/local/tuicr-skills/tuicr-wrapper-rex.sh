@@ -100,7 +100,9 @@ launch_tuicr_float() {
 
   local tuicr_bin
   tuicr_bin=$(command -v tuicr)
-  local command=("$tuicr_bin" "$@")
+  # shell "none" runs with the Rex server's PATH (no nix profile), so tuicr
+  # can't find `jj` and falls back to git in colocated repos. Pass ours.
+  local command=(/usr/bin/env "PATH=$PATH" "$tuicr_bin" "$@")
 
   # Optional --stdout capture: skips tuicr's save & copy confirm dialog on
   # exit and writes the exported review straight to a file we print below.
