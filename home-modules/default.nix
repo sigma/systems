@@ -19,7 +19,7 @@
     ./accounts.nix
     ./agent-env.nix # interactive-editor lockout shared by every coding agent
     ./agent-skills.nix # skill registry linked into every agent's skill root
-    ./agents.nix # agent roster: skills, herdr and installs derive from it
+    ./agents.nix # agent roster: skills and installs derive from it
     ./ai-apis.nix # local LLM endpoints by protocol (set by the server module)
     ./builder-access.nix
     ./catppuccin.nix

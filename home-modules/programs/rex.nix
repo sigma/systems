@@ -45,7 +45,7 @@ let
   appBin = "${cfg.app}/Contents/Helpers/Rex Server.rex/Contents/MacOS";
   # May have spaces (the app bundle): quote it wherever it is used.
   rex = if cfg.package != null then getExe cfg.package else "${appBin}/rex";
-  # The `prefix>t` float runs tmux, like herdr's scratch popup (./herdr.nix):
+  # The `prefix>t` float runs tmux:
   # the shell, jobs and scrollback then outlive the pane and Rex restarts.
   # Keyed on the Rex session label, falling back to its ID.
   scratch = pkgs.writeShellApplication {
@@ -157,8 +157,8 @@ in
       };
       services.rex.enable = mkDefault machine.features.nixos;
 
-      # tmux-compatible leader layer (tmux and herdr also use C-z, see
-      # ../settings/programs/tmux.nix and ./herdr.nix). Only keys that
+      # tmux-compatible leader layer (tmux also uses C-z, see
+      # ../settings/programs/tmux.nix). Only keys that
       # differ from Rex's defaults are bound: its Mac defaults already cover
       # focus (alt+cmd+arrows), zoom (shift+cmd+enter), font size (cmd+=/-/0)
       # and the command palette (shift+cmd+p), so none of those is rebound.
@@ -203,7 +203,7 @@ in
             };
             "prefix>z" = "pane.zoom";
             "prefix>x" = "pane.close";
-            # herdr's popups (./herdr.nix), as floating panes. The same key
+            # Popups, as floating panes. The same key
             # hides and re-shows them; see ./rex/float-toggle.lua.
             "prefix>t" = {
               action = "float_toggle";

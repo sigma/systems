@@ -54,7 +54,7 @@ in
 
     # Fullscreen without the macOS animation/space dance, keeping the window
     # clear of the notch. Native tabs don't work in this mode — splits and
-    # herdr do the multiplexing here, so that's not a loss.
+    # Rex do the multiplexing here, so that's not a loss.
     macos-non-native-fullscreen = "padded-notch";
 
     # Window chrome mirrored from wezterm (appearance.lua): same asymmetric

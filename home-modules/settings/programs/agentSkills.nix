@@ -1,6 +1,6 @@
 # programs.agentSkills → skillsets symlinked into every installed agent's skill
 # directory (mechanism lives in ../../agent-skills.nix). Tools that ship skills
-# of their own (hunk, herdr, tuicr) register them from their modules.
+# of their own (hunk, tuicr) register them from their modules.
 {
   config,
   lib,

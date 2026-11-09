@@ -8,7 +8,6 @@
 #   - this module installs Linux packages and drives programs.claude-code
 #   - darwin-modules/apps/agents.nix installs the Homebrew formulae/casks
 #   - settings/programs/agentSkills.nix links skills into every skillDir
-#   - programs/herdr.nix integrates every herdrId
 #   - settings/programs/zed-editor.nix registers every acp id
 #
 # Delivery channels differ per platform on purpose. On darwin, Homebrew tracks
@@ -168,12 +167,6 @@ let
           description = "Endpoint variants of this agent. Only claude-code supports them today.";
         };
 
-        herdrId = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          description = "herdr integration id (`herdr integration install <id>`).";
-        };
-
         installed = mkOption {
           type = types.bool;
           readOnly = true;
@@ -209,7 +202,6 @@ in
         linux.package = pkgs.master.claude-code;
         skillDir = ".claude/skills";
         acp = "claude-acp";
-        herdrId = "claude";
       };
 
       pi = {
@@ -217,7 +209,6 @@ in
         darwin.brew = "pi-coding-agent";
         linux.package = pkgs.master.pi-coding-agent;
         skillDir = ".pi/agent/skills";
-        herdrId = "pi";
       };
 
       oh-my-pi = {
@@ -226,7 +217,6 @@ in
         # omp ignores ~/.claude/skills unless skills.enableClaudeUser is set
         # (default false), so link the set into its native user directory.
         skillDir = ".omp/agent/skills";
-        herdrId = "omp";
       };
 
       opencode = {
@@ -235,7 +225,6 @@ in
         # No skillDir: opencode already scans ~/.claude/skills (the floor
         # agent's), so linking the set into its own directory would list every
         # skill twice. https://opencode.ai/docs/skills/
-        herdrId = "opencode";
       };
 
       gemini-cli = {

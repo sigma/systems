@@ -1,29 +1,22 @@
 # Applied to tuicr's skills/tuicr/SKILL.md by default.nix. Each expression
-# rewrites or adds one passage so the skill matches the herdr popup and Rex
-# floating-pane wrappers; the build fails if any of them misses (see the
+# rewrites or adds one passage so the skill matches the Rex floating-pane
+# wrapper; the build fails if any of them misses (see the
 # marker greps in default.nix). tuicr quits on `:q`; plain `q` no longer does.
 
 # Frontmatter description.
 s|^(description: .*)cmux, tmux, Zellij, or Herdr when|\1cmux, tmux, Zellij, Herdr, or Rex when|
 
-# Herdr: popup instead of a split pane.
-s|^The Herdr wrapper requires `jq` to read pane IDs and completion results from$|The Herdr wrapper opens tuicr in a Herdr popup (via the `tuicr` Herdr plugin)|
-s|^Herdr's JSON responses\.$|rather than a split pane, and requires `jq` to read Herdr's JSON responses.|
-s|^- Select a pane: click it in the Herdr UI$|- The popup is modal: it takes all keyboard input until tuicr exits|
-s|^- Close tuicr: press `q`; the wrapper then closes the review pane$|- Close tuicr: type `:q`; the popup closes itself and the wrapper returns|
-
-# Rex: a floating pane over the agent's tab, blocking like Herdr's.
+# Rex: a floating pane over the agent's tab, blocking until tuicr exits.
 /^\| `\$HERDR_ENV` is `1` \|/a\
 | `$REX_SESSION` is set | Run `tuicr-wrapper-rex.sh /path/to/repo -- <scope>` |
 /^<skill-directory>\/tuicr-wrapper-herdr\.sh /a\
 <skill-directory>/tuicr-wrapper-rex.sh /path/to/repo -- -w
-/^rather than a split pane, and requires `jq` to read Herdr's JSON responses\.$/a\
+/^Herdr's JSON responses\.$/a\
 \
 The Rex wrapper opens tuicr in a Rex floating pane over the agent's tab and\
-also requires `jq`. Herdr run inside a Rex terminal sets both `$HERDR_ENV` and\
-`$REX_SESSION`; Herdr is the innermost multiplexer there.
+also requires `jq`.
 s|the tmux, Zellij, and Herdr wrappers wait|the tmux, Zellij, Herdr, and Rex wrappers wait|
-/^- Close tuicr: type `:q`; the popup closes itself and the wrapper returns$/a\
+/^- Close tuicr: press `q`; the wrapper then closes the review pane$/a\
 \
 Rex:\
 \

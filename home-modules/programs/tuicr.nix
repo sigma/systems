@@ -93,12 +93,8 @@ in
       xdg.configFile."tuicr/config.toml".source = tomlFormat.generate "tuicr-config.toml" cfg.settings;
 
       # tuicr's agent skills teach agents to drive the review TUI. The bundle is
-      # patched to open reviews as floating panes: a herdr popup, which herdr
-      # only exposes to scripts as a plugin pane (hence the plugin below), or a
-      # Rex floating pane (overlays/pkg/local/tuicr-skills).
-      programs.herdr.plugins = mkIf config.programs.herdr.enable {
-        tuicr = pkgs.local.herdr-tuicr-plugin;
-      };
+      # patched to open reviews in a Rex floating pane
+      # (overlays/pkg/local/tuicr-skills).
       programs.agentSkills.plugins = [ pkgs.local.tuicr-skills ];
     })
   ];

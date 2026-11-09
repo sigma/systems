@@ -23,7 +23,6 @@
   # example: pkg = inputs.FOO.packages.${final.stdenv.system}.default;
   (final: prev: {
     inherit (inputs.home-manager.packages.${final.stdenv.system}) home-manager;
-    inherit (inputs.herdr.packages.${final.stdenv.system}) herdr;
     quartermaster-skills = inputs.quartermaster.packages.${final.stdenv.system}.skills;
     zed-editor = inputs.zed.packages.${final.stdenv.system}.default;
   })

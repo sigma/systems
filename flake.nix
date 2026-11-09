@@ -94,13 +94,6 @@
     zed.inputs.flake-parts.follows = "flake-parts";
     zed.inputs.crane.follows = "nix-pins/fh/crane";
 
-    # herdr (terminal agent multiplexer). Pinned here rather than taken from
-    # nixpkgs-master, which trails herdr's releases; upstream's own package.nix
-    # uses cargoLock + a vendored zig-deps expression, so bumping the tag is the
-    # whole upgrade. Drop this input once master keeps up.
-    herdr.url = "github:herdrdev/herdr/v0.9.5";
-    herdr.inputs.nixpkgs.follows = "nixpkgs";
-
     # Rex (terminal multiplexer): the prebuilt release binary and its
     # home-manager module (see home-modules/programs/rex.nix). Snapshot channel,
     # the line the Mac app ships from; flake.lock pins the exact build, and

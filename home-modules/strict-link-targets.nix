@@ -4,8 +4,8 @@
 # a pre-existing file whose content happens to equal its Nix source as fine:
 # it warns "will be skipped since they are the same", and linkGeneration then
 # skips it too — the file stays a plain, unmanaged copy, even with
-# `force = true`. That is exactly how a tool's own installer (herdr
-# integration install, ...) leaves strays behind once the same file is
+# `force = true`. That is exactly how a tool's own installer (`rex skill
+# setup`, ...) leaves strays behind once the same file is
 # declared here: the first switch after declaring it changes nothing on disk,
 # and the next bump of the declared content fails activation with a "would be
 # clobbered" that nothing warned about.

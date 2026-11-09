@@ -86,7 +86,7 @@ _Avoid_: core profile, minimal set.
 
 **Agent roster**:
 The canonical list of AI coding agents a _machine_ may carry. Each entry records the agent's
-delivery channel per platform, its skill directory, its herdr integration id, its ACP id
+delivery channel per platform, its skill directory, its ACP id
 (for editors that host external agents), and its default gate: _floor_ (always on — the
 _floor agent_, `claude-code`), `ai` (on when the resolved `ai` _content feature_ is), or
 off (enabled only by a policy). Everything that installs an agent, registers its skills,
