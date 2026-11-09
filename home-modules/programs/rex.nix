@@ -8,7 +8,8 @@
 #
 #   - Macs: the Rex app runs the server and ships its own CLI, so
 #     programs.rex.package is null (upstream then installs nothing, and
-#     terminfo/sshGuard default off). The app bundle's CLI dir goes on PATH.
+#     terminfo/sshGuard default off). The app bundle's CLI is linked into
+#     the profile, so it is on PATH even under launchd's bare one.
 #   - NixOS: the flake's prebuilt package, plus a personal server
 #     (services.rex, a systemd user service). nixos-modules/nixos-user.nix
 #     turns on linger for it, so it runs from boot and survives logout. On
@@ -65,6 +66,13 @@ let
       exec tmux new-session -A -s "$name"
     '';
   };
+  # The app's CLI in the profile's bin: the Obsidian ▶ button runs `worklog send`
+  # with /etc/profiles/per-user/$USER/bin on launchd's bare PATH, and worklog
+  # looks `rex` up there.
+  appCli = pkgs.runCommand "rex-app-cli" { } ''
+    mkdir -p $out/bin
+    ln -s ${escapeShellArg "${appBin}/rex"} $out/bin/rex
+  '';
   # Names sessions after their first pane's directory and agent panes after
   # their agent; see ./rex/autolabel.lua. Handlers only run under `rex do`,
   # hence a service. --autostart=false: never start a server, wait for one.
@@ -83,8 +91,9 @@ in
       description = ''
         Rex application bundle, used when {option}`programs.rex.package` is
         null (the Macs, where the app is installed by hand, not by Nix). The
-        skill and hook call its bundled CLI by full path; the CLI's directory
-        also goes on PATH for the bare `rex` commands the skill's guide teaches.
+        skill and hook call its bundled CLI by full path; the CLI is also
+        linked into the profile for the bare `rex` commands the skill's guide
+        teaches and for tools started without a login shell's PATH.
       '';
     };
 
@@ -265,9 +274,8 @@ in
     }
 
     (mkIf cfg.enable {
-      home.sessionPath = mkIf (cfg.package == null) [ appBin ];
-      # On PATH on every host, for the `prefix>t` float to find by name.
-      home.packages = [ scratch ];
+      # scratch: on PATH on every host, for the `prefix>t` float to find by name.
+      home.packages = [ scratch ] ++ optional (cfg.package == null) appCli;
 
       # Exits while no server is up; KeepAlive retries until the app starts.
       # launchd gives no reliable $HOME, which rex needs to find the server.

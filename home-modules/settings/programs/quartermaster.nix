@@ -18,6 +18,8 @@
         ];
       };
     };
+    # A personal choice, not quartermaster's default (herdr): sends drive Rex panes.
+    settings.multiplexer = "rex";
     # This checkout is off the <root>/<owner>/<repo> convention; `to=nix` sends land here.
     settings.projects."sigma/systems" = {
       path = "~/.config/nix";
