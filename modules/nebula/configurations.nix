@@ -89,83 +89,24 @@ let
     { sops = sopsConfigFor { isHome = true; inherit user; }; }
   ];
 
-  # Build standalone home-manager config for darwin machines.
-  #
-  # Strategy: Evaluate the full darwin system and directly expose its
-  # home-manager user configuration. This avoids re-evaluating modules
-  # which causes option rename/removal conflicts.
-  #
-  # The darwin system's home-manager.users.<login> already has all the
-  # attributes that homeManagerConfiguration would produce (activationPackage,
-  # config, etc.), so we just pass it through.
-  macHome =
-    machine:
+  # Standalone home-manager config for a darwin or NixOS machine: the full
+  # system's own home-manager user, passed through. Extracting it from the
+  # system builder itself (not a copy of its module list) keeps a standalone
+  # switch identical to a full one, and avoids re-evaluating modules, which
+  # causes option rename/removal conflicts.
+  homeOf =
+    system: machine:
     let
-      user = userFor machine;
-      # Build the full darwin system to get the complete home-manager config.
-      # Mirror `mac`'s module list exactly, including sopsDarwinModules: darwin
-      # modules like darwin-modules/nix.nix reference the `sops` option on
-      # builders, so omitting it here breaks the standalone home extraction
-      # even though the full `nh darwin switch` (via `mac`) succeeds.
-      darwinSystem = inputs.darwin.lib.darwinSystem {
-        inherit (machine) system;
-        specialArgs = {
-          inherit user machine stateVersion;
-          inherit (machine) system;
-        };
-        modules =
-          cfg.darwinModules
-          ++ machine.darwinModules
-          ++ [
-            nixpkgsConfigModule
-            inputs.home-manager.darwinModules.home-manager
-            (homeManagerConfig { inherit user machine; })
-            nixModule
-          ]
-          ++ (sopsDarwinModules user);
-      };
-      # The home-manager user config from darwin
-      hmUserConfig = darwinSystem.config.home-manager.users.${user.login};
+      hmUserConfig = system.config.home-manager.users.${(userFor machine).login};
     in
     # Wrap to match homeManagerConfiguration's output structure
-    {
-      inherit (hmUserConfig.home) activationPackage;
-      config = hmUserConfig;
-      # Include other commonly used attributes
-      inherit (hmUserConfig) news newsDisplay newsEntries;
-    };
-
-  # Build standalone home-manager config for NixOS machines.
-  # Same strategy as macHome - directly use the NixOS system's home-manager config.
-  nixosHome =
-    machine:
-    let
-      user = userFor machine;
-      # Build the full NixOS system to get the complete home-manager config
-      nixosSystem = inputs.nixpkgs-stable.lib.nixosSystem {
-        inherit (machine) system;
-        specialArgs = {
-          inherit user machine stateVersion;
-        };
-        modules =
-          cfg.nixosModules
-          ++ machine.nixosModules
-          ++ [
-            nixpkgsConfigModule
-            inputs.home-manager.nixosModules.home-manager
-            (homeManagerConfig { inherit user machine; })
-            nixModule
-          ];
-      };
-      hmUserConfig = nixosSystem.config.home-manager.users.${user.login};
-    in
     {
       inherit (hmUserConfig.home) activationPackage;
       config = hmUserConfig;
       inherit (hmUserConfig) news newsDisplay newsEntries;
     };
 in
-{
+rec {
   mac =
     machine:
     let
@@ -193,7 +134,7 @@ in
         ++ (sopsDarwinModules user);
     };
 
-  inherit macHome;
+  macHome = machine: homeOf (mac machine) machine;
 
   linux =
     machine:
@@ -277,5 +218,5 @@ in
         modules = sharedModules;
       };
 
-  inherit nixosHome;
+  nixosHome = machine: homeOf (nixos machine) machine;
 }
