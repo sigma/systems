@@ -128,7 +128,17 @@ in
           layout = "tiling";
           workspace = "E";
         }
+        {
+          appId = "com.superlogical.rex";
+          layout = "tiling";
+          workspace = "E";
+        }
         # Notes
+        {
+          appId = "md.obsidian";
+          layout = "tiling";
+          workspace = "N";
+        }
         {
           appId = "notion.id";
           layout = "floating";
@@ -147,6 +157,11 @@ in
         }
         {
           appId = "net.whatsapp.WhatsApp";
+          layout = "tiling";
+          workspace = "C";
+        }
+        {
+          appId = "xyz.block.buzz.app";
           layout = "tiling";
           workspace = "C";
         }
