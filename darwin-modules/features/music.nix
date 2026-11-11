@@ -34,8 +34,13 @@ in
       sessions.Integra.devices = [ { name = "integra7"; } ];
     };
 
-    # Place the NI controller apps on the music workspace.
+    # Place the DAW and NI controller apps on the music workspace.
     programs.aerospace.windowRules = [
+      {
+        appId = "com.ableton.live";
+        layout = "tiling";
+        workspace = "M";
+      }
       {
         appId = "com.native-instruments.Maschine 2";
         layout = "tiling";
