@@ -161,6 +161,12 @@ in
           workspace = "C";
         }
         {
+          # Chrome web app: matched by name, not its opaque web-app bundle id.
+          appNameRegexSubstring = "^Google Chat$";
+          layout = "tiling";
+          workspace = "C";
+        }
+        {
           appId = "xyz.block.buzz.app";
           layout = "tiling";
           workspace = "C";
