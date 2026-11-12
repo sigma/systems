@@ -82,6 +82,13 @@ the front-end is my choice.
 
 - Before pushing, run every gate CI runs (read `.github/workflows/*`), formatter
   checks included. Clean build and tests don't imply formatted.
+- A PR that builds on another goes in a native GitHub stack, which runs CI
+  on every PR in it: open each PR on the one below, then
+  `gh api --method POST repos/<o>/<r>/stacks -F 'pull_requests[]=<bottom>' -F 'pull_requests[]=<top>'`
+  (`-F`: the numbers must be integers). Add a PR on top with
+  `POST repos/<o>/<r>/stacks/<stack>/add -F 'pull_requests[]=<n>'`.
+  Not a `gh` extension. A 422 saying the PRs "are already part of a stack"
+  means it's done.
 - Never leave a found issue only in a summary: fix it if cheap and in scope, else
   file a ticket linked from the work (or comment on an existing one it constrains).
 - Do unambiguous cleanup without asking (a stale status line, a box already
